@@ -16,6 +16,8 @@ robots.txt
 /MAINTAINERS.txt
 /UPGRADE.txt
 /README.txt
+sites/README.txt
+sites/example.sites.php
 sites/all/README.txt
 sites/all/modules/README.txt
 sites/all/themes/README.txt
@@ -35,3 +37,23 @@ xmlrpc.php
 /profiles
 /scripts
 /themes
+
+# Ignore OS generated files
+__MACOSX
+*/.DS_Store
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
+
+# Ignore development aids
+.idea
+.buildpath
+.project
+.settings
+.classpath
+.sass-cache/

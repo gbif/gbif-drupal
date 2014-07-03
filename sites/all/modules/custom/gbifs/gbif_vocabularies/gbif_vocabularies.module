@@ -1,0 +1,11 @@
+<?php
+/**
+ * @file
+ */
+ 
+/**
+ * Implements hook_countries_alter().
+ */
+function gbif_vocabularies_countries_alter(&$countries) {
+  
+}

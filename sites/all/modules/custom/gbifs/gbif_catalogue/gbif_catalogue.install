@@ -1,0 +1,466 @@
+<?php
+/**
+ * @file
+ * Installation of gbif_catalogue
+ * The installation will:
+ *   1) Populate all required vocabularies and their terms;
+ *   2) Establish the "resource" content type and its field settings; 
+ *   3) Create search server and index;
+ *   4) Create Facets for search;
+ *   5) Create Blocks for positioning search facets;
+ *   6) Create Views for browsing tools;
+ *   7) Import all resource from IMS;
+ */
+
+require_once(dirname(__FILE__)) . '/gbif_catalogue.module';
+
+/**
+ * Implementation of hook_requiremensts()
+ */
+function gbif_catalogue_requirements($phase) {
+  $requirements = array();
+
+  if ($phase == "runtime") {
+    // Try to load the API.
+    filemaker_load_api();
+    $requirements['gbif_catalogue']['title'] = t('GBIF Tools Catalogue');
+    
+    // Is the API available?
+    if (class_exists('FileMaker')) {
+      $requirements['gbif_catalogue']['value'] = 'FileMaker API is installed correctly';
+      $requirements['gbif_catalogue']['severity'] = REQUIREMENT_OK;
+    }
+
+    // Required API wasn't found.
+    else {
+      $requirements['gbif_catalogue']['value'] = t('FileMaker API was not found');
+
+      // Provide instructions on installing the FileMaker API for PHP.
+      $requirements['gbif_catalogue']['description'] = t('The FileMaker API for PHP is required for this module. The API comes with your copy of FileMaker server and should be placed in sites/all/libraries/filemakerapi.');
+      $requirements['gbif_catalogue']['severity'] = REQUIREMENT_ERROR;
+    }
+  }
+  return $requirements;
+}
+
+/**
+ * Implemtation of hook_install().
+ */
+function gbif_catalogue_install() {
+  // Populate all required vocabularies and their terms.
+  gbif_catalogue_vocabularies_create();
+  
+  // Establish the "resource" content type and its fields.
+  node_types_rebuild();
+  $types = node_type_get_types();
+  
+  // Setup the body field.
+  node_add_body_field($types['resource'], 'Description'); // Attach body field and name it 'Description'.
+  $instance = field_read_instance('node', 'body', 'resource');
+  $instance['widget']['weight'] = 5;
+  $instance['widget']['settings']['rows'] = 5;
+  field_update_instance($instance);
+  
+  // Setup the other fields.
+  _gbif_catalogue_create_custom_fields();
+
+  gbif_catalogue_import_tools();
+
+  _gbif_catalogue_search_view_create();
+
+}
+
+/**
+ * Implemtation of hook_uninstall().
+ */
+function gbif_catalogue_uninstall() {
+
+  // Clean up contents of the resource type.
+  $type = 'resource';
+  $sql = 'SELECT nid FROM {node} n WHERE n.type = :type';
+  $result = db_query($sql, array(':type' => $type));
+  $nodeids = array();
+  foreach ($result as $row) {
+    $nodeids[] = $row->nid;
+  }
+  node_delete_multiple($nodeids);
+  node_type_delete($type);
+
+  // Delete all fields associated with 'resource' content type.
+  _gbif_catalogue_delete_custom_fields();  
+
+  // Clean up the vocabularies.
+  gbif_catalogue_vocabularies_delete();
+
+  cache_clear_all();
+}
+
+function gbif_catalogue_vocabularies_create() {
+  $t = get_t();
+  module_load_include('inc', 'gbif_catalogue', 'gbif_catalogue.settings');
+  $definitions = _gbif_catalogue_definition();
+  
+  // Create a field to track the IMS keyword ID
+  $field = array(
+    'field_name' => 'field_rs_term_kp_id',
+    'type' => 'number_integer',
+    'label' => $t('IMS Keyword ID'),
+  );
+  field_create_field($field);
+  
+  // Insert default vocabularies and initial terms
+  foreach ($definitions as $df) {
+    $voc = array(
+      'name' => $df['name'],
+      'machine_name' => $df['machine_name'],
+      'description' => $df['description'],
+      'hierarchy' => '0',
+      'module' => 'gbif_catalogue',
+      'weight' => $df['weight'],
+      'rdf_mapping' => array(
+        'rdftype' => array(
+          0 => 'skos:ConceptScheme',
+        ),
+        'name' => array(
+          'predicates' => array(
+            0 => 'dc:title',
+          ),
+        ),
+        'description' => array(
+          'predicates' => array(
+            0 => 'rdfs:comment',
+          ),
+        ),
+      ),
+    );
+
+    $voc = (object)$voc;
+    taxonomy_vocabulary_save($voc);
+    unset($voc);
+    
+    // Create field instances of the IMS keywords for each of the vocabularies.
+    $instance = array(
+      'field_name' => 'field_rs_term_kp_id',
+      'entity_type' => 'taxonomy_term',
+      'bundle' => $df['machine_name'],
+      'label' => $t('IMS Keyword ID'),
+      'description' => $t('IMS Keyword ID'),
+      'required' => false,
+      'widget' => array(
+        'type' => 'text_textfield',
+        'weight' => 4,
+      ),
+    );
+    field_create_instance($instance);
+    
+    // Now populate terms by using the newly created vocabulary
+    $voc = taxonomy_vocabulary_machine_name_load($df['machine_name']);
+    foreach ($df['terms'] as $termname) {
+      taxonomy_term_save((object) array(
+        'vid' => $voc->vid,
+        'name' => $termname['name'],
+        'description' => $termname['description'],
+        'field_rs_term_kp_id' => array(
+          LANGUAGE_NONE => array(
+            0 => array(
+              'value' => isset($termname['ims_kp_id']) ? $termname['ims_kp_id'] : NULL,
+            ),
+          ),
+        ),
+      ));
+    }
+  }
+  
+  return t('Vocabularies created.');
+}
+
+function gbif_catalogue_vocabularies_delete() {
+  module_load_include('inc', 'gbif_catalogue', 'gbif_catalogue.settings');
+  $definitions = _gbif_catalogue_definition();
+  foreach ($definitions as $df) {
+    $voc = taxonomy_vocabulary_machine_name_load($df['machine_name']);
+    taxonomy_vocabulary_delete($voc->vid);
+  }
+  return t('Vocabularies deleted.');
+}
+
+function _gbif_catalogue_create_custom_fields() {
+  foreach (_gbif_catalogue_installed_fields() as $field) {
+    field_create_field($field);
+  }
+  foreach (_gbif_catalogue_installed_instances() as $fieldinstance) {
+    $fieldinstance['entity_type'] = 'node';
+    $fieldinstance['bundle'] = 'resource';
+    field_create_instance($fieldinstance);
+  }
+}
+
+function _gbif_catalogue_delete_custom_fields() {
+  foreach (array_keys(_gbif_catalogue_installed_fields()) as $field) {
+    field_delete_field($field);
+  }
+  $instances = field_info_instances('node', 'resource');
+  foreach ($instances as $instance_name => $fieldinstance) {
+    field_delete_instance($fieldinstance);
+  }
+}
+
+/**
+ * Helper function to define fields.
+ */
+function _gbif_catalogue_installed_fields() {
+  $t = get_t();
+  return array(
+    'field_rs_alternative_title' => array(
+      'field_name' => 'field_rs_alternative_title',
+      'label' => $t('Alternative title'),
+      'type' => 'text',
+      'module' => 'gbif_catalogue',
+      'cardinality' => 1,
+      'settings' => array(
+        'max_length' => 1000,
+      ),
+    ),
+    'field_rs_abstract' => array(
+      'field_name' => 'field_rs_abstract',
+      'label' => $t('Abstract'),
+      'type' => 'text_long',
+      'module' => 'gbif_catalogue',
+      'translatable' => 1,
+      'cardinality' => 1,
+    ),
+    'field_rs_author' => array(
+      'field_name' => 'field_rs_author',
+      'label' => $t('Author(s)'),
+      'type' => 'text',
+      'module' => 'gbif_catalogue',
+      'translatable' => 0,
+      'cardinality' => 1,
+    ),
+    'field_rs_contributor' => array(
+      'field_name' => 'field_rs_contributor',
+      'label' => $t('Contributor(s)'),
+      'type' => 'text_long',
+      'module' => 'gbif_catalogue',
+      'translatable' => 0,
+      'cardinality' => 1,
+    ),
+    'field_rs_publisher' => array(
+      'field_name' => 'field_rs_publisher',
+      'label' => $t('Publisher(s)'),
+      'type' => 'text',
+      'module' => 'gbif_catalogue',
+      'translatable' => 0,
+      'cardinality' => 1,
+    ),
+    'field_rs_extent' => array(
+      'field_name' => 'field_rs_extent',
+      'label' => $t('Extent'),
+      'type' => 'text',
+      'module' => 'gbif_catalogue',
+      'translatable' => 0,
+      'cardinality' => 1,
+    ),
+    'field_rs_rights' => array(
+      'field_name' => 'field_rs_rights',
+      'label' => $t('Rights'),
+      'type' => 'text_long',
+      'module' => 'gbif_catalogue',
+      'translatable' => 1,
+      'cardinality' => 1,
+    ),
+    'field_rs_rights_holder' => array(
+      'field_name' => 'field_rs_rights_holder',
+      'label' => $t('Rights holder'),
+      'type' => 'text',
+      'module' => 'gbif_catalogue',
+      'translatable' => 1,
+      'cardinality' => 1,
+    ),
+    'field_rs_tool_url' => array(
+      'field_name' => 'field_rs_tool_url',
+      'label' => $t('Link'),
+      'type' => 'link_field',
+      'module' => 'gbif_catalogue',
+      'translatable' => 1,
+      'cardinality' => 1,
+    ),    
+    'term_rs_purpose' => array(
+      'field_name' => 'term_rs_purpose',
+      'label' => $t('Purpose'),
+      'type' => 'taxonomy_term_reference',
+      'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+      'settings' => array(
+        'allowed_values' => array(
+          array(
+            'vocabulary' => 'orc_purpose',
+            'parent' => 0,
+          ),
+        ),
+      ),
+    ),
+    'term_rs_target_audience' => array(
+      'field_name' => 'term_rs_target_audience',
+      'label' => $t('Target audience'),
+      'type' => 'taxonomy_term_reference',
+      'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+      'settings' => array(
+        'allowed_values' => array(
+          array(
+            'vocabulary' => 'orc_target_audience',
+            'parent' => 0,
+          ),
+        ),
+      ),
+    ),
+    /*
+    'tool_type' => array(),
+    'publishing_date' => array(),
+    'image' => array(),
+    'applicable_data_type' => array(),
+    'development_status' => array(),
+    'language_term' => array(),
+    'operating_system' => array(),
+    'resource_type_term' => array(),
+    'standard_and_format' => array(),
+    */
+  );
+}
+
+/**
+ * Helper function to create field instances.
+ */
+function _gbif_catalogue_installed_instances() {
+  $t = get_t();
+  return array(
+    'field_rs_alternative_title' => array(
+      'field_name' => 'field_rs_alternative_title',
+      'label' => $t('Alternative title'),
+      'cardinality' => 1,
+      'widget' => array(
+        'type' => 'text_textfield',
+        'settings' => array('size' => 60),
+        'weight' => 3,
+      ),
+    ),
+    'field_rs_abstract' => array(
+      'field_name' => 'field_rs_abstract',
+      'label' => $t('Abstract'),
+      'type' => 'text_long',
+      'cardinality' => 1,
+      'widget' => array(
+        'type' => 'text_textarea',
+        'settings' => array('row' => 4),
+        'weight' => 6,
+      ),
+    ),
+    'field_rs_author' => array(
+      'field_name' => 'field_rs_author',
+      'label' => $t('Author(s)'),
+      'type' => 'text',
+      'cardinality' => 1,
+      'widget' => array(
+        'type' => 'text_textfield',
+        'settings' => array('size' => 60),
+        'weight' => 7,
+      ),      
+    ),
+    'field_rs_contributor' => array(
+      'field_name' => 'field_rs_contributor',
+      'label' => $t('Contributor(s)'),
+      'type' => 'text',
+      'cardinality' => 1,
+      'widget' => array(
+        'type' => 'text_textarea',
+        'settings' => array('row' => 2),
+        'weight' => 8,
+      ),      
+    ),
+    'field_rs_publisher' => array(
+      'field_name' => 'field_rs_publisher',
+      'label' => $t('Publisher(s)'),
+      'type' => 'text',
+      'cardinality' => 1,
+      'widget' => array(
+        'type' => 'text_textfield',
+        'settings' => array('size' => 60),
+        'weight' => 9,
+      ),
+    ),
+    'field_rs_extent' => array(
+      'field_name' => 'field_rs_extent',
+      'label' => $t('Extent'),
+      'type' => 'text',
+      'cardinality' => 1,
+      'widget' => array(
+        'type' => 'text_textfield',
+        'settings' => array('size' => 60),
+        'weight' => 10,
+      ),
+    ),
+    'field_rs_rights' => array(
+      'field_name' => 'field_rs_rights',
+      'label' => $t('Rights'),
+      'type' => 'text_long',
+      'cardinality' => 1,
+      'widget' => array(
+        'type' => 'text_textarea',
+        'settings' => array('row' => 4),
+        'weight' => 11,
+      ),
+    ),
+    'field_rs_rights_holder' => array(
+      'field_name' => 'field_rs_rights_holder',
+      'label' => $t('Rights holder'),
+      'type' => 'text',
+      'cardinality' => 1,
+      'widget' => array(
+        'type' => 'text_textfield',
+        'settings' => array('size' => 256),
+        'weight' => 12,
+      ),
+    ),
+    'field_rs_tool_url' => array(
+      'field_name' => 'field_rs_tool_url',
+      'label' => $t('URL'),
+      'type' => 'link_field',
+      'cardinality' => 1,
+      'widget' => array(
+        'type' => 'link_field',
+        'settings' => array(),
+        'weight' => 13,
+      ),
+    ),    
+    'term_rs_purpose' => array(
+      'field_name' => 'term_rs_purpose',
+      'label' => $t('Purpose'),
+      'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+      'widget' => array(
+        'module' => 'options',
+        'type' => 'options_buttons',
+        'weight' => 14,
+      ),
+    ),
+    'term_rs_target_audience' => array(
+      'field_name' => 'term_rs_target_audience',
+      'label' => $t('Target audience'),
+      'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+      'widget' => array(
+        'module' => 'options',
+        'type' => 'options_buttons',
+        'weight' => 15,
+      ),
+    ),
+    /*
+    'tool_type' => array(),
+    'publishing_date' => array(),
+    'image' => array(),
+    'applicable_data_type' => array(),
+    'development_status' => array(),
+    'language_term' => array(),
+    'operating_system' => array(),
+    'resource_type_term' => array(),
+    'standard_and_format' => array(),
+    */
+  );
+}

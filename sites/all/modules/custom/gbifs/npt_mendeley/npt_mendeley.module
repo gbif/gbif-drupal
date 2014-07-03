@@ -1,0 +1,1120 @@
+<?php
+/**
+ * @file
+ * This module retrieves relevant literature entries about a node from Mendeley API.
+ * @todo More precise progress probing using CURLOPT_PROGRESSFUNCTION.
+ */
+
+define('NPT_MENDELEY_CONSUMER_KEY', '6d775b71aef1d3e93dbfabbd2653bfe1051e3ddaf');
+define('MENDELEY_GBIF_PUBLIC_GROUP_ID', '1068301');
+define('MENDELEY_PUBLIC_GROUPS_DOCUMENTS', 'http://api.mendeley.com/oapi/documents/groups');
+define('MENDELEY_DOC_DETAIL_URL', 'http://api.mendeley.com/oapi/documents/details');
+define('GBIF_ENUMERATION_COUNTRY', 'http://api.gbif.org/v0.9/enumeration/country');
+
+/**
+ * Implements hook_menu().
+ * @todo Access point for JSON call
+ */
+function npt_mendeley_menu() {
+  $items = array();
+  $items['admin/config/npt'] = array(
+    'title' => 'NPT Configuration',
+    'description' => t("Configure settings that determine how this Drupal site presents itself as a Nodes' portal."),
+    'position' => 'right',
+    'weight' => -10,
+    'page callback' => 'system_admin_menu_block_page',
+    'access arguments' => array('administer site configuration'),
+    'file' => 'system.admin.inc',
+    'file path' => drupal_get_path('module', 'system'),
+  );
+  $items['admin/config/npt/mendeley_settings'] = array(
+    'title' => 'GBIF on Mendeley',
+    'description' => t('Settings for accessing GBIF public library on Mendeley and updating statistics.'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('npt_mendeley_settings_form'),
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'npt_mendeley.admin.inc',
+  );
+
+  // Menu link for full list browsing.
+  $items['mendeley'] = array(
+    'type' => MENU_NORMAL_ITEM,
+    'title' => 'GBIF Use Cases',
+    'page callback' => 'npt_mendeley_full_list',
+    'access callback' => TRUE,
+    'weight' => 30,
+  );
+  $items['mendeley/usecases'] = array(
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'title' => 'GBIF Use Cases',
+    'weight' => -10,
+  );
+
+  // Menu link for sub categories.
+  $tag_sets = variable_get('npt_mendeley_tags');
+  // Only type => 'gbif_used' has menu tabs. So get rid of type => 'country'
+  foreach ($tag_sets as $k => $tag_set) {
+    if ($tag_set['type'] == 'country' || $tag_set['machine_name'] == 'usecases') unset($tag_sets[$k]);
+  }
+
+  foreach ($tag_sets as $tag_set) {
+    $machine_name = $tag_set['machine_name'];
+    $items["mendeley/$machine_name"] = array(
+      'type' => MENU_LOCAL_TASK,
+      'title' => $tag_set['tab_name'],
+      'page callback' => 'npt_mendeley_full_list',
+      'page arguments' => array(1),
+      'access callback' => TRUE,
+      'weight' => $tag_set['weight'],
+    );
+  }
+
+  // Register country paths so the menu tabs for gbif_used doesn't show.
+  $items['mendeley/country'] = array(
+    'type' => MENU_NORMAL_ITEM,
+    'page callback' => 'npt_mendeley_full_list',
+    'page arguments' => array(1),
+    'access callback' => TRUE,
+  );
+  
+  // For reporting about progress of document retreival.
+  $items['mendeley/retrieval_progress'] = array(
+    'page callback' => '_npt_mendeley_retrievel_progress',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_library().
+ */
+function npt_mendeley_library() {
+  $libraries['progress'] = array(
+    'title' => 'Progress bar for Mendeley retrievel',
+    'css' => array(
+      drupal_get_path('module', 'npt_mendeley') . '/css/progress.css' => array(
+        'type' => 'file',
+        'media' => 'all',
+      ),
+    ),
+  );
+  $libraries['jqPagination'] = array(
+    'title' => 'jQuery pagination plugin',
+    'website' => 'http://beneverard.github.io/jqPagination/',
+    'version' => 1.3,
+    'js' => array(
+      drupal_get_path('module', 'npt_mendeley') . '/js/jquery.jqpagination.min.js' => array(
+        'type' => 'file',
+        'scope' => 'footer',
+        'weight' => 20,
+      ),
+      drupal_get_path('module', 'npt_mendeley') . '/js/paging.js' => array(
+        'type' => 'file',
+        'scope' => 'footer',
+        'weight' => 20,
+      ),
+    ),
+    'css' => array(
+      drupal_get_path('module', 'npt_mendeley') . '/css/jqpagination.css' => array(
+        'type' => 'file',
+        'media' => 'all',
+      ),
+      drupal_get_path('module', 'npt_mendeley') . '/css/paging.css' => array(
+        'type' => 'file',
+        'media' => 'all',
+      ),
+    ),
+  );
+  return $libraries;
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function npt_mendeley_block_info() {
+  $tag_sets = variable_get('npt_mendeley_tags');
+  
+  foreach ($tag_sets as $tag_set) {
+
+    switch ($tag_set['type']) {
+      case 'country':
+        $delta = $tag_set['machine_name'];
+        $blocks[$delta] = array(
+          'info' => 'Country: ' . $tag_set['name'],
+          'region' => 'content',
+          'weight' => 1,
+          'status' => 0,
+        );
+        break;
+
+      case 'gbif_used':
+        $delta = $tag_set['machine_name'];
+        $blocks[$delta] = array(
+          'info' => $tag_set['name'],
+          'region' => 'content',
+          'weight' => $tag_set['weight'],
+          'status' => 1,
+          'visibility' => BLOCK_VISIBILITY_LISTED,
+          'pages' => $tag_set['pages'],
+        );
+        break;
+    }
+
+  }
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_info_alter().
+ */
+function npt_mendeley_block_info_alter(&$block, $theme, $code_blocks) {
+  // Automatically assign country relevant blocks to /npt/* if this Drupal is an NPT instance.
+  $profile = variable_get('install_profile', NULL);
+  $node_info = variable_get('gbif_participant_settings', NULL);
+  if ($profile == 'npt_startup' && isset($node_info['node_country'])) {
+    $delta = $node_info['node_country'];
+    $delta_bio = $node_info['node_country'] . '_bio';
+    switch ($theme) {
+      case NPTSTARTUP_THEME:
+
+        // Assign the country citation block at the Facts page. 
+        $file = drupal_realpath(file_build_uri('npt_mendeley/countries/' . $delta . '.json'));
+        $file_exists = file_exists($file);
+        if ($file_exists == TRUE) $file_size = filesize($file);
+        
+        if ($file_exists == TRUE && $file_size > 2) {
+          $block['npt_mendeley'][$delta]['weight'] = 9;
+          $block['npt_mendeley'][$delta]['status'] = 1;
+          $block['npt_mendeley'][$delta]['region'] = 'content';
+          $block['npt_mendeley'][$delta]['visibility'] = BLOCK_VISIBILITY_LISTED;
+          $block['npt_mendeley'][$delta]['pages'] = 'npt/stats';
+        }
+        
+        $file = $file_exists = $file_size = NULL;
+        
+        // Assign _biodiversity tagged citations block if not empty.
+        $file = drupal_realpath(file_build_uri('npt_mendeley/countries/' . $delta_bio . '.json'));
+        $file_exists = file_exists($file);
+        if ($file_exists == TRUE) $file_size = filesize($file);
+        
+        if ($file_exists == TRUE && $file_size > 2) {
+          $block['npt_mendeley'][$delta_bio]['weight'] = 10;
+          $block['npt_mendeley'][$delta_bio]['status'] = 1;
+          $block['npt_mendeley'][$delta_bio]['region'] = 'content';
+          $block['npt_mendeley'][$delta_bio]['visibility'] = BLOCK_VISIBILITY_LISTED;
+          $block['npt_mendeley'][$delta_bio]['pages'] = 'npt/stats';
+        }
+
+        $file = $file_exists = $file_size = NULL;
+        
+        break;
+    }
+    
+  }
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function npt_mendeley_block_view($delta = '') {
+  $block = array();
+  $tag_sets = variable_get('npt_mendeley_tags');
+  foreach ($tag_sets as $tag_set) {
+    if ($delta == $tag_set['machine_name']) {
+      $subject = ($tag_set['type'] == 'country') ? 'Country: ' . $tag_set['name'] : $tag_set['name'];
+      $block['subject'] = $subject; 
+      $block['content'] = array(
+        '#markup' => _npt_mendeley_list_documents($tag_set['type'], $tag_set['machine_name'], 'block'),
+      );
+    }
+  }
+  return $block;
+}
+
+/**
+ * Implementation of hook_cron().
+ */
+function npt_mendeley_cron() {
+  $documents_file_loc = file_build_uri('npt_mendeley/documents.json');
+  $file_exists = file_exists(drupal_realpath($documents_file_loc));
+
+  if ($file_exists == TRUE) {
+    $documents = json_decode(file_get_contents(file_create_url($documents_file_loc)));
+    if (count($documents) > 0) {
+      npt_mendeley_fill_doc_detail();
+    }
+  }
+}
+
+/**
+ * Produce citation list and export it
+ * @todo should use theme_item_list to consolidate the code.
+ * @todo use dataTables.js to allow better search and paging.
+ */
+function npt_mendeley_full_list($gbif_cat_type = 'usecases', $machine_name = '', $json = '') {
+
+  // Determine where to extract the analysed documents
+  if ($gbif_cat_type == 'country') {
+    $$machine_name = json_decode(file_get_contents(file_build_uri('npt_mendeley/countries/' . $machine_name . '.json')));
+  }
+  // If the first argument appears to be machine_name, the argument is treated as machine_name.
+  elseif ($gbif_cat_type <> 'country' && $machine_name = '') {
+    $$gbif_cat_type = json_decode(file_get_contents(file_build_uri('npt_mendeley/' . $gbif_cat_type . '.json')));
+  }
+
+  // Generate output.
+  // If the request is for JSON, stop processing and export right away.
+  if ($gbif_cat_type == 'country' && $json == 'json') {
+
+    $doc_count = count($$machine_name);
+    if ($doc_count == 0) {
+      $message = 'No document is tagged with ' . $machine_name . '.';
+      $result = array('Error' => $message);
+    }
+    
+    // Determine whether this is a JSONP request
+    if (isset($_GET['callback'])) {
+      header('Content-Type: text/javascript; charset=utf8');
+      header('Access-Control-Max-Age: 3628800');
+      header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
+
+      $callback = $_GET['callback'];
+      if ($doc_count == 0) {
+        echo $callback . '(' . json_encode($result) . ')';
+      }
+      else {
+        echo $callback . '(' . json_encode($$machine_name) . ')';
+      }
+    }
+    else {
+      
+      if ($doc_count == 0) {
+        drupal_json_output($result);
+      }
+      else {
+        drupal_json_output($$machine_name);
+      }
+    }
+  }
+  else {
+
+    // Determine the title
+    // While brute forcing the count as per POR-1621
+    $tag_sets = variable_get('npt_mendeley_tags');
+    foreach ($tag_sets as $tag_set) {
+      if ($gbif_cat_type == 'country') {
+        if ($tag_set['machine_name'] == $machine_name) {
+			    $$machine_name = json_decode(file_get_contents(file_build_uri('npt_mendeley/countries/' . $machine_name . '.json')));
+			    $doc_count = count($$machine_name);
+			    $title = format_plural($doc_count,
+					  '1 publication for '.$tag_set['tab_name'],
+					  '@count publications for '.$tag_set['tab_name']);
+          $GLOBALS['npt_mendeley_block_title'] = $title;
+        }
+      }
+      else {
+        if ($tag_set['machine_name'] == $gbif_cat_type) {
+ 		      $$machine_name = json_decode(file_get_contents(file_build_uri('npt_mendeley/' . $gbif_cat_type . '.json')));
+		      $doc_count = count($$machine_name);
+		      $title = format_plural($doc_count,
+		        '1 publication in "'.$tag_set['tab_name'] . '"',
+		        '@count publications in "'.$tag_set['tab_name']) . '"';
+          $GLOBALS['npt_mendeley_block_title'] = $title;
+        }
+      }
+    }
+
+    // Again if the first argument appears to be machine_name, it is treated as so.
+    if ($gbif_cat_type <> 'country' && $machine_name == '') {
+      drupal_add_library('npt_mendeley', 'jqPagination', FALSE); 
+      $content = _npt_mendeley_list_documents('gbif_used', $gbif_cat_type, 'page');
+    }
+    else {
+      drupal_add_library('npt_mendeley', 'jqPagination', FALSE); 
+      $content = _npt_mendeley_list_documents($gbif_cat_type, $machine_name, 'page');
+    }
+    return $content;
+  }
+}
+
+/**
+ * Generate the list of documents for display, as block, page or json.
+ * @todo Forename of authors with dash or multiple words
+ * @todo Be careful that the most recent 3 in the block rendering
+ *       is not accurate given that we don't have precise date to sort.
+ */
+function _npt_mendeley_list_documents($gbif_cat_type, $machine_name, $render) {
+
+	global $base_url;
+
+	$tag_sets = variable_get('npt_mendeley_tags');
+
+	foreach ($tag_sets as $tag_set) {
+		if ($machine_name == $tag_set['machine_name']) {
+			if ($gbif_cat_type == 'country') {
+				$$machine_name = json_decode(file_get_contents(file_build_uri('npt_mendeley/countries/' . $machine_name . '.json')));
+			}
+			elseif ($gbif_cat_type == 'gbif_used') {
+				$$machine_name = json_decode(file_get_contents(file_build_uri('npt_mendeley/' . $machine_name . '.json')));
+			}
+			$doc_count = count($$machine_name);
+				
+			// If there are more then 3 documents, we only keep the recent 3
+			// for block view.
+			if ($doc_count > 0 && $render == 'block') {
+				$$machine_name = array_slice($$machine_name, 0, 3);
+			}
+				
+			// If $render == 'raw', then instead of HTML output, we give the raw array.
+			if ($render == 'raw') {
+				$content = $$machine_name;
+			} elseif ($render <> 'raw') {
+				$content = '';
+
+				if ($render == 'block') {
+					$content .= '<p class="mendeley_bold">';
+					$content .= $tag_set['desc'] . '</p><p>';
+				} else {
+					// $content .= '<h5>' . $tag_set['desc'] . '</h5>';
+					// $content .= '<p>';
+				}
+
+				if ($doc_count > 0) {
+					if ($doc_count >= 3 && $render == 'block') {
+						$content .= t('Most recent 3 publications in this category:');
+					} else {
+					// $content .= format_plural($doc_count,
+					//'1 publication in this category:',
+					//'@count publications in this category:');
+					}
+				}
+				// Start the list.
+				if ($render == 'page') {
+					$list_item .= "<div id='mendeley-citation'>";
+					foreach ($$machine_name as $k => $doc) {
+						foreach ($doc as $key => $value) {
+							$$key = (isset($key)) ? $value : NULL;
+						}
+						$num = $k + 1;
+						$list_item .='<div class="result" id="citation-'.$num.'">' ;
+						
+						// Title first
+						$list_item .= (isset($url)) ? '<h2>' . l($title, $url).'</h2>' : '<h2>'. $title . '. </h2>';
+
+						// Author
+						$author_count = count($authors);
+						if ($author_count >= 3) {
+							$list_item .= '<p>'.$authors[0]->surname . ', ' . substr($authors[0]->forename, 0, 1) . '. ';
+							$list_item .= 'et al. </p>';
+						}
+						else {
+							$list_item .= '<p>' ;
+							foreach ($authors as $i => $author) {
+								$list_item .= $author->surname . ', ' . substr($author->forename, 0, 1) . '.';
+								if ($i < $author_count - 1) $list_item .= ', ';          
+							}
+							$list_item .= '</p>' ;
+						}
+						$list_item .= '<div class="footer"><p class="date">' ;
+						// This line is pending because of faulty mendeley call.
+						$list_item .= (isset($publication_outlet)) ? ' <em>' . $publication_outlet . '</em>, ' : '';
+
+						// Volume, issue and page.
+						$list_item .= (isset($volume)) ? 'Volume: ' . $volume : '';
+						$list_item .= (isset($issue)) ? '(' . $issue . '), ' : '';
+						$list_item .= (isset($page)) ? 'p.' . $page . '. ' : '';
+
+						// Year, title and the rest
+						$list_item .= (isset($year)) ? '(' . $year . ')' : '';
+						
+						$list_item .= '</p></div>' ; 
+						$list_item .= '</div>' ; 
+					}
+
+ 					$list_item .= '</div>';
+ 					
+					$content .= $list_item;
+									// Add pagination.
+					$pagination = '<ul class="pagination">';
+					$pagination .= '<li class="first"><a href="#" class="first" data-action="first">&laquo;</a></li>';
+					$pagination .= '<li><a href="#" class="previous" data-action="previous">&lsaquo;</a></li>';
+					$pagination .= '<input class="mendeley_pager" type="text" readonly="readonly" data-max-page="30" />';
+					$pagination .= '<li><a href="#" class="next" data-action="next">&rsaquo;</a></li>';
+					$pagination .= '<li class="last"><a href="#" class="last" data-action="last">&raquo;</a></li>';
+					$pagination .= '</ul>';
+
+					$content .= $pagination; 
+					
+					if ($doc_count === 0) {
+						$content .= t('There is so far no publication in this category.');
+					}
+				} else {
+					$list_item = '<ul class="mendeley_ul" id="mendeley-citation">';
+					foreach ($$machine_name as $k => $doc) {
+						foreach ($doc as $key => $value) {
+							$$key = (isset($key)) ? $value : NULL;
+						}
+						$num = $k + 1;
+						$list_item .= '<li class="mendeley_li" id="citation-' . $num . '">';
+
+						// Title first
+						$list_item .= (isset($url)) ? '<strong>' . l($title, $url) . '. </strong>' : '<strong>' . $title . '. </strong>';
+
+						// Author
+						$author_count = count($authors);
+						if ($author_count >= 3) {
+							$list_item .= $authors[0]->surname . ', ' . substr($authors[0]->forename, 0, 1) . '. ';
+							$list_item .= 'et al. ';
+						}
+						else {
+							foreach ($authors as $i => $author) {
+							$list_item .= $author->surname . ', ' . substr($author->forename, 0, 1) . '.';
+							if ($i < $author_count - 1) $list_item .= ', ';          
+							}
+						}
+
+						// This line is pending because of faulty mendeley call.
+						$list_item .= (isset($publication_outlet)) ? ' <em>' . $publication_outlet . '</em>, ' : '';
+
+						// Volume, issue and page.
+						$list_item .= (isset($volume)) ? 'Volume: ' . $volume : '';
+						$list_item .= (isset($issue)) ? '(' . $issue . '), ' : '';
+						$list_item .= (isset($page)) ? 'p.' . $page . '. ' : '';
+
+						// Year, title and the rest
+						$list_item .= (isset($year)) ? '(' . $year . ')' : '';
+
+						$list_item .= '</li>';
+					}
+					$list_item .= '</ul>';
+
+					$content .= $list_item;
+
+					// Provide 'see more' link to the page render.
+					if ($doc_count > 3 && $render == 'block') {
+						global $base_url;
+						if ($gbif_cat_type == 'gbif_used') {
+							$content .= l('see more...', $base_url . '/mendeley/' . $machine_name);
+						} else {
+							$content .= l('see more...', $base_url . '/mendeley/' . $gbif_cat_type . '/' . $machine_name);
+						}
+					} elseif ($doc_count <= 3 && $render == 'block') {
+						if ($gbif_cat_type == 'gbif_used') {
+							$content .= l('see page view...', $base_url . '/mendeley/' . $machine_name);
+						} else {
+							$content .= l('see page view...', $base_url . '/mendeley/' . $gbif_cat_type . '/' . $machine_name);
+						}
+						$content .= '';
+					}
+				}
+			}
+		}
+	}
+	return $content;
+}
+
+/**
+ * Ensure a local digest of citations from the GBIF Public Library on Mendeley.
+ * @todo To figure out why size doesn't show in debug session.
+ */
+function npt_mendeley_retrieve() {
+
+  // Trial accessing Mendeley API.
+  $mendeley_gbif_url = MENDELEY_PUBLIC_GROUPS_DOCUMENTS . '/' . MENDELEY_GBIF_PUBLIC_GROUP_ID . '/docs/?details=true&items=40&consumer_key=' . NPT_MENDELEY_CONSUMER_KEY;
+  $mendeley_ch = curl_init(); // Create a cURL resource
+  curl_setopt($mendeley_ch, CURLOPT_URL, $mendeley_gbif_url);
+  curl_setopt($mendeley_ch, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($mendeley_ch, CURLOPT_HEADER, true);
+  $mendeley_ch_result = curl_exec($mendeley_ch);
+  $mendeley_api_status = curl_getinfo($mendeley_ch);
+  curl_close($mendeley_ch);
+  unset($mendeley_ch);
+  
+  // Debug step: checking Mendeley API status
+  // Refer to: http://apidocs.mendeley.com/home/responses-and-errors-1
+  switch ($mendeley_api_status['http_code']) {
+    case 200:
+      break; // Proceed! Success! This header is sent for GET requests together with a JSON object containing the data requested.
+    case 201:
+      break; // Another success header! This one is sent after a POST request has been successful.
+    case 204:
+      return t('No content from Mendeley.');
+    case 400:
+      return t('Bad Request to Mendeley.');
+    case 401:
+      return t('Unauthorized: Authentication credentials were missing or incorrect.');
+    case 403:
+      return t('Forbidden.');
+    case 404:
+      return t('Not found.');
+    case 429:
+      return t('Too many requests: Rate limit reached. Please try an hour later.');
+    case 503:
+      return t('Service Unavailable: Mendeley is up, but something went wrong, please try again later.');
+  }
+  
+  // Get essential stats for determining the workflow
+  $headers = _npt_mendeley_get_headers($mendeley_ch_result, FALSE);
+  $mendeley_ratelimit_remaining = $headers['ratelimit_remaining'];
+  $total_results = $headers['total_results'];
+  $total_pages = $headers['total_pages'];
+
+  // For storing the progress for ajax callback
+  $_SESSION['mendeley_progress'] = array(
+    'percentage' => 0,
+    'message' => t('Initialising...'),
+    'ratelimit_remaining' => $headers['ratelimit_remaining'],
+    'page_retrieved' => 0,
+    'total_pages' => $headers['total_pages'],
+    'documents_retrieved' => 0,
+    'total_results' => $headers['total_results'],
+    'timestamp' => time(),
+  );
+  variable_set('npt_mendeley_retrieval_progress', $_SESSION['mendeley_progress']);
+  unset($headers);
+
+  // Prepare the uri for storing retrieved documents
+  $documents_file_loc = file_build_uri('npt_mendeley/documents.json');
+  $documents_file_path = drupal_realpath($documents_file_loc);
+  $documents_exist = file_exists($documents_file_loc);
+
+  if ($documents_exist == TRUE) {
+    $documents_time = filemtime($documents_file_path)? filemtime($documents_file_path) : 0;
+    $time = time();
+    $documents_age = $time - $documents_time;
+  }
+
+  $interval = variable_get('npt_mendeley_update_interval', 3600);
+  if ($documents_exist == TRUE && $documents_age < $interval) {
+
+    // If documents are already retrieved and it's younger than defined in
+    // npt_mendeley_update_interval, then use the local copy.
+    // Otherwise retrieve and update again.
+
+    $gbif_documents_content = file_get_contents($documents_file_loc);
+    $gbif_documents = json_decode($gbif_documents_content);
+
+    return t('The local copy is still new to use.');
+
+  } elseif ($documents_exist == FALSE || $documents_age >= $interval) {
+
+    // If there is no document retrieved or the local copy is older than 6 hrs,
+    // then retrieve all documents into one array
+
+    $_SESSION['mendeley_progress']['message'] = t('@results documents in @pages pages to be retrieved from GBIF Public Library.', array('@results' => $total_results, '@pages' => $total_pages));
+    $_SESSION['mendeley_progress']['percentage'] = 0;
+    
+    $url_to_retrieve = array();
+    $mendeley_gbif_documents = array();
+
+    // Append all urls to be retrieved.
+    for ($i = 0; $i < $total_pages; $i++) {
+      $url_to_retrieve[] = $mendeley_gbif_url . '&page=' . $i;
+    }
+
+    $mendeley_ch = array();
+    $master_ch = curl_multi_init();
+    
+    // Construct curl handlers
+    foreach ($url_to_retrieve as $i => $url) {
+      $mendeley_ch[$i] = curl_init($url);
+      curl_setopt($mendeley_ch[$i], CURLOPT_RETURNTRANSFER, true);
+      curl_setopt($mendeley_ch[$i], CURLOPT_HEADER, true);
+      
+      // @todo To figure out why size doesn't show in debug session
+      // curl_setopt($mendeley_ch[$i], CURLOPT_NOPROGRESS, false);
+      // _npt_mendeley_curl_progress_callback($mendeley_ch[$i]);
+      curl_multi_add_handle($master_ch, $mendeley_ch[$i]);
+    }
+
+    // Seems not possible to get http header and use x-ratelimit-remaining for
+    // more precise progress reporting.
+    do {
+      curl_multi_exec($master_ch, $running);
+    } while ($running > 0);
+    
+    // Push results together
+    foreach ($url_to_retrieve as $i => $url) {
+      $curl_result = curl_multi_getcontent($mendeley_ch[$i]);
+      $headers = _npt_mendeley_get_headers($curl_result, FALSE);
+      $mendeley_gbif_documents = array_merge($mendeley_gbif_documents, $headers['documents']);
+      
+      $_SESSION['mendeley_progress']['ratelimit_remaining'] = $headers['ratelimit_remaining'];
+      $_SESSION['mendeley_progress']['page_retrieved'] = $i + 1;
+      $_SESSION['mendeley_progress']['documents_retrieved'] = count($mendeley_gbif_documents);
+      $_SESSION['mendeley_progress']['timestamp'] = time();
+      $_SESSION['mendeley_progress']['message'] = t('@page_retrieved of @total_pages retrieved', array('@page_retrieved' => $_SESSION['mendeley_progress']['page_retrieved'], '@total_pages' => $_SESSION['mendeley_progress']['total_pages']));
+      $_SESSION['mendeley_progress']['percentage'] = round(100 * $_SESSION['mendeley_progress']['page_retrieved'] / $_SESSION['mendeley_progress']['total_pages']);
+      variable_set('npt_mendeley_retrieval_progress', $_SESSION['mendeley_progress']);
+      
+      curl_multi_remove_handle($master_ch, $mendeley_ch[$i]);
+      curl_close($mendeley_ch[$i]);
+    }
+
+    curl_multi_close($master_ch);
+    
+    foreach ($mendeley_gbif_documents as $doc) {
+      $doc->publication_outlet = '[Pending journal name]';
+    }
+    
+    // Take out those don't have uuid and save separately.
+    $documents_no_uuid = array();
+    foreach ($mendeley_gbif_documents as $k => $doc) {
+      if (isset($doc->uuid) == FALSE) {
+        $documents_no_uuid[] = $doc;
+        unset($mendeley_gbif_documents[$k]);
+      }
+    }
+    // Save a local copy of documents that don't have uuid.
+    $no_uuid_file_save_success = file_save_data(json_encode($documents_no_uuid), file_build_uri('npt_mendeley/documents_no_uuid.json') , FILE_EXISTS_REPLACE);
+
+    // Organise the mendeley documents
+    $docs = array();
+    foreach ($mendeley_gbif_documents as $doc) {
+      $docs[] = $doc;
+    }
+    $mendeley_gbif_documents = $docs;
+    unset($docs);
+    
+    // Save a local copy for use when there is no network connection or the rate is exceeded for Mendeley API.
+    $json_file = json_encode($mendeley_gbif_documents);
+    $file_save_success = file_save_data($json_file, $documents_file_loc, FILE_EXISTS_REPLACE);
+    
+    if (is_object($file_save_success)) {
+      // reset detailed_documents
+      $documents_file_loc = file_build_uri('npt_mendeley/detailed_documents.json');
+      $file_exists = file_exists(drupal_realpath($documents_file_loc));
+      if ($file_exists == TRUE) {
+        file_unmanaged_delete(drupal_realpath($documents_file_loc));
+      }
+      $total_doc_count = count($mendeley_gbif_documents);
+      variable_set('npt_mendeley_total', $total_doc_count);
+      variable_set('npt_mendeley_updated', 0);
+      return t('!count Mendeley documents retrieved and saved.', array('!count' => $total_doc_count));
+    } else {
+      return t('Mendeley documents not successfully saved.');
+    }
+  } else {
+    return t('An exception occurred during the retrival.');
+  }
+}
+
+/**
+ * @todo Find a better way to incorporate the trial accessing code
+ *       in npt_mendeley_retrieve().
+ * @todo rate limit of detail call is 500.
+ */
+
+function npt_mendeley_fill_doc_detail() {
+  // Load local documents.json
+  $documents_file_loc = file_build_uri('npt_mendeley/documents.json');
+  $file_exists = file_exists(drupal_realpath($documents_file_loc));
+
+  switch ($file_exists) {
+    case FALSE:
+      return t('Please first update documents from Mendeley.');
+    case TRUE:
+    	$documents = json_decode(file_get_contents(file_create_url($documents_file_loc)));
+      
+      // Trial accessing Mendeley API.
+      $uuid = $documents[0]->uuid;
+      $mendeley_gbif_url = MENDELEY_DOC_DETAIL_URL . '/' . $uuid . '/?consumer_key=' . NPT_MENDELEY_CONSUMER_KEY;
+      $mendeley_ch = curl_init(); // Create a cURL resource
+      curl_setopt($mendeley_ch, CURLOPT_URL, $mendeley_gbif_url);
+      curl_setopt($mendeley_ch, CURLOPT_RETURNTRANSFER, true);
+      curl_setopt($mendeley_ch, CURLOPT_HEADER, true);
+      $mendeley_ch_result = curl_exec($mendeley_ch);
+      $mendeley_api_status = curl_getinfo($mendeley_ch);
+      curl_close($mendeley_ch);
+      unset($mendeley_ch);
+
+      // Debug step: checking Mendeley API status
+      // Refer to: http://apidocs.mendeley.com/home/responses-and-errors-1
+      switch ($mendeley_api_status['http_code']) {
+        case 200:
+          break; // Proceed! Success! This header is sent for GET requests together with a JSON object containing the data requested.
+        case 201:
+          break; // Another success header! This one is sent after a POST request has been successful.
+        case 204:
+          return t('No content from Mendeley.');
+        case 400:
+          return t('Bad Request to Mendeley.');
+        case 401:
+          return t('Unauthorized: Authentication credentials were missing or incorrect.');
+        case 403:
+          return t('Forbidden.');
+        case 404:
+          return t('Not found.');
+        case 429:
+          return t('Too many requests: Rate limit reached. Please try an hour later.');
+        case 503:
+          return t('Service Unavailable: Mendeley is up, but something went wrong, please try again later.');
+      }
+
+      // Get essential stats for determining the workflow
+      $headers = _npt_mendeley_get_headers($mendeley_ch_result, FALSE);
+      $mendeley_ratelimit_remaining = $headers['ratelimit_remaining'];
+      $document_left_count = count($documents);
+      if ($document_left_count < $mendeley_ratelimit_remaining) {
+        $attempts = $document_left_count;
+      }
+      elseif ($document_left_count >= $mendeley_ratelimit_remaining) {
+        $attempts = $mendeley_ratelimit_remaining;
+      }
+      
+      // With available number of calls, update the publication_outlet
+      $url_to_retrieve = array();
+      $detailed_documents = array();
+      $detailed_documents_to_save = array();
+      
+      // Temporarily take some documents for filling details
+      for ($i = 0; $i < $attempts; $i++) {
+        $uuid = $documents[$i]->uuid;
+        $url_to_retrieve[] = array(
+          'uuid' => $uuid,
+          'url' => MENDELEY_DOC_DETAIL_URL . '/' . $uuid . '/?consumer_key=' . NPT_MENDELEY_CONSUMER_KEY,
+        );
+        $detailed_documents[] = $documents[$i];
+        unset($documents[$i]);
+      }
+      
+      // Prepare for the cUrl retrieval
+      $mendeley_ch = array();
+      $master_ch = curl_multi_init();
+      
+      foreach ($url_to_retrieve as $i => $url) {
+        $mendeley_ch[$i] = curl_init($url['url']);
+        curl_setopt($mendeley_ch[$i], CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($mendeley_ch[$i], CURLOPT_HEADER, true);
+        curl_multi_add_handle($master_ch, $mendeley_ch[$i]);
+      }
+      
+      do {
+        curl_multi_exec($master_ch, $running);
+      } while ($running > 0);
+      
+      // Insert retreived document details
+      foreach ($url_to_retrieve as $i => $url) {
+        $curl_result = curl_multi_getcontent($mendeley_ch[$i]);
+        $headers = _npt_mendeley_get_headers($curl_result, TRUE);
+        $uuid = $url['uuid'];
+        if (isset($headers['document_detail']->error) && $headers['document_detail']->error == 'Rate limit exceed.') {
+          break;
+        }
+        else {
+          if (isset($headers['document_detail']->publication_outlet)) $detailed_documents[$i]->publication_outlet = $headers['document_detail']->publication_outlet;
+          $detailed_documents_to_save[] = $detailed_documents[$i];
+          unset($detailed_documents[$i]);
+          curl_multi_remove_handle($master_ch, $mendeley_ch[$i]);
+          curl_close($mendeley_ch[$i]);
+        }
+      }
+      
+      curl_multi_close($master_ch);
+
+      // If for any reason there are any unprocessed documents, put them back to the $documents array.
+      if (count($detailed_documents) > 0) {
+        foreach ($detailed_documents as $detailed_document) {
+          $documents[] = $detailed_document;
+        }
+      } 
+
+      // Organise $documents so the index starts from zero.
+      $documents = _npt_mendeley_document_reindex($documents);
+
+      // Save remaining documents until next _fill_doc_detail call.
+      $file_save_success = file_save_data(json_encode($documents), $documents_file_loc, FILE_EXISTS_REPLACE);
+      if (is_object($file_save_success)) {
+        drupal_set_message(t('The downloaded document is updated.'), 'status');
+      } else {
+        drupal_set_message(t('The downloaded document is not updated. Please check.'), 'warning');
+      }      
+      
+      // Pickup and merge previously processed detailed documents, if any.
+      $detailed_doc_file_loc = file_build_uri('npt_mendeley/detailed_documents.json');
+      $previous_exist = file_exists(drupal_realpath($detailed_doc_file_loc));
+      if ($previous_exist == TRUE) {
+        $detailed_documents_previous = json_decode(file_get_contents(file_create_url(file_build_uri('npt_mendeley/detailed_documents.json'))));
+        $detailed_documents_to_save = array_merge($detailed_documents_previous, $detailed_documents_to_save);
+      }
+      
+      $detailed_file = json_encode($detailed_documents_to_save);
+      $file_save_success = file_save_data($detailed_file, $detailed_doc_file_loc, FILE_EXISTS_REPLACE);
+      
+      if (is_object($file_save_success)) {
+        $updated_count = count($detailed_documents_to_save);
+        variable_set('npt_mendeley_updated', $updated_count);
+        $total_doc_count = variable_get('npt_mendeley_total');
+        return t('!updated_count of totally !total_doc_count documents retrieved and inserted.', array('!updated_count' => $updated_count, '!total_doc_count' => $total_doc_count));
+      } else {
+        return t('There is an error while attempting to save retreived document detail.');
+      }
+      break;
+  }
+  
+}
+
+/**
+ * Group retrieved documents into various defined categories.
+ */
+function npt_mendeley_analyse() {
+
+  $tag_sets = variable_get('npt_mendeley_tags');
+   
+  // Check if there is a local copy of Mendeley documents.
+  $documents_file_loc = file_build_uri('npt_mendeley/detailed_documents.json');
+  $file_exists = file_exists(drupal_realpath($documents_file_loc));
+  
+  $total = variable_get('npt_mendeley_total');
+  $updated = variable_get('npt_mendeley_updated');
+  
+  if ($file_exists == TRUE && $total == $updated) {
+    $finished == TRUE;
+  }
+  else {
+    $finished == FALSE;
+  }
+
+  switch ($finished) {
+    case FALSE:
+      if ($file_exists == FALSE) {
+        return t('Please first update documents from Mendeley.'); 
+      }
+      elseif ($total <> $updated) {
+        return t('Please wait until all journal names are updated.'); 
+      }
+    case TRUE:
+      $documents = json_decode(file_get_contents(drupal_realpath($documents_file_loc)));
+
+      $file_save_error = FALSE;
+
+      foreach ($tag_sets as $tag_set) {
+        $machine_name = $tag_set['machine_name'];
+        $$machine_name = array();
+        if ($tag_set['type'] == 'gbif_used') {
+          $file_loc = file_build_uri('npt_mendeley/' . $machine_name . '.json');
+        }
+        elseif ($tag_set['type'] == 'country') {
+          $file_loc = file_build_uri('npt_mendeley/countries/' . $machine_name . '.json');
+        }
+
+        foreach ($documents as $k => $doc) {
+          $tag_count = count($tag_set['tags']);
+
+          if (count(array_intersect($tag_set['tags'], $doc->tags)) == $tag_count) {
+            array_push($$machine_name, $doc);
+          }
+        }
+
+        // Some categories have a sub-category that mix documents in the same list.
+        if (isset($tag_set['tags_alt'])) {
+          foreach ($documents as $k => $doc) {
+            $tag_count = count($tag_set['tags_alt']);
+
+            if (count(array_intersect($tag_set['tags_alt'], $doc->tags)) == $tag_count) {
+              array_push($$machine_name, $doc);
+            }
+          }
+        }
+
+        // Sort according to year and the first author
+        foreach ($$machine_name as $doc) {
+          $doc->firstAuthor = $doc->authors[0]->surname;
+        }
+        usort($$machine_name, npt_mendeley_make_comparer('year', 'firstAuthor'));
+        $file_save_success = file_save_data(json_encode($$machine_name), $file_loc, FILE_EXISTS_REPLACE);
+
+        if ($file_save_success == FALSE) $file_save_error = TRUE;
+
+      }
+
+      if ($file_save_error == TRUE) {
+        return t('Error while saving files.');
+      } else {
+        return t('All files successfully analysed and saved.');
+      }
+      break;
+  }
+  
+}
+
+/**
+ * Helper function for sorting articles
+ * http://goo.gl/PjtC0B
+ */
+function npt_mendeley_make_comparer() {
+  $criteria_names = func_get_args();
+  $comparer = function($first, $second) use ($criteria_names) {
+    // Do we have anything to compare?
+    while(!empty($criteria_names)) {
+      // What will we compare now?
+      $criterion = array_shift($criteria_names);
+
+      // Do the actual comparison
+      // If it's year, then sort desendingly
+      if ($criterion == 'year') {
+        if ($first->$criterion < $second->$criterion) {
+          return 1;
+        }
+        elseif ($first->$criterion > $second->$criterion) {
+          return -1;
+        }
+      }
+      else {
+        if ($first->$criterion < $second->$criterion) {
+          return -1;
+        }
+        elseif ($first->$criterion > $second->$criterion) {
+          return 1;
+        }
+      }
+    }
+
+    // Nothing more to compare with, so $first == $second
+    return 0;                               
+  };
+  return $comparer;    
+}
+
+/**
+ * Helper function to get headers variables in a mendeley call
+ * from http headers and the top level of JSON output.
+ */
+function _npt_mendeley_get_headers($curl_result, $detail) {
+  $headers = array();
+  $ratelimit_remaining = 0;
+  $result_by_line = explode("\r\n", $curl_result);
+  
+  // Get the remaining rate from the header.
+  foreach ($result_by_line as $line) {
+    $header_ratelimit = strpos($line, "x-ratelimit-remaining");
+    if ($header_ratelimit === 0) {
+      $header = explode(":", $line);
+      $ratelimit_remaining = trim($header[1]);
+    }
+  }
+  
+  // Get the documents in json format, convert it to array
+  $json_result = json_decode(end($result_by_line));
+  
+  $headers['ratelimit_remaining'] = $ratelimit_remaining;
+  
+  if ($detail == TRUE) {
+    $headers['document_detail'] = $json_result;
+  }
+  else {
+    if (isset($json_result->documents)) $headers['documents'] = $json_result->documents;
+  }
+  if (isset($json_result->total_results)) $headers['total_results'] = $json_result->total_results;
+  if (isset($json_result->total_pages)) $headers['total_pages'] = $json_result->total_pages;
+  
+  return $headers;
+}
+
+/**
+ * Helper function to inform the progress of download during
+ * curl_multi_exec().
+ * @todo It was once working. The debug session shows all variables as zero.
+ */
+function _npt_mendeley_curl_progress_callback($ch) {
+  curl_setopt($ch, CURLOPT_PROGRESSFUNCTION, function ($to_download = 0, $downloaded = 0, $to_upload = 0, $uploaded = 0) {
+    if ($downloaded != 0 && $downloaded / $to_download == 1) {
+  	  $_SESSION['mendeley_progress']['page_retrieved']++;
+  		$_SESSION['mendeley_progress']['message'] = t('@page_retrieved of @total_pages retrieved', array('@page_retrieved' => $_SESSION['mendeley_progress']['page_retrieved'], '@total_pages' => $_SESSION['mendeley_progress']['total_pages']));
+  		$_SESSION['mendeley_progress']['percentage'] = round(100 * $_SESSION['mendeley_progress']['page_retrieved'] / $_SESSION['mendeley_progress']['total_pages']);
+  		variable_set('npt_mendeley_retrieval_progress', $_SESSION['mendeley_progress']);
+    }
+  });
+}
+
+/**
+ * Helper function to resolve duplicate documents
+ */
+function _npt_mendeley_deduplicate(&$docs) {
+  $unique_docs = array();
+  foreach ($docs as $doc) {
+    $unique_docs[$doc->id] = $doc;
+  }
+  $docs = array_values($unique_docs);
+  return $docs;
+}
+
+/**
+ * Helper function for ajax callback
+ */
+function _npt_mendeley_retrievel_progress() {
+  
+  $progress = variable_get('npt_mendeley_retrieval_progress');
+  
+  header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+  header('Cache-Control: no-cache, must-revalidate');
+  header('Pragma: no-cache');
+  header('Expires: Mon, 26 Jul 1991 05:00:00 GMT');  // disable IE caching
+
+  drupal_json_output($progress);
+}
+
+/**
+ * Helper function for re-indexing documents
+ */
+function _npt_mendeley_document_reindex($documents) {
+  $docs = array();
+  foreach ($documents as $doc) {
+    $docs[] = $doc;
+  }
+  $documents = $docs;
+  return $documents;
+}
+
+/**
+ * Implementation of hook_token_info().
+ * Declare the type of tokens we support
+ *
+ */
+function npt_mendeley_token_info() {
+  global $base_url ;
+
+  $types['nptmy'] = array(
+    'name' => t("npt_mendeley tokens"),
+    'description' => t("Tokens for various mendeley listings"),
+  );
+
+  $tag_sets = variable_get('npt_mendeley_tags');
+
+  foreach ($tag_sets as $tag_set) {
+    if ($tag_set['type'] == 'gbif_used') {
+      $type = $tagset['machine_name'];
+      $npt_mendeley[$type] = array(
+        'name' => $tag_set['name'],
+        'description' => $tag_set['desc'],
+      );
+    }
+  }
+
+  return array(
+    'types' => $types,
+    'tokens' => array(
+      'npt_mendeley' => $npt_mendeley,
+    ),
+  );
+}
+
+/**
+ * Implementation of hook_tokens().
+ * Run the actual tokens replacement;
+ *
+ */
+function npt_mendeley_tokens($type, $tokens, array $data = array(), array $options = array()) {
+
+  $replacements = array();
+  
+  if ($type == 'nptmy') {
+    foreach ($tokens as $name => $original) {
+      $replacements[$original] = _npt_mendeley_list_documents('gbif_used', $name, 'block');
+    }
+  }
+
+  return $replacements;
+}

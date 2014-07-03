@@ -1,0 +1,45 @@
+<?php
+/**
+* @file
+* Lets users add GBIF basic dictionary.
+*
+* 
+*
+*/
+
+/**
+* Implementation of hook_menu().
+*/
+
+function gbdict_menu() {
+
+	$items['admin/config/gbdict'] = array(
+			'title' => 'GBIF custom vocabularies',
+			'description' => 'Add or remove the GBIF custom vocabularies',
+			'position' => 'right',
+			'weight' => -5,
+			'page callback' => 'system_admin_menu_block_page',
+			'access arguments' => array('administer site configuration'),
+			'file' => 'system.admin.inc',
+			'file path' => drupal_get_path('module', 'system'),
+			);
+
+	$items['admin/config/gbdict/settings'] = array(
+			'title' => 'GBIF custom vocabularies',
+			'description' => 'Add or remove the GBIF custom vocabularies',
+			'page callback' => 'drupal_get_form',
+			'page arguments' => array('gbdict_admin_settings'),
+			'access arguments' => array('administer site configuration'),
+			'type' => MENU_NORMAL_ITEM,
+			'file' => 'gbdict.admin.inc',
+			);
+
+	return $items;
+
+}
+
+
+
+
+
+

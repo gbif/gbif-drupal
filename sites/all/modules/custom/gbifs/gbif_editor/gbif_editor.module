@@ -1,0 +1,72 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: bko
+ * Date: 11/6/14
+ * Time: 12:08 PM
+ */
+
+/**
+ * Implements hook_filter_info().
+ * This function register a "non_drupal_url" filter to detect registered menu links
+ * that points to a Struts page of the GBIF Portal.
+ */
+function gbif_editor_filter_info() {
+	$filters['non_drupal_url'] = array(
+		'title' => t('Point non-drupal URLs to a Struts page'),
+		'description' => t('Identifies internal links and supplies domain name if that link points to a Struts page.'),
+		'process callback' => '_filter_non_drupal_url',
+		//'tips callback' => '_filter_non_drupal_url_tips',
+	);
+	return $filters;
+}
+
+/**
+ * @param $text
+ * @return mixed
+ */
+function _filter_non_drupal_url($text) {
+	return preg_replace_callback('%<a[^>]*?href="([^"]+?)"[^>]*?>(.*?)</a>%i',
+		"_filter_process_non_drupal_url", $text);
+}
+
+/**
+ * Thanks to Lowell Montgomery's very well commented intlinks module.
+ *
+ * This function does the actual checking whether the URL being filtered has
+ * an instance in menu_links table.
+ *
+ * @param $matches
+ * @return mixed
+ */
+function _filter_process_non_drupal_url($matches) {
+	if ($matches[1][0] != "/") {
+		return $matches[0];
+	}
+	//Strip the leading slash from link path to look up.
+	$path = ltrim($matches[1], '/');
+	$path_parts = explode('#', $path);
+	// We don't want the "anchor", if there is one.
+	$path = $path_parts[0];
+	// We also don't want any arguments or queries for special paths.
+	$path_parts = explode('&', $path);
+	$path = $path_parts[0];
+	$path_parts = explode('?', $path);
+	$path = $path_parts[0];
+	// Now checking whether this link is registered as a menu link and is "non-drupal-url".
+	$result = db_select('menu_links', 'ml')
+		->fields('ml')
+		->condition('link_path', '%' . $path . '%', 'LIKE')
+		->condition('non_drupal_url', 1, '=')
+		->execute()
+		->fetchAssoc();
+	if ($result != false) {
+		$env = variable_get('environment_settings');
+		$data_portal_base_url = $env['data_portal_base_url'];
+		$link = l($matches[2], $data_portal_base_url . $matches[1]);
+		return $link;
+	}
+	else {
+		return $matches[0];
+	}
+}

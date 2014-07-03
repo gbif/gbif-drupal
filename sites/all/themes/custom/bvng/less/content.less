@@ -1,0 +1,765 @@
+.block-gbif-blocks {
+  margin-top: 41px;
+  
+  h3 {
+    margin-top: 10px;
+  }
+  
+}
+
+.node-content {
+  margin-left: 15px;
+  padding-top: 20px;
+  padding-left: 0px;
+  border-top: 1px solid @page-header-border-color;
+  
+  p {
+    margin-bottom: 18px;
+  }
+  
+  > ul {
+    padding-left: 10px;
+    list-style: square;
+    list-style-position: outside;
+    list-style-image: url("../images/bullet.png");
+  }
+  
+}
+
+.field-items {
+	ul {
+    padding-left: 10px;
+    list-style: square;
+    list-style-position: outside;
+    list-style-image: url("../images/bullet.png");
+	}
+}
+
+.view-column {
+  margin-left: 15px;
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.node-sidebar {
+  width: 240px;
+  margin-left: 30px;
+  padding-top: 25px;
+  padding-left: 0px;
+  padding-right: 0px;
+  border-top: 1px solid @page-header-border-color;
+
+  h3 {
+    margin-bottom: 5px;
+  }
+
+  ul {
+    padding-left: 0px;
+  }
+  
+  .item-list {
+    margin-bottom: 20px;
+  }
+  
+  .newsarticle-sidebar,
+  .usesofdata-sidebar {
+    list-style: none;
+    color: @cGray2;
+  }
+  
+  .researchers-location,
+  .links-to-research,
+  .data-use-categories,
+  .tags {
+    padding-left: 10px;
+    list-style: square;
+    list-style-position: outside;
+    list-style-image: url("../images/bullet.png");
+  }
+}
+
+.sidebar-header {
+  margin-left: 40px;
+  width: 260px;
+  color: @cGray70;
+}
+
+.sidebar-filter {
+  width: 230px;
+  margin-left: 30px;
+  padding-top: 15px;
+  padding-left: 0px;
+  padding-right: 0px;
+  border-top: 1px solid @page-header-border-color;
+  ul {
+    margin-top: 20px;
+    padding-left: 20px;
+    li {
+      margin-bottom: 2px;
+    }
+  }
+  p {
+    padding-left: 10px;
+    margin-bottom: 20px;
+  }
+}
+
+.sidebar-signup {
+  width: 269px;
+  margin-left: 15px;
+  padding-top: 25px;
+  padding-left: 0px;
+  padding-right: 0px;
+  border-top: 1px solid @page-header-border-color;
+  ul {
+    padding-left: 20px;
+  }
+}
+
+.subscribe {
+  background: @colorLightBlue;
+  border-radius: @border-radius-large;
+  padding: 20px;
+  h4 {
+    margin-top: 0px;
+    font-size: 13px;
+    font-weight: normal;
+    text-transform: uppercase;
+    text-shadow: 0 1px @cWhite;
+  }
+  p {
+    font-size: 13px;
+    color: @cGray3;
+    line-height: 18px;
+  }
+  .form-control {
+    margin-bottom: 5px;
+  }
+  .form-submit {
+    margin-top: 10px;
+  }
+}
+
+.field-type-image {
+  margin-bottom: 20px;
+  > .field-label {
+    display:none;
+  }
+  .field-item {
+    // margin-top: 15px;
+  }
+}
+
+.node-content,
+.field-name-body {
+  p {
+    > em > strong,
+    > strong {
+      font-weight: bold;
+    }
+    a[href^="mailto"] {
+      text-decoration: underline;
+      font-style: italic;
+      color: rgb(102,102,102);
+    	font-size: 14px;
+    }
+  }
+}
+
+.node-list {
+  border-top: 1px solid @page-header-border-color;
+  margin-bottom: 20px;
+  padding-top: 10px;
+  color: @cGray75;
+  
+  p {
+    font-size: 13px;
+  }
+
+	> h3 {
+    margin: 10px 0px 2px 0px;
+    font-size: 13px;
+    font-weight: normal;
+    text-transform: uppercase;
+    text-shadow: 0 1px @cWhite;
+    color: @cGray3;
+	}
+
+  > h2 {
+    margin-top: 10px;
+    margin-bottom: 7px;
+    padding-bottom: 0px;
+    font-size: 17px;
+    font-weight: bold;
+    
+    > a {
+      &:hover {
+        text-decoration: none;
+      }
+    }
+  }
+  
+  > footer {
+    font-size: 13px;
+    p { margin-bottom: 0px; }
+    .date {
+      color: @cGray3;
+      margin-bottom: 0px;
+      margin-top: 5px;
+    }
+  }
+}
+
+// These rules need to be cleaned up together with Mendeley module.
+#mendeley-citation {
+  border-top: 1px solid @page-header-border-color;
+	margin-top: 0px;
+  margin-bottom: 20px;
+  padding-top: 10px;
+  color: @cGray75;
+
+  p {
+    font-size: 13px;
+		margin-bottom: 0px;
+  }
+
+	h3 {
+    margin: 10px 0px 2px 0px;
+    font-size: 13px;
+    font-weight: normal;
+    text-transform: uppercase;
+    text-shadow: 0 1px @cWhite;
+    color: @cGray3;
+	}
+
+  h2 {
+    margin-top: 10px;
+    margin-bottom: 7px;
+    padding-bottom: 0px;
+    font-size: 17px;
+    font-weight: bold;
+
+    > a {
+      &:hover {
+        text-decoration: none;
+      }
+    }
+  }
+
+  footer {
+    font-size: 13px;
+    p { margin-bottom: 0px; }
+    .date {
+      color: @cGray3;
+      margin-bottom: 0px;
+      margin-top: 5px;
+    }
+  }
+
+	.result {
+		border-bottom: 1px solid @page-header-border-color;
+		padding-bottom: 15px;
+		margin-bottom: 15px;
+	}
+
+}
+
+.node-featured {
+  article {
+    border-top: none;
+    padding-top: 0px;
+  }
+  h2 {
+    font-weight: bold;
+    font-size: 19px;
+    line-height: 24px;
+    margin-bottom: 7px;
+  }
+  footer {
+    display: block;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    background: @colorLightBlue;
+    font-size: 13px;
+    text-align: center;
+    vertical-align: bottom;
+    color: @cGray80;
+  }
+}
+
+.node-next {
+  h2 {
+    padding-bottom: 0px;
+    > a {
+      font-size: 17px;
+      font-weight: bold;
+    }
+  }
+}
+
+.filter-list {
+  list-style: none;
+}
+
+.also-tagged {
+  display: inline;
+  padding-left: 5px;
+  font-size: 13px;
+  > li {
+    display: inline-block;
+    margin-top: 2px;
+    margin-right: 5px;
+    padding: 1px 5px 0px 5px;
+    border: 1px solid #ACC5D9;
+    background-color: #EAF6FF;
+    border-radius: 4px;
+  }
+}
+
+.view-content-featured {
+  .item-list {
+    ul {
+      padding-left: 0px;
+			margin-bottom: 0px;
+      li {
+        display: inline-block;
+        vertical-align: top;
+        width: 269px;
+        margin-right: 29px;
+        margin-bottom: 20px;
+        p {
+          font-size: 15px;
+          height: 8em;
+          line-height: 1.3em;
+          overflow: hidden;
+          margin-bottom: 18px;
+        }
+      }
+      li.views-row-right {
+        margin-right: 0px;
+      } 
+    }
+  }
+  
+  hr {
+    margin-top: 0px;
+  }
+}
+
+.taxonomy-term {
+  > h2 {
+    margin-top: 0px;
+    margin-bottom: 20px;
+    font-size: 23px;
+    text-shadow: 0 1px @cWhite;
+  }
+}
+
+.slideshow-well {
+  height: 424px;
+  padding-right: 0px;
+}
+
+.slideshow-layout {
+  top: -60px;
+  
+}
+
+.skin-default {
+  > h4 {
+    margin: 0px 0px 0px 15px;
+    float: left;
+    line-height: 24px;
+    color: #999;
+    font-size: 13px;
+    font-weight: normal;
+    text-transform: uppercase;
+    text-shadow: 0 1px @cWhite;
+  }
+}
+
+.views-slideshow-controls-top {
+  width: 270px;
+  margin-left: 15px;
+}
+
+#widget_pager_top_featurednewsarticles-default {
+  display: block;
+  position: relative;
+  width: 70px;
+  margin: 6px 0px 0px 0px;
+  float: right;
+}
+
+#widget_pager_top_featurednewsarticles-default div {
+  display: inline-block;
+  .views-field-nid {
+    width: 10px;
+  }
+  .views-content-nid {
+    display: none;
+  }
+}
+
+.views-slideshow-pager-field-item {
+  background: url('../images/slideshow-bullet.png') no-repeat;
+  &.active {
+    background: url('../images/slideshow-bullet-active.png') no-repeat;
+  }
+}
+
+.slideshow-image {
+  position: relative;
+  overflow: hidden;
+  width: 616px;
+  left: -10px;
+  top: -51px;
+  right: 24px;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+
+.slideshow-intro {
+  padding-right: 30px;
+  h3 {
+    font-size: 23px;
+    //font-weight: normal;
+    line-height: 28px;
+    text-shadow: 0 1px @cWhite;
+    color: #333;
+  }
+  p {
+    font-size: 15px;
+    color: @cGray75;
+    .readmore {
+      font-size: 0.9em;
+    }
+  }
+}
+
+.field-content {
+	hr {
+		margin-top: 15px;
+	}
+}
+
+.news-summary {
+  padding-bottom: 10px;
+  
+  h2 {
+    font-size: 23px;
+    font-weight: normal;
+    text-shadow: 0 1px @cWhite;
+    line-height: 20px;
+    margin-top: 0px;
+    margin-bottom: 3px;
+  }
+  h3 {
+    font-size: 15px;
+    font-weight: normal;
+    color: @cGray3;
+    line-height: 18px;
+    margin-top: 6px;
+    margin-bottom: 3px;
+  }
+}
+
+.summary-ruler {
+  margin-top: 0px;
+	margin-bottom: 15px; 
+}
+
+.header-ruler {
+  margin-top: 0px; 
+  margin-bottom: 20px;
+}
+
+.field-name-field-citationinformation,
+.field-name-field-relatedgbifresources {
+  border-top: 1px solid @page-header-border-color;
+  margin-top: 20px;
+  padding-top: 15px;
+  .field-label {
+    text-transform: uppercase;
+    font-weight: normal;
+    font-size: 13px;
+  }
+  p {
+    font-size: 13px;
+  }
+}
+
+.taxonomy-generic {
+  h3 {
+    margin: 10px 0px 2px 0px;
+    font-size: 13px;
+    font-weight: normal;
+    text-transform: uppercase;
+    text-shadow: 0 1px @cWhite;
+    color: @cGray3;
+  }
+  h2 {
+    margin-top: 0px;
+  }
+}
+
+.feed {
+  position: relative;
+  float: right;
+  top: -3px;
+  right: -18px;
+}
+
+.content-header {
+	padding-right: 0px;
+	/* distance between header and the gray border from the next <div>
+	no need to specifically target individual elements inside header */
+	margin-bottom: 15px;
+}
+
+.user-header {
+  margin: 0px 15px;
+}
+
+.generic-column {
+  p {
+    font-size: @font-size-large;
+    color: @cGray70;
+  }
+}
+
+/*
+After jquery.cycle is loaded, the width of the row container is rendered
+differently on Firefox. This style explicitly set the style so the slideshow
+image won't shift it's position.
+*/
+.views-slideshow-cycle-main-frame-row {
+  width: 930px;
+}
+
+.user-login-row {
+  > .subscribe {
+    padding: 40px 25px 20px 25px;
+  }
+  
+  .form-item-name,
+  .form-item-pass {
+    width: 285px;
+  }
+
+  .form-item-pass {
+    margin-bottom: 0px;
+  }
+  
+  label {
+    color: @cGray80;
+  }
+  
+  input {
+    border-radius: 3px;
+  }
+  
+  .form-item-current-pass {
+    input {
+      width: 240px;
+    }
+  }
+  
+  .form-item-field-country-mono-und {
+    select {
+      width: 240px;
+    }
+  }
+}
+
+.field-name-field-firstname,
+.field-name-field-lastname {
+  display: inline-block;
+  width: 49.5%;
+  padding-right: 10px;
+  input {
+    width: 295px;
+  }
+}
+
+.form-item-mail {
+  padding-right: 11px;
+}
+
+.user-login-action {
+  padding: 15px 15px 0px 15px;
+  p {
+    margin-bottom: 0px;
+    font-size: 14px;
+  }
+  button {
+    margin-top: 5px;
+  }
+}
+
+.profile {
+  .field-label {
+    font-size: 14px;
+    display: inline;
+    font-weight: normal;
+    text-transform: uppercase;
+  }
+  .field-items,
+  .field-item {
+    display: inline;
+  }
+  dl {
+    margin-bottom: 0px;
+  }
+  dt {
+    font-size: 14px;
+    display: inline;
+    font-weight: normal;
+    text-transform: uppercase;
+  }
+  dd {
+    display: inline;
+  }
+}
+
+.disclaimer {
+  background-color: #FDFFD8;
+  p {
+    color: @cGray2;
+    font-size: 13px;
+  }
+  
+  div.notice-icon {
+    float: right;
+    margin-top: 8px;
+    background: url("../images/images.png") -81px 0px no-repeat;
+    width: 44px;
+    height: 44px;
+  }
+}
+
+// @see http://stackoverflow.com/questions/18729638/rounded-tables-in-twitter-bootstrap-3
+.table-curved {
+  border-collapse: separate;
+}
+.table-curved {
+  border: solid @table-border-color 1px;
+  border-radius: @table-radius;
+  border-left:0px;
+  border-top: none;
+}
+.table-curved td, .table-curved th {
+  border-left: 1px solid @table-border-color;
+  //border-top: 1px solid @table-border-color;
+}
+.table-curved th {
+  //border-top: none;
+}
+.table-curved th:first-child {
+  border-radius: @table-radius 0 0 0;
+}
+.table-curved th:last-child {
+  border-radius: 0 @table-radius 0 0;
+}
+.table-curved th:only-child{
+  border-radius: @table-radius @table-radius 0 0;
+}
+.table-curved tr:last-child td:first-child {
+  border-radius: 0 0 0 @table-radius;
+}
+.table-curved tr:last-child td:last-child {
+  border-radius: 0 0 @table-radius 0;
+}
+
+.table-curved {
+  th {
+    color: @cGray2;
+    font-size: 13px;
+  }
+  td {
+    color: @cGray2;
+    font-size: 13px;
+    .contactName {
+      text-decoration: underline;
+      font-style: italic;
+      margin-bottom: 3px;
+    }
+    .contactPosition,
+    .contactInstitution {
+      color: @cGray2;
+      font-size: 13px;
+      padding-left: 5px;
+    }
+    .address {
+      color: @cGray3;
+      padding-left: 5px;
+      margin-bottom: 5px;
+      span {
+        display: block;
+      }
+    }
+  }
+}
+.node-resource-ims,
+.node-event-ims {
+	.node-content {
+		.field-name-body {
+			.field-label {
+				text-transform: uppercase;
+				font-weight: normal;
+				font-size: 13px;
+			}
+		}
+	}
+}
+
+.form-item-field-country-mono-und {
+	width: 240px;
+}
+
+.field-name-field-authors,
+.field-name-field-publisher,
+.field-name-field-publishing-date,
+.field-name-field-target-audience,
+.field-name-field-contributors,
+.field-name-field-abstract,
+.field-name-field-bibliographic-citation,
+.field-name-field-rights,
+.field-name-field-rights-holder,
+.field-name-field-audience,
+.field-name-field-contact,
+.field-name-field-participants, 
+.field-name-field-dates,
+.field-name-field-venuecountry,
+.field-name-field-status,
+.field-name-field-language,
+.field-name-field-resources, 
+.field-name-field-publisher-w-date {
+	.field-label {
+		text-transform: uppercase;
+		font-weight: normal;
+		font-size: 13px;
+	}
+	margin-bottom: 18px;
+}
+
+.field-name-field-image-url {
+	margin-bottom: 20px;
+}
+
+.kinfo_width {
+	width: 240px ;
+}
+
+.search-result {
+	h2 {
+		margin-top: 0px;
+	}
+}
+
+.mendeley_bold {
+	font-weight: bold;
+}
+.mendeley_ul {
+	padding-left: 10px;
+}

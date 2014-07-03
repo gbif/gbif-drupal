@@ -1,0 +1,91 @@
+<?php
+/**
+* @file
+* This module creates allows to create URLs like www.gbif.org/orc/?doc_id=1300, used in the GBIF website since 2011.
+*/
+
+/**
+* Implements hook_help.
+*
+* Displays help and module information.
+*
+* @param path
+*   Which path of the site we're using to display help
+* @param arg
+*   Array that holds the current path as returned from arg() function
+*/
+
+function orc_help($path, $arg) {
+  switch ($path) {
+    case "admin/help#orc":
+      return '<p>' . t("This module enables URLs like www.gbif.org/orc/?doc_id=1300. It requires a content type resource_ims."). '</p>';
+      break;
+  }
+}
+
+/**
+* Implements hook_permission().
+*/
+function orc_permission() {
+  return array(
+    'access orc content' => array(
+      'title' => t('Access content for the GBIF IMS import module. It needs to be activated for everyone in public sites.'),
+    )
+  );
+}
+
+/**
+* Implements hook_menu().
+*/
+function orc_menu() {
+  $items = array();
+  
+    $items['orc'] = array(
+    'title' => t('Resources'),
+    'page callback' => '_orc_page',
+    'access arguments' => array('access orc content'),
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+/**
+* Custom page callback function, declared in orc_menu().
+*/
+function _orc_page() { 
+
+	global $user;
+	global $base_url;
+	global $base_path;
+	$dataportal_base_url = theme_get_setting( 'vizz2_dataportal_base_url','vizz2' );
+
+	if ((isset($_GET['doc_id'])) && ($_GET['doc_id'] != "")) {
+		//
+		// First, we try to find if we have that ID registered as an node in drupal
+		//
+		
+		$query = new EntityFieldQuery();
+		$entities = $query->entityCondition('entity_type', 'node')
+						->propertyCondition('type', 'resource_ims')
+						->propertyCondition('status', 1)					  
+						->fieldCondition('field_orc_original_ims_id', 'value', $_GET['doc_id'], '=')
+						->execute();
+		if (!empty($entities['node'])) { // yes, valid node
+
+			$node = node_load(array_shift(array_keys($entities['node'])));
+			$url = 'resources/'.$node->nid ;
+
+		} else { 		
+			// The id is not registered or not visible. We show a warning message.
+			drupal_not_found() ;
+		} 
+			
+	} else { // no doc_id GET variable declared
+		
+		drupal_not_found() ;
+	}
+	
+	drupal_goto( $url ); 
+
+} 

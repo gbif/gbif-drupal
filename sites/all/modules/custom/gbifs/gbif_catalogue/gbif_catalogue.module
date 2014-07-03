@@ -1,0 +1,560 @@
+<?php
+/**
+ * This module packs relevant settings and procedures that sets up the
+ * GBIF Tools Catalogue, a deliverable in GBIF Work Programme.
+ * For convenience, we use gbif_catalogue as the machine name while
+ * using "GBIF Tools Catalogue" as human readables.
+ */
+
+module_load_include('inc', 'gbif_catalogue', 'gbif_catalogue.settings');
+
+/**
+ * Implements hook_menu().
+ */
+function gbif_catalogue_menu() {
+  $items = array();
+  $items['admin/config/gbif'] = array(
+    'title' => 'GBIF',
+    'description' => "Relevant settings that support the Drupal instance runs as the global portal CMS.",
+    'position' => 'right',
+    'weight' => -10,
+    'page callback' => 'system_admin_menu_block_page',
+    'access arguments' => array('administer site configuration'),
+    'file' => 'system.admin.inc',
+    'file path' => drupal_get_path('module', 'system'),
+  );
+  $items['admin/config/gbif/tools-catalogue'] = array(
+    'title' => 'GBIF Tools Catalogue',
+    'description' => 'Settings and configuration for the GBIF Catalogue.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('gbif_catalogue_settings_form'),
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'gbif_catalogue.admin.inc',
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_node_info().
+ */
+function gbif_catalogue_node_info() {
+  return array(
+    'resource' => array(
+      'name' => t('Resource'),
+      'base' => 'resource',
+      'description' => t('IMS resources which will be eventually managed natively in the Drupal system.'),
+      'has_title' => TRUE,
+      'title_label' => t('Title'),
+      'locked' => TRUE, // Unchangeable by the administrator from UI.
+    ),
+  );
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function gbif_catalogue_block_info() {
+  $blocks = array();
+  $blocks['tools_search_blocks'] = array(
+    'info' => t('Tools Catalogue Search'),
+    'region' => 'highlighted',
+    'weight' => -30,
+    'status' => 1,
+    'visibility' => BLOCK_VISIBILITY_LISTED,
+    'pages' => 'resources/tools',
+    'cache' => DRUPAL_NO_CACHE,
+  );
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function gbif_catalogue_block_view($delta = '') {
+  $block = array();
+  switch ($delta) {
+    case 'tools_search_blocks':
+      $block['subject'] = t('Search the catalogue of tools');
+      $block['content'] = drupal_get_form('bvng_focused_search_form');
+      break;
+  }
+  return $block;
+}
+
+/**
+ * Provide the title field in the form when editing.
+ */
+function resource_form($node, $form_state) {
+  $type = node_type_get_type($node);
+  $form['title'] = array(
+    '#type' => 'textfield',
+    '#title' => check_plain($type->title_label),
+    '#default_value' => !empty($node->title) ? $node->title : '',
+    '#required' => TRUE,
+  );
+  return $form;
+}
+
+/**
+ * Implements hook_search_info().
+ */
+/*
+function gbif_catalogue_search_info() {
+  return array(
+    'title' => 'Tools',
+    'path' => 'resource',
+    'conditions_callback' => 'gbif_catalogue_search_conditions',
+  );
+}
+*/
+
+/**
+ * Implementation of hook_views_api().
+ */
+function gbif_catalogue_views_api() {
+  return array(
+    'api' => 3.0,
+    'path' => drupal_get_path('module', 'gbif_catalogue') . '/views'
+  );
+}
+
+/**
+ * Implements hook_ctools_plugin_api().
+ */
+function gbif_catalogue_ctools_plugin_api() {
+  list($module, $api) = func_get_args();
+  if ($module == "facetapi" && $api == "facetapi_defaults") {
+    return array("version" => "1");
+  }
+}
+
+function bvng_focused_search_form($form, &$form_state, $keys = '') {
+  // Render the form to search a focused content type
+  if(module_exists('search')) {
+    $form = search_form($form, $form_state, drupal_get_path_alias($_GET['q'])); // Use existing search form code
+    $form['basic']['keys']['#title'] = '';
+    $form['#validate'] = array('search_form_validate', 'bvng_focused_search_validate');
+    $form['#submit'] = array('search_form_submit');
+    return $form;
+  }
+}
+
+/**
+ * Modified the search keys according to where the form is submitted.
+ * If the form is submitted from resources/tools, then the search will
+ * be limited to type:resource.
+ */
+function bvng_focused_search_validate($form, &$form_state) {
+  // Using an array to determine which content type to search based on path from search form
+  $content_type = array_search($form['#action'], array('resource' => '/resources/tools'));
+  $content_type = empty($content_type) ? '' : $content_type;
+  if ($content_type == 'resource') {
+    $form_state['action'] = 'search/node';
+    $keys = $form_state['values']['processed_keys'];
+    $keys = search_expression_insert($keys, 'type', $content_type); // additional seach criteria added here
+    $element['#parents'] = array('processed_keys');
+    form_set_value($element, trim($keys), $form_state);
+  }
+}
+
+function _gbif_catalogue_search_view_create() {
+  
+  // Update default node index with fields
+  $id = 'default_node_index';
+  $index = search_api_index_load($id);
+  $values = array(
+    'name' => 'Default node index',
+    'enabled' => '1',
+    'description' => 'An automatically created search index for indexing node data. Might be configured to specific needs.',
+    'server' => 'default_search_database',
+    'read_only' => 0,
+    'options' => array(
+      'index_directly' => 1,
+      'cron_limit' => '100'
+    ),
+    'actions' => array(),
+  );
+  $values['options'] += $index->options;
+  $additional_fields = array(
+    'field_rs_alternative_title' => array('type' => 'text'),
+    'field_rs_abstract' => array('type' => 'text'),
+    'field_rs_author' => array('type' => 'text'),
+    'field_rs_contributor' => array('type' => 'text'),
+    'field_rs_publisher' => array('type' => 'text'),
+    'field_rs_extent' => array('type' => 'text'),
+    'field_rs_rights' => array('type' => 'text'),
+    'field_rs_rights_holder' => array('type' => 'text'),
+    'term_rs_purpose' => array('type' => "list<integer>", 'entity_type' => 'taxonomy_term'),
+    'term_rs_target_audience' => array('type' => "list<integer>", 'entity_type' => 'taxonomy_term'),
+    'body:summary' => array('type' => 'text'),
+  );
+  $values['options']['fields'] += $additional_fields;
+  $index->update($values);
+  $index = search_api_index_load($id);
+  $index->clear();
+  search_api_index_items($index, -1);
+
+  // Create search facets
+  $searcher = 'search_api@default_node_index';
+  $realm_name = 'block';
+  $adapter = facetapi_adapter_load($searcher);
+  $realm = facetapi_realm_load($realm_name);
+  $facet_info = facetapi_get_facet_info($searcher);
+  $enabled_facets = array('term_rs_purpose', 'term_rs_target_audience');
+  
+  foreach ($facet_info as $facet_name => $facet) {
+    $status = in_array($facet_name, $enabled_facets) ? 1 : 0;
+    $weight = 0;
+    facetapi_save_facet_status($adapter, $realm, $facet, $status, $weight, TRUE);
+  }
+
+  // Update index and flush the cache
+  drupal_cron_run();
+
+  // Position facet blocks
+  db_update('block')
+    ->fields(array(
+      'visibility' => 1,
+      'pages' => 'resources/tools',
+      'region' => 'sidebar_second',
+      'status' => 1,
+    ))
+    ->condition('module', 'facetapi')
+    ->condition('theme', 'bvng')
+    ->execute();
+
+}
+
+function gbif_catalogue_peep() {
+  // Position facet blocks
+  //_gbif_catalogue_search_view_create();
+}
+
+
+/**
+ * Implements hook_default_search_api_server().
+ */
+function gbif_catalogue_default_search_api_server() {
+  $defaults['default_search_database'] = entity_create('search_api_server', array(
+    'name' => 'Default search database',
+    'machine_name' => 'default_search_database',
+    'description' => 'Default search database.',
+    'class' => 'search_api_db_service',
+    'options' => array(
+      'database' => 'default:default',
+      'min_chars' => '1',
+      'indexes' => array(
+        'default_node_index' => array(
+          'type' => array(
+            'table' => 'search_api_db_default_node_index',
+            'column' => 'type',
+            'type' => 'string',
+            'boost' => '1.0',
+          ),
+          'title' => array(
+            'table' => 'search_api_db_default_node_index_title',
+            'type' => 'text',
+            'boost' => '5.0',
+          ),
+          'promote' => array(
+            'table' => 'search_api_db_default_node_index',
+            'column' => 'promote',
+            'type' => 'boolean',
+            'boost' => '1.0'
+          ),
+          'sticky' => array(
+            'table' => 'search_api_db_default_node_index',
+            'column' => 'sticky',
+            'type' => 'boolean',
+            'boost' => '1.0',
+          ),
+          'created' => array(
+            'table' => 'search_api_db_default_node_index',
+            'column' => 'created',
+            'type' => 'date',
+            'boost' => '1.0'
+          ),
+          'changed' => array(
+            'table' => 'search_api_db_default_node_index',
+            'column' => 'changed',
+            'type' => 'date',
+            'boost' => '1.0'
+          ),
+          'author' => array(
+            'table' => 'search_api_db_default_node_index',
+            'column' => 'author',
+            'type' => 'integer',
+            'boost' => '1.0'
+          ),
+          'comment_count' => array(
+            'table' => 'search_api_db_default_node_index',
+            'column' => 'comment_count',
+            'type' => 'integer',
+            'boost' => '1.0'
+          ),
+          'search_api_language' => array(
+            'table' => 'search_api_db_default_node_index',
+            'column' => 'search_api_language',
+            'type' => 'string',
+            'boost' => '1.0'
+          ),
+          'body:value' => array(
+            'table' => 'search_api_db_default_node_index_body_value',
+            'type' => 'text',
+            'boost' => '1.0'
+          ),
+          'field_rs_alternative_title' => array(
+            'table' => 'search_api_db_default_node_index_field_rs_alternative_title',
+            'type' => 'text',
+            'boost' => '1.0'
+          ),
+          'field_rs_abstract' => array(
+            'table' => 'search_api_db_default_node_index_field_rs_abstract',
+            'type' => 'text',
+            'boost' => '1.0'
+          ),
+          'field_rs_author' => array(
+            'table' => 'search_api_db_default_node_index_field_rs_author',
+            'type' => 'text',
+            'boost' => '1.0'
+          ),
+          'field_rs_contributor' => array(
+            'table' => 'search_api_db_default_node_index_field_rs_contributor',
+            'type' => 'text',
+            'boost' => '1.0'
+          ),
+          'field_rs_publisher' => array(
+            'table' => 'search_api_db_default_node_index_field_rs_publisher',
+            'type' => 'text',
+            'boost' => '1.0'
+          ),
+          'field_rs_extent' => array(
+            'table' => 'search_api_db_default_node_index_field_rs_extent',
+            'type' => 'text',
+            'boost' => '1.0'
+          ),
+          'field_rs_rights' => array(
+            'table' => 'search_api_db_default_node_index_field_rs_rights',
+            'type' => 'text',
+            'boost' => '1.0'
+          ),
+          'field_rs_rights_holder' => array(
+            'table' => 'search_api_db_default_node_index_field_rs_rights_holder',
+            'type' => 'text',
+            'boost' => '1.0'
+          ),
+          'term_rs_purpose' => array(
+            'table' => 'search_api_db_default_node_index_term_rs_purpose',
+            'column' => 'value',
+            'type' => "list<integer>",
+            'boost' => '1.0'
+          ),
+          'term_rs_target_audience' => array(
+            'table' => 'search_api_db_default_node_index_term_rs_target_audience',
+            'column' => 'value',
+            'type' => "list<integer>",
+            'boost' => '1.0'
+          ),
+          'language' => array(
+            'table' => 'search_api_db_default_node_index',
+            'column' => 'language',
+            'type' => 'string',
+            'boost' => '1.0'
+          ),
+          'body:summary' => array(
+            'table' => 'search_api_db_default_node_index_body_summary',
+            'type' => 'text',
+            'boost' => '1.0'
+          ),
+        ),
+      ),
+    ),
+    'enabled' => '1',
+    'rdf_mapping' => array(),
+  ));
+  return $defaults;
+}
+
+/**
+ * Load FileMaker API if it's not already loaded.
+ * @return TRUE if the FileMaker API is loaded, FALSE otherwise.
+ */
+function filemaker_load_api() {
+
+  if (!class_exists('FileMaker')) {
+
+    // Try to use libraries module.
+    if (module_exists('libraries')) {
+
+      $libraries_path = drupal_get_path('module', 'libraries');
+      $libraries_include = $libraries_path . '/' . 'libraries.module';
+
+      include_once($libraries_include);
+
+      // Let's see if the FileMaker API is really available from libraries.
+      $filemaker_api = './' . libraries_get_path('filemaker') . '/FileMaker.php';
+      if (file_exists($filemaker_api)) {
+        include_once $filemaker_api;
+      }
+    }
+  }
+
+  if (!class_exists('FileMaker')) {
+    drupal_set_message(t('Can not find FileMaker API. Please place the FileMaker API at sites/all/libraries/filemakerapi/FileMaker. See README.txt for details.'), 'error');
+  }
+  
+  // Tell the caller if the FileMaker class exists.
+  return class_exists('FileMaker');
+}
+
+function ims_connection() {
+  // Load FileMaker api
+  filemaker_load_api();
+
+  // Load credentials
+  $IMSCredential = variable_get('ims_connection');
+
+  $IMS = new FileMaker();
+  $IMS->setProperty('database', $IMSCredential['database']);
+  $IMS->setProperty('hostspec', $IMSCredential['hostname']);
+  $IMS->setProperty('username', $IMSCredential['username']);
+  $IMS->setProperty('password', $IMSCredential['password']);
+
+  return $IMS;
+}
+
+/**
+ * Import tools from the IMS to resource content type
+ * @todo check the result and return proper AJAX message upon
+ *       task completion or errors.
+ */
+function gbif_catalogue_import_tools() {
+  // Temporary suppress "deprecated" warning of FileMaker API
+  error_reporting(E_ALL ^ E_DEPRECATED);
+  
+  $IMS = ims_connection();
+  
+  $ListNodes_find =& $IMS->newFindCommand('WDOCS_File_detail');
+  // For now only get resources that are typed tools
+  $ListNodes_find->addFindCriterion('_kf_TypeID', '102');
+  $ListNodes_find->addSortRule('Title_Text', 1, FILEMAKER_SORT_ASCEND);
+  $result = $ListNodes_find->execute();
+
+  // Handle error (if any)
+  if (FileMaker::isError($result)) {
+    echo "Error: " . $result->getMessage() . "\n"; 
+  }
+  else {
+    $records = array();
+    $records['IMS'] = $result->getRecords();
+
+    foreach ($records['IMS'] as $record) {
+
+      $node = new stdClass();
+      $node->type = 'resource';
+      node_object_prepare($node);
+
+      $node->title = $record->getField('Title_Text');
+      $node->language = LANGUAGE_NONE;
+
+      $node->body[$node->language][0]['value'] = $record->getField('Description');
+      $node->body[$node->language][0]['summary'] = text_summary($record->getField('Description'));
+      $node->body[$node->language][0]['format'] = 'filtered_html';
+      $node->field_rs_author[$node->language][0]['value'] = $record->getField('Author');
+      $node->field_rs_contributor[$node->language][0]['value'] = $record->getField('Contributor');
+      $node->field_rs_publisher[$node->language][0]['value'] = $record->getField('Publisher');
+      $node->field_rs_extent[$node->language][0]['value'] = $record->getField('Extend');
+      $node->field_rs_rights[$node->language][0]['value'] = $record->getField('Rights');
+      $node->field_rs_rights_holder[$node->language][0]['value'] = $record->getField('RightsHolder');
+      $node->field_rs_tool_url[$node->language][0]['url'] = $record->getField('Url');
+
+      // Get related keywords
+      $keywords = array();
+      $related_set = $record->getRelatedSet('WDOCS_File_FileKeyword_Keyword');
+      if (!FileMaker::isError($related_set)) {
+        foreach ($related_set as $related_row) {
+          $key = $related_row->getField('WDOCS_File_FileKeyword_Keyword::__kp_ID');
+          $keywords[$key] = $related_row->getField('WDOCS_File_FileKeyword_Keyword::Keyword');
+        }
+        
+        // Match and insert the keyword to the resource.
+        $term_set = array();
+        foreach ($keywords as $ims_kp_id => $keyword) {
+          // First find the $keyword from _gbif_catalogue_definition().
+          $matched = _gbif_catalogue_search_definition($ims_kp_id);
+          
+          // Then tag the keyword with the node being prepared.
+          if ($matched <> 'not term_rs_purpose') { // Temporarily limit the scope in purpose.
+            $term_set[$matched->field][LANGUAGE_NONE][] = array (
+              'vid' => $matched->vid,
+              'tid' => $matched->tid,
+              'name' => $matched->name,
+              'vocabulary_machine_name' => $matched->vocabulary_machine_name,
+            );
+          }
+        }
+
+        // Attach the keyword sets to the node object.
+        foreach ($term_set as $field_name => $field_setting) {
+          $node->$field_name = $field_setting;
+        }
+      }
+
+      $node = node_submit($node);
+
+      node_save($node);
+
+      // Retrieve nid to judge whether the node_save is successful.
+      if ($node->nid) {
+        $record->nid = $node->nid; 
+      }
+
+    }
+  }
+
+  error_reporting(E_ALL);
+  
+  drupal_cron_run();
+  
+  // Should examine the result before informing via the UI
+  return t('All tools from IMS are successfully retrieved and saved.');
+}
+
+/**
+ * Vocabularies from IMS.
+ * To be deprecated if the matching can be explicitly achieved with
+ * gbif_catalogue.settings.inc.
+ */
+function gbif_catalogue_ims_vocabularies() {
+
+  $IMS = ims_connection();
+
+  $find =& $IMS->newFindCommand('__Keyword');
+  $find->addSortRule('__kp_ID', 1, FILEMAKER_SORT_ASCEND);
+  $result = $find->execute();
+  $records = $result->getRecords();
+  
+  $vocabularies = array();
+  
+  foreach ($records as $record) {
+    $unit = array();
+    $unit['__kp_ID'] = $record->getField('__kp_ID');
+      $Code1 = str_split($record->getField('Code1'), 3);
+    $unit['code_cat'] = $Code1[0];
+    $unit['code_1'] = $Code1[1];
+    $unit['Code2'] = $record->getField('Code2');
+    $unit['Keyword'] = $record->getField('Keyword');
+    $unit['Keyword_short'] = $record->getField('Keyword_short');
+    
+    $unit_mod = $unit;
+    unset($unit_mod['__kp_ID']);
+    unset($unit_mod['code_cat']);
+    unset($unit_mod['code_1']);
+    unset($unit_mod['Code2']);
+    
+    $vocabularies[$unit['code_cat']][$unit['__kp_ID']] = $unit_mod;    
+  }
+  
+  return $vocabularies;
+}

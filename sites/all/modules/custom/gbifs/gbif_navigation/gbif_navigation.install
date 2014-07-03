@@ -1,0 +1,100 @@
+<?php
+/**
+ * @file
+ * gbif_navigation module installation.
+ */
+ 
+/**
+ * Implenets hook_install().
+ * @see drush_menu_import_import() is more verbose from the command-line.
+ */
+function gbif_navigation_install() {
+  
+  // Add the non-Drupal URL setting in menu_links table.
+  db_add_field('menu_links', 'non_drupal_url', array(
+    'description' => 'We save a value here if the link is pointing to non-Drupal URL.',
+    'type' => 'int',
+    'size' => 'tiny',
+    'not null' => FALSE,
+  ));
+
+  // Create the menu and import default menu items.
+  $menus = _gbif_navigation_default_menus();
+  $options = array(
+    'create_content'  => FALSE,
+    'link_to_content' => TRUE,
+    'remove_menu_items' => FALSE
+  );
+  foreach ($menus as $menu) {
+    menu_save($menu);
+    $menu_file = drupal_get_path('module', 'gbif_navigation') . '/' . $menu['menu_name'] . '-default.txt';
+    menu_import_file($menu_file, $menu['menu_name'], $options);
+  }
+  
+  // Set the default menu to gbif-menu.
+  variable_set('menu_main_links_source', 'gbif-menu');
+  variable_set('menu_secondary_links_source', 'gbif-menu');
+  variable_set('menu_default_active_menus', array('gbif-menu'));
+
+}
+
+/**
+ * Implements hook_schema_alter().
+ */
+function gbif_navigation_schema_alter(&$schema) {
+  if (isset($schema['menu_links'])) {
+    $schema['menu_links']['fields']['non_drupal_url'] = array(
+      'description' => 'We save a value here if the link is pointing to non-Drupal URL.',
+      'type' => 'int',
+      'size' => 'tiny',
+      'not null' => FALSE,
+    );
+  }
+}
+
+/**
+ * Implements hook_enable().
+ */
+function gbif_navigation_enable() {
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function gbif_navigation_uninstall() {
+  // Delete menus that are created by this module.
+  $menus = _gbif_navigation_default_menus();
+  foreach ($menus as $menu) {
+    menu_delete_links($menu['menu_name']);
+    menu_delete(menu_load($menu['menu_name']));
+  }
+  menu_rebuild();
+
+  // Set the default menu back to main-menu.
+  variable_set('menu_main_links_source', 'main-menu');
+  variable_set('menu_secondary_links_source', 'main-menu');
+  variable_set('menu_default_active_menus', array('main-menu'));
+  
+  // Remove non-Drupal URL setting in menu_links table.
+  db_drop_field('menu_links', 'non_drupal_url');
+}
+
+/**
+ * Definition of default menus.
+ */
+function _gbif_navigation_default_menus() {
+  $t = get_t();
+  $menus = array(
+    array(
+      'menu_name' => 'gbif-menu',
+      'title' => $t('GBIF Menu'),
+      'description' => $t("The <em>GBIF Menu</em> contains links for navigation and menu tabs that are specific to GBIF Portal."),
+    ),
+    array(
+      'menu_name' => 'footer-links',
+      'title' => $t('Footer links'),
+      'description' => $t("The <em>Footer Links</em> contains links for displaying in footer region that are specific to GBIF Portal."),
+    ),
+  );
+  return $menus;  
+}

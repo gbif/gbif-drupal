@@ -1,0 +1,16 @@
+{
+  "name": "bvng",
+  "version": "0.0.0",
+  "description": "The next generation theme based on Bootstrap. Design and layout originated from Vizzuality.",
+  "main": "index.js",
+  "scripts": {
+    "test": "lessc less/style.less css/style.css"
+  },
+  "author": "Burke Chih-Jen Ko",
+  "license": "ISC",
+  "devDependencies": {
+    "grunt": "~0.4.4",
+    "grunt-contrib-less": "~0.11.0",
+    "grunt-contrib-watch": "~0.6.1"
+  }
+}

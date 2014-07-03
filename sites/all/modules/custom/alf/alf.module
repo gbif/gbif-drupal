@@ -1,0 +1,203 @@
+<?php
+
+/**
+* Implements hook_field_info().
+*
+* Provides the description of the field.
+*/
+function alf_field_info() {
+	return array(
+	// We name our field as the associative name of the array.
+		'alf_field' => array(
+		'label' => t('Anchor Link Field'),
+		'description' => t('Allows the user to insert an anchor link'),
+		'default_widget' => 'alf_widget',
+		'default_formatter' => 'alf_formatter',
+		),
+	);
+}
+
+function alf_element_info() {
+  $elements = array();
+  $elements['alf'] = array(
+    '#input' => TRUE,
+    '#process' => array('alf_field_process'),
+    '#theme' => 'alf_field',
+    '#theme_wrappers' => array('form_element'),
+  );
+  return $elements;
+}
+
+
+/**
+*
+* Use theme() to insert our own function(s)
+*
+*
+*/
+function alf_theme() {
+	return array(
+		'alf_field' => array(
+		  'render element' => 'form',
+		),
+	);
+}
+
+
+/**
+*
+* Attempt to draw a nicer view of the input form while creating the field
+*
+*
+*/
+function theme_alf_field($vars) {
+	$element = $vars['form'];
+
+	$output = '';
+	$output .= '<div class="link-field-column">'.drupal_render($element['title']).'</div>';
+ 	$output .= '<div class="link-field-column">'.drupal_render($element['link']).'</div>' ;
+
+
+	return $output;
+}
+
+
+/**
+* Implements hook_field_is_empty().
+*
+* hook_field_is_emtpy() is where Drupal asks us if this field is empty.
+* Return TRUE if it does not contain data, FALSE if it does. This lets
+* the form API flag an error when required fields are empty.
+*/
+function alf_field_is_empty($item, $field) {
+	
+	return empty($item['title']) && empty ($item['link']) ;
+}
+
+
+/**
+* Implements hook_field_validate().
+*
+* This hook gives us a chance to validate content that's in our
+* field. We're really only interested in the $items parameter, since
+* it holds arrays representing content in the field we've defined.
+*
+* @see alf_field_widget_error()
+*/
+function alf_field_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors) {
+	foreach ($items as $delta => $item) {
+		if (!empty($item['link'])) {
+			if ( !preg_match('@^[0-9a-zA-Z-_]*$@', $item['link'] )) {
+				$errors[$field['field_name']][$langcode][$delta][] = array(
+					'error' => 'alf_invalid',
+					'message' => t('Link field can only contain alphanum and - _'),
+				);
+			}
+		}
+	}
+}
+
+
+/**
+* Implements hook_field_formatter_info().
+*
+*
+* @see alf_field_formatter_view()
+*/
+function alf_field_formatter_info() {
+
+	return array(
+		'alf_field' => array(
+			'label' => t('Simple anchor format'),
+			'field types' => array('alf_field'),
+				),
+		) ;
+
+}
+
+/**
+* Implements hook_field_formatter_view().
+*
+*
+* @see alf_field_formatter_info()
+*/
+function alf_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+	$element = array();
+
+	foreach ($items as $delta => $item) {
+		$element[$delta]['#markup'] = '<br /> Test<br />';
+	}
+	return $element;
+}
+
+/**
+* Implements hook_field_widget_info().
+*
+*
+* @see alf_field_widget_form()
+*/
+function alf_field_widget_info() {
+	return array(
+		'alf_field' => array(
+		'label' => t('Simple anchor edit '),
+		'field types' => array('alf_field'),
+		'multiple values' => FIELD_BEHAVIOR_DEFAULT,
+		),
+	);
+}
+
+/**
+* Implements hook_field_widget_form().
+*
+* hook_widget_form() is where Drupal tells us to create form elements for
+* our field's widget.
+*
+*/
+function alf_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
+
+	$widget = $element;
+	$widget['#delta'] = $delta;
+	$item =& $items[$delta];
+
+	$widget += array( '#type' => 'fieldset', '#theme'=>'alf_field', '#description'=>t('Anchor links')) ;
+	$widget['title'] = array (
+		'#type' => 'textfield',
+		'#title' => 'Anchor title',
+		'#description' => 'Anchor title (the text visible to the reader)',
+		'#default_value' => isset($item['title']) ? $item['title'] : '',
+		'#attributes'=>array('style'=>array('display:inline-block')),
+		'#maxlength' => 128,
+		);
+	$widget['link'] = array (
+		'#type' => 'textfield',
+		'#title' => 'Anchor target',
+		'#description' => 'Anchor target in the page (e.g. target_dont_use_spaces)',
+		'#default_value' => isset($item['link']) ? $item['link'] : '',
+		'#attributes'=>array('style'=>array('display:inline-block')),
+		'#maxlength' => 128,
+		);
+
+	if ($instance['required'] == 1) $widget['#required'] = 1;
+	
+	$element = $widget;
+	return $element;
+}
+
+
+/**
+* Implements hook_field_widget_error().
+*
+* hook_field_widget_error() lets us figure out what to do with errors
+* we might have generated in hook_field_validate(). Generally, we'll just
+* call form_error().
+*
+* @see alf_field_validate()
+* @see form_error()
+*/
+function alf_field_widget_error($element, $error, $form, &$form_state) {
+	switch ($error['error']) {
+		case 'alf_invalid':
+			form_error($element, $error['message']);
+		break;
+	}
+}

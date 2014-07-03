@@ -1,0 +1,6 @@
+name = Anchor Link Field
+description = "Allows users to insert anchor links"
+package = Fields
+core = 7.x
+files[] = alf.module
+files[] = alf.install

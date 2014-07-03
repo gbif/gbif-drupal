@@ -1,0 +1,151 @@
+<?php
+/**
+ * @file
+ *
+ * This module provides a block that will emit various information
+ * pieces; to be used instead of plain old template(s).
+ *
+ */
+
+/**
+ * Implements hook_help().
+ */
+function gbif_blocks_help($path, $arg) {
+  if ($path == 'admin/help#gbif_blocks') {
+    return t('A module to emit various additional info e.g. for a node right side bar.');
+  }
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function gbif_blocks_block_info() {
+  $blocks = array();
+  $blocks['gbif_blocks'] = array(
+    'info' => t('GBIF Blocks'),
+    'region' => 'sidebar_second',
+    'weight' => -15,
+    'status' => 0,
+    'visibility' => BLOCK_VISIBILITY_LISTED,
+    'pages' => 'page/*',
+    'cache' => DRUPAL_NO_CACHE,
+  );
+  $blocks['gbif_blocks_account'] = array(
+    'info' => t('Account'),
+    'region' => 'account',
+    'weight' => -15,
+    'status' => 1,
+    'cache' => DRUPAL_NO_CACHE,
+  );
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ * This block view is for positioning. The content will be generated
+ * dynamically according to the content type.
+ * @see _gbif_blocks_block_content().
+ */
+function gbif_blocks_block_view($delta = '') {
+  $block = array();
+
+  switch ($delta) {
+    case 'gbif_blocks':
+      $block['subject'] = '<none>';
+      $block['content'] = _gbif_blocks_newsarticle_sidebar();
+      break;
+    case 'gbif_blocks_account':
+      $block['subject'] = '<none>';
+      $block['content'] = ' ';
+      break;
+  }
+
+  return $block;
+}
+
+/**
+ * Helper function to assemble renderable array for our block content.
+ * Returns a renderable array with the block content.
+ * @return $block
+ * @todo Date formating ideally could be taken cared by template.
+ * returns a renderable array of block content.
+ */
+function _gbif_blocks_newsarticle_sidebar() {
+  $block = array();
+
+  $node = menu_get_object('node');
+
+  if ($node && $node->type === 'newsarticle') {
+
+    // PUBLICATION DATE
+    $publication_date = array(
+      'title' => t('Publication date'),
+      'type' => 'ul',
+      'items' => array(
+        'data' => format_date($node->created, 'custom', 'F jS, Y '),
+      ),
+      'attributes' => array(
+        'id' => 'publication-date',
+        'class' => 'item-date',
+      ),
+    );
+
+    // LAST UPDATED
+    $last_updated = array(
+      'title' => t('Last updated'),
+      'type' => 'ul',
+      'items' => array(
+        'data' => format_date($node->changed, 'custom', 'F jS, Y '),
+      ),
+      'attributes' => array(
+        'id' => 'last-updated',
+        'class' => 'item-date',
+      ),
+    );
+
+    // TAGS
+    $terms = array();
+    // List where to get terms to populate as tags.
+    $term_sources = array(
+      'field_capacity',
+      'field_country',
+    );
+
+    // Get all the terms.
+    foreach ($term_sources as $term_source) {
+      $items = field_get_items('node', $node, $term_source);
+      foreach ($items as $item) {
+        $terms[] = $item['taxonomy_term'];
+      }
+    }
+    // Create term links.
+    $term_links = array(
+      'title' => t('Tags'),
+      'type' => 'ul',
+      'attributes' => array(
+        'id' => 'tags',
+        'class' => 'tags'
+      ),
+    );
+    foreach ($terms as $term) {
+      $uri = taxonomy_term_uri($term);
+      $term_links['items'][]['data'] = l($term->name, $uri['path']);
+    }
+  }
+
+  $markup = theme_item_list($publication_date);
+  $markup .= theme_item_list($last_updated);
+  $markup .= theme_item_list($term_links);
+
+  // Block output in HTML with div wrapper.
+  $block = array(
+    'message' => array(
+      '#type' => 'markup',
+      'prefix' => '<div>',
+      '#markup' => $markup,
+      '#suffix' => '</div>',
+    ),
+  );
+
+  return $block;
+}

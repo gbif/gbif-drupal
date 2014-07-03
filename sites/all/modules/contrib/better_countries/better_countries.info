@@ -1,0 +1,16 @@
+name = "Better Countries"
+description = Improvements and additions to the Countries module.
+core = 7.x
+package = Countries
+
+dependencies[] = countries
+; dependencies[] = countries_i18n
+dependencies[] = libraries
+dependencies[] = entity
+
+; Information added by Drupal.org packaging script on 2014-02-28
+version = "7.x-1.1"
+core = "7.x"
+project = "better_countries"
+datestamp = "1393585710"
+

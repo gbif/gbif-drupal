@@ -1,0 +1,62 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: bko
+ * Date: 11/6/14
+ * Time: 12:09 PM
+ *
+ * @ http://www.dibe.gr/blog/drupal-7-create-users-and-roles-programmatically
+ */
+
+/**
+ * Implements hook_install().
+ */
+function gbif_role_install() {
+
+}
+
+function gbif_role_enable() {
+	$editor_role = user_role_load_by_name('editors');
+	$editor_rid = $editor_role->rid;
+	$editor_permissions = array(
+		'access administration menu' => TRUE,
+		'flush caches' => TRUE,
+		'display drupal links' => TRUE,
+		'access contextual links' => FALSE,
+		'access dashboard' => TRUE,
+		'add media from remote sources' => TRUE,
+		// Node
+		'administer nodes' => TRUE,
+		'access content overview' => TRUE,
+		// Node - featured data set
+		'create featureddataset content' => TRUE,
+		'edit own featureddataset content' => TRUE,
+		'edit any featureddataset content' => TRUE,
+		'delete own featureddataset content' => TRUE,
+		'delete any featureddataset content' => TRUE,
+		// Node - generic template
+		'create generictemplate content' => TRUE,
+		'edit own generictemplate content' => TRUE,
+		'edit any generictemplate content' => TRUE,
+		'delete own generictemplate content' => TRUE,
+		'delete any generictemplate content' => TRUE,
+		// Node - news item
+		'create newsarticle content' => TRUE,
+		'edit own newsarticle content' => TRUE,
+		'edit any newsarticle content' => TRUE,
+		'delete own newsarticle content' => TRUE,
+		'delete any newsarticle content' => TRUE,
+		// Node - featured data use
+		'create usesofdata content' => TRUE,
+		'edit own usesofdata content' => TRUE,
+		'edit any usesofdata content' => TRUE,
+		'delete own usesofdata content' => TRUE,
+		'delete any usesofdata content' => TRUE,
+		// Shortcuts
+		'administer shortcuts' => TRUE,
+		'customize shortcut links' => TRUE,
+		'switch shortcut sets' => TRUE,
+		'access site in maintenance mode' => TRUE,
+	);
+	user_role_change_permissions($editor_rid, $editor_permissions);
+}

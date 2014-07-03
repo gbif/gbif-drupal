@@ -1,0 +1,6 @@
+name = GBIF Role
+description = Applies the default roles and permissions.
+core = 7.x
+version = 7.x-0.1
+package = GBIFS
+project = GBIF Portal

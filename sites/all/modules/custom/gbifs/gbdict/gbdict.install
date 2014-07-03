@@ -1,0 +1,47 @@
+<?php
+/**
+* Implements hook_install()
+*/
+
+
+function gbdict_install(){
+
+
+}
+
+/**
+* Custom function to load an array of terms into a specified vocabulary.
+*/
+
+function _gbdict_init_dicts ( $dicts ) {
+
+	
+
+}
+
+function _gbdict_load_terms( $terms, $vocab_name ) {
+	$vocab = taxonomy_vocabulary_machine_name_load( $vocab_name );
+	
+	if ($vocab == false) {
+		drupal_set_message( 'Error while attempting to install vocabulary ' . $vocab_name, 'error' );
+	} else {
+		foreach( $terms as $weight => $term){
+			$data = new stdClass();
+			$data->name = $term;
+			$data->vid = $vocab->vid;
+			$data->weight = $weight;
+
+			taxonomy_term_save($data);
+		}
+	}
+}
+
+/**
+* Implements hook_uninstall()
+*/
+
+function gbdict_uninstall() {
+	watchdog("GBDICT Module", "Uninstalling module and deleting dicts");
+	
+
+}

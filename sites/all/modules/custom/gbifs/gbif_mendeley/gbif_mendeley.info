@@ -1,0 +1,10 @@
+name = GBIF Mendeley
+description = Lists of professional publications that use GBIF mediated data.
+version = 7.x-0.8
+package = GBIFS
+project = GBIF Portal
+core = 7.x
+
+configure = admin/config/gbif/mendeley_settings
+
+dependencies[] = gbif_tweaks

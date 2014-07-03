@@ -1,0 +1,11 @@
+name = GBIF IMS import module
+description = This module imports and updates information from the GBIF information management system (IMS) based on Filemaker into the Drupal database.
+core = 7.x
+version = 0.1
+package = GBIFS
+project = GBIF Portal
+
+; dependencies[] = panels
+; files[] = example.test
+
+; configure = admin/config/content/gbifims_import

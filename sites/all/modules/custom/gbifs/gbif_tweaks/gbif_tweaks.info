@@ -1,0 +1,9 @@
+name = GBIF Tweaks
+description = Tweaks the Drupal so the fundamental settings increment along with the development.
+core = 7.x
+version = 7.x-0.1
+package = GBIFS
+project = GBIF Portal
+
+dependencies[] = special_menu_items
+dependencies[] = ctools

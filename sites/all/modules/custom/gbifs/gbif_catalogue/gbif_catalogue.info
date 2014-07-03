@@ -1,0 +1,18 @@
+name = GBIF Catalogue
+description = Add functionalities for the management of online resources and tools.
+core = 7.x
+version = 7.x-0.2
+package = GBIFS
+project = GBIF Portal
+
+configure = admin/config/gbif/tools-catalogue
+
+dependencies[] = gbif_tweaks
+dependencies[] = views
+dependencies[] = link
+dependencies[] = search
+dependencies[] = search_api
+dependencies[] = search_api_db
+dependencies[] = search_api_facetapi
+dependencies[] = search_api_views
+dependencies[] = facetapi

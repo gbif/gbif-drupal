@@ -1,0 +1,1292 @@
+<?php
+/**
+* @file
+* This module imports and updates information from the GBIF information management system (IMS) based on Filemaker into the Drupal database.
+*/
+
+/**
+* Implements hook_help.
+*
+* Displays help and module information.
+*
+* @param path
+*   Which path of the site we're using to display help
+* @param arg
+*   Array that holds the current path as returned from arg() function
+*/
+
+function gbifims_import_help($path, $arg) {
+  switch ($path) {
+    case "admin/help#gbifims_import":
+      return '<p>' . t("This module enables import of data from the IMS database. It requires content types defined as follows: </p>
+	  <ul>
+	  	<li>event_ims: for events (more info to come).</li>
+		<li>resource_ims: for events (more info to come).</li>
+	  </ul>
+	  <p>It accepts the following GET variables:</p>
+	  <ul>
+	  	<li>import_type=events: imports/updates information about events (more info as additional documentation).</li>
+	  	<li>import_type=resources: imports/updates information about resources, that appear in the online resource centre (more info as additional documentation).</li>
+	  	<li>import_type=projects: imports/updates information about projects (planned, not yet developed).</li>
+	  </ul>") . '</p>';
+      break;
+  }
+}
+
+/**
+* Implements hook_permission().
+*/
+function gbifims_import_permission() {
+  return array(
+    'access gbifims_import content' => array(
+      'title' => t('Access content for the GBIF IMS import module'),
+    )
+  );
+}
+
+/**
+* Implements hook_menu().
+*/
+function gbifims_import_menu() {
+  $items = array();
+  
+    $items['gbifims_import'] = array(
+    'title' => 'GBIF IMS data import',
+    'page callback' => '_gbifims_import_page',
+    'access arguments' => array('access gbifims_import content'),
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+/**
+* Custom page callback function, declared in gbifims_import_menu().
+*/
+function _gbifims_import_page() {
+
+global $base_url;
+
+/**
+* Links with the FileMaker Studio and the definition of the database connection
+* We also set all the variables that we will use later
+*/
+
+require_once(dirname(__FILE__).'/Connections/IMS_RO.php'); 
+$ridi = $_GET['ridi'];
+$ridd = $_GET['ridd'];
+
+switch ($_GET['ot']) 
+{
+	//
+	// The Operation Type variable defines what we do: operation type. c for create, u for update, d for deletion. The default launches the full process of checking.
+	//
+	case 'c':
+		//
+		// Create the resource
+		//
+		switch ($_GET['rt'])
+		{
+			case 'e':
+				// 
+				// Create event
+				//
+				// Get the values from the database into an array
+				$array_event_details = retrieve_event_details ($ridi, $IMS_RO);
+				//
+				// assigning values
+				//
+				$newnode = new stdClass();
+				$newnode->type = "event_ims";
+				$newnode->language = "und";
+				$newnode->name = $array_event_details["Name_Full"];
+				$newnode->title = $newnode->name;
+				$newnode->body['und'][0]['value'] = $array_event_details["Desc_Short"];
+				$newnode->body['und'][0]['summary'] = substr($array_event_details["Desc_Short"],0,200)."...";
+				$newnode->body['und'][0]['format'] = 'filtered_html'; 
+				$newnode->uid = 64;  
+				$newnode->status = 1;
+				$newnode->created = time();
+				$newnode->changed = $newnode->created;
+				$newnode->comment = 0; 
+				$newnode->promote = 1;
+				$newnode->sticky = 0;
+				$newnode->field_original_ims_id["und"][0]["value"] = $ridi;
+				
+				$fields = array (	'image_url'=>'image_url',
+									'audience'=>'audience',
+									'HowToContact'=>'contact',
+									'venue'=>'venue',
+									'city'=>'city',
+									'country'=>'venuecountry',
+									'Date_Text'=>'dates',
+									'status'=>'status',
+									'Language'=>'language',
+									'resources'=>'resources',
+									'participants'=>'participants',
+									'region'=>'regions',
+								) ;
+
+								
+				foreach ( $fields as $fms => $drupal ) {
+					// you just can't do:  "if ( !empty( trim( $array_event_details[$fms] ))) " in PHP 5.3...  
+					$detail = trim( $array_event_details[$fms] ) ;
+					if ( !empty( $detail )) {
+						$newnode->{"field_".$drupal}["und"][0]["value"] = $array_event_details[$fms] ;
+					} 
+				}
+
+				// this one works in a single shot in 5.5 but not in 5.3
+				// if ( !empty( trim( $array_event_details["startdate"] ))) { $newnode->field_start_date["und"][0]["value"] = $array_event_details["startdate"]; }
+				$detail = trim( $array_event_details["startdate"] ) ;
+				if ( !empty( $detail )) { $newnode->field_start_date["und"][0]["value"] = $array_event_details["startdate"]; }
+				$newnode->field_start_date["und"][0]["date_type"] = "datestamp";
+
+				/*
+				if ( !empty( trim( $array_event_details["image_url"] ))) { $newnode->field_image_url["und"][0]["value"] = $array_event_details["image_url"] ;	}
+				if ( !empty( trim( $array_event_details["audience"] ))) { $newnode->field_audience["und"][0]["value"] =  $array_event_details["audience"] ; }
+				if ( !empty( trim( $array_event_details["HowToContact"] ))) { $newnode->field_contact["und"][0]["value"] = $array_event_details["HowToContact"] ; }
+				if ( !empty( trim( $array_event_details["venue"] ))) { $newnode->field_venue["und"][0]["value"] = $array_event_details["venue"] ; }
+				if ( !empty( trim( $array_event_details["city"] ))) { $newnode->field_city["und"][0]["value"] = $array_event_details["city"] ; }
+				if ( !empty( trim( $array_event_details["country"] ))) { $newnode->field_venuecountry["und"][0]["value"] =  $array_event_details["country"] ; }
+				if ( !empty( trim( $array_event_details["Date_Text"] ))) { $newnode->field_dates["und"][0]["value"] = $array_event_details["Date_Text"] ; }
+				if ( !empty( trim( $array_event_details["status"] ))) { $newnode->field_status["und"][0]["value"] = $array_event_details["status"] ; }
+				if ( !empty( trim( $array_event_details["Language"] ))) { $newnode->field_language["und"][0]["value"] = $array_event_details["Language"] ; }
+				if ( !empty( trim( $array_event_details["resources"] ))) { $newnode->field_resources["und"][0]["value"] = $array_event_details["resources"] ; }
+				if ( !empty( trim( $array_event_details["participants"] ))) { $newnode->field_participants["und"][0]["value"] = $array_event_details["participants"] ; }
+				// $newnode->field_type_images = $array_event_details["Desc_Short"];
+				if ( !empty( trim( $array_event_details["region"] ))) {$newnode->field_regions["und"][] = array('tid' => $array_event_details["region"],);}
+				if ( !empty( trim( $array_event_details["relatedparticipants"] ))) {$newnode->field_country["und"] = $array_event_details["relatedparticipants"];}	
+				*/
+
+				if ( $newnode = node_submit($newnode) ) {
+					node_save($newnode);
+				} else {
+					// On Error Resume Next
+				}
+			break; // End of Creating event
+			
+			case 'r':
+				//
+				// Create resource
+				//
+				//
+				// Get the values from the database into an array
+				$array_resource_details = retrieve_resource_details ($ridi, $IMS_RO);
+
+				// prepare a valid date value; account for FM NULL fields (which are returned as strings!)
+				// 978303600 = 01 JAN 2001
+				$tmp = empty($array_resource_details["DateOfPublication"]) ? '978303600' : $array_resource_details["DateOfPublication"] ;
+				$FM_format = 'U';
+				$date = DateTime::createFromFormat($FM_format, $tmp);
+				$UDOPublication = $date->format('U') ; // U = format as Unix timestamp
+				$DOPublication = $date->format('Y-m-d H:i:s e') ; // later on, node_submit will use strtotime(), that's why you need "e" or your results will be skewed by TZ
+				
+				//
+				// assigning values
+				//
+				$newnode = new stdClass();
+				$newnode->type = "resource_ims";
+				$newnode->language = "und";
+				$newnode->name = $array_resource_details["Name"];
+				$newnode->title = $newnode->name;
+				$newnode->body["und"][0]["value"] = $array_resource_details["Description"];
+				$newnode->body["und"][0]["summary"] = substr($array_resource_details["Description"],0,200)."...";
+				$newnode->body['und'][0]['format'] = 'filtered_html'; 
+				$newnode->uid = 64; 
+				$newnode->status = 1;
+				// $newnode->created is useless if you avoid node_submit()! You need to change $node-date ;
+				$newnode->date = $DOPublication ;
+				$newnode->comment = 0;
+				$newnode->promote = 0;
+				$newnode->sticky = 0;
+				$newnode->field_publishing_date["und"][0]["value"] = $UDOPublication ;				
+				$newnode->field_orc_original_ims_id["und"][0]["value"] = $ridi;
+				
+				$fields = array (	'Author'=>'authors',
+								'AlternativeTitle'=>'alternative_title',
+								'Publisher'=>'publisher',
+								'Audience'=>'target_audience',
+								'Abstract'=>'abstract',
+								'BibliographicCitation'=>'bibliographic_citation',
+								'Contributor'=>'contributors',
+								'Rights'=>'rights',
+								'RightsHolder'=>'rights_holder',
+								'NumDownloads'=>'number_downloads',
+								'Size_Text'=>'size_text',
+								'Language'=>'orc_language',
+								'ResourceType'=>'resource_type',
+								'VersionSelector'=>'version_selector',) ;	
+				
+				foreach ( $fields as $fms => $drupal ) {
+					$detail = trim ( $array_resource_details[$fms] ) ;
+					if ( !empty( $detail )) {
+						$newnode->{"field_".$drupal}["und"][0]["value"] = $array_resource_details[$fms] ;
+					} 
+				}
+				/*
+				if ( !empty( trim( $array_resource_details["Author"] ))) { $newnode->field_authors["und"][0]["value"] = $array_resource_details["Author"] ; }
+				if ( !empty( trim( $array_resource_details["AlternativeTitle"] ))) { $newnode->field_alternative_title["und"][0]["value"] = $array_resource_details["AlternativeTitle"] ; }
+				if ( !empty( trim( $array_resource_details["Publisher"] ))) { $newnode->field_publisher["und"][0]["value"] = $array_resource_details["Publisher"]; }
+				if ( !empty( trim( $array_resource_details["Audience"] ))) { $newnode->field_target_audience["und"][0]["value"] = $array_resource_details["Audience"] ; }
+				if ( !empty( trim( $array_resource_details["Abstract"] ))) { $newnode->field_abstract["und"][0]["value"] = $array_resource_details["Abstract"] ; }
+				if ( !empty( trim( $array_resource_details["BibliographicCitation"] ))) { $newnode->field_bibliographic_citation["und"][0]["value"] = $array_resource_details["BibliographicCitation"] ; }
+				if ( !empty( trim( $array_resource_details["Contributor"] ))) { $newnode->field_contributors["und"][0]["value"] = $array_resource_details["Contributor"] ; }
+				if ( !empty( trim( $array_resource_details["Rights"] ))) { $newnode->field_rights["und"][0]["value"] = $array_resource_details["Rights"] ; }
+				if ( !empty( trim( $array_resource_details["RightsHolder"] ))) { $newnode->field_rights_holder["und"][0]["value"] = $array_resource_details["RightsHolder"] ; }
+				if ( !empty( trim( $array_resource_details["NumDownloads"] ))) { $newnode->field_number_downloads["und"][0]["value"] = (int)$array_resource_details["NumDownloads"] ; }
+				if ( !empty( trim( $array_resource_details["Size_Text"] ))) { $newnode->field_size_text["und"][0]["value"] = $array_resource_details["Size_Text"] ; }
+				if ( !empty( trim( $array_resource_details["Language"]))) { $newnode->field_orc_language["und"][0]["value"] = $array_resource_details["Language"] ; }
+				if ( !empty( trim( $array_resource_details["ResourceType"]))) { $newnode->field_resource_type["und"][0]["value"] = $array_resource_details["ResourceType"] ; }
+				if ( !empty( trim( $array_resource_details["VersionSelector"]))) { $newnode->field_version_selector["und"][0]["value"] = $array_resource_details["VersionSelector"] ; }
+				*/
+				$orc_featured = $array_resource_details["Featured"];
+				$newnode->field_orc_featured["und"][0]["value"] = ($orc_featured =='') ? 0 : (int)$orc_featured ;
+				
+				$orc_short_listed = $array_resource_details["ShortListed"];
+				$newnode->field_orc_short_listed["und"][0]["value"] = ($orc_short_listed =='') ? 0 : (int)$orc_short_listed ;
+				
+				
+	//			if (!empty($array_resource_details["region"])) {$newnode->field_regions["und"][] = array('tid' => $array_resource_details["region"],);}
+	//			if (!empty($array_resource_details["relatedparticipants"])) {$newnode->field_country["und"] = $array_resource_details["relatedparticipants"];}	
+				
+				// Create the file object
+				$image = file_get_contents($array_resource_details["image_url"]);
+				$dir = drupal_mkdir('public://orc_temp/');
+				$filename = 'public://orc_temp/orc_'.$ridi.'.jpg' ;
+
+				$file = file_save_data($image, $filename , FILE_EXISTS_REPLACE);
+
+				$filepath = drupal_realpath( $filename );
+
+				$file->uid = 1 ;
+				$file->status = 1 ;
+				$file->display = 1 ;
+				$file->alt = $newnode->title." thumbnail" ;
+				$file->title = $newnode->title." thumbnail" ;
+				$file->filepath = $filepath ;
+				
+				$newnode->field_orc_resource_thumbnail[LANGUAGE_NONE][0] = (array)$file;			
+
+				if ($newnode = node_submit($newnode)) {
+					node_save($newnode);
+					// added correctly
+				} else {
+					// added incorrectly
+					// OnError Resume Next (TM) ;-)
+				}
+
+			break; // End of Creating Resource
+		} // End of switch depending on the type of resource
+	break;
+
+	case "u":
+		//
+		// Update the resource, event...
+		//
+		switch ($_GET['rt'])
+		{
+		case 'e':
+			// 
+			// Update an event
+			//
+			// Get the values from the database into an array
+			$array_event_details = retrieve_event_details ($ridi, $IMS_RO);
+			//
+			// assigning values
+			//
+			$newnode = node_load($ridd);
+			$newnode->type = 'event_ims';
+			$newnode->language = 'und';
+			$newnode->name = $array_event_details['Name_Full'];
+			$newnode->title = $newnode->name;
+			$newnode->body['und'][0]['value'] = $array_event_details['Desc_Short'];
+			$newnode->body['und'][0]['summary'] = substr($array_event_details['Desc_Short'],0,200)."...";
+			$newnode->body['und'][0]['format'] = ( $newnode->body['und'][0]['format'] === NULL ) ? 'filtered_html' : $newnode->body['und'][0]['format'] ;
+			$newnode->uid = 64;
+			$newnode->status = 1;
+			// $newnode->created = time(); // We want to respect this one
+			$newnode->changed = time();
+			$newnode->comment = 0;
+			$newnode->promote = 1;
+			$newnode->sticky = 0;
+			$newnode->field_original_ims_id["und"][0]["value"] = $ridi;
+
+			// note "startdate" is missing from the array
+			$fields = array (	'image_url'=>'image_url',
+								'audience'=>'audience',
+								'HowToContact'=>'contact',
+								'venue'=>'venue',
+								'city'=>'city',
+								'country'=>'venuecountry',
+								'Date_Text'=>'dates',
+								'status'=>'status',
+								'Language'=>'language',
+								'resources'=>'resources',
+								'participants'=>'participants',
+								'relatedparticipants'=>'country',
+								'region'=>'regions',
+								) ;
+
+			foreach ( $fields as $fms => $drupal ) {
+				$detail = trim( $array_event_details[$fms] ) ; // 5.5 vs. 5.3
+				if ( !empty( $detail )) {
+					$newnode->{"field_".$drupal}['und'][0]['value'] = $array_event_details[$fms] ;
+					$newnode->{"field_".$drupal}['und'][0]['format'] =  ( $newnode->{"field_".$drupal}['und'][0]['format'] === NULL ) ? 'filtered_html' : $newnode->{"field_".$drupal}['und'][0]['format'] ;
+				} else {
+					unset ( $newnode->{"field_".$drupal}["und"] ) ;
+				}
+			}
+			
+			$newnode->field_start_date["und"][0]["value"] = $array_event_details["startdate"] ;
+			$newnode->field_start_date["und"][0]["date_type"] = "datestamp";
+			
+/*			if ( !empty( trim( $array_event_details["image_url"] ))) { unset ( $newnode->field_image_url["und"][0]["value"] ) ; }
+			if ( !empty( trim( $array_event_details["audience"] ))) { unset ( $newnode->field_audience["und"][0]["value"] = $array_event_details["audience"] ) ; }
+			if ( !empty( trim( $array_event_details["HowToContact"] ))) { unset ( $newnode->field_contact["und"][0]["value"] = $array_event_details["HowToContact"] ) ; }
+			if ( !empty( trim( $array_event_details["venue"] ))) { $newnode->field_venue["und"][0]["value"] = $array_event_details["venue"] ; }
+			if ( !empty( trim( $array_event_details["city"] ))) { $newnode->field_city["und"][0]["value"] = $array_event_details["city"] ; }
+			if ( !empty( trim( $array_event_details["country"] ))) { $newnode->field_venuecountry["und"][0]["value"] = $array_event_details["country"] ; }
+			if ( !empty( trim( $array_event_details["Date_Text"] ))) { $newnode->field_dates["und"][0]["value"] = $array_event_details["Date_Text"] ; }
+			if ( !empty( trim( $array_event_details["status"] ))) { $newnode->field_status["und"][0]["value"] = $array_event_details["status"] ; }
+			if ( !empty( trim( $array_event_details["Language"] ))) { $newnode->field_language["und"][0]["value"] = $array_event_details["Language"] ; }
+			if ( !empty( trim( $array_event_details["resources"] ))) { $newnode->field_resources["und"][0]["value"] = $array_event_details["resources"] ; }
+			if ( !empty( trim( $array_event_details["participants"] ))) { $newnode->field_participants["und"][0]["value"] = $array_event_details["participants"] ; }
+			if ( !empty( trim( $array_event_details["startdate"] ))) { $newnode->field_start_date["und"][0]["value"] = $array_event_details["startdate"] ; }
+			if (!empty($array_event_details["relatedparticipants"])) {$newnode->field_country["und"] = $array_event_details["relatedparticipants"];}
+			if (!empty($array_event_details["region"])) {$newnode->field_regions["und"][] = array('tid' => $array_event_details["region"],);} */
+
+			if ($newnode = node_submit($newnode)) {
+				node_save($newnode);
+				node_load(FALSE, NULL, TRUE);
+				// drupal_set_message(t("Node ".$node->title." updated correctly"));
+				//var_dump($newnode);
+				
+			} else {
+				// drupal_set_message(t("Node ".$node->title." update error"), "error");
+			}
+			
+		break; // end of updating an event
+		case 'r':
+			// 
+			// Update a resource
+			//		
+			// Get the values from the database into an array
+			$array_resource_details = retrieve_resource_details ($ridi, $IMS_RO);
+			//
+			// assigning values
+			//
+				$newnode = node_load($ridd);
+				if ( $newnode ) { // because nobody guarantees that you can load it
+					$newnode->name = $array_resource_details['Name'];
+					$newnode->title = $newnode->name;
+					$newnode->body['und'][0]['value'] = $array_resource_details['Description'];
+					$newnode->body['und'][0]['summary'] = substr($array_resource_details['Description'],0,200)."...";
+					$newnode->body['und'][0]['format'] = ( $newnode->body['und'][0]['format'] === NULL ) ? 'filtered_html' : $newnode->body['und'][0]['format'] ;
+					$newnode->uid = 64;
+					$newnode->status = 1;
+					// $newnode->created = time();
+					$newnode->changed = time();
+					$newnode->comment = 0;
+					$newnode->promote = 1;
+					$newnode->sticky = 0;
+					// $newnode->field_orc_original_ims_id["und"][0]["value"] = $ridi;
+					
+					$fields = Array (	'Author'=>'authors',
+									'AlternativeTitle'=>'alternative_title',
+									'Publisher'=>'publisher',
+									'DateOfPublication'=>'publishing_date',
+									'Audience'=>'target_audience',
+									'Abstract'=>'abstract',
+									'BibliographicCitation'=>'bibliographic_citation',
+									'Contributor'=>'contributors',
+									'Rights'=>'rights',
+									'RightsHolder'=>'rights_holder',
+									'NumDownloads'=>'number_downloads',
+									'Size_Text'=>'size_text',
+									'Language'=>'language',
+									'ResourceType'=>'resource_type',
+									'VersionSelector'=>'version_selector', );
+					foreach ( $fields as $fms => $drupal ) {
+						$detail = trim( $array_resource_details[$fms] ) ;
+						if ( !empty( $detail )) {
+							$newnode->{'field_'.$drupal}['und'][0]['value'] = $array_resource_details[$fms] ;
+							$newnode->{'field_'.$drupal}['und'][0]['format'] =  ( $newnode->{"field_".$drupal}['und'][0]['format'] === NULL ) ? 'filtered_html' : $newnode->{'field_'.$drupal}['und'][0]['format'] ;
+						} else {
+							unset( $newnode->{"field_".$drupal}['und'] ) ;
+						}
+					}
+					
+					/* 
+					if ( !empty( trim( $array_resource_details["Author"] ))) { $newnode->field_authors["und"][0]["value"] = $array_resource_details["Author"] ; }
+					if ( !empty( trim( $array_resource_details["AlternativeTitle"] ))) { $newnode->field_alternative_title["und"][0]["value"] = $array_resource_details["AlternativeTitle"] ; }
+					if ( !empty( trim( $array_resource_details["Publisher"] ))) { $newnode->field_publisher["und"][0]["value"] = $array_resource_details["Publisher"] ; }
+					if ( !empty( trim( $array_resource_details["DateOfPublication"] ))) { $newnode->field_publishing_date["und"][0]["value"] = $array_resource_details["DateOfPublication"] ; }
+					if ( !empty( trim( $array_resource_details["Audience"] ))) { $newnode->field_target_audience["und"][0]["value"] = $array_resource_details["Audience"] ; }
+					if ( !empty( trim( $array_resource_details["Abstract"] ))) { $newnode->field_abstract["und"][0]["value"] = $array_resource_details["Abstract"] ; }
+					if ( !empty( trim( $array_resource_details["BibliographicCitation"] ))) { $newnode->field_bibliographic_citation["und"][0]["value"] = $array_resource_details["BibliographicCitation"] ; }
+					if ( !empty( trim( $array_resource_details["Contributor"] ))) { $newnode->field_contributors["und"][0]["value"] = $array_resource_details["Contributor"] ; }
+					if ( !empty( trim( $array_resource_details["Rights"] ))) { $newnode->field_rights["und"][0]["value"] = $array_resource_details["Rights"] ; }
+					if ( !empty( trim( $array_resource_details["RightsHolder"] ))) { $newnode->field_rights_holder["und"][0]["value"] = $array_resource_details["RightsHolder"] ; }
+					if ( !empty( trim( $array_resource_details["NumDownloads"] ))) { $newnode->field_number_downloads["und"][0]["value"] = $array_resource_details["NumDownloads"] ; }
+					if ( !empty( trim( $array_resource_details["Size_Text"] ))) { $newnode->field_size_text["und"][0]["value"] = $array_resource_details["Size_Text"] ; }
+					if ( !empty( trim( $array_resource_details["Language"] ))) { $newnode->field_orc_language["und"][0]["value"] = $array_resource_details["Language"] ; }
+					if ( !empty( trim( $array_resource_details["ResourceType"] ))) { $newnode->field_resource_type["und"][0]["value"] = $array_resource_details["ResourceType"] ; }					
+					$newnode->field_version_selector["und"][0]["value"] = $array_resource_details["VersionSelector"];												
+					*/
+					$orc_featured = $array_resource_details["Featured"];
+					$newnode->field_orc_featured["und"][0]["value"] = ($orc_featured =='') ? 0 : (int)$orc_featured ;
+					
+					$orc_short_listed = $array_resource_details["ShortListed"];
+					$newnode->field_orc_short_listed["und"][0]["value"] = ($orc_short_listed =='') ? 0 : (int)$orc_short_listed ;
+
+					
+					
+					// Create the file object
+					$image = file_get_contents($array_resource_details["image_url"]);
+					$dir = drupal_mkdir('public://orc_temp/');
+					$filename = 'public://orc_temp/orc_'.$ridi.'.jpg' ;
+
+					$file = file_save_data($image, $filename , FILE_EXISTS_REPLACE);
+
+					$filepath = drupal_realpath( $filename );
+
+					$file->uid = 1 ;
+					$file->status = 1 ;
+					$file->display = 1 ;
+					$file->alt = $newnode->title." thumbnail" ;
+					$file->title = $newnode->title." thumbnail" ;
+					$file->filepath = $filepath ;
+
+					$newnode->field_orc_resource_thumbnail[LANGUAGE_NONE][0] = (array)$file;			
+
+					if ($newnode = node_submit($newnode)) {
+						node_save($newnode);
+						node_load(FALSE, NULL, TRUE);					
+						// added correctly
+					} else {
+						// added incorrectly
+					}
+				} 
+		break;	// end of updating a resource
+		} // End of switch depending on the type of resource
+	break;
+
+	case "d":
+		//
+		// Delete the resource
+		//
+		switch ($_GET['rt'])
+		{
+		case 'e':
+			// http://dd.gbif.org/gbifims_import/error.php?errorCode=401&errorMsg=No+records+match+the+request
+			// Delete an event (= mark as hidden)
+			//		
+			$newnode = node_load($ridd);
+			$newnode->status = 0;			
+			if ($newnode = node_submit($newnode)) {
+				node_save($newnode);
+				node_load(FALSE, NULL, TRUE);
+				// added correctly;
+			} else {
+				// added incorrectly;
+			}
+		break; // end of deleting an event
+		case 'r':
+			// 
+			// Delete a resource (= mark as hidden)
+			//
+			$newnode = node_load($ridd);
+			$newnode->status = 0;			
+			if ($newnode = node_submit($newnode)) {
+				node_save($newnode);
+				node_load(FALSE, NULL, TRUE);
+				// added correctly;
+			} else {
+				// added incorrectly;
+			}
+		break; // end of deleting a resource
+		} // End of switch depending on the type of resource
+	break;
+	
+	default:
+		//
+		// generic process. It verfies the current list against the IMS
+		$MaxEventRecordsToUpdate = 120;
+		$MaxResourceRecordsToUpdate = 120;
+		switch ($_GET['rt'])
+		{
+			case 'e':
+				//
+				// CHECK EVENTS	
+				//	
+				// Extract the list of public events into an array
+				// The second element in the second level is a flag that marks records that need to be updated.
+				//  at the beginning, we set it to 0 (=not found yet).
+				//
+				$ListPublicEvents_find = $IMS_RO->newFindCommand('__Event');
+				$ListPublicEvents_findCriterions = array('OnTheWeb'=>'Yes',);
+				foreach($ListPublicEvents_findCriterions as $key=>$value) {
+					$ListPublicEvents_find->AddFindCriterion($key,$value);
+				}
+				
+				fmsSetPage($ListPublicEvents_find,'ListPublicEvents',10000); 
+				
+				// $ListPublicEvents_find->setRange(0, $MaxEventRecordsToUpdate);
+
+				$ListPublicEvents_result = $ListPublicEvents_find->execute(); 
+				
+				if(FileMaker::isError($ListPublicEvents_result)) fmsTrapError($ListPublicEvents_result,"error.php"); 
+				
+				fmsSetLastPage($ListPublicEvents_result,'ListPublicEvents',10000); 
+				
+				
+				$ListPublicEvents_row = current($ListPublicEvents_result->getRecords());
+				
+				foreach($ListPublicEvents_result->getRecords() as $ListPublicEvents_row) {
+					$array_ListPublicEvents[$ListPublicEvents_row->getField('__kp_ID')] = array($ListPublicEvents_row->getField('zz__Modified_Timestamp__lxm'), "0");
+				}
+				
+				//
+				// Get a list of the existing events in Drupal
+				//
+				$query = new EntityFieldQuery();
+				$query->entityCondition('entity_type', 'node')
+				  ->entityCondition('bundle', 'event_ims');
+				$results = $query->execute();
+				$array_ListEventsDrupal = node_load_multiple(array_keys($results['node']));
+				
+				//
+				// Some checks. DELETE BEFORE PUBLISHING
+				//
+				// echo $array_ListEventsDrupal[179]->field_resources["und"][0]["value"]."<br />";
+				//  var_dump($array_ListEventsDrupal);
+			
+				//
+				// We check the dates of last update from us and the IMS. If it's more recent in the IMS, we mark for update
+				//
+			
+				foreach ($array_ListEventsDrupal as $key => $element_ListEventsDrupal){
+					$ims_id_to_check = $array_ListEventsDrupal[$key]->field_original_ims_id["und"][0]["value"];
+					
+					$time_ims = strtotime( $array_ListPublicEvents[$ims_id_to_check][0] );
+					$time_drupal = $array_ListEventsDrupal[$key]->changed;
+					
+					If ($time_ims == null) 
+					{
+						// it does not exist in the ims, delete (=hide)
+						$array_ListPublicEvents[$ims_id_to_check][1] = "3";
+						$array_ListPublicEvents[$ims_id_to_check][2] = $array_ListEventsDrupal[$key]->nid;
+					}
+					else If ($time_ims >$time_drupal) 
+					{
+						// Element exists in drupal and Drupal is older, mark as need to update		
+						$array_ListPublicEvents[$ims_id_to_check][1] = "2";
+						$array_ListPublicEvents[$ims_id_to_check][2] = $array_ListEventsDrupal[$key]->nid;
+					}
+					else If (($time_ims <= $time_drupal) && ($time_ims > 0))
+					{
+						// Element exists in drupal and is more recent, mark as no need to update
+						$array_ListPublicEvents[$ims_id_to_check][1] = "1"; 
+					}
+			
+				}
+			
+				//
+				// We go now through the array from the IMS, and act accordingly to it status
+				//
+				
+				$NumberAdditions = 0;
+				$NumberIgnored = 0;
+				$NumberUpdates = 0;
+				$NumberDeletions = 0;
+				foreach ($array_ListPublicEvents as $key => $element_ListPublicEvents)	{
+					switch ($array_ListPublicEvents[$key][1]) {
+						case "0":
+							$array_UrlsToCall[$key] = $base_url."/gbifims_import/?ot=c&rt=e&ridi=".$key;
+							$NumberAdditions = $NumberAdditions + 1;
+							break;
+						case "1":
+							// Element exists in drupal and is more recent, no need to update
+							// echo "case1 ";
+							$NumberIgnored += 1;
+							break;
+						case "2":
+							// Element exists in drupal and Drupal is older, needs to be updated
+							// echo "case2 ";
+							$array_UrlsToCall[$key] = $base_url."/gbifims_import/?ot=u&rt=e&ridi=".$key."&ridd=".$array_ListPublicEvents[$key][2];
+							// echo $array_UrlsToCall[$key];
+							$NumberUpdates += 1;				
+							break;			
+						case "3":
+							// Element is no longer available from FileMaker, so we marke for 'deletion' (=hide)
+							// echo "case3 ";
+							$array_UrlsToCall[$key] = $base_url."/gbifims_import/?ot=d&rt=e&ridd=".$array_ListPublicEvents[$key][2];
+							$NumberDeletions += 1;				
+							break;			
+	
+						} // end of the switch depending on the type of operation					
+					} // end of foreach checking the IMS array	
+					//
+					// Now we call all the pages that perform the actual operations
+					//
+					
+/*					
+					Code like this makes the Airbus crash. :-|
+					Unless you switch to MyISAM or you do heavy tunning of Inno, this 
+					will fail in oh so many ways
+					$mh = curl_multi_init(); 				
+					$curl_array = array();
+					$dummycounter = 0;
+					foreach($array_UrlsToCall as $i => $url)
+					{
+						If ($dummycounter < $MaxEventRecordsToUpdate)
+							{
+							$curl_array[$i] = curl_init($url);
+							curl_setopt($curl_array[$i], CURLOPT_CONNECTTIMEOUT, 15); //Only send the data, don't wait.
+							curl_setopt($curl_array[$i], CURLOPT_TIMEOUT, 15);
+							curl_multi_add_handle($mh, $curl_array[$i]);
+							$dummycounter += 1;						
+							}
+					}
+
+					$running = NULL;
+
+					do {
+						usleep(10000);
+						curl_multi_exec($mh,$running);
+					} while($running > 0);
+					
+					$dummycounter = 0;
+					foreach($array_UrlsToCall as $i => $url){					
+						If ($dummycounter < $MaxEventRecordsToUpdate)
+							{
+							curl_multi_remove_handle($mh, $curl_array[$i]);
+							curl_close($curhttp://dd.gbif.org/gbifims_import/?ot=c&rt=r&ridi=2819l_array[$i]);
+							$dummycounter += 1;
+							} 
+					}
+
+				curl_multi_close($mh);       
+*/
+
+				foreach($array_UrlsToCall as $i => $url) {
+					If ($dummycounter < $MaxResourceRecordsToUpdate) {
+					// echo "<a href='$url'>$url</a><br>";
+						$ch = curl_init($url);
+						curl_setopt( $ch, CURLOPT_CONNECTTIMEOUT, 5); 
+						curl_setopt( $ch, CURLOPT_TIMEOUT, 5);
+						curl_exec( $ch ) ;
+						curl_close ( $ch ) ;
+						$dummycounter += 1;						
+					}
+				}
+
+				
+				
+				//
+				// Build the output array
+				//		
+				$page_array['gbifims_import_arguments'] = array(
+				  '#title' => t('GBIF IMS data import'),
+				  '#markup' => "<h3>".t('EVENT SYNCHRONIZATION RESULTS')."</h3>"."<br /><p>".t('Number of existing elements NOT needing an update: ').$NumberIgnored.".<br />&nbsp;<br />".t('Number of elements to be added: ').$NumberAdditions.".<br />".t('Number of existing elements needing an update: ').$NumberUpdates.".<br />".t('Number of elements deactivated: ').$NumberDeletions.".<br />&nbsp;</p>",);
+				If ($dummycounter == $MaxEventRecordsToUpdate) {
+					$page_array['gbifims_import_arguments']['#markup'] .= "<p>".t('IMPORTANT NOTE: To avoid server overload, only ').$MaxEventRecordsToUpdate.t(' update operations are performed every time you call this script. Reload this page to continue the synchronization till this message dissapears.')."<br />&nbsp;<br />&nbsp;</p>";
+				}
+				
+				return $page_array;	
+			break;
+			
+			case 'r':
+				//
+				// CHECK RESOURCES
+				//	
+				// Extract the list of public resources into an array
+				// The second element in the second level is a flag that marks records that need to be updated.
+				//  at the beginning, we set it to 0 (=not found yet).
+				//
+				$ListPublicResources_find = $IMS_RO->newFindCommand('__File');
+				$ListPublicResources_findCriterions = array('OnTheWeb'=>'1','Restricted__lcn'=>'0',);
+				foreach($ListPublicResources_findCriterions as $key=>$value) {
+					$ListPublicResources_find->AddFindCriterion($key,$value);
+				}
+				
+				$ListPublicResources_find->AddSortRule('DateOfPublication',1,FILEMAKER_SORT_DESCEND ) ;
+				
+				fmsSetPage($ListPublicResources_find,'ListPublicResources',100000); 
+				
+				$ListPublicResources_result = $ListPublicResources_find->execute(); 
+				
+				if(FileMaker::isError($ListPublicResources_result)) fmsTrapError($ListPublicResources_result,"error.php"); 
+				
+				fmsSetLastPage($ListPublicResources_result,'ListPublicResources',100000); 
+				
+				$ListPublicResources_row = current($ListPublicResources_result->getRecords());
+
+				foreach($ListPublicResources_result->getRecords() as $ListPublicResources_row) {
+					$array_ListPublicResources[$ListPublicResources_row->getField('__kp_ID')] = array($ListPublicResources_row->getField('zz__Modified_Timestamp__lxm'), "0");
+				}
+
+				//
+				// Get a list of the existing events in Drupal
+				//
+				$query = new EntityFieldQuery();
+				$query->entityCondition('entity_type', 'node')
+				  ->entityCondition('bundle', 'resource_ims');
+				$results = $query->execute();
+				$array_ListResourcesDrupal = node_load_multiple(array_keys($results['node']));
+				//
+				// We check the dates of last update from us and the IMS. If it's more recent in the IMS, we mark for update
+				//
+			
+				foreach ($array_ListResourcesDrupal as $key => $element_ListResourcesDrupal){
+					$ims_id_to_check = $array_ListResourcesDrupal[$key]->field_orc_original_ims_id["und"][0]["value"];
+					$time_ims = strtotime( $array_ListPublicResources[$ims_id_to_check][0] );
+					$time_drupal = $array_ListResourcesDrupal[$key]->changed;
+					If ($time_ims == null) 
+					{
+						// it does not exist in the ims, delete (=hide)
+						$array_ListPublicResources[$ims_id_to_check][1] = "3";
+						$array_ListPublicResources[$ims_id_to_check][2] = $array_ListResourcesDrupal[$key]->nid;
+					}
+					else If ($time_ims >$time_drupal) 
+					{
+						// Element exists in drupal and Drupal is older, mark as need to update		
+						$array_ListPublicResources[$ims_id_to_check][1] = "2";
+						$array_ListPublicResources[$ims_id_to_check][2] = $array_ListResourcesDrupal[$key]->nid;
+					}
+					else If (($time_ims <= $time_drupal) && ($time_ims > 0))
+					{
+						// Element exists in drupal and is more recent, mark as no need to update
+						$array_ListPublicResources[$ims_id_to_check][1] = "1"; 
+					}
+			
+				}
+				
+				//
+				// We go now through the array from the IMS, and act accordingly to it status
+				//
+				
+				$NumberAdditions = 0;
+				$NumberIgnored = 0;
+				$NumberUpdates = 0;
+				$NumberDeletions = 0;
+				foreach ($array_ListPublicResources as $key => $element_ListPublicResources)	{
+					switch ($array_ListPublicResources[$key][1]) {
+						case "0":
+							$array_UrlsToCall[$key] = $base_url."/gbifims_import/?ot=c&rt=r&ridi=".$key;
+							$NumberAdditions = $NumberAdditions + 1;
+							break;
+						case "1":
+							// Element exists in drupal and is more recent, no need to update
+							// echo "case1 ";
+							$NumberIgnored += 1;
+							break;
+						case "2":
+							// Element exists in drupal and Drupal is older, needs to be updated
+							// echo "case2 ";
+							$array_UrlsToCall[$key] = $base_url."/gbifims_import/?ot=u&rt=r&ridi=".$key."&ridd=".$array_ListPublicResources[$key][2];
+							// echo $array_UrlsToCall[$key];
+							$NumberUpdates += 1;				
+							break;			
+						case "3":
+							// Element is no longer available from FileMaker, so we marke for 'deletion' (=hide)
+							// echo "case3 ";
+							$array_UrlsToCall[$key] = $base_url."/gbifims_import/?ot=d&rt=r&ridd=".$array_ListPublicResources[$key][2];
+							$NumberDeletions += 1;				
+							break;			
+	
+						} // end of the switch depending on the type of operation					
+					} // end of foreach checking the IMS array	
+
+					//
+					// Now we call all the pages that perform the actual operations
+					//
+/*					$mh = curl_multi_init(); 				
+					$curl_array = array();
+					$dummycounter = 0;
+					foreach($array_UrlsToCall as $i => $url) {
+						If ($dummycounter < $MaxResourceRecordsToUpdate) {
+							$curl_array[$i] = curl_init($url);
+							curl_setopt($curl_array[$i], CURLOPT_CONNECTTIMEOUT, 15); //Only send the data, don't wait.
+							curl_setopt($curl_array[$i], CURLOPT_TIMEOUT, 15);
+							curl_multi_add_handle($mh, $curl_array[$i]);
+							$dummycounter += 1;						
+						}
+					}
+					
+					$running = NULL;
+					
+					do {
+						usleep(10000);
+						curl_multi_exec($mh,$running);
+					} while($running > 0);
+					
+					$dummycounter = 0;
+					
+					foreach($array_UrlsToCall as $i => $url){					
+						If ($dummycounter < $MaxResourceRecordsToUpdate)
+							{
+							curl_multi_remove_handle($mh, $curl_array[$i]);
+							curl_close($curl_array[$i]);
+							$dummycounter += 1;
+							} 
+					}
+
+				curl_multi_close($mh);       */
+		
+				foreach($array_UrlsToCall as $i => $url) {
+					If ($dummycounter < $MaxResourceRecordsToUpdate) {
+						$ch = curl_init($url);
+						curl_setopt($curl_array[$i], CURLOPT_CONNECTTIMEOUT, 5); 
+						curl_setopt($curl_array[$i], CURLOPT_TIMEOUT, 5);
+						curl_exec( $ch ) ;
+						curl_close ( $ch ) ;
+						$dummycounter += 1;						
+					}
+				}
+				
+				//
+				// Build the output array
+				//		
+				$page_array['gbifims_import_arguments'] = array(
+				  '#title' => t('GBIF IMS data import'),
+				  '#markup' => "<h3>".t('RESOURCE SYNCHRONIZATION RESULTS')."</h3>"."<br /><p>".t('Number of existing elements NOT needing an update: ').$NumberIgnored.".<br />&nbsp;<br />".t('Number of elements to be added: ').$NumberAdditions.".<br />".t('Number of existing elements needing an update: ').$NumberUpdates.".<br />".t('Number of elements deactivated: ').$NumberDeletions.".<br />&nbsp;</p>",);
+				If ($dummycounter == $MaxResourceRecordsToUpdate) {
+					$page_array['gbifims_import_arguments']['#markup'] .= "<p>".t('IMPORTANT NOTE: To avoid server overload, only ').$MaxResourceRecordsToUpdate.t(' update operations are performed every time you call this script. Reload this page to continue the synchronization till this message dissapears.')."</p>";
+				}
+				return $page_array;				
+			break;
+			
+			
+			default:
+				//
+				// if no variable is set, we show some generic info and links
+				//
+				$page_array['gbifims_import_arguments'] = array(
+					  '#title' => t('GBIF IMS data import'),
+					  '#markup' => "<p>".t('This module allows to synchronize/import information from the GBIF Information Management System to its website.')."<br />".t('Please use one of the links abelow if you want to launch the process manually:')."<br />&nbsp;</p>"."<ul><li><a href=\"".$base_url."/gbifims_import/?rt=e\">".t('Synchronize events')."</a></li><li><a href=\"".$base_url."/gbifims_import/?rt=r\">".t('Synchronize resources')."</a></li></ul><p>&nbsp;</p>",);
+				return $page_array;	
+			break;
+			
+			} // End of switch for GET variable of Record Type
+	break;
+} // End of switch for GET variable of Operation Type
+} // End of Page declaration
+
+//
+// Functions to extract information
+//
+
+function retrieve_event_details ($event_id, $IMS_RO) {
+
+
+//
+// LINK FIRST DATASET: EVENT DETAILS
+//
+
+	$EventDetails_find = $IMS_RO->newFindCommand('W_Events');
+	$EventDetails_findCriterions = array('__kp_ID'=>$event_id,);
+	foreach($EventDetails_findCriterions as $key=>$value) {
+		$EventDetails_find->AddFindCriterion($key,$value);
+	}
+	
+	fmsSetPage($EventDetails_find,'EventDetails',1); 
+	
+	$EventDetails_result = $EventDetails_find->execute(); 
+	
+	if(FileMaker::isError($EventDetails_result)) fmsTrapError($EventDetails_result,"error.php"); 
+	
+	$EventDetails_row = current($EventDetails_result->getRecords());
+	
+	$EventDetails__WEVEEventCity_portal = fmsRelatedRecord($EventDetails_row, 'WEVE_Event_City');
+	$EventDetails__WEVEEventContactEventEventroleParticipantEventrole_portal = fmsRelatedRecord($EventDetails_row, 'WEVE_Event_ContactEventEventroleParticipant_Eventrole');
+	$EventDetails__WEVEEventContactEventEventroleParticipantContact_portal = fmsRelatedRecord($EventDetails_row, 'WEVE_Event_ContactEventEventroleParticipant_Contact');
+	$EventDetails__WEVEEventContactEventEventroleParticipant_portal = fmsRelatedRecord($EventDetails_row, 'WEVE_Event_ContactEventEventroleParticipant');
+	$EventDetails__WEVEEventEventresourcetype_portal = fmsRelatedRecord($EventDetails_row, 'WEVE_Event_Eventresourcetype');
+	$EventDetails__WEVEEventEventEventaccesscategory_portal = fmsRelatedRecord($EventDetails_row, 'WEVE_Event_EventEventaccesscategory');
+	$EventDetails__WEVEEventEventEventaccesscategoryEventaccesscategory_portal = fmsRelatedRecord($EventDetails_row, 'WEVE_Event_EventEventaccesscategory_Eventaccesscategory');
+	$EventDetails__WEVEEventEventtype_portal = fmsRelatedRecord($EventDetails_row, 'WEVE_Event_Eventtype');
+	$EventDetails__WEVEEventEventKeyword_portal = fmsRelatedRecord($EventDetails_row, 'WEVE_Event_EventKeyword');
+	$EventDetails__WEVEEventEventKeywordKeyword_portal = fmsRelatedRecord($EventDetails_row, 'WEVE_Event_EventKeyword_Keyword');
+	$EventDetails__WEVEEventEventstatus_portal = fmsRelatedRecord($EventDetails_row, 'WEVE_Event_Eventstatus');
+	$EventDetails__WEVEEventCityCountry_portal = fmsRelatedRecord($EventDetails_row, 'WEVE_Event_City_Country');
+	$EventDetails__WEventsEventsAccessCategories_portal = fmsRelatedRecord($EventDetails_row, 'W_Events_EventsAccessCategories');
+
+
+//
+//// LIST PEOPLE
+//
+$ListPeople_find = $IMS_RO->newFindCommand('W_ListPeopleEvent');
+$ListPeople_findCriterions = array('_kf_EventID'=>$EventDetails_row->getField('__kp_ID'),);
+foreach($ListPeople_findCriterions as $key=>$value) {
+	$ListPeople_find->AddFindCriterion($key,$value);
+}
+
+fmsSetPage($ListPeople_find,'ListPeople',500); 
+
+if(FileMaker::isError($ListPeople_result)) fmsTrapError($ListPeople_result,"error.php"); 
+$ListPeople_find->addSortRule('WEVE_Event_ContactEventEventroleParticipant_Contact::Name_Abv__lct',1,FILEMAKER_SORT_ASCEND); 
+
+$ListPeople_result = $ListPeople_find->execute(); 
+
+if(FileMaker::isError($ListPeople_result)) $NoPeople = True; 
+
+// Condition temporarily disabled. It should prevent the page to break if there is no people associated to an event
+if ($NoPeople != True) {
+
+fmsSetLastPage($ListPeople_result,'ListPeople',500); 
+
+$ListPeople_row = current($ListPeople_result->getRecords());
+
+$ListPeople__WListPeopleEventContact_portal = fmsRelatedRecord($ListPeople_row, 'W_ListPeopleEvent_Contact');
+$ListPeople__WListPeopleEventEventPeopleRole_portal = fmsRelatedRecord($ListPeople_row, 'W_ListPeopleEvent_EventPeopleRole');
+$ListPeople__WListPeopleEventEvents_portal = fmsRelatedRecord($ListPeople_row, 'W_ListPeopleEvent_Events');
+$ListPeople__WListPeopleEventParticipant_portal = fmsRelatedRecord($ListPeople_row, 'W_ListPeopleEvent_Participant');
+
+// Condition temporarily disabled. It should prevent the page to break if there is no people associated to an event
+}
+
+//
+//// LIST OF RESOURCES
+//
+
+$ListResources_find = $IMS_RO->newFindCommand('W_ListResourcesEvent');
+$ListResources_findCriterions = array('_kf_EventID'=>$EventDetails_row->getField('__kp_ID'),);
+foreach($ListResources_findCriterions as $key=>$value) {
+	$ListResources_find->AddFindCriterion($key,$value);
+}
+
+
+// This section is hidden, unless a get variable is given a specific value (displays only public items)
+if ($_GET['secret'] != '1') 
+	{
+	$ListResources_find->AddFindCriterion('OnTheWeb','Yes');
+	}
+
+fmsSetPage($ListResources_find,'ListResources',50); 
+
+$ListResources_result = $ListResources_find->execute(); 
+
+if(FileMaker::isError($ListResources_result)) $NoResources = True; 
+
+if ($NoResources != True) {
+
+fmsSetLastPage($ListResources_result,'ListResources',50); 
+
+$ListResources_row = current($ListResources_result->getRecords());
+
+$ListResources__WListResourcesEventEvents_portal = fmsRelatedRecord($ListResources_row, 'W_ListResourcesEvent_Events');
+$ListResources__WListResourcesEventResourceType_portal = fmsRelatedRecord($ListResources_row, 'W_ListResourcesEvent_ResourceType');
+
+}
+
+//
+//// LIST OF COUNTRIES with participants in the event, for the summary
+//
+
+$ListCountries_find = $IMS_RO->newFindCommand('W_ListCountriesParticipantsEvent');
+$ListCountries_findCriterions = array('_kf_EventID'=>$EventDetails_row->getField('__kp_ID'),'_kf_EventroleID'=>'14',);
+foreach($ListCountries_findCriterions as $key=>$value) {
+	$ListCountries_find->AddFindCriterion($key,$value);
+}
+
+fmsSetPage($ListCountries_find,'ListCountries',1000); 
+
+$ListCountries_find->addSortRule('WEVE_Event_ContactEventEventroleParticipant_Participant::Name_Short',1,FILEMAKER_SORT_ASCEND); 
+
+$ListCountries_result = $ListCountries_find->execute(); 
+
+if(FileMaker::isError($ListCountries_result)) 
+{
+	$ListCountriesString = '';
+
+} else {
+	
+	fmsSetLastPage($ListCountries_result,'ListCountries',1000); 
+	
+	$ListCountries_row = current($ListCountries_result->getRecords());
+	
+	$ListCountries__WListPeopleEventParticipant_portal = fmsRelatedRecord($ListCountries_row, 'W_ListPeopleEvent_Participant');
+	
+	$ListCountriesString = "";
+	$PreviousCountry = "";
+	$NumberNodes = 0;
+	$NumberParticipantsCountry = 0;
+	
+	foreach($ListCountries_result->getRecords() as $ListCountries_row)
+	{ 
+		If (($ListCountries_row->getField('WEVE_Event_ContactEventEventroleParticipant_Participant::Name_Short') != $PreviousCountry) & ($ListCountries_row->getField('WEVE_Event_ContactEventEventroleParticipant_Participant::Name_Short') != ""))
+		{
+		$ListCountriesString .= $PreviousCountry;
+		$NumberNodes = $NumberNodes + 1;
+		$PreviousCountry = $ListCountries_row->getField('WEVE_Event_ContactEventEventroleParticipant_Participant::Name_Short');
+		If ($NumberParticipantsCountry != 0)
+			{
+			If ($NumberParticipantsCountry != 1) 
+				{
+				// We only show the number of people if it is more than 1
+				$ListCountriesString .= " (".$NumberParticipantsCountry." people), "; 
+				} else {
+				$ListCountriesString .= ", "; 
+				}				
+			$NumberParticipantsCountry = 0;
+			} else {
+			// $ListCountriesString .= ", ";
+			}
+		}
+		$NumberParticipantsCountry = $NumberParticipantsCountry + 1;
+	}
+	If ($PreviousCountry != "")
+	{
+	$ListCountriesString = substr($ListCountriesString,0,-2);
+	If ($ListCountriesString != "")
+		{
+		$ListCountriesString .= " and ";
+		}
+	$ListCountriesString .= $PreviousCountry;
+	If ($NumberParticipantsCountry != 1) 
+		{
+		// We only show the number of people if it is more than 1
+		$ListCountriesString .= " (".$NumberParticipantsCountry." people)";
+		}
+	}
+}
+	
+//
+//// LIST OF PARTICIPANTS OFFICIALLY LINKED TO THE EVENT
+//
+
+$ListRelatedCountries_find = $IMS_RO->newFindCommand('WEVP_EventParticipant');
+$ListRelatedCountries_findCriterions = array('_kf_EventID'=>$EventDetails_row->getField('__kp_ID'),'WEVP_EventParticipant_Event::OnTheWeb'=>'Yes',);
+foreach($ListRelatedCountries_findCriterions as $key=>$value) {
+    $ListRelatedCountries_find->AddFindCriterion($key,$value);
+}
+
+fmsSetPage($ListRelatedCountries_find,'ListRelatedCountries',1000); 
+
+$ListRelatedCountries_result = $ListRelatedCountries_find->execute(); 
+
+if(FileMaker::isError($ListRelatedCountries_result)) {
+	$ArrayRelatedParticipants = '';
+} else {
+
+	fmsSetLastPage($ListRelatedCountries_result,'ListRelatedCountries',1000); 
+
+	$ListRelatedCountries_row = current($ListRelatedCountries_result->getRecords());
+
+	$ListRelatedCountries__WEVPEventParticipantEvent_portal = fmsRelatedRecord($ListRelatedCountries_row, 'WEVP_EventParticipant_Event');
+	$ListRelatedCountries__WEVPEventParticipantParticipant_portal = fmsRelatedRecord($ListRelatedCountries_row, 'WEVP_EventParticipant_Participant');
+	$ListRelatedCountries__WEVPEventParticipantParticipantCountry_portal = fmsRelatedRecord($ListRelatedCountries_row, 'WEVP_EventParticipant_Participant_Country');
+
+	foreach($ListRelatedCountries_result->getRecords() as $ListRelatedCountries_row){ 
+		if ($ListRelatedCountries_row->getField('WEVP_EventParticipant_Participant_Country::_kf_Drupal_tid') != "") {
+			$ArrayRelatedParticipants[] = array("tid"=>$ListRelatedCountries_row->getField('WEVP_EventParticipant_Participant_Country::_kf_Drupal_tid'),);
+		}
+	}
+}
+
+//
+//// LIST OF KEYWORDS WITH MATCHING ELEMENTS IN DRUPAL
+//
+
+//$ListKeywordsPerEvent_find = $IMS_RO->newFindCommand('WEVK_EventKeyword');
+//$ListKeywordsPerEvent_findCriterions = array('WEVK_EventKeyword_Event::OnTheWeb'=>'Yes','_kf_EventID'=>$EventDetails_row->getField('__kp_ID'),);
+//foreach($ListKeywordsPerEvent_findCriterions as $key=>$value) {
+//    $ListKeywordsPerEvent_find->AddFindCriterion($key,$value);
+//}
+//
+//fmsSetPage($ListKeywordsPerEvent_find,'ListKeywordsPerEvent',1000); 
+//
+//$ListKeywordsPerEvent_result = $ListKeywordsPerEvent_find->execute(); 
+//
+//if(FileMaker::isError($ListKeywordsPerEvent_result)) fmsTrapError($ListKeywordsPerEvent_result,"error.php"); 
+//
+//fmsSetLastPage($ListKeywordsPerEvent_result,'ListKeywordsPerEvent',1000); 
+//
+//$ListKeywordsPerEvent_row = current($ListKeywordsPerEvent_result->getRecords());
+//
+//$ListKeywordsPerEvent__WEVKEventKeywordKeyword_portal = fmsRelatedRecord($ListKeywordsPerEvent_row, 'WEVK_EventKeyword_Keyword');
+//$ListKeywordsPerEvent__WEVKEventKeywordEvent_portal = fmsRelatedRecord($ListKeywordsPerEvent_row, 'WEVK_EventKeyword_Event');
+//
+//foreach($ListKeywordsPerEvent_result->getRecords() as $ListKeywordsPerEvent_row)
+//	{
+//		If ($ListKeywordsPerEvent_row->getField('WEVK_EventKeyword_Keyword::_kf_Drupal_tid') != "") {
+//			$taxArr[] = $ListKeywordsPerEvent_row->getField('WEVK_EventKeyword_Keyword::_kf_Drupal_tid');
+//		}
+//	}
+
+//
+// END OF DATABASE QUERIES
+//
+
+//
+// Assignement of calculated values
+//
+
+// Target audience
+
+if ($EventDetails_row->getField('NumberParticipants') != "") 
+	{
+		$audience .= $EventDetails_row->getField('NumberParticipants')." people";
+		If ($NumberNodes != 0)
+			{
+			$audience .= " from ".$NumberNodes." countries/organisations: ";
+			}
+	} 
+	// we show the number the origin of participants if there is anything to show
+	if ($ListCountriesString != "") 
+	{
+	$audience .= $ListCountriesString.".<br />";
+	} else {
+		if ($EventDetails_row->getField('NumberParticipants') != "") 
+		{
+		$audience .= ". ";
+		}
+	}
+    $audience .= htmlspecialchars_decode($EventDetails_row->getField('TargetPublic'));
+
+// Venue
+    
+	if ($EventDetails_row->getField('Venue') != "") 
+	{
+	$venue .= htmlspecialchars_decode($EventDetails_row->getField('Venue')); 
+	}
+
+// City
+    
+	if ($EventDetails_row->getField('WEVE_Event_City::Cityname') != "") 
+	{
+	$city .= $EventDetails_row->getField('WEVE_Event_City::Cityname');
+	}
+	
+// Country
+    
+	if ($EventDetails_row->getField('WEVE_Event_City_Country::Name') != "") 
+	{
+	$country .= $EventDetails_row->getField('WEVE_Event_City_Country::Name');
+	}
+	
+	if ($EventDetails_row->getField('WEVE_Event_City_Country_Region_GBIFarea::_kf_Drupal_tid') != "")
+	{
+	$region = $EventDetails_row->getField('WEVE_Event_City_Country_Region_GBIFarea::_kf_Drupal_tid');
+	}
+
+// Participants
+
+if ($NoPeople != True) { 
+	$participants .= "<ul>";
+	foreach($ListPeople_result->getRecords() as $ListPeople_row){ 
+		$participants .= "<li><span Title=".$ListPeople_row->getField('Notes').">".$ListPeople_row->getField('WEVE_Event_ContactEventEventroleParticipant_Contact::Name_Abv__lct')." (".$ListPeople_row->getField('WEVE_Event_ContactEventEventroleParticipant_Eventrole::Peoplerole').")</span></li>";
+	}
+	$participants .= "</ul>";
+	
+}
+
+// Resources
+
+if ($NoResources != True) {
+	$resources .= "<ul>";
+	foreach($ListResources_result->getRecords() as $ListResources_row){
+		  $resources .= "<li><a href=\"".$ListResources_row->getField('URL')."\" target=\"_blank\">".$ListResources_row->getField('Description')."</a>.</li>";
+	}
+	$resources .= "</ul>";
+}
+
+// image URL
+
+$image_url = "http://imsgbif.gbif.org/CMS/W_TR_EventDetail.php?image=Thumbnail&recid=".$EventDetails_row->getRecordId();
+
+$array_event_details = array ("__kp_ID" => $EventDetails_row->getField('__kp_ID'), "Name_Full" => htmlspecialchars_decode($EventDetails_row->getField('Name_Full')), "Desc_Short" => htmlspecialchars_decode($EventDetails_row->getField('Desc_Short')), "audience" => $audience, "HowToContact" => htmlspecialchars_decode($EventDetails_row->getField('HowToContact')), "Date_Text" => htmlspecialchars_decode($EventDetails_row->getField('Date_Text')), "status" => htmlspecialchars_decode($EventDetails_row->getField('WEVE_Event_Eventstatus::Status')), "image_url" => htmlspecialchars_decode($image_url), "Language" => htmlspecialchars_decode($EventDetails_row->getField('Language')), "venue" => $venue, "city" => $city, "country" => $country, "participants" => $participants, "resources" => $resources, "startdate" => strtotime($EventDetails_row->getField('Date_Start')), "region" => $region, "relatedparticipants" => $ArrayRelatedParticipants,);
+
+return $array_event_details;
+
+
+} // end of retrieve_event_details function declaration
+
+//
+// FUNCTION TO RETRIEVE THE DETAILS OF A RESOURCE
+//
+
+function retrieve_resource_details ($resource_id, $IMS_RO) {
+
+	$ResourceDetails_find = $IMS_RO->newFindCommand('WDOCS_File');
+	$ResourceDetails_findCriterions = array('__kp_ID'=>$resource_id,'OnTheWeb'=>'1',);
+	foreach($ResourceDetails_findCriterions as $key=>$value) {
+		$ResourceDetails_find->AddFindCriterion($key,$value);
+	}
+	
+	fmsSetPage($ResourceDetails_find,'ResourceDetails',10); 
+	
+	$ResourceDetails_result = $ResourceDetails_find->execute(); 
+	
+	if(FileMaker::isError($ResourceDetails_result)) fmsTrapError($ResourceDetails_result,"error.php"); 
+	
+	fmsSetLastPage($ResourceDetails_result,'ResourceDetails',10); 
+	
+	$ResourceDetails_row = current($ResourceDetails_result->getRecords());
+	
+	$ResourceDetails__WDOCSFileRatingComments_portal = fmsRelatedRecord($ResourceDetails_row, 'WDOCS_File_RatingComments');
+	$ResourceDetails__WDOCSFileFileKeywordKeyword_portal = fmsRelatedRecord($ResourceDetails_row, 'WDOCS_File_FileKeyword_Keyword');
+	$ResourceDetails__WDOCSFileFileKeywordKeywordKeywordLanguage_portal = fmsRelatedRecord($ResourceDetails_row, 'WDOCS_File_FileKeyword_Keyword_KeywordLanguage');
+
+// image URL
+
+$Image_URL = "http://fms.gbif.org:8020/SuperContainer/RawData/THMB/".substr($resource_id,0,2)."/".$resource_id."?width=150&username=zordesign&password=GBIF2010";
+
+$VersionSelector = getVersionSelector($ResourceDetails_row->getField('__kp_ID'), $IMS_RO);
+		
+	$array_resource_details = array ("__kp_ID" => $ResourceDetails_row->getField('__kp_ID'), "Name" => htmlspecialchars_decode($ResourceDetails_row->getField('Title_Text')), "Description" => htmlspecialchars_decode($ResourceDetails_row->getField('Description')), "Author" => htmlspecialchars_decode($ResourceDetails_row->getField('Author')), "AlternativeTitle" => htmlspecialchars_decode($ResourceDetails_row->getField('AlternativeTitle')), "Publisher" => htmlspecialchars_decode($ResourceDetails_row->getField('Publisher')), "Audience" => htmlspecialchars_decode($ResourceDetails_row->getField('Audience')), "Abstract" => htmlspecialchars_decode($ResourceDetails_row->getField('Abstract')),  "BibliographicCitation" => htmlspecialchars_decode($ResourceDetails_row->getField('BibliographicCitation')),  "Contributor" => htmlspecialchars_decode($ResourceDetails_row->getField('Contributor')),  "Rights" => htmlspecialchars_decode($ResourceDetails_row->getField('Rights')),  "RightsHolder" => htmlspecialchars_decode($ResourceDetails_row->getField('RightsHolder')), "NumDownloads" => $ResourceDetails_row->getField('NumDownloads'), "Featured" => $ResourceDetails_row->getField('Featured'), "ShortListed" => $ResourceDetails_row->getField('ShortListed'), "image_url" => $Image_URL, "Size_Text" => htmlspecialchars_decode($ResourceDetails_row->getField('Size_Text')), "ResourceType" => htmlspecialchars_decode($ResourceDetails_row->getField('_kf_TypeID')), "Language" => htmlspecialchars_decode($ResourceDetails_row->getField('WDOCS_File_Language::Language')), "VersionSelector" => getVersionSelector($ResourceDetails_row->getField('__kp_ID'), $IMS_RO), );
+
+	$DateOfPublication = strtotime ($ResourceDetails_row->getField('DateOfPublication')) ;
+	$DummyDateOfPublication = strtotime ('01/01/2001');
+	$array_resource_details [DateOfPublication] = ($DateOfPublication == '')? $DummyDateOfPublication : $DateOfPublication ; 
+	return $array_resource_details;
+
+
+} // end of retrieve_resource_details function declaration
+
+	function getVersionSelector($doc_id, $IMS_RO){
+		// global $IMS_RO;
+	$orc_url = "http://www.gbif.org/orc/";
+		
+		//first get file cluster id
+		$query = $IMS_RO->newFindCommand('WDOCS_File_FileFilecluster');
+		$query->addFindCriterion('_kf_FileID',$doc_id);
+		$res = $query->execute();
+		if(FileMaker::isError($res)) return;
+		
+		$records = $res->getRecords();
+		if(empty($records)) return;
+		
+		$fcid = $records[0]->getField('_kf_FileclusterID');
+		
+		$query = $IMS_RO->newFindCommand('WDOCS_File_FileFilecluster');
+		$query->addFindCriterion('_kf_FileclusterID',$fcid);
+		$query->addSortRule('Version',1,FILEMAKER_SORT_ASCEND);		
+		$res = $query->execute();	
+		if(FileMaker::isError($res)) return;
+		
+		$records = $res->getRecords();
+
+		if(!empty($records)){
+			$out = array();
+			$out[] = '<form action="'.CMS_ABS_URL_PREFIX.'" id="version_select_form">';
+			$out[] = '<select id="version" name="doc_id" onchange="document.location=this.options[this.selectedIndex].value">';
+			foreach($records as $rec){
+				$selected = '';
+				if($rec->getField('_kf_FileID') == $doc_id){
+					$selected = ' selected="selected"';
+				}	
+				
+				$url = $orc_url.'?doc_id='.$rec->getField('_kf_FileID');
+				
+				$out[] = '<option value="'.$url.'"'.$selected.'>'.$rec->getField('Version').'</option>';
+			}
+			$out[] = '</select>';	
+			$out[] = '</form>';
+			return implode("\n",$out);
+			
+		} 
+		
+	}

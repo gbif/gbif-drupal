@@ -1,0 +1,32 @@
+<?php
+/**
+ * @file
+ *  This module together with some NPT modules provides better flexibility
+ *  for NPT modules to be used indepentdly without NPT Startup profile.
+ */
+
+// NPT Startup constants
+define('NPTSTARTUP_THEME', 'gbifwhite');
+define('NPTSTARTUP_ADMIN_THEME', 'npt_admin');
+define('GBIF_REGISTRY_API_NODE', 'http://api.gbif.org/node');
+define('GBIF_REGISTRY_API_ORG', 'http://api.gbif.org/organization');
+define('GBIF_API', 'http://api.gbif.org');
+define('GBIF_COUNTRY_ENUM', 'http://api.gbif.org/enumeration/country');
+define('GBRDS_AGENT_URL', 'http://gbrds.gbif.org/browse/agent?uuid=');
+define('GBIF_PORTAL_PUBLISHER', 'http://uat.gbif.org/portal/publisher');
+define('GBIF_PORTAL', 'http://uat.gbif.org');
+
+function npt_constants_js_settings() {
+  $npt_constants = array(
+    'GBIF_REGISTRY_API_NODE' => GBIF_REGISTRY_API_NODE,
+    'GBIF_REGISTRY_API_ORG' => GBIF_REGISTRY_API_ORG,
+    'GBIF_COUNTRY_ENUM' => GBIF_COUNTRY_ENUM,
+    'GBIF_PORTAL_PUBLISHER' => GBIF_PORTAL_PUBLISHER,
+    'GBIF_API' => GBIF_API,
+    'GBIF_PORTAL' => GBIF_PORTAL,
+    'GBRDS_AGENT_URL' => GBRDS_AGENT_URL,
+  );
+  drupal_add_js(array(
+    'npt_constants' => $npt_constants,
+  ), 'setting');
+}

@@ -1,0 +1,100 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: bko
+ * Date: 27/6/14
+ * Time: 5:45 PM
+ */
+
+function gbif_ims_menu() {
+	$items = array();
+	$items['admin/config/gbif'] = array(
+		'title' => 'GBIF Configuration',
+		'description' => t("Configure settings that determine how this Drupal site presents itself as the GBIF Portal."),
+		'position' => 'right',
+		'weight' => -10,
+		'page callback' => 'system_admin_menu_block_page',
+		'access arguments' => array('administer site configuration'),
+		'file' => 'system.admin.inc',
+		'file path' => drupal_get_path('module', 'system'),
+	);
+	$items['admin/config/gbif/ims_settings'] = array(
+		'title' => 'IMS configuration',
+		'description' => t('Configure GBIF Imformation Management System.'),
+		'page callback' => 'drupal_get_form',
+		'page arguments' => array('gbif_ims_settings_form'),
+		'access arguments' => array('administer site configuration'),
+		'type' => MENU_NORMAL_ITEM,
+		'file' => 'gbif_ims.admin.inc',
+	);
+	return $items;
+}
+
+function gbif_ims_event_update() {
+	// Load all event_ims entity.
+	$time_start = new DateTime();
+
+	$query = new EntityFieldQuery();
+	$query->entityCondition('entity_type', 'node')
+		->entityCondition('bundle', 'event_ims');
+		// ->entityCondition('entity_id', 3063); // To debug a particular record
+	$result = $query->execute();
+
+	if ($result['node']) {
+		$nids = array_keys($result['node']);
+		foreach ($nids as $nid) {
+			$raw_node = node_load($nid);
+			$wrapped_node = entity_metadata_wrapper('node', $raw_node);
+			$fields = _gbif_ims_event_field_format();
+			foreach ($fields as $field => $format) {
+
+				// @todo Fields that have plain_text as their text format break the value->raw() method. To be investigated.
+				if ($format == 'full_html') {
+					if (!empty($raw_node->$field)) {
+						$value = $wrapped_node->$field->value->raw();
+					}
+					// Clean up the field content if it's empty.
+					// Otherwise assign the text format so it'll be rendered correctly.
+					if (empty($value)) {
+						$wrapped_node->$field = array();
+					}
+					else {
+						$wrapped_node->$field->format = $format;
+					}
+					unset($value);
+					$wrapped_node->save();
+				}
+			}
+		}
+	}
+
+	$time_end = new DateTime();
+	$time_diff = $time_start->diff($time_end);
+	$time_spent = $time_diff->format('%H:%I:%S');
+	return t('Events updated. @time elapsed.', array('@time' => $time_spent));
+}
+
+/**
+ * Temporary helper function to provide the format definition of the fields
+ * of event_ims.
+ */
+function _gbif_ims_event_field_format() {
+	$formats = array(
+		'body' => 'full_html',
+		'field_audience' => 'full_html',
+		'field_contact' => 'full_html',
+		'field_resources' => 'full_html',
+		'field_participants' => 'full_html',
+		'field_image_url' => 'plain_text',
+		'field_dates' => 'plain_text',
+		'field_venuecountry' => 'plain_text',
+		'field_status' => 'plain_text',
+		'field_language' => 'plain_text',
+		'field_venue' => 'full_html',
+		'field_city' => 'plain_text',
+		'field_country' => 'plain_text',
+		'field_type_images' => 'plain_text',
+		'field_original_ims_id' => 'plain_text',
+	);
+	return $formats;
+}

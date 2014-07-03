@@ -1,0 +1,75 @@
+<?php
+/**
+ * Implements hook_schema_alter().
+ */
+function better_countries_schema_alter(&$schema) {
+  $schema[BC_COUNTRIES_TABLE]['fields'] += array(
+    BC_PREFIX . 'pin_city' => array(
+      'type' => 'text',
+      'description' => 'The city whose coordinates will be used to place a pin on the map',
+      'size' => 'tiny',
+      'not null' => FALSE,
+    ),
+    BC_PREFIX . 'pin_latitude' => array(
+      'type' => 'text',
+      'description' => "The latitude of the country's pin.",
+      'size' => 'tiny',
+      'not null' => FALSE,
+    ),
+    BC_PREFIX . 'pin_longitude' => array(
+      'type' => 'text',
+      'description' => "The longitude of the country's pin.",
+      'size' => 'tiny',
+      'not null' => FALSE,
+    ),
+    BC_PREFIX . 'custom_code' => array(
+      'type' => 'text',
+      'description' => "Custom code for this country.",
+      'size' => 'tiny',
+      'not null' => FALSE,
+    ),
+  );
+}
+
+/**
+ * Implements hook_install()
+ */
+function better_countries_install() {
+  // Add our custom fields to the countries_country table
+  $schema = drupal_get_schema(BC_COUNTRIES_TABLE);
+  foreach ($schema['fields'] as $field_name => $definition) {
+    if (strpos($field_name, BC_PREFIX) !== FALSE) {
+      db_add_field(BC_COUNTRIES_TABLE, $field_name, $definition);
+    }
+  }
+
+  // Fetch the data on install
+  // (run better_countries_sync)
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function better_countries_uninstall() {
+  // Drop our custom fields from the countries_country table
+  $schema = drupal_get_schema('countries_country');
+  foreach ($schema['fields'] as $field_name => $definition) {
+    if (strpos($field_name, 'better_countries_') !== FALSE) {
+      db_drop_field('countries_country', $field_name);
+    }
+  }
+}
+
+/**
+ * Implements hook_update_N().
+ */
+function better_countries_7100() {
+  $custom_code = array(
+    'type' => 'text',
+    'description' => "Custom code for this country.",
+    'size' => 'tiny',
+    'not null' => FALSE,
+  );
+
+  db_add_field('countries_country', BC_PREFIX . 'custom_code', $custom_code);
+}

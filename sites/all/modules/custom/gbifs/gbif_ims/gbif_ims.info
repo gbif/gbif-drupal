@@ -1,0 +1,8 @@
+name = GBIF IMS
+description = This is the enhanced Information Management System.
+version = 7.x-0.1
+package = GBIFS
+project = GBIF Portal
+core = 7.x
+
+dependencies[] = gbif_tweaks

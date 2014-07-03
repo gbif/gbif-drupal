@@ -1,0 +1,499 @@
+<?php
+/**
+* Implements hook_install()
+*/
+function gbifims_install(){
+
+}
+
+
+/**
+* Implements hook_uninstall()
+*/
+function gbifims_uninstall() {
+	 drupal_uninstall_schema('gbifims');
+
+}
+
+/**
+* Implements hook_schema().
+*
+*
+*/
+function gbifims_schema() {
+$schema['gbifims_Contact'] = array(
+  'description' => 'TODO: please describe this table!',
+  'fields' => array(
+	'ContactID' => array(
+	  'description' => 'TODO: please describe this field!',
+	  'type' => 'int',
+	  'not null' => TRUE,
+	),
+	'CountryID_Address' => array(
+	  'description' => 'TODO: please describe this field!',
+	  'type' => 'int',
+	  'not null' => FALSE,
+	),
+	'InstitutionID' => array(
+	  'description' => 'TODO: please describe this field!',
+	  'type' => 'int',
+	  'not null' => FALSE,
+	),
+	'Name_First' => array(
+	  'description' => 'TODO: please describe this field!',
+	  'type' => 'varchar',
+	  'length' => '128',
+	  'not null' => FALSE,
+	),
+	'Name_Middle' => array(
+	  'description' => 'TODO: please describe this field!',
+	  'type' => 'varchar',
+	  'length' => '128',
+	  'not null' => FALSE,
+	),
+	'Name_Last' => array(
+	  'description' => 'TODO: please describe this field!',
+	  'type' => 'varchar',
+	  'length' => '128',
+	  'not null' => FALSE,
+	),
+	'Address' => array(
+	  'description' => 'Postal address',
+	  'type' => 'varchar',
+	  'length' => '4096',
+	  'not null' => FALSE,
+	),
+	'City' => array(
+	  'description' => 'City',
+	  'type' => 'varchar',
+	  'length' => '256',
+	  'not null' => FALSE,
+	),
+	'Email' => array(
+	  'description' => 'TODO: please describe this field!',
+	  'type' => 'varchar',
+	  'length' => '64',
+	  'not null' => FALSE,
+	),
+	'Job_Description' => array(
+	  'description' => 'TODO: please describe this field!',
+	  'type' => 'varchar',
+	  'length' => '4096',
+	  'not null' => FALSE,
+	),
+	'Fax' => array(
+	  'description' => 'Telefax number',
+	  'type' => 'varchar',
+	  'length' => '256', // because some people will insert MULTIPLE numbers in one FMaker field! :-@
+	  'not null' => FALSE,
+	),
+	'OnTheWeb' => array(
+	  'description' => 'OnTheWeb',
+	  'type' => 'int',
+	  'size' => 'tiny',
+	  'not null' => FALSE,
+	),
+	'Job_Position' => array(
+	  'description' => 'Job Position',
+	  'type' => 'varchar',
+	  'length' => '1024',
+	  'not null' => FALSE,
+	),
+	'Phone_Office' => array(
+	  'description' => 'Telephone number',
+	  'type' => 'varchar',
+	  'length' => '256', // because some people will insert MULTIPLE numbers in one FMaker field! :-@
+	  'not null' => FALSE,
+	),
+	'ZipCode' => array(
+	  'description' => 'Postal Zip code',
+	  'type' => 'varchar',
+	  'length' => '32',
+	  'not null' => FALSE,
+	),
+	'GBIF_Order' => array(
+	  'description' => 'TODO: please describe this field!',
+	  'type' => 'int',
+	  'not null' => FALSE,
+	),
+	'zz__PEOP_SuperContainer_IMGURL__lct' => array(
+	  'description' => 'TODO: please describe this field!',
+	  'type' => 'varchar',
+	  'length' => '256',
+	  'not null' => FALSE,
+	),
+	'URL' => array(
+	  'description' => 'TODO: please describe this field!',
+	  'type' => 'varchar',
+	  'length' => '2048',
+	  'not null' => FALSE,
+	),
+	'GBIF_Staff' => array(
+	  'description' => 'TODO: please describe this field!',
+	  'type' => 'int',
+	  'size' => 'tiny',
+	  'not null' => FALSE,
+	),
+  ),
+  'primary key' => array('ContactID'),
+  'indexes' => array(
+	'Name_First' => array(array('Name_First', 20)),
+	'Name_Last' => array(array('Name_Last', 20)),
+	'Name_Middle' => array(array('Name_Middle', 20)),
+  ),
+);
+
+$schema['gbifims_ContactGrouproleNodeParticipant'] = array(
+  'description' => 'TODO: please describe this table!',
+  'fields' => array(
+    'ContactGrouproleNodeParticipantID' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'not null' => TRUE,
+    ),
+    'ContactID' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'not null' => TRUE,
+    ),
+    'GrouproleID' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'not null' => TRUE,
+    ),
+    'NodeID' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'not null' => FALSE,
+    ),
+    'ParticipantID' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'not null' => FALSE,
+    ),
+    'Active' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'size' => 'tiny',
+      'not null' => FALSE,
+    ),
+  ),
+  'primary key' => array('ContactGrouproleNodeParticipantID'),
+  'indexes' => array(
+    'ContactID' => array('ContactID'),
+    'GrouproleID' => array('GrouproleID'),
+    'NodeID' => array('NodeID'),
+    'ParticipantID' => array('ParticipantID'),
+  ),
+);
+
+$schema['gbifims_Country'] = array(
+  'description' => 'TODO: please describe this table!',
+  'fields' => array(
+    'CountryID' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'not null' => TRUE,
+    ),
+    'RegionID' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'not null' => FALSE,
+    ),
+    'ISO2' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'char',
+      'length' => '4',
+      'not null' => FALSE,
+    ),
+    'ISO3' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'char',
+      'length' => '4',
+      'not null' => FALSE,
+    ),
+    'Name' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'length' => '256',
+      'not null' => TRUE,
+    ),
+  ),
+  'indexes' => array(
+    'CountryID' => array('CountryID'),
+    'ISO2' => array('ISO2'),
+    'ISO3' => array('ISO3'),
+    'Name' => array(array('Name', 32)),
+    'RegionID' => array('RegionID'),
+  ),
+);
+
+
+$schema['gbifims_Group'] = array(
+  'description' => 'TODO: please describe this table!',
+  'fields' => array(
+    'GroupID' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'not null' => TRUE,
+    ),
+    'Name' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'length' => '128',
+      'not null' => FALSE,
+    ),
+  ),
+  'indexes' => array(
+    'GroupID' => array('GroupID'),
+  ),
+);
+
+
+$schema['gbifims_Grouprole'] = array(
+  'description' => 'TODO: please describe this table!',
+  'fields' => array(
+    'GrouproleID' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'not null' => TRUE,
+    ),
+    'GroupID' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'not null' => TRUE,
+    ),
+    'SortOrder' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'not null' => FALSE,
+    ),
+    'Name' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'length' => '128',
+      'not null' => FALSE,
+    ),
+  ),
+  'indexes' => array(
+    'GroupID' => array('GroupID'),
+    'GrouproleID' => array('GrouproleID'),
+  ),
+);
+
+$schema['gbifims_Institution'] = array(
+  'description' => 'TODO: please describe this table!',
+  'fields' => array(
+    'InstitutionID' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'not null' => TRUE,
+    ),
+    'CountryID' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'not null' => FALSE,
+    ),
+    'Acronym' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'length' => '256',
+      'not null' => FALSE,
+    ),
+    'Address' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'length' => '256',
+      'not null' => FALSE,
+    ),
+    'City' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'length' => '128',
+      'not null' => FALSE,
+    ),
+    'Description' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'length' => '4096',
+      'not null' => FALSE,
+    ),
+    'Email' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'length' => '128',
+      'not null' => FALSE,
+    ),
+    'Name' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'length' => '128',
+      'not null' => FALSE,
+    ),
+    'State' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'length' => '512',
+      'not null' => FALSE,
+    ),
+    'Telephone' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'length' => '512',
+      'not null' => FALSE,
+    ),
+    'ZipCode' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'length' => '256',
+      'not null' => FALSE,
+    ),
+  ),
+  'indexes' => array(
+    'Acronym' => array('Acronym'),
+    'CountryID' => array('CountryID'),
+    'InstitutionID' => array('InstitutionID'),
+    'Name' => array(array('Name', 32)),
+  ),
+);
+
+$schema['gbifims_Node'] = array(
+  'description' => 'TODO: please describe this table!',
+  'fields' => array(
+    'NodeID' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'not null' => TRUE,
+    ),
+    'ParticipantID' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'not null' => FALSE,
+    ),
+    'Name_Full' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'length' => '256',
+      'not null' => FALSE,
+    ),
+    'Name_Acronym' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'length' => '64',
+      'not null' => FALSE,
+    ),
+    'URL' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'length' => '1024',
+      'not null' => FALSE,
+    ),
+  ),
+  'indexes' => array(
+    'Name_Acronym' => array('Name_Acronym'),
+    'Name_Full' => array(array('Name_Full', 32)),
+    'NodeID' => array('NodeID'),
+    'ParticipantID' => array('ParticipantID'),
+  ),
+);
+
+$schema['gbifims_Participant'] = array(
+  'description' => 'TODO: please describe this table!',
+  'fields' => array(
+    'ParticipantID' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'not null' => TRUE,
+    ),
+    'RegionID' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'not null' => FALSE,
+    ),
+    'CountryID' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'not null' => FALSE,
+    ),
+    'InstitutionID' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'not null' => FALSE,
+    ),
+    'GBIFmembership' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'length' => '64',
+      'not null' => FALSE,
+    ),
+    'Member_AsOf' => array(
+	  'description' => 'Start date of GBIF membership',
+	  'mysql_type' => 'DATETIME',
+	  'not null' => FALSE,
+	),
+    'Name_Full' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'length' => '512',
+      'not null' => FALSE,
+    ),
+    'Name_Short' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'length' => '256',
+      'not null' => FALSE,
+    ),
+    'PublicDescription' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'length' => '1024',
+      'not null' => FALSE,
+    ),
+    'MOU2012_Date' => array(
+      'description' => 'TODO: please describe this field!',
+      'mysql_type' => 'DATETIME',
+      'not null' => FALSE,
+    ),
+    'Host_URL' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'length' => '512',
+      'not null' => FALSE,
+    ),
+  ),
+  'primary key' => array('ParticipantID'),
+  'indexes' => array(
+    'CountryID' => array('CountryID'),
+    'InstitutionID' => array('InstitutionID'),
+    'Name_Full' => array(array('Name_Full', 64)),
+    'Name_Short' => array('Name_Short'),
+    'RegionID' => array('RegionID'),
+  ),
+);
+
+$schema['gbifims_GBIFarea'] = array(
+	'description' => '__GBIFarea from FM',
+	'fields' => array(
+		'GBIFareaID' => array(
+			'description' => 'TODO: please describe this field!',
+			'type' => 'int',
+			'not null' => TRUE,
+		),
+		'GBIFarea' => array(
+			'description' => 'Area name',
+			'type' => 'varchar',
+			'length' => '256',
+			'not null' => TRUE,
+		),
+		'Drupal_tid' => array(
+			'description' => 'Drupal term id',
+			'type' => 'int',
+			'not null' => FALSE,
+		),
+	),
+);
+
+
+return $schema; 
+
+}

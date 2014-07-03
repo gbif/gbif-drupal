@@ -1,0 +1,91 @@
+name = GBIF Spring
+description = The next generation theme based on Bootstrap. Design and layout originated from Vizzuality.
+core = 7.x
+base theme = bootstrap
+
+
+;;;;;;;;;;;;;;;;;;;;;
+;; Regions
+;;;;;;;;;;;;;;;;;;;;;
+
+; In the header section
+regions[account]        = 'Account'
+regions[navigation]     = 'Navigation'
+regions[search]         = 'Search'
+
+; Header as the name of a region is ambiguous for team communication
+; because the term usually implies many regions in the header "section".
+; I suggest we avoid assigning blocks to this region and keep it
+; only for compatibility reason.
+regions[header]         = 'Top Bar'
+
+; In the banner section
+regions[highlighted]    = 'Highlighted'
+regions[menu]           = 'Menu'
+regions[shortcut]       = 'Shortcut'
+
+; In the main section
+regions[help]           = 'Help'
+regions[content]        = 'Content'
+regions[sidebar_first]  = 'Primary sidebar'
+regions[sidebar_second] = 'Secondary sidebar'
+regions[supplement]     = 'Supplement'
+
+; In the footer section
+regions[links]          = 'Links'
+regions[credits]        = 'Credits'
+ 
+; Footer as a term also has the same concern as header.
+; I suggest we avoid using that for the same reason.
+regions[footer]         = 'Footer'
+
+; Hidden regions that should not be used by admins.
+regions[page_top]       = 'Page top'
+regions[page_bottom]    = 'Page bottom'
+
+
+;;;;;;;;;;;;;;;;;;;;;
+;; Stylesheets
+;;;;;;;;;;;;;;;;;;;;;
+
+stylesheets[all][] = css/style.css
+
+
+; For information on choosing the desired method, please read the Drupal
+; Bootstrap sub-theme "how-to" documentation:
+; https://drupal.org/node/1978010
+
+; ;----------------------------------
+; ; METHOD 1: Bootstrap Source Files
+; ;----------------------------------
+; 
+; ;;;;;;;;;;;;;;;;;;;;;
+; ;; Scripts
+; ;;;;;;;;;;;;;;;;;;;;;
+; 
+scripts[] = 'bootstrap/js/affix.js'
+scripts[] = 'js/alert.js'
+scripts[] = 'bootstrap/js/button.js'
+scripts[] = 'bootstrap/js/carousel.js'
+scripts[] = 'bootstrap/js/collapse.js'
+scripts[] = 'bootstrap/js/dropdown.js'
+scripts[] = 'bootstrap/js/modal.js'
+scripts[] = 'bootstrap/js/tooltip.js'
+scripts[] = 'bootstrap/js/popover.js'
+scripts[] = 'bootstrap/js/scrollspy.js'
+scripts[] = 'bootstrap/js/tab.js'
+scripts[] = 'bootstrap/js/transition.js'
+
+
+; ; Disable BootstrapCDN if using Bootstrap source files in your sub-theme.
+; ; ... by uncommenting the following line.
+settings[bootstrap_cdn] = ''
+
+
+; ;-------------------------
+; ; METHOD 2: Bootstrap CDN
+; ;-------------------------
+;
+; Method 2 uses BootstrapCDN, the only thing you might need to provide here
+; is overrides to Bootstrap theme settings. Copy them here from the base theme
+; to override.

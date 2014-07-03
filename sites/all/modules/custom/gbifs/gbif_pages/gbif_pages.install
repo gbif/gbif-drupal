@@ -1,0 +1,24 @@
+<?php
+/**
+ * @file gbif_pages.install
+ */
+
+/**
+ * Implements hook_enable().
+ * @todo Gotta find a way to automate the view revert.
+ */
+function gbif_pages_enable() {
+//  $views = gbif_pages_views_register();
+//	//$config_path = $_SERVER['DOCUMENT_ROOT'] . '/' . conf_path();
+//	drupal_load();
+//
+//  foreach ($views as $view_name) {
+//    //exec('cd ' . $config_path . ' && drush vr '. $view_name);
+//    //Tried to run a drush command here but it doesn't work if run from command line.
+//  	$view = views_get_view($view_name);
+//    if ($view->type)
+//    $view->delete();
+//    ctools_include('object-cache');
+//    ctools_object_cache_clear('view', $view);
+//  }
+}

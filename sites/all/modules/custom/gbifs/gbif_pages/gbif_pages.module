@@ -1,0 +1,261 @@
+<?php
+
+/**
+ * @file
+ * gbif_pages.module
+ *
+ * An important reference post:
+ * @see http://chacadwa.com/blog/2012/12/08/override-drupal-7-taxonomy-display-vocabulary
+ * @see https://api.drupal.org/api/views/views.module/function/views_embed_view/7
+ */
+
+/**
+ * Implements hook_menu_alter().
+ */
+function gbif_pages_menu_alter(&$items) {
+  $items['taxonomy/term/%taxonomy_term']['page callback'] = 'gbif_pages_taxonomy_term_page';
+	$items['search/node/%menu_tail']['page callback'] = 'gbif_pages_search_view';
+}
+
+/**
+ * Implements hook_block_info_alter().
+ */
+function gbif_pages_block_info_alter(&$blocks, $theme, $code_blocks) {
+  switch ($theme) {
+    case 'bvng':
+      break;
+  }
+}
+
+/**
+ * Implements hook_library().
+ */
+function gbif_pages_library() {
+	$env = variable_get('environment_settings');
+  $libraries['gbif_page_widgets'] = array(
+    'title' => 'GBIF Widgets',
+    'js' => array(
+			$env['data_portal_base_url'] . '/js/widgets.js' => array(
+        'type' => 'file',
+        'scope' => 'footer',
+        'weight' => 20,
+      ),
+    ),
+  );
+  return $libraries;
+}
+
+/**
+ * Implementation of hook_views_api().
+ */
+function gbif_pages_views_api() {
+  return array(
+    'api' => 3.0,
+    'path' => drupal_get_path('module', 'gbif_pages') . '/views'
+  );
+}
+
+function gbif_pages_views_register() {
+	$views = array(
+		'newsarticles',
+		'usesofdatafeaturedarticles',
+		'datausearticles',
+		'featurednewsarticles',
+		'viewallevents',
+		'viewallresources',
+		'taxonomy_term_json',
+	);
+	return $views;
+}
+
+/**
+ * Build custom term pages with associated views.
+ *
+ * The logic assumes one view per term page. In case we need to
+ * associate more than one view, we then add a condition and write
+ * another custom function which should return $build.
+ */
+function gbif_pages_taxonomy_term_page($term) {
+  $relation = gbif_pages_term_view_relation();
+  if (array_key_exists($term->tid, $relation)) {
+
+    $uri = entity_uri('taxonomy_term', $term);
+
+    // Set the term path as the canonical URL to prevent duplicate content.
+    drupal_add_html_head_link(array('rel' => 'canonical', 'href' => url($uri['path'], $uri['options'])), TRUE);
+    // Set the non-aliased path as a default shortlink.
+    drupal_add_html_head_link(array('rel' => 'shortlink', 'href' => url($uri['path'], array_merge($uri['options'], array('alias' => TRUE)))), TRUE);
+
+    // Every term page has a chance to show the description in taxaNavigation.
+    $build = taxonomy_term_show($term);
+
+    // Attach view(s) depending on term-view relations.
+    $markup = '';
+    $view_count = 0;
+    array_walk_recursive($relation[$term->tid], function($value, $key) use (&$view_count) {
+    	if ($key == 'view') $view_count++;
+    });
+
+    if ($view_count > 1) {
+      foreach ($relation[$term->tid] as $view_block) {
+        $markup .= "\n";
+        $markup .= views_embed_view($view_block['view'], $view_block['display']);
+      }
+    }
+    elseif ($view_count === 1) {
+      $markup = views_embed_view($relation[$term->tid]['view'], $relation[$term->tid]['display']);
+    }
+
+    // Attach the final result to the page build.
+    $build['members'] = array('#markup' => $markup);
+
+  }
+  else {
+    $build = taxonomy_term_page($term);
+  }
+  return $build;
+}
+
+/**
+ * Override for search_view().
+ * @see modules/search/search_pages.inc.
+ * @see https://drupal.org/node/708590.
+ */
+function gbif_pages_search_view($module = NULL, $keys = '') {
+  $info = FALSE;
+  $keys = trim($keys);
+  // Also try to pull search keywords out of the $_REQUEST variable to
+  // support old GET format of searches for existing links.
+  if (!$keys && !empty($_REQUEST['keys'])) {
+    $keys = trim($_REQUEST['keys']);
+  }
+
+  if (!empty($module)) {
+    $active_module_info = search_get_info();
+    if (isset($active_module_info[$module])) {
+      $info = $active_module_info[$module];
+    }
+  }
+
+  if (empty($info)) {
+    // No path or invalid path: find the default module. Note that if there
+    // are no enabled search modules, this function should never be called,
+    // since hook_menu() would not have defined any search paths.
+    $info = search_get_default_module_info();
+    // Redirect from bare /search or an invalid path to the default search path.
+    $path = 'search/' . $info['path'];
+    if ($keys) {
+      $path .= '/' . $keys;
+    }
+    drupal_goto($path);
+  }
+
+  // Default results output is an empty string.
+  $results = array('#markup' => '');
+  // Process the search form. Note that if there is $_POST data,
+  // search_form_submit() will cause a redirect to search/[module path]/[keys],
+  // which will get us back to this page callback. In other words, the search
+  // form submits with POST but redirects to GET. This way we can keep
+  // the search query URL clean as a whistle.
+  if (empty($_POST['form_id']) || $_POST['form_id'] != 'search_form') {
+    $conditions =  NULL;
+    if (isset($info['conditions_callback']) && function_exists($info['conditions_callback'])) {
+      // Build an optional array of more search conditions.
+      $conditions = call_user_func($info['conditions_callback'], $keys);
+    }
+    // Only search if there are keywords or non-empty conditions.
+    if ($keys || !empty($conditions)) {
+      // Log the search keys.
+      watchdog('search', 'Searched %type for %keys.', array('%keys' => $keys, '%type' => $info['title']), WATCHDOG_NOTICE, l(t('results'), 'search/' . $info['path'] . '/' . $keys));
+
+      // Collect the search results.
+      $results = search_data($keys, $info['module'], $conditions);
+    }
+  }
+  // The form may be altered based on whether the search was run.
+  $build['search_form'] = drupal_get_form('search_form', NULL, $keys, $info['module']);
+  $build['search_results'] = $results;
+
+  return $build;	
+}
+
+function gbif_pages_term_view_relation() {
+  $relation = array(
+    '565' => array( // newsroom/summary
+      array(
+        'view' => 'featurednewsarticles',
+        'display' => 'default',
+      ),
+      array(
+        'view' => 'usesofdatafeaturedarticles',
+        'display' => 'latest3',
+      ),
+      array(
+        'view' => 'newsarticles',
+        'display' => 'latest3',
+      ),
+    ),
+    '566' => array( // newsroom/news
+      'view' => 'newsarticles',
+      'display' => 'page',
+    ),
+    '567' => array( // newsroom/uses
+      'view' => 'usesofdatafeaturedarticles',
+      'display' => 'latest6',
+    ),
+    '569' => array( // newsroom/events
+      'view' => 'viewallevents',
+      'display' => 'current',
+    ),
+    '764' => array( // resources/summary
+    	'view' => 'viewallresources',
+    	'display' => 'latest5',
+    ),
+  );
+  return $relation;
+}
+
+function gbif_pages_form_alter(&$form, &$form_state, $form_id) {
+  switch ($form_id) {
+    case 'generictemplate_node_form':
+      $form['body']['#suffix'] = '<p>' . t('For full-width images, please use 877 pixels as the width and make sure the dimensions are provided in the "Appearance" tab of the image dialogue box.') . '</p>';
+      break;
+    case 'newsarticle_node_form':
+      break;
+    case 'user_login':
+      $form['actions']['submit']['#value'] = t('Login');
+      break;
+    case 'user_profile_form':
+      break;
+  }
+}
+
+/**
+ * Implements hook_image_default_styles().
+ */
+function gbif_pages_image_default_styles() {
+	$styles = array();
+	$styles['featured_news_slideshow_image'] = array(
+		'label' => t('Featured news slideshow image'),
+		'effects' => array(
+			array(
+				'name' => 'image_scale',
+				'data' => array(
+					'width' => 628,
+					'upscale' => 1,
+				),
+				'weight' => 0,
+			),
+			array(
+				'name' => 'image_crop',
+				'data' => array(
+					'width' => 626,
+					'height' => 424,
+				),
+				'weight' => 1,
+			),
+		),
+	);
+
+	return $styles;
+}

@@ -1,0 +1,282 @@
+<?php
+// Countries table name.  Just here for simplicity, since this isn't likely to change.
+define('BC_COUNTRIES_TABLE', 'countries_country');
+
+// Prefix for columns and fields.
+define('BC_PREFIX', 'better_countries_');
+
+/**
+ * Implements hook_menu().
+ */
+function better_countries_menu() {
+  $items['admin/config/regional/countries/bc'] = array(
+    'title' => 'Better Countries',
+    'description' => t('Configuration and imports provided by Better Countries'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('better_countries_config'),
+    'access callback' => 'user_access',
+    'access arguments' => array('administer better countries'),
+    'file' => 'better_countries.admin.inc',
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 10,
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function better_countries_permission() {
+  return array(
+    'administer better countries' => array(
+      'title' => t('Administer Better Countries'),
+      'description' => t('Allows users to configure and use Better Countries module.'),
+    ),
+    'administer countries' => array(
+      'title' => t('Administer Countries'),
+      'description' => t('Allows users to administer the Countries module, including editing and enabling countries.'),
+    ),
+
+  );
+}
+
+/**
+ * Implements hook_menu_alter
+ *
+ * Used to change the access of Countries module administration paths
+ */
+function better_countries_menu_alter(&$items) {
+  foreach ($items as $path => $item) {
+    if (isset($item['module']) && $item['module'] == 'countries') {
+      $items[$path]['access arguments'] = array('administer countries');
+    }
+  }
+}
+
+/**
+ * Implements hook_libraries_info().
+ */
+function better_countries_libraries_info() {
+  $libraries['geonames'] = array(
+    'name' => 'PEAR GeoNames PHP Library',
+    'vendor url' => 'http://pear.php.net/',
+    'download url' => 'http://pear.php.net/package/Services_GeoNames',
+    'version arguments' => array(
+      'file' => 'package.xml',
+      'pattern' => '/<release>(\d+\.\d+\.\d+)<\/release>/',
+      'lines' => 40,
+    ),
+    'files' => array(
+      'php' => array('Services_GeoNames-1.0.1/Services/GeoNames.php', ),
+    ),
+  );
+
+  return $libraries;
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function better_countries_form_countries_admin_form_alter(&$form, &$form_state, $form_id) {
+  $form[BC_PREFIX . 'pin_city'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Pin City',
+    '#size' => 20,
+    '#default_value' => $form['#country']->{BC_PREFIX . 'pin_city'},
+    '#description' => t('The city to use for for pin coordinates.  Defaults to the capital city (if provided by GeoNames).'),
+  );
+  $form[BC_PREFIX . 'custom_code'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Custom Country Code',
+    '#size' => 5,
+    '#default_value' => $form['#country']->{BC_PREFIX . 'custom_code'},
+    '#description' => t('Custom country code.'),
+  );
+
+}
+
+/**
+ * Translation Import handler
+ */
+function better_countries_import_translations() {
+  $enabled_languages = language_list('enabled');
+
+  // Don't add a translation in the default language if it is English (the source language of the file)
+  $default_language = language_default('language');
+  if ($default_language == 'en') {
+    unset($enabled_languages[1][$default_language]);
+  }
+
+  $enabled_languages = array_keys($enabled_languages[1]);
+
+  $query = "SELECT c.iso2 AS iso, s.lid, s.source FROM {locales_source} s
+    RIGHT JOIN {countries_country} c ON s.source = c.name
+    ORDER BY c.iso2";
+
+  $iso_codes = db_query($query, array(':group' => 'countries'))->fetchAllKeyed(1,0);
+  $sources = db_query($query, array(':group' => 'countries'))->fetchAllAssoc('lid');
+
+  $filename = drupal_get_path('module', 'better_countries') . '/files/translated_country_names.csv';
+
+  if (($handle = fopen($filename, 'r')) !== FALSE) {
+    $count = 0;
+    while ((list($iso, $language, $country) = fgetcsv($handle, 1000, ',')) !== FALSE) {
+      if (is_numeric($iso) || strlen($iso) != 2 || !in_array($language, $enabled_languages) || !in_array($iso, $iso_codes)) {
+        continue;
+      }
+
+      foreach ($iso_codes as $lid => $code) {
+        if ($iso == $code) {
+          db_merge('locales_target')
+            ->key(
+              array(
+                'lid'      => $lid,
+                'language' => $language,
+              )
+            )
+            ->fields(
+              array(
+                'lid'         => $lid,
+                'language'    => $language,
+                'translation' => $country,
+                'i18n_status' => 1
+              )
+            )->execute();
+          $count++;
+        }
+      }
+    }
+
+    drupal_set_message($filename . ' was opened and used to import ' . $count . ' translations in ' . count($enabled_languages) . ' languages.');
+  }
+  else {
+    drupal_set_message('Could not open the country translation CSV file.');
+  }
+}
+
+/**
+ * Country continent assignment import handler
+ */
+function better_countries_import_country_continents($form, $form_state) {
+  if ($file = file_load($form_state['values']['better_countries']['continents']['country-continents'])) {
+    $filename = file_directory_temp() . '/' . $file->filename;
+
+    if (($handle = fopen($filename, 'r')) !== FALSE) {
+      while ((list($iso2, $iso3, $name, $official_name, $numcode, $continent, $enabled) = fgetcsv($handle, 1000, ',')) !== FALSE) {
+        $result = db_update('countries_country')
+          ->fields(array(
+              'continent' => $continent,
+            ))
+          ->condition('iso2', $iso2)
+          ->execute();
+      }
+    }
+  }
+}
+
+/**
+ * Synchronisation handler
+ */
+function better_countries_get_pins() {// This function will get passed form and form_state, though we don't really care
+  if ($library = libraries_load('geonames')) {
+    $username = variable_get('bc_geonames_username');
+    $token = md5($username);
+    $geonames  = new Services_GeoNames($username, $token);
+    $geonames->url = 'http://api.geonames.org';
+    $geonames_countries = $geonames->countryInfo();
+
+    $query = "SELECT iso2, " . BC_PREFIX . "pin_city AS city FROM {countries_country}";
+    $local_countries = db_query($query)->fetchAllAssoc('iso2');
+
+    foreach ($geonames_countries as $country) {
+      if (array_key_exists($country->countryCode, $local_countries) && !empty($country->capital)) {
+        $city = (!empty($local_countries[$country->countryCode]->city)) ? $local_countries[$country->countryCode]->city : $country->capital;
+        $city = check_plain($city);
+        $options = array(
+          'username' => $username,
+          'name_equals' => $city,
+          'country' => $country->countryCode,
+          'maxRows' => 1, // We take the very first result only
+        );
+        $url = better_countries_geonames_query('search', $options);
+        $xml = file_get_contents($url);
+        $city_info = new SimpleXMLElement($xml);
+        $fields = array(
+          BC_PREFIX . 'pin_city' => $city,
+          BC_PREFIX . 'pin_latitude' => $city_info->geoname->lat,
+          BC_PREFIX . 'pin_longitude' => $city_info->geoname->lng,
+        );
+
+      $update = db_merge(BC_COUNTRIES_TABLE)
+        ->key(array('iso2' => $country->countryCode, ))
+        ->fields($fields)
+        ->execute();
+      }
+    }
+  }
+}
+
+/**
+ * Helper function to generate geonames WS API querys
+ */
+function better_countries_geonames_query($api_function, $options) {
+  return 'http://api.geonames.org/' . $api_function . '?' . http_build_query($options);
+}
+
+
+/**
+ * @return array of country names, keyed to cid suitable for use in a custom form (for example).
+ *
+ * arguments:
+ *  $status: one of 'enabled', 'disabled', or all; defaults to 'enabled'
+ *  $official: will return official_name if TRUE; defaults to FALSE
+ *  $key: field to be used as a key; may be 'cid', or other valid colum from countries_country.
+ */
+function better_countries_form_options($status = 'enabled', $official = FALSE, $key = 'cid') {
+  // Accidentally calling a non-existent key will fail miserably, so check first if it exists.
+  // If it does not, use the default, and leave a message in watchdog.
+  $schema = drupal_get_schema('countries_country');
+  if (!in_array($key, array_keys($schema['fields']))) {
+    watchdog('Better Countries', 'The key argument provided - \'%arg\' - is invalid; using \'cid\' instead.', array('%arg' => $key, ), WATCHDOG_ERROR);
+    $key = 'cid';
+  }
+
+  $query = "SELECT $key, " ;
+  $query .= $official ? "official_name " : "name ";
+  $query .="AS name, iso2 FROM {countries_country} WHERE enabled ";
+
+  switch ($status) {
+    case 'disabled':
+      $query .= "= 0";
+      break;
+
+    case 'all':
+      $query .= "> -1";
+      break;
+
+    case 'enabled':
+      $query .= "= 1";
+      break;
+  }
+
+  $results = db_query($query)->fetchAllAssoc($key);
+
+  $options = array();
+  foreach ($results as $index => &$row) {
+    $options[$index] = countries_i18n_translate($row->iso2, $official ? 'official_name' : 'name', $row->name, i18n_language_interface()->language);
+  }
+
+  return $options;
+}
+
+/**
+ * Implements hook_views_api().
+ */
+function better_countries_views_api() {
+  return array(
+    'api' => '3',
+     'path' => drupal_get_path('module', 'better_countries') . '/views',
+  );
+}
+

@@ -1,0 +1,24 @@
+<?php
+/**
+ * @file
+ */
+
+/**
+ * Implements hook_install().
+ */
+function gbif_vocabularies_install() {
+  // Disable the to-be-deprecated gbdict module.
+  $module_list = array(
+    'gbdict',
+  );
+  module_disable($module_list);  
+  drupal_uninstall_modules($module_list, FALSE);
+  
+  // Enable country-related modules
+  module_enable(array(
+    'countries',
+    'better_countries',
+    'countryicons',
+  ));
+  
+}

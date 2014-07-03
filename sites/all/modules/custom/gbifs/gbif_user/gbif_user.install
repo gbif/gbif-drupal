@@ -1,0 +1,163 @@
+<?php
+/**
+ * @file
+ */
+
+
+/**
+ * Implements hook_install().
+ *
+ * This module assumes the existence of field_country.
+ */
+function gbif_user_install() {
+
+  // Create a country field and an instance that only allows single value.
+  $field = array(
+    'field_name' => 'field_country_mono',
+    'label' => t('Country'),
+    'description' => 'The country to which a user is registered.',
+    'type' => 'taxonomy_term_reference',
+    'module' => 'taxonomy',
+    'cardinality' => 1,
+    'active' => 1,
+	  'locked' => FALSE,
+	  'deleted' => 0,
+	  'columns' => array(
+	    'tid' => array(
+	      'type' => 'int',
+	      'unsigned' => TRUE,
+	      'not null' => FALSE,
+	    ),
+	  ),
+	  'bundles' => array(
+	    'user' => array('user'),
+	  ),
+    'settings' => array(
+      'allowed_values' => array(
+        array(
+          'vocabulary' => 'countries',
+          'parent' => 0
+        ),
+      ),
+    ),
+    'instance_settings' => array(
+      'allowed_values' => array(
+        array(
+          'vocabulary' => 'countries',
+          'parent' => 0
+        ),
+      ),
+      'user_register_form' => TRUE,
+    ),
+    'entity_types' => array(),
+	  'translatable' => 0,
+    'storage' => array(
+      'type' => 'field_sql_storage',
+      'settings' => array(),
+      'module' => 'field_sql_storage',
+      'active' => 1,
+      'details' => array(
+        'sql' => array(
+          'FIELD_LOAD_CURRENT' => array(
+            'field_data_field_country_mono' => array(
+              'tid' => 'field_country_mono_tid',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => array(
+            'field_revision_field_country_mono' => array(
+              'tid' => 'field_country_mono_tid',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreigh keys' => array(
+      'tid' => array(
+        'table' => 'taxonomy_term_data',
+        'columns' => array(
+          'tid' => 'tid',
+        ),
+      ),
+    ),
+    'indexes' => array(
+      'tid' => array('tid'),
+    ),
+  );
+  field_create_field($field);
+
+  $instance = array(
+    'field_name' => 'field_country_mono',
+    'label' => t('Country'),
+    'description' => 'The country from where the user is.',
+    'entity_type' => 'user',
+    'bundle' => 'user',
+    'required' => 1,
+    'deleted' => 0,
+    'default_value' => NULL,
+    'widget' => array(
+      'type' => 'options_select',
+      'module' => 'options',
+      'weight' => 5,
+      'active' => 1,
+    ),
+    'display' => array(
+      'default' => array(
+        'type' => 'link',
+        'label' => 'above',
+        'settings' => array(),
+        'weight' => 3,
+      ),
+      'teaser' => array(
+        'type' => 'hidden',
+        'label' => 'above',
+        'settings' => array(),
+        'weight' => 0,
+      ),
+    ),
+    'settings' => array(
+      'mediafront' => array(
+        'field_type' => '0',
+        'media_type' => 'media',
+        'preview' => '0',
+        'thumbnail' => '0',
+        'custom' => '',
+      ),
+      'user_register_form' => 1,
+    ),
+  );
+  field_create_instance($instance);
+
+  // Migrate user->country data from field_country to field_country_mono.
+	$tables = array(
+		'field_data',
+		'field_revision',
+	);
+	foreach ($tables as $table) {
+		$source_table = $table . '_field_country';
+		$target_table = $table . '_field_country_mono';
+	  $result = db_select($source_table, 'fc')
+			->fields('fc')
+			->condition('entity_type', 'user', '=')
+			->condition('bundle', 'user', '=')
+			->execute();
+
+	  foreach ($result as $record) {
+	    db_insert($target_table)
+	      ->fields(array(
+	      	'entity_type' => $record->entity_type,
+					'bundle' => $record->bundle,
+					'deleted' => $record->deleted,
+					'entity_id' => $record->entity_id,
+					'revision_id' => $record->revision_id,
+					'language' => $record->language,
+					'delta' => $record->delta,
+					'field_country_mono_tid' => $record->field_country_tid, 
+	      ))
+				->execute();
+	  }
+	}
+
+	// Delete the instance of field_country for user.
+	$instance = field_info_instance('user', 'field_country', 'user');
+	field_delete_instance($instance, TRUE);
+}

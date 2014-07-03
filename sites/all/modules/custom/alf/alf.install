@@ -1,0 +1,38 @@
+<?php
+/**
+* Implements hook_install()
+*/
+function alf_install(){
+
+}
+
+
+/**
+* Implements hook_uninstall()
+*/
+
+function alf_uninstall() {
+	watchdog("Anchor Links Field Module", "Uninstalling module");
+
+}
+
+
+/**
+* Implements hook_field_schema().
+*
+* As opposed to hook_schema(), in hook_field_schema() one must only specify
+* the columns, they'll be created as tables anyway. 
+*
+*/
+function alf_field_schema($field) {
+
+	$columns = array(
+		'title' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE),
+		'link' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE),
+	);
+
+	return array(
+		'columns' => $columns,
+		'indexes' => array(),
+	);
+}

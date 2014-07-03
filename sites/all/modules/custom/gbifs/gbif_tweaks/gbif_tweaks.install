@@ -1,0 +1,173 @@
+<?php
+/**
+ * @file
+ */
+
+/**
+ * Implements hook_install().
+ */
+function gbif_tweaks_install() {
+  // Hide "submitted by" by default.
+  variable_set('node_submitted_resource', 0);
+  // Disable "comment" by default.
+  variable_set('comment_resource', 0);
+
+  // Change the default theme to bvng.
+  theme_enable(array(
+    'bvng',
+  ));
+  theme_disable(array(
+    'vizz2'
+  ));
+
+  // Set the default theme.
+  variable_set('theme_default', 'bvng');
+  variable_set('admin_theme', 'gbifgreen');
+  
+  // Make it easier for administration
+  // and uninstall unused modules
+  $module_list = array(
+    'toolbar',
+    'local_fonts',
+    'fontyourface_ui',
+    'fontyourface',
+    'colorbox',
+    'devel',
+		'wysiwyg',
+  );
+  module_disable($module_list);
+  drupal_uninstall_modules($module_list, FALSE);
+  
+  module_enable(array(
+    'admin_menu',
+    'admin_menu_toolbar',
+    'jquery_update',
+    'views_slideshow',
+    'views_slideshow_cycle',
+    'chosen',
+		'themekey',
+		'ckeditor',
+		'countryicons_shiny',
+  ));
+  
+  // jquery_update settings.
+  variable_set('jquery_update_jquery_cdn', 'none');
+  variable_set('jquery_update_jquery_version', '1.8');
+  
+  // file_public_path settings.
+  variable_set('file_public_path', 'sites/default/files');
+  
+  // GBIF definitions.
+  gbif_tweaks_region_definition();
+  gbif_tweaks_subject_definition();
+
+	// Theme control.
+	gbif_tweaks_theme_control();
+
+  // Flush all caches so the special menu items can take effect.
+  drupal_flush_all_caches();
+  
+  // Enable related GBIF modules.
+  module_enable(array(
+		'gbif_blocks',
+		'gbif_pages',
+		'gbif_vocabularies',
+		'gbif_user',
+		'gbif_navigation',
+		'gbif_editor',
+		'gbif_role',
+		'gbif_ims',
+  ));
+
+}
+
+/**
+ * Implements hook_uninstall().
+ * @todo Decide whether we should uninstall jquery_update if this
+ *       module got uninstalled. jquery_update is required by
+ *       bootstrap.
+ */
+function gbif_tweaks_uninstall() {
+  // Hide "submitted by" by default.
+  variable_del('node_submitted_resource', 0);
+  // Disable "comment" by default.
+  variable_del('comment_resource', 0);
+  
+  // Revert the default theme to vizz2.
+  theme_disable(array(
+    'bvng'
+  ));
+  theme_enable(array(
+    'vizz2',
+  ));
+  
+  // Revert the admin menu.
+  module_disable(array(
+    'admin_menu',
+    'admin_menu_toolbar'
+  ));
+  module_enable(array(
+    'toolbar',
+  ));
+  
+  // Revert GBIF definitions.
+  variable_del('gbif_region_definition');
+  variable_del('gbif_subject_definition');
+  
+  // Uninstall GBIF related modules.
+  $module_list = array(
+    'gbif_blocks',
+    'gbif_pages',
+    'gbif_navigation',
+    'gbif_vocabularies',
+  );
+  drupal_uninstall_modules($module_list, TRUE);
+}
+
+/**
+ * Define GBIF Regions and set a variable.
+ */
+function gbif_tweaks_region_definition() {
+  $regions = array(
+    t('Africa'),
+    t('Asia'),
+    t('Europe'),
+    t('Latin America'),
+    t('North America'),
+    t('Oceania'),
+  );
+  variable_set('gbif_region_definition', $regions);
+}
+
+/**
+ * Define main subjects for filtering.
+ */
+function gbif_tweaks_subject_definition() {
+  $subjects = array(
+    '635' => t('Invasives'),
+    '639' => t('Climate change'),
+    '638' => t('Conservation'),
+    '636' => t('Agriculture'),
+    '637' => t('Human health'),
+    '640' => t('Species distributions'),
+  );
+  variable_set('gbif_subject_definition', $subjects);
+}
+
+/**
+ * ThemeKey settings
+ */
+function gbif_tweaks_theme_control() {
+	$themekey = array(
+		'property' => 'drupal:path',
+		'operator' => '=',
+		'value' => 'imce',
+		'weight' => 1,
+		'theme' => 'bartik',
+		'enabled' => 1,
+		'wildcards' => 'a:0:()',
+		'parent' => 0,
+		'module' => 'themekey',
+	);
+	drupal_write_record('themekey_properties', $themekey);
+}

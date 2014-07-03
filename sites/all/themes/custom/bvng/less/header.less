@@ -1,0 +1,61 @@
+// Insert your styling here.
+
+#masthead {
+  background: url('../images/navbar.jpg') repeat-x top;
+  height: @masthead-height;
+  position: relative;
+  
+  nav > ul > li.search {
+    display:none;
+    position:absolute;
+    top: 11px;
+    display: block;
+    padding: 0;
+    width: 14px;
+    height: 14px;
+
+    a.search {
+    }
+
+    form {
+      opacity: 0;
+      width: 10px;
+    }
+  }
+}
+
+.account {
+  position: absolute;
+  top: -3px;
+  right: -8px;
+  width: 180px;
+  height: 25px;
+  text-align: center;
+  padding: 6px 0 0 7px;
+  color: #ADD8B8;
+  font-size: 11px;
+  background: url("../images/images.png") 0 -94px no-repeat;
+  color: @colorTitleOnGreen;
+  
+  a {
+    color: @colorTitleOnGreen;
+    
+    &:hover {
+      color: @colorLinkHover;
+      text-decoration: none;
+    }
+  }  
+}
+
+#banner {
+  background: url('../images/banner-green.jpg') repeat-x top;
+  border-bottom: 1px solid @nav-tabs-border-color;
+  height: @banner-height;
+  position: relative;
+}
+
+#region-menu {
+  position: absolute;
+  bottom: 0px;
+  padding-left: 0;
+}

@@ -17,11 +17,14 @@ function npt_mendeley_settings_form() {
     '#value' => t('Update now'),
     '#prefix' => '<div id="update-div">',
     '#suffix' => '<div id="status-wrapper"></div></div>',
-    '#ajax' => array(
-      'callback' => 'npt_mendeley_retrieve',
+		'#submit' => array('npt_mendeley_retrieve_by_oauth2'),
+    /*
+		'#ajax' => array(
+      'callback' => 'npt_mendeley_retrieve_by_oauth2',
       'wrapper' => 'status-wrapper',
       'effect' => 'fade',
     ),
+    */
   );
 
   $total_docs = variable_get('npt_mendeley_total');
@@ -49,7 +52,7 @@ function npt_mendeley_settings_form() {
   $form['npt_mendeley_analyse'] = array(
     '#type' => 'fieldset',
     '#title' => t('Analyse retrieved documents from Mendeley'),
-    '#description' => '<p>' . t('Group retrieved documents according to prefined sets of tags and produce lists in configurable blocks.') . '</p>',
+    '#description' => '<p>' . t('Group retrieved documents according to pre-defined sets of tags and produce lists in configurable blocks.') . '</p>',
   );
   $form['npt_mendeley_analyse']['analyse_submit'] = array(
     '#type' => 'submit',

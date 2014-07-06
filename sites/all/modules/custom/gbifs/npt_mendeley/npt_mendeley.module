@@ -3,13 +3,37 @@
  * @file
  * This module retrieves relevant literature entries about a node from Mendeley API.
  * @todo More precise progress probing using CURLOPT_PROGRESSFUNCTION.
+ * @see http://unitstep.net/blog/2009/05/05/using-curl-in-php-to-access-https-ssltls-protected-sites/
  */
 
-define('NPT_MENDELEY_CONSUMER_KEY', '6d775b71aef1d3e93dbfabbd2653bfe1051e3ddaf');
+include_once('HttpPost.php');
+
+define('MENDELEY_GBIF_PORTAL_CLIENT_ID', 516);
+define('MENDELEY_GBIF_PORTAL_CLIENT_SECRET', variable_get('mendeley_client_secret'));
 define('MENDELEY_GBIF_PUBLIC_GROUP_ID', '1068301');
-define('MENDELEY_PUBLIC_GROUPS_DOCUMENTS', 'http://api.mendeley.com/oapi/documents/groups');
-define('MENDELEY_DOC_DETAIL_URL', 'http://api.mendeley.com/oapi/documents/details');
+define('MENDELEY_AUTHENTICATION_SERVER', 'https://mix.mendeley.com');
+define('MENDELEY_PUBLIC_GROUPS_DOCUMENTS', 'https://api-oauth2.mendeley.com/oapi/documents/groups');
+define('MENDELEY_DOC_DETAIL_URL', 'https://api-oauth2.mendeley.com/oapi/documents/details');
 define('GBIF_ENUMERATION_COUNTRY', 'http://api.gbif.org/v0.9/enumeration/country');
+
+/**
+ * Implements hook_oauth2_client2().
+ */
+function npt_mendeley_oauth2_clients() {
+	// user-password flow
+	$oauth2_clients['mendeley'] = array(
+		'token_endpoint' => MENDELEY_AUTHENTICATION_SERVER . '/oauth/token',
+		'auth_flow' => 'server-side',
+		'client_id' => MENDELEY_GBIF_PORTAL_CLIENT_ID,
+		'client_secret' => MENDELEY_GBIF_PORTAL_CLIENT_SECRET,
+		'authorization_endpoint' => MENDELEY_AUTHENTICATION_SERVER . '/oauth/authorize',
+		'redirect_uri' => $GLOBALS['base_url'] . '/mendeley/oauth2_callback',
+		'scope' => 'all',
+		'username' => 'bko@gbif.org',
+		'password' => 'C75jPm62',
+	);
+	return $oauth2_clients;
+}
 
 /**
  * Implements hook_menu().
@@ -84,7 +108,50 @@ function npt_mendeley_menu() {
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
-  return $items;
+
+	$items['mendeley/oauth2_callback'] = array(
+		'page callback' => '_npt_mendeley_oauth2_callback',
+		'access callback' => TRUE,
+		'type' => MENU_CALLBACK,
+	);
+
+	return $items;
+}
+
+function _npt_mendeley_oauth2_callback() {
+	// The existence of code means it's been redirected from a successful authorization request.
+	// So it's good to request an OAuth access token.
+	if ($_GET['code']) {
+		$code = $_GET['code'];
+		$url = MENDELEY_AUTHENTICATION_SERVER . '/oauth/token';
+		$params = array(
+			'grant_type' => 'authorization_code',
+			'code' => $code,
+			'redirect_uri' => $GLOBALS['base_url'] . '/mendeley/oauth2_callback',
+		);
+		$query = rawurldecode(http_build_query($params));
+
+		$ch = curl_init();
+
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array("Authorization: Basic " . base64_encode(MENDELEY_GBIF_PORTAL_CLIENT_ID . ':' . MENDELEY_GBIF_PORTAL_CLIENT_SECRET)));
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 1);
+		$CAcertificate = drupal_get_path('module', 'npt_mendeley') . '/CAcertificates/GeoTrustGlobalCA';
+		if (file_exists($CAcertificate)) {
+			curl_setopt($ch, CURLOPT_CAINFO, $CAcertificate);
+		}
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $query);
+		curl_setopt($ch, CURLOPT_HEADER, 1);
+		curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+		$result = curl_exec($ch);
+		$json = json_decode(end(explode("\r\n", $result)));
+
+		return $responseObj->access_token;
+	}
 }
 
 /**
@@ -515,15 +582,29 @@ function _npt_mendeley_list_documents($gbif_cat_type, $machine_name, $render) {
 	return $content;
 }
 
+
+function npt_mendeley_retrieve_by_oauth2() {
+
+  // Trial accessing Mendeley API.
+	try {
+		$oauth2_client = oauth2_client_load('mendeley');
+		$mendeley_auth_url = $oauth2_client->getAccessToken();
+	}
+	catch (Exception $e) {
+		drupal_set_message($e->getMessage(), 'error');
+	}
+
+}
+
 /**
  * Ensure a local digest of citations from the GBIF Public Library on Mendeley.
  * @todo To figure out why size doesn't show in debug session.
  */
 function npt_mendeley_retrieve() {
+	$mendeley_gbif_url = MENDELEY_AUTHENTICATION_SERVER . '/oauth/authorize?client_id=516&redirect_uri=http://localhost:10088&response_type=code&scope=all';
+	$html = file_get_contents($mendeley_gbif_url);
 
-  // Trial accessing Mendeley API.
-  $mendeley_gbif_url = MENDELEY_PUBLIC_GROUPS_DOCUMENTS . '/' . MENDELEY_GBIF_PUBLIC_GROUP_ID . '/docs/?details=true&items=40&consumer_key=' . NPT_MENDELEY_CONSUMER_KEY;
-  $mendeley_ch = curl_init(); // Create a cURL resource
+	$mendeley_ch = curl_init(); // Create a cURL resource
   curl_setopt($mendeley_ch, CURLOPT_URL, $mendeley_gbif_url);
   curl_setopt($mendeley_ch, CURLOPT_RETURNTRANSFER, true);
   curl_setopt($mendeley_ch, CURLOPT_HEADER, true);

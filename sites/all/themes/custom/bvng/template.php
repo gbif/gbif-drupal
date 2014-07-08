@@ -687,10 +687,6 @@ function bvng_js_alter(&$js) {
 			if ($attr['group'] == 100) {
 				$js[$data]['scope'] = 'footer';
 			}
-			// Move Google Analytics JS to the footer.
-			if ($data == 'sites/all/modules/contrib/google_analytics/googleanalytics.js' || $data === '0') {
-				$js[$data]['scope'] = 'footer';
-			}
 		}
 	}
 }

@@ -35,8 +35,12 @@
       print $view_title;
       drupal_set_title($view_title);
     ?>
+			<a href="/resources/archive/rss"><img class="rss-icon" src="/sites/all/themes/custom/bvng/images/rss-feed.gif"/></a>
     </h2>
   </header>
+	<div class="content-header sidebar-header col-md-3">
+		<h2>More GBIF resources</h2>
+	</div>
 </div>
 <div class="row">
   <div class="view-column col-md-8">
@@ -79,13 +83,16 @@
           <?php print $attachment_after; ?>
         </div>
       <?php endif; ?>
-      <?php if ($pager): ?>
+			<?php if ($pager): ?>
+				<hr>
         <?php print $pager; ?>
       <?php endif; ?>
     </div>
   </div>
-  <div class="col-md-3">
-
+  <div class="sidebar-filter col-md-3">
+		<ul class="filter-list">
+			<li>Filters coming soon...</li>
+		</ul>
   </div>
     <?php if ($footer): ?>
       <div class="view-footer">

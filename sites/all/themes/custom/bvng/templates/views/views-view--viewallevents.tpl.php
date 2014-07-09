@@ -29,8 +29,13 @@
 ?>
 <div class="row">
   <header class="content-header col-md-8">
-    <h2><?php print $view->get_title(); ?></h2>
-  </header>
+    <h2>
+			<?php print $view->get_title(); ?>
+			<?php if (current_path() != 'newsroom/events/archive'): ?>
+			<a href="/newsroom/events/rss"><img class="rss-icon" src="/sites/all/themes/custom/bvng/images/rss-feed.gif"/></a>
+			<?php endif; ?>
+		</h2>
+	</header>
 	<div class="content-header sidebar-header col-md-3">
 		<h2>More GBIF events</h2>
 	</div>

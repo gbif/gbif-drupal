@@ -194,6 +194,16 @@ function gbif_pages_view_viewallevents() {
 	$handler->display->display_options['fields']['title']['alter']['trim'] = TRUE;
 	$handler->display->display_options['fields']['title']['alter']['html'] = TRUE;
 	$handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
+
+	/* Display: Feed */
+	$handler = $view->new_display('feed', 'Feed', 'feed_upcoming');
+	$handler->display->display_options['defaults']['title'] = FALSE;
+	$handler->display->display_options['title'] = 'Upcoming GBIF events';
+	$handler->display->display_options['pager']['type'] = 'some';
+	$handler->display->display_options['style_plugin'] = 'rss';
+	$handler->display->display_options['row_plugin'] = 'node_rss';
+	$handler->display->display_options['path'] = 'newsroom/events/rss';
+	$handler->display->display_options['sitename_title'] = 0;
 	$translatables['viewallevents'] = array(
 		t('Master'),
 		t('Current GBIF events'),
@@ -216,6 +226,7 @@ function gbif_pages_view_viewallevents() {
 		t('Past GBIF events'),
 		t('Block of latest 4'),
 		t('More'),
+		t('Feed'),
 	);
 
 	return $view;

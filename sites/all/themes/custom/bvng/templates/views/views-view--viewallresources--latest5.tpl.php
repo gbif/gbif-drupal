@@ -29,14 +29,21 @@
 ?>
 <div class="row">
   <header class="content-header col-md-8">
-    <h2><?php print $view->get_title(); ?></h2>
+    <h2>
+			<?php print $view->get_title(); ?>
+			<a href="/resources/archive/rss"><img class="rss-icon" src="/sites/all/themes/custom/bvng/images/rss-feed.gif"/></a>
+		</h2>
   </header>
+	<div class="content-header sidebar-header col-md-3">
+		<h2>More GBIF resources</h2>
+	</div>
+
 </div>
 <div class="row">
   <div class="view-column col-md-8">
     <div class="<?php print $classes; ?>">
 		<p>GBIF maintains an online database of documents, manuals, tools and links useful to GBIF Participants and their biodiversity information facilities. All of these resources are available through this portal, and can be searched using the box at the top of the page. The resources added most recently to the database are shown below. </p>
-		<p>In coming months, we will develop more advanced filtering and searching facilities, building on the functions of the GBIF Online Resource Centre associated with the previous GBIF portal</p>
+		<p>In coming months, we will develop more advanced filtering and searching facilities, building on the functions of the GBIF Online Resource Centre associated with the previous GBIF portal.</p>
       <?php print render($title_prefix); ?>
       <?php if ($title): ?>
         <?php print $title; ?>
@@ -75,12 +82,11 @@
           <?php print $attachment_after; ?>
         </div>
       <?php endif; ?>
-		<a class="btn btn-primary" href="/resources/archive"> Archive of all GBIF resources </a>
     </div>
   </div>
-  <div class="col-md-3">
-
-  </div>
+	<div class="sidebar-filter col-md-3">
+		<?php print _bvng_get_resource_links(); ?>
+	</div>
     <?php if ($footer): ?>
       <div class="view-footer">
         <?php print $footer; ?>

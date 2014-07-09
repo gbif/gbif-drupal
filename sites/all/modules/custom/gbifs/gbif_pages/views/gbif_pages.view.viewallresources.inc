@@ -77,7 +77,7 @@ function gbif_pages_view_viewallresources() {
 	$handler->display->display_options['header']['area_text_custom']['table'] = 'views';
 	$handler->display->display_options['header']['area_text_custom']['field'] = 'area_text_custom';
 	$handler->display->display_options['header']['area_text_custom']['label'] = 'Label';
-	$handler->display->display_options['header']['area_text_custom']['content'] = '<h3>Latest Additions</h3>';
+	$handler->display->display_options['header']['area_text_custom']['content'] = '<h4>Latest Additions</h4>';
 	$handler->display->display_options['path'] = 'resources/summary';
 	$handler->display->display_options['menu']['type'] = 'normal';
 	$handler->display->display_options['menu']['title'] = 'Archive of all Resources';
@@ -128,7 +128,7 @@ function gbif_pages_view_viewallresources() {
 		t('Page'),
 		t('Archive of all GBIF resources'),
 		t('Label'),
-		t('<h3>Latest Additions</h3>'),
+		t('<h4>Latest Additions</h4>'),
 		t('Feed'),
 		t('Resources Full List'),
 	);

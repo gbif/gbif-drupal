@@ -548,9 +548,11 @@ function bvng_preprocess_taxonomy_term(&$variables) {
 
 /**
  * Implements hook_preprocess_views_view().
+ * @todo RSS feed icon in the header should be processed here for all views template.
  */
 function bvng_preprocess_views_view(&$variables) {
-  drupal_set_title($variables['view']->get_title());
+  $view_title = $variables['view']->get_title();
+	drupal_set_title($view_title);
   switch ($variables['view']->name) {
     case 'featurednewsarticles':
       // Contruct the JSON for slideshow.
@@ -572,7 +574,21 @@ function bvng_preprocess_views_view(&$variables) {
       drupal_add_js(drupal_get_path('theme', 'bvng') . '/js/featuredNewsSlideshow.js', array('type' => 'file', 'scope' => 'footer', 'weight' => 50));
       */
       break;
+		case 'newsarticles':
+			$region = arg(3);
+			if (!empty($region)) {
+				$feed_url = '/newsroom/archive/rss/' . $region;
+			}
+			else {
+				$feed_url = '/newsroom/archive/rss';
+			}
+			break;
   }
+	$variables['view_title'] = $view_title;
+	if (!empty($feed_url)) {
+		$variables['feed_url'] = $feed_url;
+	}
+
 }
 
 function bvng_preprocess_views_view_field(&$variables, $hook) {                      
@@ -1082,6 +1098,24 @@ function _bvng_get_event_links() {
 		'past' => array(
 			'label' => t('Past GBIF events'),
 			'url_base' => 'newsroom/events/archive',
+		),
+	);
+	$links = '';
+	$links = '<ul class="filter-list">';
+	foreach ($options as $option) {
+		$links .= '<li>';
+		$links .= l($option['label'], $option['url_base']);
+		$links .= '</li>';
+	}
+	$links .= '</ul>';
+	return $links;
+}
+
+function _bvng_get_resource_links() {
+	$options = array(
+		'all' => array(
+			'label' => t('All GBIF resources'),
+			'url_base' => 'resources/archive',
 		),
 	);
 	$links = '';

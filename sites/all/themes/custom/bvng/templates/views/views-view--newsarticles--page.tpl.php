@@ -30,12 +30,10 @@
 <div class="row">
   <header class="content-header col-md-8">
     <h2>
-    <?php
-      $view_title = $view->get_title();
-      print $view_title;
-      drupal_set_title($view_title);
-    ?>
+			<?php print $view_title; ?>
+			<a href="<?php print $feed_url; ?>"><img class="rss-icon" src="/sites/all/themes/custom/bvng/images/rss-feed.gif"/></a>
     </h2>
+
   </header>
   <div class="content-header sidebar-header col-md-3">
     <h2>Filter by region</h2>
@@ -82,9 +80,9 @@
           <?php print $attachment_after; ?>
         </div>
       <?php endif; ?>
-      <hr>
       <?php if ($pager): ?>
-        <?php print $pager; ?>
+				<hr>
+				<?php print $pager; ?>
       <?php endif; ?>
       <?php if ($more): ?>
         <?php print $more; ?>

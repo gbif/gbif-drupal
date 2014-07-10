@@ -20,7 +20,7 @@ function gbif_pages_view_viewallevents() {
 
 	/* Display: Master */
 	$handler = $view->new_display('default', 'Master', 'default');
-	$handler->display->display_options['title'] = 'Current GBIF events';
+	$handler->display->display_options['title'] = 'Current events';
 	$handler->display->display_options['use_more_always'] = FALSE;
 	$handler->display->display_options['access']['type'] = 'perm';
 	$handler->display->display_options['cache']['type'] = 'none';
@@ -68,7 +68,7 @@ function gbif_pages_view_viewallevents() {
 	/* Display: Upcoming */
 	$handler = $view->new_display('page', 'Upcoming', 'current');
 	$handler->display->display_options['defaults']['title'] = FALSE;
-	$handler->display->display_options['title'] = 'Upcoming GBIF events';
+	$handler->display->display_options['title'] = 'Upcoming events';
 	$handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
 	$handler->display->display_options['defaults']['pager'] = FALSE;
 	$handler->display->display_options['pager']['type'] = 'full';
@@ -105,7 +105,7 @@ function gbif_pages_view_viewallevents() {
 	$handler->display->display_options['filters']['field_start_date_value']['year_range'] = '-0:+5';
 	$handler->display->display_options['path'] = 'newsroom/events';
 	$handler->display->display_options['menu']['type'] = 'normal';
-	$handler->display->display_options['menu']['title'] = 'A view of all GBIF events';
+	$handler->display->display_options['menu']['title'] = 'All events';
 	$handler->display->display_options['menu']['weight'] = '0';
 	$handler->display->display_options['menu']['name'] = 'main-menu';
 	$handler->display->display_options['menu']['context'] = 0;
@@ -114,7 +114,7 @@ function gbif_pages_view_viewallevents() {
 	/* Display: Past */
 	$handler = $view->new_display('page', 'Past', 'past');
 	$handler->display->display_options['defaults']['title'] = FALSE;
-	$handler->display->display_options['title'] = 'Past GBIF events';
+	$handler->display->display_options['title'] = 'Past events';
 	$handler->display->display_options['defaults']['sorts'] = FALSE;
 	/* Sort criterion: Content: start_date (field_start_date) */
 	$handler->display->display_options['sorts']['field_start_date_value']['id'] = 'field_start_date_value';
@@ -198,7 +198,7 @@ function gbif_pages_view_viewallevents() {
 	/* Display: Feed */
 	$handler = $view->new_display('feed', 'Feed', 'feed_upcoming');
 	$handler->display->display_options['defaults']['title'] = FALSE;
-	$handler->display->display_options['title'] = 'Upcoming GBIF events';
+	$handler->display->display_options['title'] = 'Upcoming events';
 	$handler->display->display_options['pager']['type'] = 'some';
 	$handler->display->display_options['style_plugin'] = 'rss';
 	$handler->display->display_options['row_plugin'] = 'node_rss';
@@ -206,7 +206,7 @@ function gbif_pages_view_viewallevents() {
 	$handler->display->display_options['sitename_title'] = 0;
 	$translatables['viewallevents'] = array(
 		t('Master'),
-		t('Current GBIF events'),
+		t('Current events'),
 		t('more'),
 		t('Apply'),
 		t('Reset'),
@@ -221,9 +221,9 @@ function gbif_pages_view_viewallevents() {
 		t('next ›'),
 		t('last »'),
 		t('Upcoming'),
-		t('Upcoming GBIF events'),
+		t('Upcoming events'),
 		t('Past'),
-		t('Past GBIF events'),
+		t('Past events'),
 		t('Block of latest 4'),
 		t('More'),
 		t('Feed'),

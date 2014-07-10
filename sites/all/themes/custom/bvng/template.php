@@ -1090,16 +1090,20 @@ function _bvng_get_regional_links() {
 }
 
 function _bvng_get_event_links() {
-	$options = array(
-		'upcoming' => array(
-			'label' => t('Upcoming GBIF events'),
-			'url_base' => 'newsroom/events',
-		),
-		'past' => array(
-			'label' => t('Past GBIF events'),
+	$options = array();
+	if (current_path() == 'taxonomy/term/569') {
+		$options[] = array(
+			'label' => t('Past events'),
 			'url_base' => 'newsroom/events/archive',
-		),
-	);
+		);
+	}
+	elseif (current_path() == 'newsroom/events/archive') {
+		$options[] = array(
+			'label' => t('Upcoming events'),
+			'url_base' => 'newsroom/events',
+		);
+	}
+
 	$links = '';
 	$links = '<ul class="filter-list">';
 	foreach ($options as $option) {
@@ -1114,7 +1118,7 @@ function _bvng_get_event_links() {
 function _bvng_get_resource_links() {
 	$options = array(
 		'all' => array(
-			'label' => t('All GBIF resources'),
+			'label' => t('All resources'),
 			'url_base' => 'resources/archive',
 		),
 	);

@@ -37,7 +37,7 @@
 		</h2>
 	</header>
 	<div class="content-header sidebar-header col-md-3">
-		<h2>More GBIF events</h2>
+		<h2></h2>
 	</div>
 </div>
 <div class="row">

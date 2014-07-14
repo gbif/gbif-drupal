@@ -61,6 +61,11 @@ function gbif_pages_view_newsarticles() {
 	$handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
 	$handler->display->display_options['fields']['title']['element_default_classes'] = FALSE;
 	$handler->display->display_options['fields']['title']['link_to_node'] = FALSE;
+	/* Sort criterion: Content: Sticky */
+	$handler->display->display_options['sorts']['sticky']['id'] = 'sticky';
+	$handler->display->display_options['sorts']['sticky']['table'] = 'node';
+	$handler->display->display_options['sorts']['sticky']['field'] = 'sticky';
+	$handler->display->display_options['sorts']['sticky']['order'] = 'DESC';
 	/* Sort criterion: Content: Post date */
 	$handler->display->display_options['sorts']['created']['id'] = 'created';
 	$handler->display->display_options['sorts']['created']['table'] = 'node';
@@ -252,6 +257,11 @@ function gbif_pages_view_newsarticles() {
 	$handler->display->display_options['filters']['field_featured_fid']['table'] = 'field_data_field_featured';
 	$handler->display->display_options['filters']['field_featured_fid']['field'] = 'field_featured_fid';
 	$handler->display->display_options['filters']['field_featured_fid']['operator'] = 'not empty';
+	/* Filter criterion: Content: Promoted to front page */
+	$handler->display->display_options['filters']['promote']['id'] = 'promote';
+	$handler->display->display_options['filters']['promote']['table'] = 'node';
+	$handler->display->display_options['filters']['promote']['field'] = 'promote';
+	$handler->display->display_options['filters']['promote']['value'] = '1';
 
 	/* Display: Block of latest 4 */
 	$handler = $view->new_display('block', 'Block of latest 4', 'latest4_fp');

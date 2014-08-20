@@ -19,7 +19,7 @@ Data {"url":"<front>"}
 --Summary {"url":"infrastructure\/summary", "non_drupal_url":true}
 --Registry {"url":"infrastructure\/registry", "non_drupal_url":true}
 --Occurences {"url":"infrastructure\/occurrences", "non_drupal_url":true}
---Data processing {"url":"infrastructure\/data-processing","hidden":true}
+--Data processing {"url":"infrastructure\/data-processing","hidden":true, "non_drupal_url":true}
 --Tools {"url":"infrastructure\/tools", "non_drupal_url":true}
 --Species {"url":"<front>","hidden":true, "non_drupal_url":true}
 --Maps {"url":"<front>","hidden":true, "non_drupal_url":true}
@@ -54,21 +54,29 @@ Community {"url":"<front>"}
 --How to join {"url":"participation\/howtojoin"}
 -Capacity enhancement {"url":"capacityenhancement\/summary", "description": "Sharing expertise, experience and technology around the GBIF community"}
 --Summary {"url":"capacityenhancement\/summary"}
---Training {"url":"capacityenhancement\/training"}
---Mentoring {"url":"capacityenhancement\/mentoring"}
---Nodes Portal Toolkit {"url":"capacityenhancement\/npt"}
---Capacity programmes {"url":"capacityenhancement\/capacityprogrammes"}
+--Support programme {"url":"capacityenhancement\/support-programme"}
 --Regional collaboration {"url":"capacityenhancement\/regionalcollaboration"}
+--Training {"url":"capacityenhancement\/training"}
+--Capacity programmes {"url":"capacityenhancement\/capacityprogrammes"}
+--Past projects {"url":"capacityenhancement\/past-projects"}
 -Resources {"url":"resources\/summary", "description": "Tools and information to support the GBIF community (look template.php for changing this particular item.)"}
 --Summary {"url":"resources\/summary"}
 ---Archive of all Resources {"url":"resources\/archive"}
 --Key information {"url":"resources\/keyinformation"}
+--For publishers {"url":"resources\/for-publishers"}
+--For users {"url":"resources\/for-users"}
+--For GBIF delegations {"url":"resources\/for-delegations"}
+--For nodes {"url":"resources\/for-nodes"}
 About {"url":"<front>"}
 -What is GBIF {"url":"whatisgbif", "description": "A short description of the Global Biodiversity Information Facility"}
 --What is GBIF? {"url":"whatisgbif"}
 -Key information {"url":"resources\/keyinformation"}
 --Summary {"url":"resources\/summary"}
 --Key information {"url":"resources\/keyinformation"}
+--For publishers {"url":"resources\/for-publishers"}
+--For users {"url":"resources\/for-users"}
+--For GBIF delegations {"url":"resources\/for-delegations"}
+--For nodes {"url":"resources\/for-nodes"}
 -Governance {"url":"governance\/governingboard", "description": "How decisions, advice, management and funding are organized in GBIF"}
 --Governing Board {"url":"governance\/governingboard"}
 --Standing committees {"url":"governance\/standingcommittees"}

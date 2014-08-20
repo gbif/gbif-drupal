@@ -20,6 +20,7 @@
   				<?php print render($form['field_lastname']); ?>
   				<?php print render($form['account']['mail']); ?>
   				<?php print render($form['field_country_mono']); ?>
+  				<?php print render($form['captcha']); ?>
         </div>
       </div>
       <div class="row user-login-action">

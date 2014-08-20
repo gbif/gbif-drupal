@@ -833,7 +833,20 @@ function _bvng_get_title_data($node_count = NULL, $user = NULL, $req_path = NULL
 	elseif ($active_menu_item) {
 		// The resource/summary and resources/keyinformation are shared by two menu parents
 		// so we force the title here.
-		if (drupal_match_path($req_path, 'taxonomy/term/764') || drupal_match_path($req_path, 'node/234') || drupal_match_path($req_path, 'resources/archive')) {
+		$resource_paths = array(
+			'taxonomy/term/764',
+			'node/234',
+			'resources/archive',
+			'node/5438',
+			'node/5549',
+			'node/5553',
+			'node/5557',
+		);
+		foreach ($resource_paths as $path) {
+			$matched = drupal_match_path($req_path, $path);
+			if ($matched == TRUE) break;
+		}
+		if (isset($matched) && $matched == TRUE) {
 		  $title = array(
 		    'name' => t('Resources'),
 		    'description' => t('Tools and information to support the GBIF community'),

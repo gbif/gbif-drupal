@@ -207,6 +207,7 @@ function _gbif_catalogue_delete_custom_fields() {
 
 /**
  * Helper function to define fields.
+ * 'rs' stands for ReSource. All fields created by this module should be prefixed with it.
  */
 function _gbif_catalogue_installed_fields() {
   $t = get_t();

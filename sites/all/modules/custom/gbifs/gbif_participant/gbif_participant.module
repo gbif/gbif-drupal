@@ -1,0 +1,65 @@
+<?php
+/**
+ * @file
+ * gbif_participant.module
+ */
+
+/**
+ * Implements hook_help().
+ */
+function gbif_participant_help($path, $arg) {
+  if ($path == 'admin/help#gbif_participant') {
+    return t('Managing and displaying information regarding GBIF Participants.');
+  }
+}
+
+/**
+ * Implements hook_node_info()
+ */
+function gbif_participant_node_info() {
+	$items = array(
+		'gbif_participant' => array(
+			'name' => t('GBIF Participant'),
+			'base' => 'gbif_participant',
+			'description' => t('A GBIF Participant profile that contains descriptive information that is shown on the country pages.'),
+			'has_title' => TRUE,
+			'title_label' => t('GBIF Participant Title'),
+			'has_body' => FALSE,
+			'body_label' => t('Custom body text'),
+			'locked' => TRUE, // Unchangeable from UI.
+			'node-preview' => 0,
+			'node-options' => array(),
+			'node-submitted' => 0,
+			'language_content_type' => '1',
+			'comment' => array(
+				'status' => 0,
+				'default-mode' => 0,
+				'anonymous' => 2,
+				'default-per-page' => 30,
+				'form-location' => 0,
+				'preview' => 2,
+				'subject-field' => 0,
+			),
+			'menu' => array(
+				'options' => array('gbif-menu'),
+				'parent' => 'gbif-menu:0',
+			),
+		),
+	);
+	return $items;
+}
+
+/**
+ * Implements hook_form()
+ * Provide the title field in the form when editing.
+ */
+function gbif_participant_form($node, $form_state) {
+	$type = node_type_get_type($node);
+	$form['title'] = array(
+		'#type' => 'textfield',
+		'#title' => check_plain($type->title_label),
+		'#default_value' => !empty($node->title) ? $node->title : '',
+		'#required' => TRUE,
+	);
+	return $form;
+}

@@ -186,7 +186,10 @@ function bvng_preprocess_page(&$variables) {
   else {
   	$node_count = NULL;
   }
-  $variables['page']['highlighted_title'] = _bvng_get_title_data($node_count, $variables['user'], $req_path);
+
+	if (!isset($variables['page']['highlighted_title'])) {
+		$variables['page']['highlighted_title'] = _bvng_get_title_data($node_count, $variables['user'], $req_path);
+	}
 
   // Manually set page title.
   if ($req_path == 'taxonomy/term/565') {

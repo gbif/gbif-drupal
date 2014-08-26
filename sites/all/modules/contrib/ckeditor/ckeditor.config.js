@@ -59,6 +59,12 @@ CKEDITOR.editorConfig = function(config) {
     config.bodyClass = 'singlepage';
     config.bodyId = 'primary';
   }
+
+  /**
+   * Allow custom classes in HTML tags, for example bootstrap table classes.
+   * Added by bko on 26 Aug 14.
+   */
+  config.allowedContent = true;
 }
 
 /*

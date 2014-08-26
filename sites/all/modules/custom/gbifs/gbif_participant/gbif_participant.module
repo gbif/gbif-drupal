@@ -5,6 +5,20 @@
  */
 
 /**
+ * Implements hook_menu().
+ */
+function gbif_participant_menu() {
+	$items['country_php'] = array(
+		'title' => 'Extra Arguments',
+		'description' => 'The page callback can use the arguments provided after the path used as key',
+		'page callback' => 'gbif_participant_page_render',
+		'access callback' => TRUE,
+		'weight' => 10,
+	);
+	return $items;
+}
+
+/**
  * Implements hook_help().
  */
 function gbif_participant_help($path, $arg) {
@@ -96,4 +110,11 @@ function gbif_participant_preprocess_node(&$variables) {
 	if (isset($variables) && $variables['type'] == 'gbif_participant') {
 
 	}
+}
+
+function gbif_participant_page_render($iso2, $page) {
+	$content = '';
+	$content .= 'Country code: ' . $iso2 . '<br/>';
+	$content .= 'Page: ' . $page;
+	return $content;
 }

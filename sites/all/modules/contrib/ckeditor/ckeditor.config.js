@@ -26,7 +26,8 @@ CKEDITOR.editorConfig = function(config) {
 
   // [#1762328] Uncomment the line below to protect <code> tags in CKEditor (hide them in wysiwyg mode).
   // config.protectedSource.push(/<code>[\s\S]*?<\/code>/gi);
-  config.extraPlugins = '';
+  // Plugin added by bko on 26 Aug 14.
+  config.extraPlugins = 'dialogadvtab';
 
   /*
     * Append here extra CSS rules that should be applied into the editing area.

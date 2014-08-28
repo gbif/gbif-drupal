@@ -5,9 +5,14 @@ version = 7.x-0.2
 package = GBIFS
 project = GBIF Portal
 
+files[] = gbif_catalogue.install
+files[] = gbif_catalogue.module
+files[] = gbif_catalogue.admin.inc
+
 configure = admin/config/gbif/tools-catalogue
 
 dependencies[] = gbif_tweaks
+dependencies[] = gbif_ims
 dependencies[] = views
 dependencies[] = link
 dependencies[] = search

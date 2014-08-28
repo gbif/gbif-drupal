@@ -1,6 +1,6 @@
 name = GBIF IMS
-description = This is the enhanced Information Management System.
-version = 7.x-0.1
+description = The to-be Information Management System on a PHP-MySQL CMS.
+version = 7.x-0.2
 package = GBIFS
 project = GBIF Portal
 core = 7.x

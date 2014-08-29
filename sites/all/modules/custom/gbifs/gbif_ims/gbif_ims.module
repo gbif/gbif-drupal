@@ -106,10 +106,21 @@ function _gbif_ims_event_field_format() {
  * Synchronise contact, country, GBIF area, group, group role, node and participant information from the IMS on FileMaker.
  */
 function gbif_ims_sync() {
-	_gbif_ims_sync();
+	$start_time = new DateTime();
+	$message = _gbif_ims_sync();
+	$end_time = new DateTime();
+	$time = $end_time->diff($start_time);
+	$time_spent = "This task took ";
+	if ($time->y > 0) {$time_spent .= $time->y.' years, ';}
+	if ($time->m > 0) {$time_spent .= $time->m.' months, ';}
+	if ($time->d > 0) {$time_spent .= $time->d.' days, ';}
+	if ($time->h > 0) {$time_spent .= $time->h.' hours, ';}
+	if ($time->i > 0) {$time_spent .= $time->i.' minutes, ';}
+	if ($time->s > 0) {$time_spent .= $time->s.' seconds ';}
+	$time_spent .= "to complete.";
 
 	// Should examine the result before informing via the UI
-	return t('Importing finished.');
+	return $message . ' ' . $time_spent;
 }
 
 /**

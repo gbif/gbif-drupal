@@ -14,473 +14,96 @@ require_once(dirname(__FILE__)) . '/gbif_ims.fields.inc';
  * Break apart each of the data migration tasks 
  */
 function _gbif_ims_sync() {
+	$schema = _gbif_ims_tables();
 
-	db_query('TRUNCATE {gbif_ims_contact}');
+	foreach ($schema as $table_name => $table) {
+		db_truncate($table_name)->execute();
 
-	$IMS = ims_connection();
-	$IMS_contact = $IMS->newFindCommand('__Contact');
-	$IMS_contact->setRange(0, 5);
-	$result = $IMS_contact->execute(); // Performance critical step.
+		$IMS = ims_connection();
+		$IMS_records = $IMS->newFindCommand($table['ims_eqv']);
+		// $IMS_records->setRange(0, 5);
+		$result = $IMS_records->execute(); // Performance critical step.
 
-	// Error handling (if any)
-	if (FileMaker::isError($result)) {
-		$error_message = $result->getMessage();
-		$error_code = $result->code;
-		drupal_set_message(t('FileMaker Error: @error_message. Code: @error_code', array('@error_message' => $error_message, '@error_code' => $error_code)), 'error');
-	}
-	else {
-		$records = array();
-		$records['contacts'] = $result->getRecords();
-		$num_records = count($records['contacts']);
-
-		$fields = _gbif_ims_contact_fields();
-
-		foreach ($records['contacts'] as $k => $record) {
-			$values = array();
-			foreach ($fields as $field_name => $field) {
-				$value = $record->getField($field['ims_eqv']);
-				if ($field['type'] == 'int') $value = (int)$value;
-				$values[$field_name] = (empty($value)) ? NULL : $value;
-			}
-			db_insert('gbif_ims_contact')->fields($values)->execute();
+		// Error handling (if any)
+		if (FileMaker::isError($result)) {
+			$error_message = $result->getMessage();
+			$error_code = $result->code;
+			drupal_set_message(t('FileMaker Error: @error_message. Code: @error_code', array('@error_message' => $error_message, '@error_code' => $error_code)), 'error');
 		}
-	}
+		else {
+			$records = $result->getRecords();
+			// $num_records = count($records['contacts']);
 
-	return TRUE;
-}
+			foreach ($records as $k => $record) {
+				$values = array();
+				$valid_record = TRUE;
+				foreach ($table['fields'] as $field_name => $field) {
+					$value = $record->getField($field['ims_eqv']);
 
+					$is_empty = empty($value);
+					if ($is_empty == TRUE && $field['not null'] == TRUE) {
+						drupal_set_message(t('Null value conflict on record @id of table @table', array('@id' => $k + 1, '@table' => $table_name)), 'warning');
+						watchdog('GBIF', 'Null value conflict on record @id of table @table', array('@id' => $k + 1, '@table' => $table_name), WATCHDOG_WARNING);
+						$valid_record = FALSE;
+						break;
+					}
 
+					if (isset($field['type'])) {
+						switch ($field['type']) {
+							case 'int':
+								$value = (int)$value;
+								if ($field_name == 'sort_weight') {
+									$values[$field_name] = (empty($value)) ? 0 : $value;
+								}
+								else {
+									$values[$field_name] = (empty($value)) ? NULL : $value;
+								}
+								break;
+							default:
+								$values[$field_name] = $value;
+						}
+					}
+					elseif (isset($field['mysql_type'])) {
+						switch ($field['mysql_type']) {
+							case 'DATETIME':
+								if (!empty($value)) {
 
-function _gbif_ims_sync_contactGrouproleNodeParticipant() {
-	
-		db_query('TRUNCATE {gbifims_ContactGrouproleNodeParticipant}');
-	
-		$resultSetError = FALSE;
+									switch ($field['ims_eqv']) {
+										case 'Member_AsOf':
+											// original field is returned as "April 2001"
+											$value = '01 ' . $value . ' 00:00';
+											$format = 'd F Y H:i';
+											break;
+										case 'MOU2012_Date':
+											// format is (so far...) 'mm/dd/yyyy' so we only patch the time
+											$value .= ' 00:00' ;
+											$format = 'm/d/Y H:i';
+											break;
+										default:
+											return t('Unexpected DATETIME field.');
+									}
 
-		$FMAccess = new db ;
+									$date = DateTime::createFromFormat($format, $value);
+									$values[$field_name] = $date->format('Y-m-d h:i');
 
-		$FMFindCMD = $FMAccess->newFindCommand( '__ContactGrouproleNodeParticipant' );
-		$FMFindCMD->addFindCriterion( '', '');		
-
-		$FMResult = $FMFindCMD->execute();
-
-		if ( FileMaker::isError( $FMResult ) ) {
-			$resultSetError = TRUE ;
-			$resultSetErrorMessage = $FMResult->getMessage() ;
-			$resultSetErrorCode = $FMResult->code ;
-			gbifims_queue_report_work(1,$item,'FileMaker Error:'.$resultSetErrorMessage);
-		} else {
-			$resultSet = $FMResult->getRecords();
-			$resultSetNumRecords = count( $resultSet ) ;		
-
-			gbifims_queue_report_work(1,$item,'CGNP:'.$resultSetNumRecords.' records');
-			
-			$FMResults = array() ;
-			foreach ( $resultSet as $key => $record ) {
-				$FMResults[] = array ();
-				$tmp = '' ;
-				
-				$FMResults[$key]['ContactGrouproleNodeParticipantID'] = $record->getField('__kp_ID') ;
-				
-				$tmp = $record->getField('_kf_ContactID') ;
-				$FMResults[$key]['ContactID'] = (empty($tmp)) ? NULL : (int)$tmp ;
-				
-				$tmp = $record->getField('_kf_GrouproleID') ; 
-				$FMResults[$key]['GrouproleID'] = (empty($tmp)) ? NULL : (int)$tmp ; 
-
-				$tmp = $record->getField('_kf_NodeID') ;
-				$FMResults[$key]['NodeID'] = (empty($tmp)) ? NULL : (int)$tmp ;
-
-				$tmp = 	$record->getField('_kf_ParticipantID') ;
-				$FMResults[$key]['ParticipantID'] = (empty($tmp)) ? NULL : (int)$tmp ;
-				
-				$FMResults[$key]['Active'] = $record->getField('Active') ;
-
-			}
-			
-			foreach ($FMResults as $values) 
-				$mytmp = db_insert('gbifims_ContactGrouproleNodeParticipant') 
-							->fields( $values )
-							->execute();
-			
-		}
-}
-
-
-function _gbif_ims_sync_group() {
-	
-		db_query('TRUNCATE {gbifims_Group}');
-	
-		$resultSetError = FALSE;
-
-		$FMAccess = new db ;
-
-		$FMFindCMD = $FMAccess->newFindCommand( '__Group' );
-		$FMFindCMD->addFindCriterion( '', '');		
-
-		$FMResult = $FMFindCMD->execute();
-
-		if ( FileMaker::isError( $FMResult ) ) {
-			$resultSetError = TRUE ;
-			$resultSetErrorMessage = $FMResult->getMessage() ;
-			$resultSetErrorCode = $FMResult->code ;
-			drupal_set_message('FileMaker Error:'.$resultSetErrorMessage);
-		} else {
-			$resultSet = $FMResult->getRecords();
-			$resultSetNumRecords = count( $resultSet ) ;		
-
-			gbifims_queue_report_work(1,$item,'Group:'.$resultSetNumRecords.' records');
-			
-			$FMResults = array() ;
-			foreach ( $resultSet as $key => $record ) {
-				$FMResults[] = array ();
-				$tmp = '' ; 
-				
-				$FMResults[$key]['GroupID'] = $record->getField('__kp_ID') ;
-				
-				$FMResults[$key]['Name'] = $record->getField('Name') ;
-			}
-			
-			foreach ($FMResults as $values) 
-				$mytmp = db_insert('gbifims_Group') 
-							->fields( $values )
-							->execute();
-			
-		}
-}
-
-// @todo save 0 if sort_weight is empty.
-function _gbif_ims_sync_grouprole() {
-	
-		db_query('TRUNCATE {gbifims_Grouprole}');
-	
-		$resultSetError = FALSE;
-
-		$FMAccess = new db ;
-
-		$FMFindCMD = $FMAccess->newFindCommand( '__Grouprole' );
-		$FMFindCMD->addFindCriterion( '', '');		
-
-		$FMResult = $FMFindCMD->execute();
-
-		if ( FileMaker::isError( $FMResult ) ) {
-			$resultSetError = TRUE ;
-			$resultSetErrorMessage = $FMResult->getMessage() ;
-			$resultSetErrorCode = $FMResult->code ;
-			drupal_set_message('FileMaker Error:'.$resultSetErrorMessage);
-		} else {
-			$resultSet = $FMResult->getRecords();
-			$resultSetNumRecords = count( $resultSet ) ;		
-
-			gbifims_queue_report_work(1,$item,'Grouprole:'.$resultSetNumRecords.' records');
-			
-			$FMResults = array() ;
-			foreach ( $resultSet as $key => $record ) {
-				$FMResults[] = array ();
-				$tmp = '';
-				
-				$FMResults[$key]['GrouproleID'] = $record->getField('__kp_ID') ;
-				
-				$tmp = $record->getField('_kf_GroupID') ;
-				$FMResults[$key]['GroupID'] = (empty($tmp)) ? NULL : (int)$tmp ;
-				
-				$tmp = $record->getField('Sort_Order__lcn') ;
-				$FMResults[$key]['SortOrder'] = (empty($tmp)) ? 0 : (int)$tmp ;
-
-								
-				$FMResults[$key]['Name'] = $record->getField('Name') ;
-			}
-			
-			foreach ($FMResults as $values) 
-				$mytmp = db_insert('gbifims_Grouprole') 
-							->fields( $values )
-							->execute();
-			
-		}
-}
-
-
-function _gbif_ims_sync_institution() {
-	
-		db_query('TRUNCATE {gbifims_Institution}');
-	
-		$resultSetError = FALSE;
-
-		$FMAccess = new db ;
-
-		$FMFindCMD = $FMAccess->newFindCommand( '__Institution' );
-		$FMFindCMD->addFindCriterion( '', '');		
-
-		$FMResult = $FMFindCMD->execute();
-
-		if ( FileMaker::isError( $FMResult ) ) {
-			$resultSetError = TRUE ;
-			$resultSetErrorMessage = $FMResult->getMessage() ;
-			$resultSetErrorCode = $FMResult->code ;
-			drupal_set_message('FileMaker Error:'.$resultSetErrorMessage);
-		} else {
-			$resultSet = $FMResult->getRecords();
-			$resultSetNumRecords = count( $resultSet ) ;		
-
-			gbifims_queue_report_work(1,$item,'Institution:'.$resultSetNumRecords.' records');
-			
-			$FMResults = array() ;
-			foreach ( $resultSet as $key => $record ) {
-				$FMResults[] = array ();
-				$tmp = '' ;
-				$FMResults[$key]['InstitutionID'] = $record->getField('__kp_ID') ;
-				
-				$tmp = $record->getField('_kf_CountryID') ;
-				$FMResults[$key]['CountryID'] = (empty($tmp)) ? NULL : (int)$tmp ;
-				
-				$FMResults[$key]['Acronym'] = $record->getField('Acronym') ;
-				$FMResults[$key]['Address'] = $record->getField('Address') ;
-				$FMResults[$key]['City'] =  $record->getField('City') ;
-				$FMResults[$key]['Description'] = $record->getField('Description') ;
-				$FMResults[$key]['Email'] = $record->getField('Email') ;
-				$FMResults[$key]['Name'] = $record->getField('Name') ;
-				$FMResults[$key]['State'] = $record->getField('State') ;
-				$FMResults[$key]['Telephone'] = $record->getField('Telephone') ;
-				$FMResults[$key]['ZipCode'] = $record->getField('ZipCode') ;
-			}
-			
-			foreach ($FMResults as $values) 
-				$mytmp = db_insert('gbifims_Institution') 
-							->fields( $values )
-							->execute();
-			
-		}
-}
-
-
-
-function _gbif_ims_sync_country() {
-	
-		db_query('TRUNCATE {gbifims_Country}');
-	
-		$resultSetError = FALSE;
-		$FMAccess = new db ;
-
-		$FMFindCMD = $FMAccess->newFindCommand( '__Country' );
-		$FMFindCMD->addFindCriterion( '', '');		
-
-		$FMResult = $FMFindCMD->execute();
-
-		if ( FileMaker::isError( $FMResult ) ) {
-			$resultSetError = TRUE ;
-			$resultSetErrorMessage = $FMResult->getMessage() ;
-			$resultSetErrorCode = $FMResult->code ;
-			drupal_set_message('FileMaker Error:'.$resultSetErrorMessage);
-		} else {
-			$resultSet = $FMResult->getRecords();
-			$resultSetNumRecords = count( $resultSet ) ;		
-
-			gbifims_queue_report_work(1,$item,'Country:'.$resultSetNumRecords.' records');
-			
-			$FMResults = array() ;
-			foreach ( $resultSet as $key => $record ) {
-				$FMResults[] = array ();
-				$tmp = '' ; 
-				$FMResults[$key]['CountryID'] = $record->getField('__kp_ID') ;
-				
-				$tmp = $record->getField('_kf_RegionID') ;
-				$FMResults[$key]['RegionID'] = (empty($tmp)) ? NULL : (int)$tmp ;
-			
-				$FMResults[$key]['ISO2'] = $record->getField('ISO2') ;
-				$FMResults[$key]['ISO3'] = $record->getField('ISO3') ;
-				$FMResults[$key]['Name'] =  $record->getField('Name') ;
-			}
-			
-			foreach ($FMResults as $values) 
-				$mytmp = db_insert('gbifims_Country') 
-							->fields( $values )
-							->execute();
-			
-		}
-}
-
-
-/**
-*
-* Break apart each of the data migration tasks 
-*
-*/
-function _gbif_ims_sync_node() {
-	
-		db_query('TRUNCATE {gbifims_Node}');
-	
-		$resultSetError = FALSE;
-
-		$FMAccess = new db ;
-
-		$FMFindCMD = $FMAccess->newFindCommand( '__Node' );
-		$FMFindCMD->addFindCriterion( '', '');		
-
-		$FMResult = $FMFindCMD->execute();
-
-		if ( FileMaker::isError( $FMResult ) ) {
-			$resultSetError = TRUE ;
-			$resultSetErrorMessage = $FMResult->getMessage() ;
-			$resultSetErrorCode = $FMResult->code ;
-			drupal_set_message('FileMaker Error:'.$resultSetErrorMessage);
-		} else {
-			$resultSet = $FMResult->getRecords();
-			$resultSetNumRecords = count( $resultSet ) ;		
-
-			gbifims_queue_report_work(1,$item,'Node:'.$resultSetNumRecords.' records');
-			
-			$FMResults = array() ;
-			foreach ( $resultSet as $key => $record ) {
-				$FMResults[] = array ();
-				$tmp = '' ; 
-				$FMResults[$key]['NodeID'] = $record->getField('__kp_ID') ;
-				
-				$tmp = $record->getField('_kf_ParticipantID') ;
-				$FMResults[$key]['ParticipantID'] = (empty($tmp)) ? NULL : (int)$tmp ;
-			
-				$FMResults[$key]['Name_Full'] = $record->getField('Name_Full') ;
-				$FMResults[$key]['Name_Acronym'] = $record->getField('Name_Acronym') ;
-				$FMResults[$key]['URL'] =  $record->getField('URL') ;
-			}
-			
-			foreach ($FMResults as $values) 
-				$mytmp = db_insert('gbifims_Node') 
-							->fields( $values )
-							->execute();
-			
-		}
-}
-
-
-function _gbif_ims_sync_participant() {
-	
-		db_query('TRUNCATE {gbifims_Participant}');
-	
-		$resultSetError = FALSE;
-
-		$FMAccess = new db ;
-
-		$FMFindCMD = $FMAccess->newFindCommand( '__Participant' );
-		$FMFindCMD->addFindCriterion( '', '');		
-
-		$FMResult = $FMFindCMD->execute();
-
-		if ( FileMaker::isError( $FMResult ) ) {
-			$resultSetError = TRUE ;
-			$resultSetErrorMessage = $FMResult->getMessage() ;
-			$resultSetErrorCode = $FMResult->code ;
-			drupal_set_message('FileMaker Error:'.$resultSetErrorMessage);
-		} else {
-			$resultSet = $FMResult->getRecords();
-			$resultSetNumRecords = count( $resultSet ) ;		
-
-			gbifims_queue_report_work(1,$item,'Participant:'.$resultSetNumRecords.' records');
-			
-			$FMResults = array() ;
-			foreach ( $resultSet as $key => $record ) {
-				$FMResults[] = array ();
-				$tmp = '' ; 
-				$FMResults[$key]['ParticipantID'] = $record->getField('__kp_ID') ;
-				
-				$tmp = $record->getField('_kf_RegionID') ;
-				$FMResults[$key]['RegionID'] = (empty($tmp)) ? NULL : (int)$tmp ;
-				
-				$tmp = $record->getField('_kf_CountryID') ; 
-				$FMResults[$key]['CountryID'] = (empty($tmp)) ? NULL : (int)$tmp ; 
-				
-				$tmp = $record->getField('_kf_InstitutionID') ; 
-				$FMResults[$key]['InstitutionID'] = (empty($tmp)) ? NULL : (int)$tmp ; 
-				
-				$FMResults[$key]['GBIFmembership'] = $record->getField('GBIFmembership') ;
-				
-				$tmp = $record->getField('Member_AsOf') ; 
-				if ( !empty( $tmp ) ) {
-					// original field is returned as "April 2001"
-					$tmp = '01 '. $tmp . ' 00:00' ;
-					$cur_format = 'd F Y H:i';
-					$date = DateTime::createFromFormat($cur_format, $tmp);
-  					$member_asof = $date->format('Y-m-d h:i') ;
-					$FMResults[$key]['Member_AsOf'] = $member_asof ;
-				} else {
-					$FMResults[$key]['Member_AsOf'] = NULL ;
+								}
+								else {
+									$values[$field_name] = NULL ;
+								}
+								break;
+						}
+					}
 				}
-				
-				
-				$FMResults[$key]['Name_Full'] = $record->getField('Name_Full') ;
-				$FMResults[$key]['Name_Short'] =  $record->getField('Name_Short') ;
-				
-				$FMResults[$key]['PublicDescription'] = $record->getField('PublicDescription') ; 
-				
-				$tmp = $record->getField('MOU2012_Date') ;
-				if ( !empty( $tmp ) ) {
-					// format is (so far...) 'mm/dd/yyyy' so we only patch the time
- 					$tmp .= ' 00:00' ;
-					$cur_format = 'm/d/Y H:i';
-					$date = DateTime::createFromFormat($cur_format, $tmp);
-  					$mou2012_date = $date->format('Y-m-d h:i') ;
-					$FMResults[$key]['MOU2012_Date'] = $mou2012_date ;
-				} else {
-					$FMResults[$key]['MOU2012_Date'] = NULL ;
+				if ($valid_record == TRUE) {
+					db_insert($table_name)->fields($values)->execute();
 				}
-				
-				$FMResults[$key]['Host_URL'] = $record->getField('Host_URL') ; 
-
 			}
-			
-			foreach ($FMResults as $values) 
-				$mytmp = db_insert('gbifims_Participant') 
-							->fields( $values )
-							->execute();
-			
+			unset($IMS);
 		}
+	}
+
+	return t('Synchronisation finished.');
 }
-
-function _gbif_ims_sync_gbif_area() {
-	
-		db_query('TRUNCATE {gbifims_GBIFarea}');
-	
-		$resultSetError = FALSE;
-
-		$FMAccess = new db ;
-
-		$FMFindCMD = $FMAccess->newFindCommand( '__GBIFarea' );
-		$FMFindCMD->addFindCriterion( '', '');		
-
-		$FMResult = $FMFindCMD->execute();
-
-		if ( FileMaker::isError( $FMResult ) ) {
-			$resultSetError = TRUE ;
-			$resultSetErrorMessage = $FMResult->getMessage() ;
-			$resultSetErrorCode = $FMResult->code ;
-			drupal_set_message('FileMaker Error:'.$resultSetErrorMessage);
-		} else {
-			$resultSet = $FMResult->getRecords();
-			$resultSetNumRecords = count( $resultSet ) ;		
-
-			gbifims_queue_report_work(1,$item,'Area:'.$resultSetNumRecords.' records');
-			
-			$FMResults = array() ;
-			foreach ( $resultSet as $key => $record ) {
-				$FMResults[] = array ();
-				$tmp = '' ; 
-				
-				$FMResults[$key]['GBIFareaID'] = $record->getField('__kp_ID') ;
-				
-				$FMResults[$key]['GBIFarea'] = $record->getField('GBIFarea') ;
-				$FMResults[$key]['Drupal_tid'] = $record->getField('_kf_Drupal_tid') ;
-			}
-			
-			foreach ($FMResults as $values) 
-				$mytmp = db_insert('gbifims_GBIFarea') 
-							->fields( $values )
-							->execute();
-			
-		}
-}
-
-
-
-
 
 function _gbif_ims_get_ParticipantsList( $type ) {
 $PList = '' ;
@@ -789,6 +412,3 @@ function _gbif_ims_get_NCList( ) {
 
 	return $CList ;
 }
-
-
-?>

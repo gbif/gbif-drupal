@@ -5,4 +5,6 @@ package = GBIFS
 project = GBIF Portal
 core = 7.x
 
+files[] = gbif_ims.fields.inc
+
 dependencies[] = gbif_tweaks

@@ -6,6 +6,8 @@
  * Time: 5:45 PM
  */
 
+module_load_include('inc', 'gbif_ims', 'gbif_ims.filemaker');
+
 function gbif_ims_menu() {
 	$items = array();
 	$items['admin/config/gbif'] = array(
@@ -20,7 +22,7 @@ function gbif_ims_menu() {
 	);
 	$items['admin/config/gbif/ims_settings'] = array(
 		'title' => 'IMS configuration',
-		'description' => t('Configure GBIF Imformation Management System.'),
+		'description' => t('Configure GBIF Information Management System.'),
 		'page callback' => 'drupal_get_form',
 		'page arguments' => array('gbif_ims_settings_form'),
 		'access arguments' => array('administer site configuration'),
@@ -97,4 +99,63 @@ function _gbif_ims_event_field_format() {
 		'field_original_ims_id' => 'plain_text',
 	);
 	return $formats;
+}
+
+/**
+ * gbif_ims_sync()
+ * Synchronise contact, country, GBIF area, group, group role, node and participant information from the IMS on FileMaker.
+ */
+function gbif_ims_sync() {
+	_gbif_ims_sync();
+
+	// Should examine the result before informing via the UI
+	return t('Importing finished.');
+}
+
+/**
+ * Load FileMaker API if it's not already loaded.
+ * @return TRUE if the FileMaker API is loaded, FALSE otherwise.
+ */
+function filemaker_load_api() {
+
+	if (!class_exists('FileMaker')) {
+
+		// Try to use libraries module.
+		if (module_exists('libraries')) {
+
+			$libraries_path = drupal_get_path('module', 'libraries');
+			$libraries_include = $libraries_path . '/' . 'libraries.module';
+
+			include_once($libraries_include);
+
+			// Let's see if the FileMaker API is really available from libraries.
+			$filemaker_api = './' . libraries_get_path('filemaker') . '/FileMaker.php';
+			if (file_exists($filemaker_api)) {
+				include_once $filemaker_api;
+			}
+		}
+	}
+
+	if (!class_exists('FileMaker')) {
+		drupal_set_message(t('Can not find FileMaker API. Please place the FileMaker API at sites/all/libraries/filemakerapi/FileMaker. See README.txt for details.'), 'error');
+	}
+
+	// Tell the caller if the FileMaker class exists.
+	return class_exists('FileMaker');
+}
+
+function ims_connection() {
+	// Load FileMaker api
+	filemaker_load_api();
+
+	// Load credentials
+	$IMSCredential = variable_get('ims_connection');
+
+	$IMS = new FileMaker();
+	$IMS->setProperty('database', $IMSCredential['database']);
+	$IMS->setProperty('hostspec', $IMSCredential['hostname']);
+	$IMS->setProperty('username', $IMSCredential['username']);
+	$IMS->setProperty('password', $IMSCredential['password']);
+
+	return $IMS;
 }

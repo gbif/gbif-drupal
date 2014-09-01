@@ -3,7 +3,7 @@
 function gbif_ims_settings_form() {
 	$form['ims_sync'] = array(
 		'#type' => 'fieldset',
-		'#title' => t('GBIF Information Management System'),
+		'#title' => t('GBIF Information Management System Synchronisation'),
 		'#description' => t('Synchronise contact, country, GBIF area, group, group role, node and participant information from the IMS on FileMaker.'),
 	);
 	$form['ims_sync']['sync_trigger'] = array(

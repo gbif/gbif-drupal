@@ -83,9 +83,12 @@
 	<div class="row">
       <section id="participation" class="col-md-12 well well-lg well-margin-top clearfix"<?php print $attributes; ?>>
         <div class="row">
-					<header class="content-header col-md-12">
+					<header class="content-header col-md-8">
 						<h2>Participation</h2>
 					</header>
+					<div class="node-sidebar-header col-md-4">
+						<h2>Node</h2>
+					</div>
         </div>
         <div class="row">
           <div class="node-content col-md-8">
@@ -99,13 +102,30 @@
             </div>
             <?php endif; ?>
 
-						<?php print render($content['gp_history_date_establishment']); ?>
-						<?php print render($content['gp_history_has_mandate']); ?>
-						<?php print render($content['gp_history_statement']); ?>
+						<h3>Member Status</h3>
+						<p><?php print $participant_ims->gbif_membership; ?></p>
+						<h3>GBIF Participant since</h3>
+						<p><?php print $participant_ims->member_as_of; ?></p>
+						<?php print $participant_ims->gbif_region; ?>
+						<?php print $participant_ims->contact_participation; ?>
 
           </div>
           <aside class="node-sidebar col-md-4">
-						<h2>Aside title</h2>
+						<div class="field-label">Node name&nbsp;</div>
+						<p><?php print $participant_ims->node_name_full; ?></p>
+						<div class="field-label">Address&nbsp;</div>
+						<p>
+							<?php print _gbif_participant_print_address_fields($participant_ims->institution_name); ?>
+							<?php print _gbif_participant_print_address_fields($participant_ims->institution_address); ?>
+							<?php print _gbif_participant_print_address_fields($participant_ims->institution_zip_code); ?>
+							<?php print _gbif_participant_print_address_fields($participant_ims->institution_city); ?>
+							<?php print _gbif_participant_print_address_fields($participant_ims->institution_state_province); ?>
+							<?php print _gbif_participant_print_address_fields($participant_ims->participant_name_full); ?>
+							<?php print _gbif_participant_print_address_fields($participant_ims->institution_email); ?>
+							<?php print _gbif_participant_print_address_fields($participant_ims->institution_telephone); ?>
+						</p>
+						<div class="field-label">Website&nbsp;</div>
+						<p><?php print $participant_ims->node_url; ?></p>
           </aside>
         </div>
       </section>
@@ -117,6 +137,9 @@
 				</div>
 				<div class="row">
 					<div class="node-content col-md-8">
+						<?php print render($content['gp_history_date_establishment']); ?>
+						<?php print render($content['gp_history_has_mandate']); ?>
+						<?php print render($content['gp_history_statement']); ?>
 						<?php print render($content['gp_vision_mission']); ?>
 						<?php print render($content['gp_structure']); ?>
 						<?php print render($content['gp_national_funding']); ?>
@@ -135,12 +158,7 @@
 					</header>
 				</div>
 				<div class="row">
-					<div class="node-content col-md-8">
-
-					</div>
-					<aside class="node-sidebar col-md-4">
-						<h2>Aside title</h2>
-					</aside>
+					<?php print $participant_ims->contact_contacts; ?>
 				</div>
 			</section>
 			<section id="endorsed-publishers" class="col-md-12 well well-lg">
@@ -151,7 +169,7 @@
 				</div>
 				<div class="row">
 					<div class="node-content col-md-12">
-
+						<?php print $participant_ims->endorsed_publishers; ?>
 					</div>
 				</div>
 			</section>

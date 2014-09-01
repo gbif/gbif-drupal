@@ -15,6 +15,15 @@ function gbif_participant_menu() {
 		'access callback' => TRUE,
 		'weight' => 10,
 	);
+	$items['admin/config/gbif/participant'] = array(
+		'title' => 'GBIF participant',
+		'description' => t('Configure GBIF participant related features.'),
+		'page callback' => 'drupal_get_form',
+		'page arguments' => array('gbif_participant_settings_form'),
+		'access arguments' => array('administer site configuration'),
+		'type' => MENU_NORMAL_ITEM,
+		'file' => 'gbif_participant.admin.inc',
+	);
 	return $items;
 }
 
@@ -79,6 +88,14 @@ function gbif_participant_form($node, $form_state) {
 }
 
 /**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function gbif_participant_form_gbif_participant_node_form_alter(&$form, &$form_state) {
+	$form['gp_id']['#disabled'] = TRUE;
+	//$form['gp_id']['#type'] = 'hidden';
+}
+
+/**
  * Implements hook_theme().
  */
 function gbif_participant_theme() {
@@ -108,6 +125,34 @@ function gbif_participant_preprocess_page(&$variables) {
 
 function gbif_participant_preprocess_node(&$variables) {
 	if (isset($variables) && $variables['type'] == 'gbif_participant') {
+		$gp_id = field_get_items('node', $variables['node'], 'gp_id');
+		$participantID = $gp_id[0]['value'];
+		$participant = _gbif_participant_participant_query($participantID);
+		$participant = $participant[0];
+		$variables['participant_ims'] = $participant;
+
+		// Format the date to only show year.
+		$timestamp = strtotime($variables['participant_ims']->member_as_of);
+		$year = date("Y", $timestamp);
+		$variables['participant_ims']->member_as_of = $year;
+
+		// Get the rest of the information from the Registry API.
+		// @todo This has to be cleaned up so it's constructed from IMS tables.
+		$uuid = _gbif_participant_get_uuid($participantID);
+		$node_call = _gbif_participant_api_registry_node() . '/' . $uuid;
+		$json = json_decode(file_get_contents($node_call));
+
+		// Contacts
+		$contacts = $json->contacts;
+		$variables['participant_ims']->contact_participation = _gbif_participant_print_contacts('participation', $contacts);
+		$variables['participant_ims']->contact_contacts = _gbif_participant_print_contacts('contacts', $contacts);
+
+		// GBIF region
+		$region = $json->gbifRegion;
+		$variables['participant_ims']->gbif_region = _gbif_participant_print_region($region);
+
+		// Endorsed publishers
+		$variables['participant_ims']->endorsed_publishers = _gbif_participant_print_endorsed_publishers($participantID);
 
 	}
 }
@@ -117,4 +162,271 @@ function gbif_participant_page_render($iso2, $page) {
 	$content .= 'Country code: ' . $iso2 . '<br/>';
 	$content .= 'Page: ' . $page;
 	return $content;
+}
+
+/**
+ * Populate or update participant information from IMS tables.
+ */
+function gbif_participant_populate() {
+	$participants = _gbif_participant_participant_query();
+
+	$checkbit = array();
+	foreach ($participants as $participant) {
+		// We want to check whether a record with the same participantID is already
+		// populated.
+		$entity_query = new EntityFieldQuery();
+		$entity_query->entityCondition('entity_type', 'node')
+			->entityCondition('bundle', 'gbif_participant')
+			->fieldCondition('gp_id', 'value', $participant->participantID, '=')
+			->count();
+		$count = $entity_query->execute();
+
+		// According to the count we decide to insert, update, or do nothing.
+		// At the end we insert a check bit for messaging the UI.
+		if (isset($count)) {
+			switch ($count) {
+				case 0:
+					// If $count = 0, we for now only populate title and participantID.
+					// @todo Populate all IMS fields when content type is complete.
+					$node = new stdClass();
+					$node->type = 'gbif_participant';
+					node_object_prepare($node);
+					$node->language = LANGUAGE_NONE;
+					$node->title = $participant->participant_name_full;
+					$node->gp_id[$node->language][0]['value'] = $participant->participantID;
+					$node = node_submit($node);
+					node_save($node);
+
+					$checkbit[$participant->participantID] = 'inserted';
+					break;
+
+				case 1:
+					// If there is one record then we update fields from the IMS.
+					$checkbit[$participant->participantID] = 'updated';
+					break;
+
+				default:
+					// If there are more than 1 record, then something went wrong so we don't
+					// create any new node here.
+					$checkbit[$participant->participantID] = 'warning';
+			}
+		}
+	}
+
+	$result = array_count_values($checkbit);
+
+	// Determine the message for UI.
+	if (isset($result['updated']) && $result['updated'] == count($checkbit)) {
+		return t('All @count participant records updated.', array('@count' => $result['updated']));
+	}
+	elseif (isset($result['inserted']) && $result['inserted'] == count($checkbit)) {
+		return t('All @count participant records inserted.', array('@count' => $result['inserted']));
+	}
+	else {
+		$message = t('There are ');
+		if (isset($result['insert'])) {
+			$inserted_text = format_plural(
+				$result['insert'],
+				'1 participant record inserted',
+				'@count participant records inserted',
+				array('@count' => $result['insert'])
+			);
+			$message .= $inserted_text;
+			if (isset($result['update'])) {
+				$message .= ', and ';
+			}
+			else {
+				$message .= '.';
+			}
+		}
+		if (isset($result['updated'])) {
+			$updated_text = format_plural(
+				$result['updated'],
+				'1 participant record updated',
+				'@count participant records updated',
+				array('@count' => $result['updated'])
+			);
+			$message .= $updated_text;
+			if (isset($result['warning'])) {
+				$message .= ', and';
+			}
+			else {
+				$message .= '.';
+			}
+		}
+		if (isset($result['warning'])) {
+			$warning_text = format_plural(
+				$result['warning'],
+				'1 participant record has duplicate(s)',
+				'@count participant records have duplicate(s)',
+				array('@count' => $result['warning'])
+			);
+			$message .= $warning_text;
+		}
+		return $message;
+	}
+}
+
+function _gbif_participant_participant_query($participantID = NULL) {
+	$query = db_select('gbif_ims_participant', 'p');
+	$query->join('gbif_ims_node', 'n', 'n.participantID = p.participantID');
+	$query->leftjoin('gbif_ims_country', 'c', 'p.countryID = c.countryID');
+	$query->leftjoin('gbif_ims_institution', 'i', 'i.institutionID = p.institutionID');
+	$query->addField('p', 'participantID', 'participantID');
+	$query->addField('p', 'name_full', 'participant_name_full');
+	$query->addField('p', 'name_short', 'participant_abbrev');
+	$query->addField('p', 'member_as_of');
+	$query->addField('p', 'gbif_membership');
+	$query->addField('p', 'mou2012_date');
+	$query->addField('c', 'iso2', 'iso2');
+	$query->addField('n', 'name_full', 'node_name_full');
+	$query->addField('n', 'url', 'node_url');
+	$query->addField('i', 'name', 'institution_name');
+	$query->addField('i', 'address', 'institution_address');
+	$query->addField('i', 'city', 'institution_city');
+	$query->addField('i', 'zip_code', 'institution_zip_code');
+	$query->addField('i', 'state_province', 'institution_state_province');
+	$query->addField('i', 'telephone', 'institution_telephone');
+	$query->addField('i', 'email', 'institution_email');
+	if (isset($participantID)) {
+		$query->condition('p.participantID', $participantID, '=');
+	}
+	$result = $query->execute()->fetchAll();
+	return $result;
+}
+
+/**
+ * Temporary helper function. Mainly for formatting.
+ * @todo Once the new IMS is ready, values should come from Drupal fields
+ * by render().
+ */
+function _gbif_participant_print_address_fields($value) {
+	if (!empty($value)) {
+		$value = $value . '<br>';
+	}
+	return $value;
+}
+
+/**
+ * Helper function for rendering contacts.
+ * @param $position is where on the template the contacts will be.
+ * 				because they have different rendering styles.
+ * @todo Emit proper URLs for contacts.
+ */
+function _gbif_participant_print_contacts($position, $contacts) {
+	$html = '';
+	switch ($position) {
+		case 'participation':
+			foreach ($contacts as $contact) {
+				switch ($contact->type) {
+					case 'HEAD_OF_DELEGATION':
+						$html .= '<h3>Head of Delegation</h3>';
+						$html .= '<p>';
+						$html .= '<a href="">';
+						$html .= $contact->firstName . ' ' . $contact->lastName;
+						$html .= '</a>';
+						$html .= '</p>';
+						break;
+					case 'NODE_MANAGER':
+						$html .= '<h3>Node Manager</h3>';
+						$html .= '<p>';
+						$html .= '<a href="">';
+						$html .= $contact->firstName . ' ' . $contact->lastName;
+						$html .= '</a>';
+						$html .= '</p>';
+						break;
+				}
+			}
+			break;
+		case 'contacts':
+			foreach ($contacts as $contact) {
+			  $html .= '<address class="col-md-4">';
+				$html .= '<a id="' . $contact->key . '"></a>';
+				$html .= '<h3>' . $contact->type . '</h3>';
+				$html .= '<div class="contactName">' . $contact->firstName . ' ' . $contact->lastName . '</div>';
+				$html .= '<div style="display: block;">';
+				$html .= '<div class="contactPosition">' . $contact->position[0] . '</div>';
+				$html .= '<div class="address">';
+
+					$html .= '<span>' . $contact->organization . '</span>';
+					$html .= '<span>';
+					for ($i = 0; $i < count($contact->address); $i++) {
+						$html .= $contact->address[$i];
+						if ($i < count($contact->address)) $html .= '<br>';
+					}
+					$html .= '</span>';
+					$html .= '<span class="city">' . $contact->postalCode . ' ' . $contact->city . '</span>';
+					$html .= '<span class="country">' . $contact->country . '</span>';
+					$html .= '<span class="email"><a href="mailto:' . $contact->email[0] . '" title="email">' . $contact->email[0] . '</a></span>';
+					$html .= '<span class="phone">';
+					for ($i = 0; $i < count($contact->phone); $i++) {
+						$html .= $contact->phone[$i];
+						if ($i < count($contact->phone)) $html .= '<br>';
+					}
+					$html .= '</span>';
+
+				$html .= '</div>';
+				$html .= '</address>';
+			}
+			break;
+	}
+	return $html;
+}
+
+/**
+ * Helper function for rendering GBIF region.
+ */
+function _gbif_participant_print_region($region) {
+	$html = '';
+	$html .= '<h3>GBIF Region</h3>';
+	$html .= '<p>';
+	$html .= $region;
+	$html .= '</p>';
+	return $html;
+}
+
+/**
+ * Helper function for getting the list of endorsed publishers for
+ * a participant.
+ */
+function _gbif_participant_print_endorsed_publishers($participantID) {
+	$api_call = _gbif_participant_api_registry_node() . '/' . _gbif_participant_get_uuid($participantID) . '/organization';
+	$json = json_decode(file_get_contents($api_call));
+	$count = $json->count;
+	$publishers = $json->results;
+
+	$html = '<ul id="endorsed-publishers" class="tags">';
+	foreach ($publishers as $publisher) {
+		$html .= '<li>';
+		$html .= '<a href="/publisher/' . $publisher->key . '">' . $publisher->title . '</a><br>';
+		$html .= '<p>' . 'A data publisher from ' . $publisher->city . ', ' . $publisher->country . ' with ' . $publisher->numPublishedDatasets . ' ';
+		$html .= format_plural($publisher->numPublishedDatasets,
+			'dataset',
+			'datasets',
+			array()
+		);
+		$html .= '</p>';
+		$html .= '</li>';
+	}
+	$html .= '</ul>';
+
+	return $html;
+}
+
+/**
+ * Helper function for getting the UUID of the participant.
+ */
+function _gbif_participant_get_uuid($participantID) {
+	$api_call = _gbif_participant_api_registry_node() . '?identifier=' . $participantID . '&identifierType=GBIF_PARTICIPANT';
+	$json = json_decode(file_get_contents($api_call));
+	$uuid = $json->results[0]->key;
+	return $uuid;
+}
+
+/**
+ * Helper function for constructing the root for Registry calls.
+ */
+function _gbif_participant_api_registry_node() {
+	$env = variable_get('environment_settings');
+	return $env['gbif_api_base_url'] . '/v' . $env['gbif_api_version'] . '/node';
 }

@@ -76,6 +76,21 @@ function _gbif_participant_installed_fields() {
 			'translatable' => '0',
 			'type' => 'number_integer',
 		),
+		'gp_iso2' => array(
+			'label' => $t('Participant ISO 3166-2 code'),
+			'active' => '1',
+			'cardinality' => '1',
+			'deleted' => '0',
+			'entity_types' => array(),
+			'field_name' => 'gp_iso2',
+			'foreign keys' => array(),
+			'indexes' => array(),
+			'locked' => '1',
+			'module' => 'text',
+			'settings' => array(),
+			'translatable' => '0',
+			'type' => 'text',
+		),
 		'gp_history_date_establishment' => array(
 			'label' => $t('History: Date of Establishment'),
 			'active' => '1',
@@ -402,6 +417,44 @@ function _gbif_participant_installed_instances() {
 				'weight' => 1,
 			),
 		),
+		'gp_iso2' => array(
+			'bundle' => 'gbif_participant',
+			'default_value' => NULL,
+			'deleted' => '0',
+			'description' => 'This ISO 2-digit code links to the IMS and cannot be changed.',
+			'display' => array(
+				'default' => array(
+					'label' => 'above',
+					'module' => 'text',
+					'settings' => array(),
+					'type' => 'hidden',
+					'weight' => '1',
+				),
+				'teaser' => array(
+					'label' => 'above',
+					'settings' => array(),
+					'type' => 'hidden',
+					'weight' => 0,
+				),
+			),
+			'entity_type' => 'node',
+			'field_name' => 'gp_iso2',
+			'label' => $t('Participant ISO 3166-2 code'),
+			'required' => 1,
+			'settings' => array(
+				'text_processing' => '0',
+				'user_register_form' => FALSE,
+			),
+			'widget' => array(
+				'active' => 1,
+				'module' => 'text',
+				'settings' => array(
+					'size' => '2',
+				),
+				'type' => 'text_textfield',
+				'weight' => 2,
+			),
+		),
 		'gp_history_date_establishment' => array(
 			'bundle' => 'gbif_participant',
 			'deleted' => '0',
@@ -460,7 +513,7 @@ function _gbif_participant_installed_instances() {
 					'year_range' => '-14:+3',
 				),
 				'type' => 'date_popup',
-				'weight' => 2,
+				'weight' => 3,
 			),
 
 		),
@@ -492,16 +545,7 @@ function _gbif_participant_installed_instances() {
 			'field_name' => 'gp_history_has_mandate',
 			'label' => $t('History: Has Formal Mandate'),
 			'required' => 0,
-			'settings' => array(
-				'mediafront' => array(
-					'custom' => '',
-					'field_type' => '0',
-					'media_type' => 'media',
-					'preview' => '0',
-					'thumbnail' => '0',
-				),
-				'user_register_form' => FALSE,
-			),
+			'settings' => array(),
 			'widget' => array(
 				'active' => 1,
 				'module' => 'options',
@@ -509,7 +553,7 @@ function _gbif_participant_installed_instances() {
 					'display_label' => 1,
 				),
 				'type' => 'options_onoff',
-				'weight' => 3,
+				'weight' => 4,
 			),
 		),
 		'gp_history_statement' => array(

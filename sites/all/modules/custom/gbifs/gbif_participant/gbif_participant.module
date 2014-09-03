@@ -93,6 +93,7 @@ function gbif_participant_form($node, $form_state) {
 function gbif_participant_form_gbif_participant_node_form_alter(&$form, &$form_state) {
 	$form['gp_id']['#disabled'] = TRUE;
 	//$form['gp_id']['#type'] = 'hidden';
+	$form['gp_iso2']['#disabled'] = TRUE;
 }
 
 /**
@@ -223,6 +224,7 @@ function gbif_participant_populate() {
 					$node->language = LANGUAGE_NONE;
 					$node->title = $participant->participant_name_full;
 					$node->gp_id[$node->language][0]['value'] = $participant->participantID;
+					$node->gp_iso2[$node->language][0]['value'] = $participant->iso2;
 					$node = node_submit($node);
 					node_save($node);
 

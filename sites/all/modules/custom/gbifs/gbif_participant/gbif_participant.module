@@ -96,6 +96,16 @@ function gbif_participant_form_gbif_participant_node_form_alter(&$form, &$form_s
 }
 
 /**
+ * Implementation of hook_views_api().
+ */
+function gbif_participant_views_api() {
+	return array(
+		'api' => 3.0,
+		'path' => drupal_get_path('module', 'gbif_participant') . '/views'
+	);
+}
+
+/**
  * Implements hook_theme().
  */
 function gbif_participant_theme() {
@@ -158,10 +168,29 @@ function gbif_participant_preprocess_node(&$variables) {
 }
 
 function gbif_participant_page_render($iso2, $page) {
-	$content = '';
-	$content .= 'Country code: ' . $iso2 . '<br/>';
-	$content .= 'Page: ' . $page;
-	return $content;
+	// If both variables are not set, then show the list of countries.
+	if (!isset($iso2) && !isset($page)) {
+		return 'country list';
+	}
+	else {
+		// Use ISO 2-digit code to look up the content about the participation.
+		if (isset($iso2)) {
+			$results = _gbif_participant_participant_query(NULL, $iso2);
+			if (count($results) > 1) {
+				return t('We are sorting out the data integrity issues regarding this participant. Please come back later. We are sorry for the inconvenience.');
+			}
+			elseif (count($results) == 0) {
+				return t('This country is not yet a participant of GBIF.');
+			}
+			elseif (count($results) == 1) {
+
+			}
+		}
+		$content = '';
+		$content .= 'Country code: ' . $iso2 . '<br/>';
+		$content .= 'Page: ' . $page;
+		return $content;
+	}
 }
 
 /**
@@ -267,7 +296,7 @@ function gbif_participant_populate() {
 	}
 }
 
-function _gbif_participant_participant_query($participantID = NULL) {
+function _gbif_participant_participant_query($participantID = NULL, $iso2 = NULL) {
 	$query = db_select('gbif_ims_participant', 'p');
 	$query->join('gbif_ims_node', 'n', 'n.participantID = p.participantID');
 	$query->leftjoin('gbif_ims_country', 'c', 'p.countryID = c.countryID');
@@ -290,6 +319,9 @@ function _gbif_participant_participant_query($participantID = NULL) {
 	$query->addField('i', 'email', 'institution_email');
 	if (isset($participantID)) {
 		$query->condition('p.participantID', $participantID, '=');
+	}
+	if (isset($iso2)) {
+		$query->condition('c.iso2', $iso2, '=');
 	}
 	$result = $query->execute()->fetchAll();
 	return $result;

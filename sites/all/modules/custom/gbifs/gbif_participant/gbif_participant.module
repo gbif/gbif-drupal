@@ -184,6 +184,8 @@ function gbif_participant_page_render($iso2, $page) {
 				return t('This country is not yet a participant of GBIF.');
 			}
 			elseif (count($results) == 1) {
+				// Find the nid and render it.
+
 
 			}
 		}
@@ -322,8 +324,14 @@ function _gbif_participant_participant_query($participantID = NULL, $iso2 = NULL
 	if (isset($participantID)) {
 		$query->condition('p.participantID', $participantID, '=');
 	}
-	if (isset($iso2)) {
+	// For country pages, we only query country participants plus Chinese Taipei.
+	if (isset($iso2) && $iso2 <> 'TW') {
 		$query->condition('c.iso2', $iso2, '=');
+		$query->condition(db_or()->condition('p.gbif_membership', array('Associate Country Participant', 'Voting Participant'), 'IN'));
+	}
+	elseif (isset($iso2) && $iso2 == 'TW') {
+		$query->condition('c.iso2', $iso2, '=');
+		$query->condition('p.gbif_membership', array('Other Associate Participant'), 'IN');
 	}
 	$result = $query->execute()->fetchAll();
 	return $result;

@@ -78,6 +78,13 @@ function gbif_navigation_block_info_alter(&$block, $theme, $code_blocks) {
       $block['menu_block']['gbif_navigation_footer_links']['region'] = 'links';
       $block['menu_block']['gbif_navigation_footer_links']['title'] = '<none>';
 
+			$block['menu_block']['gbif_navigation_country_page']['weight'] = 5;
+			$block['menu_block']['gbif_navigation_country_page']['status'] = 1;
+			$block['menu_block']['gbif_navigation_country_page']['region'] = 'menu';
+			$block['menu_block']['gbif_navigation_country_page']['title'] = '<none>';
+			$block['menu_block']['gbif_navigation_country_page']['visibility'] = BLOCK_VISIBILITY_LISTED;
+			$block['menu_block']['gbif_navigation_country_page']['pages'] = "country_php/*";
+
       break;
   }
 }
@@ -132,6 +139,17 @@ function gbif_navigation_menu_block_blocks() {
       'expanded'    => 1,
       'sort'        => 0,
     ),
+		'gbif_navigation_country_page' => array(
+			'menu_name'   => 'country-page',
+			'parent_mlid' => 0,
+			'title_link'  => 0,
+			'admin_title' => 'Country page',
+			'level'       => 1,
+			'follow'      => 0,
+			'depth'       => 1,
+			'expanded'    => 1,
+			'sort'        => 0,
+		),
   );
 }
 

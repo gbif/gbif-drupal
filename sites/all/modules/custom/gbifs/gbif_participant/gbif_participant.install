@@ -16,7 +16,7 @@ function gbif_participant_install() {
 }
 
 function gbif_participant_enable() {
-
+	gbif_participant_populate();
 }
 
 function gbif_participant_uninstall() {

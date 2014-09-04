@@ -745,16 +745,9 @@ function _bvng_well_types($req_path, $system_main) {
 			return 'none';
 		}
   }
-	elseif (drupal_match_path($req_path, 'analytics')) {
+	elseif (drupal_match_path($req_path, 'country_php/*') || drupal_match_path($req_path, 'analytics/*')) {
 		return 'none';
 	}
-	elseif (drupal_match_path($req_path, 'analytics/*/*/*')) {
-		return 'none';
-	}
-	elseif (drupal_match_path($req_path, 'analytics/*')) {
-		return 'none';
-	}
-
   elseif ($req_path) {
     // Others are views.
     foreach ($filter_paths as $path) {

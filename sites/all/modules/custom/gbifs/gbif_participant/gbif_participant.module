@@ -110,11 +110,15 @@ function gbif_participant_views_api() {
 /**
  * Implements hook_theme().
  */
-function gbif_participant_theme() {
+function gbif_participant_theme($existing, $type, $theme, $path) {
 	$path = drupal_get_path('module', 'gbif_participant');
 	return array(
 		'node__gbif_participant' => array(
 			'template' => 'node--gbif_participant',
+			'path' => "$path/theme",
+		),
+		'gbif_participant_summary' => array(
+			'template' => 'summary',
 			'path' => "$path/theme",
 		),
 	);
@@ -211,42 +215,54 @@ function gbif_participant_page_render($iso2, $chapter) {
 		// If both variables are not set, then show the list of countries.
 		return 'country list';
 	}
-	else {
+	elseif (isset($iso2) && $chapter == 'participation') {
 		// Use ISO 2-digit code to look up the content about the participation.
-		if (isset($iso2) && $chapter == 'participation') {
-			$results = _gbif_participant_participant_query(NULL, $iso2);
-			if (count($results) > 1) {
-				return t('We are on the information regarding this participant. Please come back later. We are sorry for the inconvenience.');
-			}
-			elseif (count($results) == 0) {
-				drupal_not_found();
-			}
-			elseif (count($results) == 1) {
-				// Find the nid and render it.
-				$participantID = $results[0]->participantID;
-				$gbif_membership = $results[0]->gbif_membership;
+		$results = _gbif_participant_participant_query(NULL, $iso2);
+		if (count($results) > 1) {
+			return t('We are on the information regarding this participant. Please come back later. We are sorry for the inconvenience.');
+		}
+		elseif (count($results) == 0) {
+			drupal_not_found();
+		}
+		elseif (count($results) == 1) {
+			// Find the nid and render it.
+			$participantID = $results[0]->participantID;
+			$gbif_membership = $results[0]->gbif_membership;
 
-				$json = _gbif_participant_get_registry_participant($participantID);
-				$region = _gbif_participant_format_region($json->gbifRegion);
+			$json = _gbif_participant_get_registry_participant($participantID);
+			$region = _gbif_participant_format_region($json->gbifRegion);
 
-				$entity_query = new EntityFieldQuery();
-				$entity_query->entityCondition('entity_type', 'node')
-					->entityCondition('bundle', 'gbif_participant')
-					->fieldCondition('gp_id', 'value', $participantID, '=');
-				$entity_query->execute();
+			$entity_query = new EntityFieldQuery();
+			$entity_query->entityCondition('entity_type', 'node')
+				->entityCondition('bundle', 'gbif_participant')
+				->fieldCondition('gp_id', 'value', $participantID, '=');
+			$entity_query->execute();
 
-				if (isset($entity_query->ordered_results) && count($entity_query->ordered_results) == 1) {
-					$nid = $entity_query->ordered_results[0]->entity_id;
-					$node = node_load($nid);
-					$page = node_page_view($node);
-					// Attached some attributes for use in preprocess_page().
-					// They should then be removed in the hook_preprocess_page().
-					$page['node'] = $node;
-					$page['gbif_membership'] = $gbif_membership;
-					$page['gbif_region'] = $region;
-					return print drupal_render_page($page);
-				}
+			if (isset($entity_query->ordered_results) && count($entity_query->ordered_results) == 1) {
+				$nid = $entity_query->ordered_results[0]->entity_id;
+				$node = node_load($nid);
+				$page = node_page_view($node);
+				// Attached some attributes for use in preprocess_page().
+				// They should then be removed in the hook_preprocess_page().
+				$page['node'] = $node;
+				$page['gbif_membership'] = $gbif_membership;
+				$page['gbif_region'] = $region;
+				return print drupal_render_page($page);
 			}
+		}
+	}
+	elseif (isset($iso2)) {
+		switch ($chapter) {
+			case 'summary':
+				return theme('gbif_participant_summary');
+			case 'about':
+				return 'This is data about page.';
+			case 'publishing':
+				return 'This is data publishing page.';
+			case 'news':
+				return 'This is news page.';
+			case 'publication':
+				return 'This is publication page.';
 		}
 	}
 }

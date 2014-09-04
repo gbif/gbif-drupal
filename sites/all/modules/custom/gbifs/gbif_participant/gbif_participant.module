@@ -127,7 +127,8 @@ function gbif_participant_preprocess_page(&$variables) {
 		// For the content type 'gbif_participant', page title and the slogan are
 		// decided by the node information.
 		$title = $variables['page']['content']['system_main']['node']->title;
-		$description = t('A GBIF !gbif_membership from !region', array('!gbif_membership' => 'gb', '!region' => 'eu')) . '<br>';
+		$gbif_membership = $variables['page']['content']['system_main']['gbif_membership'];
+		$description = t('A GBIF !gbif_membership from !region', array('!gbif_membership' => $gbif_membership, '!region' => 'eu')) . '<br>';
 		$description .= t('Names of countries, territories and islands are based on the !url standard.', array('!url' => l('ISO 3166-1', 'https://www.iso.org/obp/ui/#search')));
 		$variables['page']['highlighted_title'] = array(
 			'name' => $title,
@@ -135,6 +136,7 @@ function gbif_participant_preprocess_page(&$variables) {
 		);
 		// Detach the node object to avoid errors in the following rendering.
 		unset($variables['page']['content']['system_main']['node']);
+		unset($variables['page']['content']['system_main']['gbif_membership']);
 	}
 }
 
@@ -191,16 +193,21 @@ function gbif_participant_page_render($iso2, $chapter) {
 			elseif (count($results) == 1) {
 				// Find the nid and render it.
 				$participantID = $results[0]->participantID;
+				$gbif_membership = $results[0]->gbif_membership;
 				$entity_query = new EntityFieldQuery();
 				$entity_query->entityCondition('entity_type', 'node')
 					->entityCondition('bundle', 'gbif_participant')
 					->fieldCondition('gp_id', 'value', $participantID, '=');
 				$entity_query->execute();
+
 				if (isset($entity_query->ordered_results) && count($entity_query->ordered_results) == 1) {
 					$nid = $entity_query->ordered_results[0]->entity_id;
 					$node = node_load($nid);
 					$page = node_page_view($node);
-					$page['node'] = $node; // Attached the node object for use in preprocess_page().
+					// Attached some attributes for use in preprocess_page().
+					// They should then be removed in the hook_preprocess_page().
+					$page['node'] = $node;
+					$page['gbif_membership'] = $gbif_membership;
 					return print drupal_render_page($page);
 				}
 			}
@@ -363,7 +370,7 @@ function _gbif_participant_print_address_fields($value) {
 
 /**
  * Helper function for rendering contacts.
- * @param $position is where on the template the contacts will be.
+ * @param $position: where on the template the contacts will be.
  * 				because they have different rendering styles.
  * @todo Emit proper URLs for contacts.
  */

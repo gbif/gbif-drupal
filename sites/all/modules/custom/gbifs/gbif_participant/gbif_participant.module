@@ -124,22 +124,24 @@ function gbif_participant_theme() {
  */
 function gbif_participant_preprocess_page(&$variables) {
 	if (isset($variables)) {
-		// For the content type 'gbif_participant', page title and the slogan are
-		// decided by the node information.
-		$title = $variables['page']['content']['system_main']['node']->title;
-		$gbif_membership = $variables['page']['content']['system_main']['gbif_membership'];
-		$gbif_region = $variables['page']['content']['system_main']['gbif_region'];
-		$description = t('A GBIF !gbif_membership from !region', array('!gbif_membership' => $gbif_membership, '!region' => $gbif_region)) . '<br>';
-		$description .= t('Names of countries, territories and islands are based on the !url standard.', array('!url' => l('ISO 3166-1', 'https://www.iso.org/obp/ui/#search')));
-		$variables['page']['highlighted_title'] = array(
-			'name' => $title,
-			'description' => $description,
-		);
-		// Detach the node object and other attributes to avoid errors in the
-		// following rendering.
-		unset($variables['page']['content']['system_main']['node']);
-		unset($variables['page']['content']['system_main']['gbif_membership']);
-		unset($variables['page']['content']['system_main']['gbif_region']);
+		if (isset($variables['page']['content']['system_main']['node'])) {
+			// For the content type 'gbif_participant', page title and the slogan are
+			// decided by the node information.
+			$title = $variables['page']['content']['system_main']['node']->title;
+			$gbif_membership = $variables['page']['content']['system_main']['gbif_membership'];
+			$gbif_region = $variables['page']['content']['system_main']['gbif_region'];
+			$description = t('A GBIF !gbif_membership from !region', array('!gbif_membership' => $gbif_membership, '!region' => $gbif_region)) . '<br>';
+			$description .= t('Names of countries, territories and islands are based on the !url standard.', array('!url' => l('ISO 3166-1', 'https://www.iso.org/obp/ui/#search')));
+			$variables['page']['highlighted_title'] = array(
+				'name' => $title,
+				'description' => $description,
+			);
+			// Detach the node object and other attributes to avoid errors in the
+			// following rendering.
+			unset($variables['page']['content']['system_main']['node']);
+			unset($variables['page']['content']['system_main']['gbif_membership']);
+			unset($variables['page']['content']['system_main']['gbif_region']);
+		}
 	}
 }
 
@@ -186,10 +188,10 @@ function gbif_participant_page_render($iso2, $chapter) {
 		if (isset($iso2) && $chapter == 'participation') {
 			$results = _gbif_participant_participant_query(NULL, $iso2);
 			if (count($results) > 1) {
-				return t('We are sorting out the data integrity issues regarding this participant. Please come back later. We are sorry for the inconvenience.');
+				return t('We are on the information regarding this participant. Please come back later. We are sorry for the inconvenience.');
 			}
 			elseif (count($results) == 0) {
-				return t('This country is not yet a participant of GBIF.');
+				drupal_not_found();
 			}
 			elseif (count($results) == 1) {
 				// Find the nid and render it.

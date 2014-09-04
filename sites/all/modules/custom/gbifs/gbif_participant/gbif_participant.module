@@ -120,6 +120,7 @@ function gbif_participant_theme($existing, $type, $theme, $path) {
 		'gbif_participant_summary' => array(
 			'template' => 'summary',
 			'path' => "$path/theme",
+			'variables' => array('participantID' => NULL),
 		),
 	);
 }
@@ -254,7 +255,7 @@ function gbif_participant_page_render($iso2, $chapter) {
 	elseif (isset($iso2)) {
 		switch ($chapter) {
 			case 'summary':
-				return theme('gbif_participant_summary');
+				return theme('gbif_participant_summary', array('participantID' => $iso2));
 			case 'about':
 				return 'This is data about page.';
 			case 'publishing':

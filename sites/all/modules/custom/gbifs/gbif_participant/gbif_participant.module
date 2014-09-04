@@ -124,13 +124,17 @@ function gbif_participant_theme() {
  */
 function gbif_participant_preprocess_page(&$variables) {
 	if (isset($variables)) {
-		// For the content type 'gbif_participant', page title is decided by the node information.
-		if (isset($variables['node']) && $variables['node']->type == 'gbif_participant') {
-			$variables['page']['highlighted_title'] = array(
-				'name' => $variables['node']->title,
-				'description' => 'draft participant profile',
-			);
-		}
+		// For the content type 'gbif_participant', page title and the slogan are
+		// decided by the node information.
+		$title = $variables['page']['content']['system_main']['node']->title;
+		$description = t('A GBIF !gbif_membership from !region', array('!gbif_membership' => 'gb', '!region' => 'eu')) . '<br>';
+		$description .= t('Names of countries, territories and islands are based on the !url standard.', array('!url' => l('ISO 3166-1', 'https://www.iso.org/obp/ui/#search')));
+		$variables['page']['highlighted_title'] = array(
+			'name' => $title,
+			'description' => $description,
+		);
+		// Detach the node object to avoid errors in the following rendering.
+		unset($variables['page']['content']['system_main']['node']);
 	}
 }
 
@@ -168,14 +172,15 @@ function gbif_participant_preprocess_node(&$variables) {
 	}
 }
 
-function gbif_participant_page_render($iso2, $page) {
-	// If both variables are not set, then show the list of countries.
-	if (!isset($iso2) && !isset($page)) {
+function gbif_participant_page_render($iso2, $chapter) {
+
+	if (!isset($iso2) && !isset($chapter)) {
+		// If both variables are not set, then show the list of countries.
 		return 'country list';
 	}
 	else {
 		// Use ISO 2-digit code to look up the content about the participation.
-		if (isset($iso2)) {
+		if (isset($iso2) && $chapter == 'participation') {
 			$results = _gbif_participant_participant_query(NULL, $iso2);
 			if (count($results) > 1) {
 				return t('We are sorting out the data integrity issues regarding this participant. Please come back later. We are sorry for the inconvenience.');
@@ -185,14 +190,21 @@ function gbif_participant_page_render($iso2, $page) {
 			}
 			elseif (count($results) == 1) {
 				// Find the nid and render it.
-
-
+				$participantID = $results[0]->participantID;
+				$entity_query = new EntityFieldQuery();
+				$entity_query->entityCondition('entity_type', 'node')
+					->entityCondition('bundle', 'gbif_participant')
+					->fieldCondition('gp_id', 'value', $participantID, '=');
+				$entity_query->execute();
+				if (isset($entity_query->ordered_results) && count($entity_query->ordered_results) == 1) {
+					$nid = $entity_query->ordered_results[0]->entity_id;
+					$node = node_load($nid);
+					$page = node_page_view($node);
+					$page['node'] = $node; // Attached the node object for use in preprocess_page().
+					return print drupal_render_page($page);
+				}
 			}
 		}
-		$content = '';
-		$content .= 'Country code: ' . $iso2 . '<br/>';
-		$content .= 'Page: ' . $page;
-		return $content;
 	}
 }
 

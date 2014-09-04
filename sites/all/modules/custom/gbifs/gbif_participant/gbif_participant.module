@@ -9,11 +9,12 @@
  */
 function gbif_participant_menu() {
 	$items['country_php'] = array(
-		'title' => 'Extra Arguments',
-		'description' => 'The page callback can use the arguments provided after the path used as key',
+		'title' => t('Countries, territories and islands'),
+		'description' => 'The entrance page for GBIF Participant countries',
 		'page callback' => 'gbif_participant_page_render',
 		'access callback' => TRUE,
-		'weight' => 10,
+		'type' => MENU_NORMAL_ITEM,
+		'menu-name' => 'menu-country',
 	);
 	$items['admin/config/gbif/participant'] = array(
 		'title' => 'GBIF participant',
@@ -120,10 +121,26 @@ function gbif_participant_theme() {
 }
 
 /**
+ * Implements hook_menu_block_tree_alter().
+ * This doesn't seem to be working. It gets overridden afterwards.
+ */
+function gbif_participant_menu_block_tree_alter(&$tree, &$config) {
+	if (isset($config) && $config['menu_name'] == 'menu-country') {
+		foreach ($tree as $k => $link) {
+			$path = explode('/', $link['link']['link_path']);
+			$iso2 = arg(1);
+			$new_path = $path[0] . '/' . $iso2 . '/' . $path[1];
+			$tree[$k]['link']['link_path'] = $new_path;
+		}
+	}
+}
+
+/**
  * Implements hook_preprocess_HOOK().
  */
 function gbif_participant_preprocess_page(&$variables) {
 	if (isset($variables)) {
+		// Preprocess for the banner.
 		if (isset($variables['page']['content']['system_main']['node'])) {
 			// For the content type 'gbif_participant', page title and the slogan are
 			// decided by the node information.
@@ -136,12 +153,23 @@ function gbif_participant_preprocess_page(&$variables) {
 				'name' => $title,
 				'description' => $description,
 			);
-			// Detach the node object and other attributes to avoid errors in the
-			// following rendering.
-			unset($variables['page']['content']['system_main']['node']);
-			unset($variables['page']['content']['system_main']['gbif_membership']);
-			unset($variables['page']['content']['system_main']['gbif_region']);
 		}
+		// Preprocess for the menu tabs.
+		if (isset($variables['page']['menu']['menu_block_gbif_navigation_country_page'])) {
+			foreach ($variables['page']['menu']['menu_block_gbif_navigation_country_page']['#content'] as $k => $tab) {
+				if (gettype($k) == 'integer') {
+					$path = explode('/', $tab['#href']);
+					$iso2 = arg(1);
+					$new_path = $path[0] . '/' . $iso2 . '/' . $path[1];
+					$variables['page']['menu']['menu_block_gbif_navigation_country_page']['#content'][$k]['#href'] = $new_path;
+				}
+			}
+		}
+		// Detach the node object and other attributes to avoid errors in the
+		// following rendering.
+		unset($variables['page']['content']['system_main']['node']);
+		unset($variables['page']['content']['system_main']['gbif_membership']);
+		unset($variables['page']['content']['system_main']['gbif_region']);
 	}
 }
 
@@ -155,7 +183,7 @@ function gbif_participant_preprocess_node(&$variables) {
 
 		// Format the date to only show year.
 		$timestamp = strtotime($variables['participant_ims']->member_as_of);
-		$year = date("Y", $timestamp);
+		$year = date('Y', $timestamp);
 		$variables['participant_ims']->member_as_of = $year;
 
 		// Get the rest of the information from the Registry API.

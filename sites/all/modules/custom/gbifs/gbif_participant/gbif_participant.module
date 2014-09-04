@@ -128,15 +128,18 @@ function gbif_participant_preprocess_page(&$variables) {
 		// decided by the node information.
 		$title = $variables['page']['content']['system_main']['node']->title;
 		$gbif_membership = $variables['page']['content']['system_main']['gbif_membership'];
-		$description = t('A GBIF !gbif_membership from !region', array('!gbif_membership' => $gbif_membership, '!region' => 'eu')) . '<br>';
+		$gbif_region = $variables['page']['content']['system_main']['gbif_region'];
+		$description = t('A GBIF !gbif_membership from !region', array('!gbif_membership' => $gbif_membership, '!region' => $gbif_region)) . '<br>';
 		$description .= t('Names of countries, territories and islands are based on the !url standard.', array('!url' => l('ISO 3166-1', 'https://www.iso.org/obp/ui/#search')));
 		$variables['page']['highlighted_title'] = array(
 			'name' => $title,
 			'description' => $description,
 		);
-		// Detach the node object to avoid errors in the following rendering.
+		// Detach the node object and other attributes to avoid errors in the
+		// following rendering.
 		unset($variables['page']['content']['system_main']['node']);
 		unset($variables['page']['content']['system_main']['gbif_membership']);
+		unset($variables['page']['content']['system_main']['gbif_region']);
 	}
 }
 
@@ -155,9 +158,7 @@ function gbif_participant_preprocess_node(&$variables) {
 
 		// Get the rest of the information from the Registry API.
 		// @todo This has to be cleaned up so it's constructed from IMS tables.
-		$uuid = _gbif_participant_get_uuid($participantID);
-		$node_call = _gbif_participant_api_registry_node() . '/' . $uuid;
-		$json = json_decode(file_get_contents($node_call));
+		$json = _gbif_participant_get_registry_participant($participantID);
 
 		// Contacts
 		$contacts = $json->contacts;
@@ -194,6 +195,10 @@ function gbif_participant_page_render($iso2, $chapter) {
 				// Find the nid and render it.
 				$participantID = $results[0]->participantID;
 				$gbif_membership = $results[0]->gbif_membership;
+
+				$json = _gbif_participant_get_registry_participant($participantID);
+				$region = _gbif_participant_format_region($json->gbifRegion);
+
 				$entity_query = new EntityFieldQuery();
 				$entity_query->entityCondition('entity_type', 'node')
 					->entityCondition('bundle', 'gbif_participant')
@@ -208,6 +213,7 @@ function gbif_participant_page_render($iso2, $chapter) {
 					// They should then be removed in the hook_preprocess_page().
 					$page['node'] = $node;
 					$page['gbif_membership'] = $gbif_membership;
+					$page['gbif_region'] = $region;
 					return print drupal_render_page($page);
 				}
 			}
@@ -373,6 +379,7 @@ function _gbif_participant_print_address_fields($value) {
  * @param $position: where on the template the contacts will be.
  * 				because they have different rendering styles.
  * @todo Emit proper URLs for contacts.
+ * @todo Rewire the IMS tables for contacts.
  */
 function _gbif_participant_print_contacts($position, $contacts) {
 	$html = '';
@@ -403,7 +410,7 @@ function _gbif_participant_print_contacts($position, $contacts) {
 			foreach ($contacts as $contact) {
 			  $html .= '<address class="col-md-4">';
 				$html .= '<a id="' . $contact->key . '"></a>';
-				$html .= '<h3>' . $contact->type . '</h3>';
+				$html .= '<h3>' . _gbif_participant_format_role($contact->type) . '</h3>';
 				$html .= '<div class="contactName">' . $contact->firstName . ' ' . $contact->lastName . '</div>';
 				$html .= '<div style="display: block;">';
 				$html .= '<div class="contactPosition">' . $contact->position[0] . '</div>';
@@ -441,7 +448,7 @@ function _gbif_participant_print_region($region) {
 	$html = '';
 	$html .= '<h3>GBIF Region</h3>';
 	$html .= '<p>';
-	$html .= $region;
+	$html .= _gbif_participant_format_region($region);
 	$html .= '</p>';
 	return $html;
 }
@@ -474,6 +481,19 @@ function _gbif_participant_print_endorsed_publishers($participantID) {
 	return $html;
 }
 
+
+/**
+ * Helper function for getting the corresponding participant info from
+ * the Registry.
+ * @param int $pid Participant ID
+ */
+function _gbif_participant_get_registry_participant($pid) {
+	$uuid = _gbif_participant_get_uuid($pid);
+	$p_call = _gbif_participant_api_registry_node() . '/' . $uuid;
+	$json = json_decode(file_get_contents($p_call));
+	return $json;
+}
+
 /**
  * Helper function for getting the UUID of the participant.
  */
@@ -490,4 +510,34 @@ function _gbif_participant_get_uuid($participantID) {
 function _gbif_participant_api_registry_node() {
 	$env = variable_get('environment_settings');
 	return $env['gbif_api_base_url'] . '/v' . $env['gbif_api_version'] . '/node';
+}
+
+/**
+ * Helper function for formatting the region text.
+ * @param $region
+ */
+function _gbif_participant_format_region($region) {
+	$regions = array(
+		'AFRICA' => t('Africa'),
+		'ASIA' => t('Asia'),
+		'EUROPE' => t('Europe'),
+		'LATIN_AMERICA' => t('Latin America'),
+		'NORTH_AMERICA' => t('North America'),
+		'OCEANIA' => t('Oceania'),
+	);
+	return $regions[$region];
+}
+
+/**
+ * Helper function for formatting the role text.
+ */
+function _gbif_participant_format_role($role) {
+	$roles = array(
+		'HEAD_OF_DELEGATION' => t('Head of Delegation'),
+		'TEMPORARY_HEAD_OF_DELEGATION' => t('Temporary Head of Delegation'),
+		'ADDITIONAL_DELEGATE' => t('Additional Delegate'),
+		'NODE_MANAGER' => t('Node Manager'),
+		'NODE_STAFF' => t('Node Staff'),
+	);
+	return $roles[$role];
 }

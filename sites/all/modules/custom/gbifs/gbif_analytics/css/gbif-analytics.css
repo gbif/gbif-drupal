@@ -1,0 +1,29 @@
+/**
+ * TODO: These all seem like they should be part of the GBIF standard styling...
+ */
+.bs-callout {
+    color: #666666;
+    padding: 20px;
+    margin: 20px 0;
+    border-left: 5px solid #eee;
+}
+.bs-callout-warning {
+    background-color: #FFFFE9;
+    border-color: #f0ad4e;
+}
+.bs-callout-warning h4 {
+    color: #f0ad4e
+}
+.bs-callout-definition {
+    background-color: #F3F3F3;
+    border-color: #CCCCCC;
+}
+.bs-callout-definition h4 {
+    color: #666666
+}
+.img-thumbnail {
+    background-color: #FFF !important;
+}
+h4 {
+    font-size: 18px !important;
+}

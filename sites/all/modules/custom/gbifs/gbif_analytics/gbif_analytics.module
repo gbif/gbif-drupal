@@ -1,0 +1,42 @@
+<?php
+/**
+ * @file
+ * gbif_analytics.module
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function gbif_analytics_menu() {
+	$items['analytics'] = array(
+		'title' => 'Analytics',
+		'description' => 'The page callback can use the arguments provided after the path used as key',
+		'page callback' => 'gbif_analytics_url_router',
+		'access callback' => TRUE,
+		'weight' => 10,
+	);
+	return $items;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function gbif_analytics_theme($existing, $type, $theme, $path) {
+	return array(
+		'gbif_analytics_home' => array(
+			'template' => 'theme/detail',
+		),
+	);
+}
+
+
+/**
+ * This does the routing based on the URL.
+ */
+function gbif_analytics_url_router($type, $iso2, $subType) {
+	// TODO: set the imgBaseUrl based on the params
+	return theme('gbif_analytics_home', array(
+		'imgBaseUrl' => 'http://analytics.gbif-uat.org/global/figure',
+		'assetsUrl' => 'http://analytics.gbif-uat.org/assets',
+	));
+}

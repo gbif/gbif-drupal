@@ -115,11 +115,11 @@ function gbif_participant_theme($existing, $type, $theme, $path) {
 	return array(
 		'node__gbif_participant' => array(
 			'template' => 'node--gbif_participant',
-			'path' => "$path/theme",
+			'path' => $path . '/theme',
 		),
 		'gbif_participant_summary' => array(
 			'template' => 'summary',
-			'path' => "$path/theme",
+			'path' => $path . '/theme',
 			'variables' => array('participantID' => NULL),
 		),
 	);

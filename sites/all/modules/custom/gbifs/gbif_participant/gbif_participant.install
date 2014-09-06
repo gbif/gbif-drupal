@@ -17,7 +17,7 @@ function gbif_participant_install() {
 
 function gbif_participant_enable() {
 	// hook_node_info() is run after hook_enable() so at this point node options
-	// are not set. So don't run gbif_participant_populate() here.
+	// is not set. So don't run gbif_participant_populate() here.
 }
 
 function gbif_participant_uninstall() {
@@ -516,7 +516,6 @@ function _gbif_participant_installed_instances() {
 				'type' => 'date_popup',
 				'weight' => 3,
 			),
-
 		),
 		'gp_history_has_mandate' => array(
 			'bundle' => 'gbif_participant',

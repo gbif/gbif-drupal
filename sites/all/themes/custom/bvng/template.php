@@ -62,7 +62,13 @@ function bvng_preprocess(&$variables, $hook) {
 
 	/* The $current_path will change after setting active menu item,
 	 * therefore a requested_path value is inserted to content region
-	 * for regional processing.
+	 * for regional processing, e.g., determining the main well type.
+	 *
+	 * @todo Make compatible with PHP 5.4.
+	 * In PHP 5.4, $req_path will be ruined on line 5893 in	includes/common.inc,
+	 * where the code assume $req_path as $elements is an array. As the result,
+	 * URLs like 'country/CH/*' or 'user/register' become '1ountry/CH/*' or
+	 * '1ser/register'.
 	 */
   $current_path = current_path();
   $variables['current_path'] = $current_path;

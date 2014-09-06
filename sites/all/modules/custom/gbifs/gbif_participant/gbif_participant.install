@@ -92,13 +92,13 @@ function _gbif_participant_installed_fields() {
 			'translatable' => '0',
 			'type' => 'text',
 		),
-		'gp_history_date_establishment' => array(
-			'label' => $t('History: Date of Establishment'),
+		'gp_node_established' => array(
+			'label' => $t('Node Established'),
 			'active' => '1',
 			'cardinality' => '1',
 			'deleted' => '0',
 			'entity_types' => array(),
-			'field_name' => 'gp_history_date_establishment',
+			'field_name' => 'gp_node_established',
 			'foreign keys' => array(),
 			'indexes' => array(),
 			'locked' => '1',
@@ -122,13 +122,13 @@ function _gbif_participant_installed_fields() {
 			'translatable' => '0',
 			'type' => 'datetime',
 		),
-		'gp_history_has_mandate' => array(
-			'label' => $t('History: Have Formal Mandate'),
+		'gp_has_mandate' => array(
+			'label' => $t('The Node Has Formal Mandate'),
 			'active' => '1',
 			'cardinality' => '1',
 			'deleted' => '0',
 			'entity_types' => array(),
-			'field_name' => 'gp_history_has_mandate',
+			'field_name' => 'gp_has_mandate',
 			'foreign keys' => array(),
 			'indexes' => array(
 				'value' => array(
@@ -147,13 +147,13 @@ function _gbif_participant_installed_fields() {
 			'translatable' => '0',
 			'type' => 'list_boolean',
 		),
-		'gp_history_statement' => array(
-			'label' => $t('History: Statement'),
+		'gp_history' => array(
+			'label' => $t('History'),
 			'active' => '1',
 			'cardinality' => '1',
 			'deleted' => '0',
 			'entity_types' => array(),
-			'field_name' => 'gp_history_statement',
+			'field_name' => 'gp_history',
 			'foreign keys' => array(
 				'format' => array(
 					'columns' => array(
@@ -251,13 +251,13 @@ function _gbif_participant_installed_fields() {
 			'translatable' => '1',
 			'type' => 'text_long',
 		),
-		'gp_comm_sites' => array(
-			'label' => $t('Websites'),
+		'gp_comm_social' => array(
+			'label' => $t('Social Media'),
 			'active' => '1',
 			'cardinality' => FIELD_CARDINALITY_UNLIMITED,
 			'deleted' => '0',
 			'entity_types' => array(),
-			'field_name' => 'gp_comm_sites',
+			'field_name' => 'gp_comm_social',
 			'foreign keys' => array(),
 			'indexes' => array(),
 			'locked' => '1',
@@ -280,13 +280,13 @@ function _gbif_participant_installed_fields() {
 			'translatable' => '0',
 			'type' => 'link_field',
 		),
-		'gp_comm_facebook' => array(
-			'label' => $t('Facebook'),
+		'gp_comm_rss' => array(
+			'label' => $t('RSS feed'),
 			'active' => '1',
-			'cardinality' => '1',
+			'cardinality' => FIELD_CARDINALITY_UNLIMITED,
 			'deleted' => '0',
 			'entity_types' => array(),
-			'field_name' => 'gp_comm_facebook',
+			'field_name' => 'gp_comm_rss',
 			'foreign keys' => array(),
 			'indexes' => array(),
 			'locked' => '1',
@@ -309,13 +309,42 @@ function _gbif_participant_installed_fields() {
 			'translatable' => '0',
 			'type' => 'link_field',
 		),
-		'gp_comm_twitter' => array(
+		'gp_comm_newsletter' => array(
 			'label' => $t('Twitter'),
 			'active' => '1',
-			'cardinality' => '1',
+			'cardinality' => FIELD_CARDINALITY_UNLIMITED,
 			'deleted' => '0',
 			'entity_types' => array(),
-			'field_name' => 'gp_comm_twitter',
+			'field_name' => 'gp_comm_newsletter',
+			'foreign keys' => array(),
+			'indexes' => array(),
+			'locked' => '1',
+			'module' => 'link',
+			'settings' => array(
+				'attributes' => array(
+					'class' => '',
+					'rel' => '',
+					'target' => 'default',
+				),
+				'display' => array(
+					'url_cutoff' => 80,
+				),
+				'enable_tokens' => 1,
+				'title' => 'optional',
+				'title_maxlength' => 128,
+				'title_value' => '',
+				'url' => 0,
+			),
+			'translatable' => '0',
+			'type' => 'link_field',
+		),
+		'gp_other_links' => array(
+			'label' => $t('Other Links'),
+			'active' => '1',
+			'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+			'deleted' => '0',
+			'entity_types' => array(),
+			'field_name' => 'gp_other_links',
 			'foreign keys' => array(),
 			'indexes' => array(),
 			'locked' => '1',
@@ -456,10 +485,10 @@ function _gbif_participant_installed_instances() {
 				'weight' => 2,
 			),
 		),
-		'gp_history_date_establishment' => array(
+		'gp_node_established' => array(
 			'bundle' => 'gbif_participant',
 			'deleted' => '0',
-			'description' => '',
+			'description' => $t('The date when the node was established. Note that "node" is different from "participant". Only 4-digit year will show on the web page. For nodes who cannot pin-point the date, 1 Jan or the first day of a known month is used.'),
 			'display' => array(
 				'default' => array(
 					'label' => 'above',
@@ -483,8 +512,8 @@ function _gbif_participant_installed_instances() {
 				),
 			),
 			'entity_type' => 'node',
-			'field_name' => 'gp_history_date_establishment',
-			'label' => $t('History: Date of Establishment'),
+			'field_name' => 'gp_node_established',
+			'label' => $t('Node Established'),
 			'required' => 0,
 			'settings' => array(
 				'default_value' => 'now',
@@ -517,7 +546,7 @@ function _gbif_participant_installed_instances() {
 				'weight' => 3,
 			),
 		),
-		'gp_history_has_mandate' => array(
+		'gp_has_mandate' => array(
 			'bundle' => 'gbif_participant',
 			'default_value' => array(
 				0 => array(
@@ -525,7 +554,7 @@ function _gbif_participant_installed_instances() {
 				),
 			),
 			'deleted' => '0',
-			'description' => 'Whether the Participant has formal mandate.',
+			'description' => 'Whether the Node has formal mandate, check for "Yes".',
 			'display' => array(
 				'default' => array(
 					'label' => 'hidden',
@@ -542,8 +571,8 @@ function _gbif_participant_installed_instances() {
 				),
 			),
 			'entity_type' => 'node',
-			'field_name' => 'gp_history_has_mandate',
-			'label' => $t('History: Has Formal Mandate'),
+			'field_name' => 'gp_has_mandate',
+			'label' => $t('The Node Has Formal Mandate'),
 			'required' => 0,
 			'settings' => array(),
 			'widget' => array(
@@ -556,7 +585,7 @@ function _gbif_participant_installed_instances() {
 				'weight' => 4,
 			),
 		),
-		'gp_history_statement' => array(
+		'gp_history' => array(
 			'bundle' => 'gbif_participant',
 			'default_value' => NULL,
 			'deleted' => '0',
@@ -577,8 +606,8 @@ function _gbif_participant_installed_instances() {
 				),
 			),
 			'entity_type' => 'node',
-			'field_name' => 'gp_history_statement',
-			'label' => $t('Statement'),
+			'field_name' => 'gp_history',
+			'label' => $t('History'),
 			'required' => 0,
 			'settings' => array(
 				'linkit' => array(
@@ -752,11 +781,11 @@ function _gbif_participant_installed_instances() {
 				'weight' => 8,
 			),
 		),
-		'gp_comm_sites' => array(
+		'gp_comm_social' => array(
 			'bundle' => 'gbif_participant',
 			'default_value' => NULL,
 			'deleted' => '0',
-			'description' => '',
+			'description' => $t('Name social media and insert the URLs. Icons will be rendered accordingly. Available titles/types are "Facebook", "Twitter", "LinkedIn", "Vimeo", "YouTube", "Instagram", "Mendeley", "Google Plus", "Pinterest". Title/type is case-insensitive.'),
 			'display' => array(
 				'default' => array(
 					'label' => 'above',
@@ -773,8 +802,8 @@ function _gbif_participant_installed_instances() {
 				),
 			),
 			'entity_type' => 'node',
-			'field_name' => 'gp_comm_sites',
-			'label' => $t('Websites'),
+			'field_name' => 'gp_comm_social',
+			'label' => $t('Social Media'),
 			'required' => 0,
 			'settings' => array(
 				'attributes' => array(
@@ -815,11 +844,11 @@ function _gbif_participant_installed_instances() {
 				'weight' => 9,
 			),
 		),
-		'gp_comm_facebook' => array(
+		'gp_comm_rss' => array(
 			'bundle' => 'gbif_participant',
 			'default_value' => NULL,
 			'deleted' => '0',
-			'description' => '',
+			'description' => $t('RSS feed(s) a node wish to provide.'),
 			'display' => array(
 				'default' => array(
 					'label' => 'above',
@@ -836,8 +865,8 @@ function _gbif_participant_installed_instances() {
 				),
 			),
 			'entity_type' => 'node',
-			'field_name' => 'gp_comm_facebook',
-			'label' => $t('Facebook'),
+			'field_name' => 'gp_comm_rss',
+			'label' => $t('RSS feed'),
 			'required' => 0,
 			'settings' => array(
 				'attributes' => array(
@@ -878,11 +907,11 @@ function _gbif_participant_installed_instances() {
 				'weight' => 13,
 			),
 		),
-		'gp_comm_twitter' => array(
+		'gp_comm_newsletter' => array(
 			'bundle' => 'gbif_participant',
 			'default_value' => NULL,
 			'deleted' => '0',
-			'description' => '',
+			'description' => $t('Newsletter(s) a node wish to provide.'),
 			'display' => array(
 				'default' => array(
 					'label' => 'above',
@@ -899,8 +928,8 @@ function _gbif_participant_installed_instances() {
 				),
 			),
 			'entity_type' => 'node',
-			'field_name' => 'gp_comm_twitter',
-			'label' => $t('Twitter'),
+			'field_name' => 'gp_comm_newsletter',
+			'label' => $t('Newsletter'),
 			'required' => 0,
 			'settings' => array(
 				'attributes' => array(
@@ -941,11 +970,74 @@ function _gbif_participant_installed_instances() {
 				'weight' => 14,
 			),
 		),
+		'gp_other_links' => array(
+			'bundle' => 'gbif_participant',
+			'default_value' => NULL,
+			'deleted' => '0',
+			'description' => $t('Other communication links a node wish to provide.'),
+			'display' => array(
+				'default' => array(
+					'label' => 'above',
+					'module' => 'link',
+					'settings' => array(),
+					'type' => 'link_default',
+					'weight' => '4',
+				),
+				'teaser' => array(
+					'label' => 'above',
+					'settings' => array(),
+					'type' => 'hidden',
+					'weight' => 0,
+				),
+			),
+			'entity_type' => 'node',
+			'field_name' => 'gp_other_links',
+			'label' => $t('Other Links'),
+			'required' => 0,
+			'settings' => array(
+				'attributes' => array(
+					'class' => '',
+					'configurable_title' => 0,
+					'rel' => '',
+					'target' => '_blank',
+					'title' => '',
+				),
+				'display' => array(
+					'url_cutoff' => '80',
+				),
+				'enable_tokens' => 0,
+				'linkit' => array(
+					'enable' => 0,
+					'insert_plugin' => '',
+				),
+				'mediafront' => array(
+					'custom' => '',
+					'field_type' => '0',
+					'media_type' => 'media',
+					'preview' => '0',
+					'thumbnail' => '0',
+				),
+				'rel_remove' => 'default',
+				'title' => 'required',
+				'title_maxlength' => '128',
+				'title_value' => '',
+				'url' => 0,
+				'user_register_form' => FALSE,
+				'validate_url' => 1,
+			),
+			'widget' => array(
+				'active' => 0,
+				'module' => 'link',
+				'settings' => array(),
+				'type' => 'link_field',
+				'weight' => 15,
+			),
+		),
 		'gp_quick_links' => array(
 			'bundle' => 'gbif_participant',
 			'default_value' => NULL,
 			'deleted' => '0',
-			'description' => '',
+			'description' => $t('Digested links by GBIFS.'),
 			'display' => array(
 				'default' => array(
 					'label' => 'above',

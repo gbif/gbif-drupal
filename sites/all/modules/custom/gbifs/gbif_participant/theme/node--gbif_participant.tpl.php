@@ -137,16 +137,16 @@
 				</div>
 				<div class="row">
 					<div class="node-content col-md-8">
-						<?php print render($content['gp_history_date_establishment']); ?>
-						<?php print render($content['gp_history_has_mandate']); ?>
-						<?php print render($content['gp_history_statement']); ?>
+						<?php print render($content['gp_node_established']); ?>
+						<?php print render($content['gp_has_mandate']); ?>
+						<?php print render($content['gp_history']); ?>
 						<?php print render($content['gp_vision_mission']); ?>
 						<?php print render($content['gp_structure']); ?>
 						<?php print render($content['gp_national_funding']); ?>
 					</div>
 					<aside class="node-sidebar col-md-4">
-						<?php print render($content['gp_comm_sites']); ?>
-						<?php print render($content['gp_comm_facebook']); ?>
+						<?php print render($content['gp_comm_social']); ?>
+						<?php print render($content['gp_comm_rss']); ?>
 						<?php print render($content['gp_quick_links']); ?>
 					</aside>
 				</div>

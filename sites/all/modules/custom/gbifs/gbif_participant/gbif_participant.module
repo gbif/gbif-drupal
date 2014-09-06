@@ -51,7 +51,7 @@ function gbif_participant_node_info() {
 			'has_body' => FALSE,
 			'body_label' => t('Custom body text'),
 			'locked' => TRUE, // Unchangeable from UI.
-			'node-preview' => 0,
+			'node-preview' => 1,
 			'node-options' => array(),
 			'node-submitted' => 0,
 			'language_content_type' => '1',

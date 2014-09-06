@@ -16,7 +16,8 @@ function gbif_participant_install() {
 }
 
 function gbif_participant_enable() {
-	gbif_participant_populate();
+	// hook_node_info() is run after hook_enable() so at this point node options
+	// are not set. So don't run gbif_participant_populate() here.
 }
 
 function gbif_participant_uninstall() {

@@ -188,27 +188,35 @@ function gbif_participant_preprocess_node(&$variables) {
 		$participant = _gbif_participant_participant_query($participantID);
 		$participant = $participant[0];
 		$variables['participant_ims'] = $participant;
+		$variables['participant_node'] = array();
 
 		// Format the date to only show year.
 		$timestamp = strtotime($variables['participant_ims']->member_as_of);
 		$year = date('Y', $timestamp);
 		$variables['participant_ims']->member_as_of = $year;
 
+		$timestamp = strtotime($variables['elements']['gp_node_established']['#items'][0]['value']);
+		$year = date('Y', $timestamp);
+		$variables['participant_node']['node_established'] = $year;
+
 		// Get the rest of the information from the Registry API.
 		// @todo This has to be cleaned up so it's constructed from IMS tables.
 		$json = _gbif_participant_get_registry_participant($participantID);
+
+		// GBIF region
+		$region = $json->gbifRegion;
+		$variables['participant_ims']->gbif_region = _gbif_participant_print_region($region);
 
 		// Contacts
 		$contacts = $json->contacts;
 		$variables['participant_ims']->contact_participation = _gbif_participant_print_contacts('participation', $contacts);
 		$variables['participant_ims']->contact_contacts = _gbif_participant_print_contacts('contacts', $contacts);
 
-		// GBIF region
-		$region = $json->gbifRegion;
-		$variables['participant_ims']->gbif_region = _gbif_participant_print_region($region);
-
 		// Endorsed publishers
 		$variables['participant_ims']->endorsed_publishers = _gbif_participant_print_endorsed_publishers($participantID);
+
+		// Social media
+		$variables['participant_node']['social_media'] = _gbif_participant_format_social_media($variables['gp_comm_social']);
 
 	}
 }
@@ -269,6 +277,7 @@ function gbif_participant_page_render($iso2, $chapter) {
 				return 'This is publication page.';
 		}
 	}
+	return 'Generic rendering.';
 }
 
 /**
@@ -457,10 +466,11 @@ function _gbif_participant_print_contacts($position, $contacts) {
 			}
 			break;
 		case 'contacts':
+			$html .= '<table class="table table-curved"><tbody>';
 			foreach ($contacts as $contact) {
-			  $html .= '<address class="col-md-4">';
-				$html .= '<a id="' . $contact->key . '"></a>';
-				$html .= '<h3>' . _gbif_participant_format_role($contact->type) . '</h3>';
+			  $html .= '<tr>';
+				$html .= '<td>';
+				$html .= '<address>';
 				$html .= '<div class="contactName">' . $contact->firstName . ' ' . $contact->lastName . '</div>';
 				$html .= '<div style="display: block;">';
 				$html .= '<div class="contactPosition">' . $contact->position[0] . '</div>';
@@ -485,7 +495,11 @@ function _gbif_participant_print_contacts($position, $contacts) {
 
 				$html .= '</div>';
 				$html .= '</address>';
+				$html .= '</td>';
+				$html .= '<td>' . '<a id="' . $contact->key . '"></a>' . _gbif_participant_format_role($contact->type) . '</td>';
+				$html .= '</tr>';
 			}
+			$html .= '</tbody></table>';
 			break;
 	}
 	return $html;
@@ -513,7 +527,7 @@ function _gbif_participant_print_endorsed_publishers($participantID) {
 	$count = $json->count;
 	$publishers = $json->results;
 
-	$html = '<ul id="endorsed-publishers" class="tags">';
+	$html = '<ul>';
 	foreach ($publishers as $publisher) {
 		$html .= '<li>';
 		$html .= '<a href="/publisher/' . $publisher->key . '">' . $publisher->title . '</a><br>';
@@ -590,4 +604,21 @@ function _gbif_participant_format_role($role) {
 		'NODE_STAFF' => t('Node Staff'),
 	);
 	return $roles[$role];
+}
+
+/**
+ * Helper function for formatting social media icons.
+ */
+function _gbif_participant_format_social_media($gp_comm_social) {
+	$path = '/' . drupal_get_path('module', 'gbif_participant') . '/img/social_icons';
+	$html = '<div class="social-media">';
+	$html .= '<h3>Social Media</h3>';
+	foreach ($gp_comm_social as $media) {
+		$media_type = strtolower($media['title']);
+		$html .= '<a href="' . $media['url'] . '">';
+		$html .= '<img src="' . $path . '/' . $media_type . '.png">';
+		$html .= '</a>';
+	}
+	$html .= '</div>';
+	return $html;
 }

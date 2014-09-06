@@ -141,7 +141,7 @@ function gbif_participant_menu_block_tree_alter(&$tree, &$config) {
 }
 
 /**
- * Implements hook_preprocess_HOOK().
+ * Implements hook_preprocess_page().
  */
 function gbif_participant_preprocess_page(&$variables) {
 	if (isset($variables)) {
@@ -171,13 +171,16 @@ function gbif_participant_preprocess_page(&$variables) {
 			}
 		}
 		// Detach the node object and other attributes to avoid errors in the
-		// following rendering.
+		// following rendering. See gbif_participant_page_render().
 		unset($variables['page']['content']['system_main']['node']);
 		unset($variables['page']['content']['system_main']['gbif_membership']);
 		unset($variables['page']['content']['system_main']['gbif_region']);
 	}
 }
 
+/**
+ * Implements hook_preprocess_node().
+ */
 function gbif_participant_preprocess_node(&$variables) {
 	if (isset($variables) && $variables['type'] == 'gbif_participant') {
 		$gp_id = field_get_items('node', $variables['node'], 'gp_id');
@@ -243,7 +246,7 @@ function gbif_participant_page_render($iso2, $chapter) {
 				$nid = $entity_query->ordered_results[0]->entity_id;
 				$node = node_load($nid);
 				$page = node_page_view($node);
-				// Attached some attributes for use in preprocess_page().
+				// Attached some attributes for use in hook_preprocess_page().
 				// They should then be removed in the hook_preprocess_page().
 				$page['node'] = $node;
 				$page['gbif_membership'] = $gbif_membership;

@@ -6,27 +6,31 @@
       <section id="data-about" class="col-md-12 well well-lg well-margin-top clearfix"<?php print $attributes; ?>>
         <div class="row">
 					<header class="content-header col-md-8">
-						<h2>Map: Data About</h2>
+
 					</header>
 					<header class="content-header sidebar-header-country col-md-4">
 						<h2>Data about</h2>
 					</header>
         </div>
         <div class="row">
+					<div id="map-about" class="country-map">
+						<iframe id="mapAboutFrame" name="map" src="http://cdn.gbif.org/v1/map/index.html?type=COUNTRY&amp;key=<?php print $iso2; ?>" allowfullscreen="" height="100%" width="100%" frameborder="0"></iframe>
+					</div>
         </div>
       </section>
 
 			<section id="data-from" class="col-md-12 well well-lg">
 				<div class="row">
 					<header class="content-header col-md-8">
-						<h2>Map: Data From</h2>
+
 					</header>
 					<header class="content-header sidebar-header-country col-md-4">
 						<h2>Data from</h2>
 					</header>
 				</div>
 				<div class="row">
-					<div class="content col-md-8">
+					<div id="map-from" class="country-map">
+						<iframe id="mapByFrame" name="map" src="http://cdn.gbif.org/v1/map/index.html?type=PUBLISHING_COUNTRY&amp;key=<?php print $iso2; ?>" allowfullscreen="" height="100%" width="100%" frameborder="0"></iframe>
 					</div>
 					<aside class="content content-sidebar col-md-4">
 					</aside>

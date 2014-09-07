@@ -120,14 +120,14 @@ function gbif_participant_theme($existing, $type, $theme, $path) {
 		'gbif_participant_summary' => array(
 			'template' => 'summary',
 			'path' => $path . '/theme',
-			'variables' => array('participantID' => NULL),
+			'variables' => array('participantID' => NULL, 'iso2' => NULL, 'node' => NULL, 'ims_result' => NULL),
 		),
 	);
 }
 
 /**
  * Implements hook_menu_block_tree_alter().
- * This doesn't seem to be working. It gets overridden afterwards.
+ * This does not seem to be working. It gets overridden afterwards.
  */
 function gbif_participant_menu_block_tree_alter(&$tree, &$config) {
 	if (isset($config) && $config['menu_name'] == 'menu-country') {
@@ -145,20 +145,6 @@ function gbif_participant_menu_block_tree_alter(&$tree, &$config) {
  */
 function gbif_participant_preprocess_page(&$variables) {
 	if (isset($variables)) {
-		// Preprocess for the banner.
-		if (isset($variables['page']['content']['system_main']['node'])) {
-			// For the content type 'gbif_participant', page title and the slogan are
-			// decided by the node information.
-			$title = $variables['page']['content']['system_main']['node']->title;
-			$gbif_membership = $variables['page']['content']['system_main']['gbif_membership'];
-			$gbif_region = $variables['page']['content']['system_main']['gbif_region'];
-			$description = t('A GBIF !gbif_membership from !region', array('!gbif_membership' => $gbif_membership, '!region' => $gbif_region)) . '<br>';
-			$description .= t('Names of countries, territories and islands are based on the !url standard.', array('!url' => l('ISO 3166-1', 'https://www.iso.org/obp/ui/#search')));
-			$variables['page']['highlighted_title'] = array(
-				'name' => $title,
-				'description' => $description,
-			);
-		}
 		// Preprocess for the menu tabs.
 		if (isset($variables['page']['menu']['menu_block_gbif_navigation_country_page'])) {
 			foreach ($variables['page']['menu']['menu_block_gbif_navigation_country_page']['#content'] as $k => $tab) {
@@ -170,11 +156,6 @@ function gbif_participant_preprocess_page(&$variables) {
 				}
 			}
 		}
-		// Detach the node object and other attributes to avoid errors in the
-		// following rendering. See gbif_participant_page_render().
-		unset($variables['page']['content']['system_main']['node']);
-		unset($variables['page']['content']['system_main']['gbif_membership']);
-		unset($variables['page']['content']['system_main']['gbif_region']);
 	}
 }
 
@@ -221,28 +202,61 @@ function gbif_participant_preprocess_node(&$variables) {
 	}
 }
 
+/**
+ * Implements hook_page_build().
+ */
+function gbif_participant_page_build(&$page) {
+	if (isset($page)) {
+		// Prepare the text for use in the banner region.
+		// @todo To move this into an earlier phase of processing.
+		$results = _gbif_participant_participant_query(NULL, arg(1));
+		$gbif_membership = $results[0]->gbif_membership;
+		$participantID = $results[0]->participantID;
+
+		$json = _gbif_participant_get_registry_participant($participantID);
+		$region = _gbif_participant_format_region($json->gbifRegion);
+		$entity_query = new EntityFieldQuery();
+		$entity_query->entityCondition('entity_type', 'node')
+			->entityCondition('bundle', 'gbif_participant')
+			->fieldCondition('gp_id', 'value', $participantID, '=');
+		$entity_query->execute();
+		$nid = $entity_query->ordered_results[0]->entity_id;
+		$node = node_load($nid);
+
+		$title = $node->title;
+		$slogan = t('A GBIF !gbif_membership from !region', array('!gbif_membership' => $gbif_membership, '!region' => $region)) . '<br>';
+		$slogan .= t('Names of countries, territories and islands are based on the !url standard.', array('!url' => l('ISO 3166-1', 'https://www.iso.org/obp/ui/#search')));
+		$page['highlighted_title'] = array(
+			'name' => $title,
+			'description' => $slogan,
+		);
+	}
+}
+
+/**
+ * Decide what to render according to the requested path.
+ * @param $iso2
+ * @param $chapter
+ * @return int|null|string
+ */
 function gbif_participant_page_render($iso2, $chapter) {
 
 	if (!isset($iso2) && !isset($chapter)) {
 		// If both variables are not set, then show the list of countries.
 		return 'country list';
 	}
-	elseif (isset($iso2) && $chapter == 'participation') {
+	elseif (isset($iso2) && isset($chapter)) {
 		// Use ISO 2-digit code to look up the content about the participation.
 		$results = _gbif_participant_participant_query(NULL, $iso2);
 		if (count($results) > 1) {
-			return t('We are on the information regarding this participant. Please come back later. We are sorry for the inconvenience.');
+			return t('We are working on the information regarding this participant. Please come back later. We are sorry for the inconvenience.');
 		}
 		elseif (count($results) == 0) {
 			drupal_not_found();
 		}
 		elseif (count($results) == 1) {
-			// Find the nid and render it.
+			// Find the nid.
 			$participantID = $results[0]->participantID;
-			$gbif_membership = $results[0]->gbif_membership;
-
-			$json = _gbif_participant_get_registry_participant($participantID);
-			$region = _gbif_participant_format_region($json->gbifRegion);
 
 			$entity_query = new EntityFieldQuery();
 			$entity_query->entityCondition('entity_type', 'node')
@@ -253,28 +267,23 @@ function gbif_participant_page_render($iso2, $chapter) {
 			if (isset($entity_query->ordered_results) && count($entity_query->ordered_results) == 1) {
 				$nid = $entity_query->ordered_results[0]->entity_id;
 				$node = node_load($nid);
-				$page = node_page_view($node);
-				// Attached some attributes for use in hook_preprocess_page().
-				// They should then be removed in the hook_preprocess_page().
-				$page['node'] = $node;
-				$page['gbif_membership'] = $gbif_membership;
-				$page['gbif_region'] = $region;
-				return print drupal_render_page($page);
+
+				switch ($chapter) {
+					case 'summary':
+						return theme('gbif_participant_summary', array('participantID' => $participantID, 'iso2' => $iso2, 'node' => $node, 'ims_result' => $results[0]));
+					case 'about':
+						return 'This is data about page.';
+					case 'publishing':
+						return 'This is data publishing page.';
+					case 'participation':
+						$page = node_page_view($node);
+						return print drupal_render_page($page);
+					case 'news':
+						return 'This is news page.';
+					case 'publication':
+						return 'This is publication page.';
+				}
 			}
-		}
-	}
-	elseif (isset($iso2)) {
-		switch ($chapter) {
-			case 'summary':
-				return theme('gbif_participant_summary', array('participantID' => $iso2));
-			case 'about':
-				return 'This is data about page.';
-			case 'publishing':
-				return 'This is data publishing page.';
-			case 'news':
-				return 'This is news page.';
-			case 'publication':
-				return 'This is publication page.';
 		}
 	}
 	return 'Generic rendering.';

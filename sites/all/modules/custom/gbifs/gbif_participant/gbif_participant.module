@@ -113,12 +113,32 @@ function gbif_participant_views_api() {
 function gbif_participant_theme($existing, $type, $theme, $path) {
 	$path = drupal_get_path('module', 'gbif_participant');
 	return array(
+		'gbif_participant_summary' => array(
+			'template' => 'summary',
+			'path' => $path . '/theme',
+			'variables' => array('participantID' => NULL, 'iso2' => NULL, 'node' => NULL, 'ims_result' => NULL),
+		),
+		'gbif_participant_about' => array(
+			'template' => 'about',
+			'path' => $path . '/theme',
+			'variables' => array('participantID' => NULL, 'iso2' => NULL, 'node' => NULL, 'ims_result' => NULL),
+		),
+		'gbif_participant_publishing' => array(
+			'template' => 'publishing',
+			'path' => $path . '/theme',
+			'variables' => array('participantID' => NULL, 'iso2' => NULL, 'node' => NULL, 'ims_result' => NULL),
+		),
 		'node__gbif_participant' => array(
 			'template' => 'node--gbif_participant',
 			'path' => $path . '/theme',
 		),
-		'gbif_participant_summary' => array(
-			'template' => 'summary',
+		'gbif_participant_news' => array(
+			'template' => 'news',
+			'path' => $path . '/theme',
+			'variables' => array('participantID' => NULL, 'iso2' => NULL, 'node' => NULL, 'ims_result' => NULL),
+		),
+		'gbif_participant_publications' => array(
+			'template' => 'publications',
 			'path' => $path . '/theme',
 			'variables' => array('participantID' => NULL, 'iso2' => NULL, 'node' => NULL, 'ims_result' => NULL),
 		),
@@ -145,6 +165,9 @@ function gbif_participant_menu_block_tree_alter(&$tree, &$config) {
  */
 function gbif_participant_preprocess_page(&$variables) {
 	if (isset($variables)) {
+		// Check if it's a participant.
+		$results = _gbif_participant_participant_query(NULL, arg(1));
+
 		// Preprocess for the menu tabs.
 		if (isset($variables['page']['menu']['menu_block_gbif_navigation_country_page'])) {
 			foreach ($variables['page']['menu']['menu_block_gbif_navigation_country_page']['#content'] as $k => $tab) {
@@ -153,6 +176,10 @@ function gbif_participant_preprocess_page(&$variables) {
 					$iso2 = arg(1);
 					$new_path = $path[0] . '/' . $iso2 . '/' . $path[1];
 					$variables['page']['menu']['menu_block_gbif_navigation_country_page']['#content'][$k]['#href'] = $new_path;
+				}
+				// If it's not a participant, take the participation menu tab away.
+				if (gettype($k) == 'integer' && $tab['#title'] == 'Participation' && count($results) == 0) {
+					unset($variables['page']['menu']['menu_block_gbif_navigation_country_page']['#content'][$k]);
 				}
 			}
 		}
@@ -168,6 +195,9 @@ function gbif_participant_preprocess_node(&$variables) {
 		$participantID = $gp_id[0]['value'];
 		$participant = _gbif_participant_participant_query($participantID);
 		$participant = $participant[0];
+
+		$country = countries_country_lookup($participant->iso2, 'iso2');
+		$participant->country = $country->name;
 		$variables['participant_ims'] = $participant;
 		$variables['participant_node'] = array();
 
@@ -177,8 +207,10 @@ function gbif_participant_preprocess_node(&$variables) {
 		$variables['participant_ims']->member_as_of = $year;
 
 		$timestamp = strtotime($variables['elements']['gp_node_established']['#items'][0]['value']);
-		$year = date('Y', $timestamp);
-		$variables['participant_node']['node_established'] = $year;
+		if ($timestamp != FALSE) {
+			$year = date('Y', $timestamp);
+			$variables['participant_node']['node_established'] = $year;
+		}
 
 		// Get the rest of the information from the Registry API.
 		// @todo This has to be cleaned up so it's constructed from IMS tables.
@@ -197,8 +229,9 @@ function gbif_participant_preprocess_node(&$variables) {
 		$variables['participant_ims']->endorsed_publishers = _gbif_participant_print_endorsed_publishers($participantID);
 
 		// Social media
-		$variables['participant_node']['social_media'] = _gbif_participant_format_social_media($variables['gp_comm_social']);
-
+		if (count($variables['gp_comm_social']) != 0) {
+			$variables['participant_node']['social_media'] = _gbif_participant_format_social_media($variables['gp_comm_social']);
+		}
 	}
 }
 
@@ -210,21 +243,28 @@ function gbif_participant_page_build(&$page) {
 		// Prepare the text for use in the banner region.
 		// @todo To move this into an earlier phase of processing.
 		$results = _gbif_participant_participant_query(NULL, arg(1));
-		$gbif_membership = $results[0]->gbif_membership;
-		$participantID = $results[0]->participantID;
+		if (count($results) == 0) {
+			$country = countries_country_lookup(arg(1), 'iso2');
+			$title = $country->name;
+			$slogan = '';
+		}
+		elseif (count($results) == 1) {
+			$gbif_membership = $results[0]->gbif_membership;
+			$participantID = $results[0]->participantID;
 
-		$json = _gbif_participant_get_registry_participant($participantID);
-		$region = _gbif_participant_format_region($json->gbifRegion);
-		$entity_query = new EntityFieldQuery();
-		$entity_query->entityCondition('entity_type', 'node')
-			->entityCondition('bundle', 'gbif_participant')
-			->fieldCondition('gp_id', 'value', $participantID, '=');
-		$entity_query->execute();
-		$nid = $entity_query->ordered_results[0]->entity_id;
-		$node = node_load($nid);
+			$json = _gbif_participant_get_registry_participant($participantID);
+			$region = _gbif_participant_format_region($json->gbifRegion);
+			$entity_query = new EntityFieldQuery();
+			$entity_query->entityCondition('entity_type', 'node')
+				->entityCondition('bundle', 'gbif_participant')
+				->fieldCondition('gp_id', 'value', $participantID, '=');
+			$entity_query->execute();
+			$nid = $entity_query->ordered_results[0]->entity_id;
+			$node = node_load($nid);
 
-		$title = $node->title;
-		$slogan = t('A GBIF !gbif_membership from !region', array('!gbif_membership' => $gbif_membership, '!region' => $region)) . '<br>';
+			$title = $node->title;
+			$slogan = t('A GBIF !gbif_membership from !region', array('!gbif_membership' => $gbif_membership, '!region' => $region)) . '<br>';
+		}
 		$slogan .= t('Names of countries, territories and islands are based on the !url standard.', array('!url' => l('ISO 3166-1', 'https://www.iso.org/obp/ui/#search')));
 		$page['highlighted_title'] = array(
 			'name' => $title,
@@ -245,16 +285,16 @@ function gbif_participant_page_render($iso2, $chapter) {
 		// If both variables are not set, then show the list of countries.
 		return 'country list';
 	}
+	elseif (isset($iso2) && !isset($chapter)) {
+		drupal_goto('country_php/' . $iso2 . '/summary');
+	}
 	elseif (isset($iso2) && isset($chapter)) {
 		// Use ISO 2-digit code to look up the content about the participation.
 		$results = _gbif_participant_participant_query(NULL, $iso2);
 		if (count($results) > 1) {
 			return t('We are working on the information regarding this participant. Please come back later. We are sorry for the inconvenience.');
 		}
-		elseif (count($results) == 0) {
-			drupal_not_found();
-		}
-		elseif (count($results) == 1) {
+		elseif (count($results) <= 1) {
 			// Find the nid.
 			$participantID = $results[0]->participantID;
 
@@ -264,26 +304,29 @@ function gbif_participant_page_render($iso2, $chapter) {
 				->fieldCondition('gp_id', 'value', $participantID, '=');
 			$entity_query->execute();
 
+			// Make sure there is only one node returned.
 			if (isset($entity_query->ordered_results) && count($entity_query->ordered_results) == 1) {
 				$nid = $entity_query->ordered_results[0]->entity_id;
 				$node = node_load($nid);
-
-				switch ($chapter) {
-					case 'summary':
-						return theme('gbif_participant_summary', array('participantID' => $participantID, 'iso2' => $iso2, 'node' => $node, 'ims_result' => $results[0]));
-					case 'about':
-						return 'This is data about page.';
-					case 'publishing':
-						return 'This is data publishing page.';
-					case 'participation':
-						$page = node_page_view($node);
-						return print drupal_render_page($page);
-					case 'news':
-						return 'This is news page.';
-					case 'publication':
-						return 'This is publication page.';
-				}
 			}
+
+			// Todo: We might need the $node object for other chapters in the future.
+			switch ($chapter) {
+				case 'summary':
+					return theme('gbif_participant_summary', array('participantID' => $participantID, 'iso2' => $iso2, 'node' => $node, 'ims_result' => $results[0]));
+				case 'about':
+					return theme('gbif_participant_about', array('participantID' => $participantID, 'iso2' => $iso2, 'node' => $node, 'ims_result' => $results[0]));
+				case 'publishing':
+					return theme('gbif_participant_publishing', array('participantID' => $participantID, 'iso2' => $iso2, 'node' => $node, 'ims_result' => $results[0]));
+				case 'participation':
+					$page = node_page_view($node);
+					return print drupal_render_page($page);
+				case 'news':
+					return theme('gbif_participant_news', array('participantID' => $participantID, 'iso2' => $iso2, 'node' => $node, 'ims_result' => $results[0]));
+				case 'publications':
+					return theme('gbif_participant_publications', array('participantID' => $participantID, 'iso2' => $iso2, 'node' => $node, 'ims_result' => $results[0]));
+			}
+
 		}
 	}
 	return 'Generic rendering.';
@@ -464,7 +507,7 @@ function _gbif_participant_print_contacts($position, $contacts) {
 						$html .= '</p>';
 						break;
 					case 'NODE_MANAGER':
-						$html .= '<h3>Node Manager</h3>';
+						$html .= '<h3>Participant Node Manager</h3>';
 						$html .= '<p>';
 						$html .= '<a href="">';
 						$html .= $contact->firstName . ' ' . $contact->lastName;
@@ -493,7 +536,8 @@ function _gbif_participant_print_contacts($position, $contacts) {
 					}
 					$html .= '</span>';
 					$html .= '<span class="city">' . $contact->postalCode . ' ' . $contact->city . '</span>';
-					$html .= '<span class="country">' . $contact->country . '</span>';
+					$country = countries_country_lookup($contact->country, 'iso2');
+					$html .= '<span class="country">' . $country->name . '</span>';
 					$html .= '<span class="email"><a href="mailto:' . $contact->email[0] . '" title="email">' . $contact->email[0] . '</a></span>';
 					$html .= '<span class="phone">';
 					for ($i = 0; $i < count($contact->phone); $i++) {

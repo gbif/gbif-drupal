@@ -1,65 +1,83 @@
 <?php
-/**
- * @file
- *
- *
- * @ingroup themeable
- */
+
 ?>
-<article id="country-summary" class="container <?php print $classes; ?>">
+<article id="country-summary" class="container">
 	<div class="row">
-      <section id="participation" class="col-md-12 well well-lg well-margin-top clearfix"<?php print $attributes; ?>>
+      <section id="data-about" class="col-md-12 well well-lg well-margin-top clearfix"<?php print $attributes; ?>>
         <div class="row">
 					<header class="content-header col-md-8">
-						<h2>Map is here</h2>
+						<h2>Map: Data About</h2>
 					</header>
-					<div class="node-sidebar-header col-md-4">
+					<header class="content-header sidebar-header-country col-md-4">
 						<h2>Data about</h2>
-					</div>
+					</header>
         </div>
         <div class="row">
-          <div class="node-content col-md-8">
-          </div>
-          <aside class="node-sidebar col-md-4">
-						<div class="field-label">Node name&nbsp;</div>
-						<div class="field-label">Address&nbsp;</div>
-						<p>
-						</p>
-						<div class="field-label">Website&nbsp;</div>
-						<p></p>
-          </aside>
         </div>
       </section>
-			<section id="description" class="col-md-12 well well-lg">
+
+			<section id="data-from" class="col-md-12 well well-lg">
 				<div class="row">
-					<header class="content-header col-md-12">
-						<h2>Description</h2>
+					<header class="content-header col-md-8">
+						<h2>Map: Data From</h2>
+					</header>
+					<header class="content-header sidebar-header-country col-md-4">
+						<h2>Data from</h2>
 					</header>
 				</div>
 				<div class="row">
-					<div class="node-content col-md-8">
+					<div class="content col-md-8">
 					</div>
-					<aside class="node-sidebar col-md-4">
+					<aside class="content content-sidebar col-md-4">
 					</aside>
 				</div>
 			</section>
-			<section id="contacts" class="col-md-12 well well-lg">
+
+			<section id="participation" class="col-md-12 well well-lg">
 				<div class="row">
 					<header class="content-header col-md-12">
-						<h2>Contacts</h2>
+						<h2>Participation</h2>
 					</header>
 				</div>
 				<div class="row">
+					<div class="content col-md-8">
+						<h3>Member Status</h3>
+						<p><?php print $participant_ims->gbif_membership; ?></p>
+						<h3>GBIF Participant since</h3>
+						<p><?php print $participant_ims->member_as_of; ?></p>
+						<?php print $participant_ims->gbif_region; ?>
+						<?php print $participant_ims->contact_participation; ?>
+					</div>
+					<aside class="content content-sidebar col-md-4">
+						<h3>Node name</h3>
+						<p><?php print $participant_ims->node_name_full; ?></p>
+						<h3>Address</h3>
+						<address>
+							<?php print _gbif_participant_print_address_fields($participant_ims->institution_name); ?>
+							<?php print _gbif_participant_print_address_fields($participant_ims->institution_address); ?>
+							<?php print _gbif_participant_print_address_fields($participant_ims->institution_zip_code); ?>
+							<?php print _gbif_participant_print_address_fields($participant_ims->institution_city); ?>
+							<?php print _gbif_participant_print_address_fields($participant_ims->institution_state_province); ?>
+							<?php print _gbif_participant_print_address_fields($participant_ims->participant_name_full); ?>
+							<?php print _gbif_participant_print_address_fields($participant_ims->institution_email); ?>
+							<?php print _gbif_participant_print_address_fields($participant_ims->institution_telephone); ?>
+						</address>
+						<h3>Node Established</h3>
+						<p><?php print $participant_node['node_established']; ?></p>
+						<h3>Website</h3>
+						<p><?php print l($participant_ims->node_url, $participant_ims->node_url); ?></p>
+					</aside>
 				</div>
 			</section>
-			<section id="endorsed-publishers" class="col-md-12 well well-lg">
+
+			<section id="latest-datasets-published" class="col-md-12 well well-lg">
 				<div class="row">
 					<header class="content-header col-md-12">
-						<h2>Endorsed Publishers</h2>
+						<h2>Latest datasets published</h2>
 					</header>
 				</div>
 				<div class="row">
-					<div class="node-content col-md-12">
+					<div class="content content-full col-md-12">
 					</div>
 				</div>
 			</section>

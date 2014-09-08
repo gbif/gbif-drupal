@@ -483,6 +483,7 @@ function _gbif_participant_print_address_fields($value) {
  * @todo Rewire the IMS tables for contacts.
  */
 function _gbif_participant_print_contacts($position, $contacts) {
+	$current_path = current_path();
 	$html = '';
 	switch ($position) {
 		case 'participation':
@@ -491,7 +492,7 @@ function _gbif_participant_print_contacts($position, $contacts) {
 					case 'HEAD_OF_DELEGATION':
 						$html .= '<h3>Head of Delegation</h3>';
 						$html .= '<p>';
-						$html .= '<a href="">';
+						$html .= '<a href="#contact' . $contact->key . '">';
 						$html .= $contact->firstName . ' ' . $contact->lastName;
 						$html .= '</a>';
 						$html .= '</p>';
@@ -499,7 +500,7 @@ function _gbif_participant_print_contacts($position, $contacts) {
 					case 'NODE_MANAGER':
 						$html .= '<h3>Participant Node Manager</h3>';
 						$html .= '<p>';
-						$html .= '<a href="">';
+						$html .= '<a href="#contact' . $contact->key . '">';
 						$html .= $contact->firstName . ' ' . $contact->lastName;
 						$html .= '</a>';
 						$html .= '</p>';
@@ -508,6 +509,18 @@ function _gbif_participant_print_contacts($position, $contacts) {
 			}
 			break;
 		case 'contacts':
+			// Sort the contacts 1) by role; 2) by last name.
+			$roles = array('HEAD_OF_DELEGATION', 'TEMPORARY_HEAD_OF_DELEGATION', 'ADDITIONAL_DELEGATE', 'NODE_MANAGER', 'NODE_STAFF');
+			//uasort($contacts, function($a, $b) { return $a->lastName - $b->lastName; });
+			usort($contacts, function($a, $b) use ($roles) {
+				if ($a->type == $b->type) {
+					// Type is the same, sort by lastName
+					if ($a->lastName == $b->lastName) return 0;
+					return $a->lastName < $b->lastName ? -1 : 1;
+				}
+				return array_search($a->type, $roles) - array_search($b->type, $roles);
+			});
+
 			$html .= '<table class="table table-curved"><tbody>';
 			foreach ($contacts as $contact) {
 			  $html .= '<tr>';
@@ -539,7 +552,7 @@ function _gbif_participant_print_contacts($position, $contacts) {
 				$html .= '</div>';
 				$html .= '</address>';
 				$html .= '</td>';
-				$html .= '<td>' . '<a id="' . $contact->key . '"></a>' . _gbif_participant_format_role($contact->type) . '</td>';
+				$html .= '<td>' . '<a id="contact' . $contact->key . '"></a>' . _gbif_participant_format_role($contact->type) . '</td>';
 				$html .= '</tr>';
 			}
 			$html .= '</tbody></table>';

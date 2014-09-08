@@ -100,6 +100,11 @@ function _gbif_navigation_default_menus() {
 			'title' => $t('Country page'),
 			'description' => $t('The <em>Country Page</em> contains links for displaying menu tabs for country pages.'),
 		),
-  );
+		array(
+			'menu_name' => 'analytics',
+			'title' => $t('Analytics'),
+			'description' => $t('The <em>Analytics Menu</em> contains links for menu tabs that are shown when visiting analytics pages.'),
+		),
+	);
   return $menus;  
 }

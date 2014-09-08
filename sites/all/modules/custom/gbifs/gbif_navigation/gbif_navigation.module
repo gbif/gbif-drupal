@@ -85,7 +85,14 @@ function gbif_navigation_block_info_alter(&$block, $theme, $code_blocks) {
 			$block['menu_block']['gbif_navigation_country_page']['visibility'] = BLOCK_VISIBILITY_LISTED;
 			$block['menu_block']['gbif_navigation_country_page']['pages'] = "country_php/*";
 
-      break;
+			$block['menu_block']['gbif_navigation_analytics']['weight'] = 6;
+			$block['menu_block']['gbif_navigation_analytics']['status'] = 1;
+			$block['menu_block']['gbif_navigation_analytics']['region'] = 'menu';
+			$block['menu_block']['gbif_navigation_analytics']['title'] = '<none>';
+			$block['menu_block']['gbif_navigation_analytics']['visibility'] = BLOCK_VISIBILITY_LISTED;
+			$block['menu_block']['gbif_navigation_analytics']['pages'] = "analytics/*";
+
+			break;
   }
 }
 
@@ -143,14 +150,25 @@ function gbif_navigation_menu_block_blocks() {
 			'menu_name'   => 'country-page',
 			'parent_mlid' => 0,
 			'title_link'  => 0,
-			'admin_title' => 'Country page',
+			'admin_title' => 'Country page menu tabs',
 			'level'       => 1,
 			'follow'      => 0,
 			'depth'       => 1,
 			'expanded'    => 1,
 			'sort'        => 0,
 		),
-  );
+		'gbif_navigation_analytics' => array(
+			'menu_name'   => 'analytics',
+			'parent_mlid' => 0,
+			'title_link'  => 0,
+			'admin_title' => 'Analytics menu tabs',
+			'level'       => 1,
+			'follow'      => 0,
+			'depth'       => 1,
+			'expanded'    => 1,
+			'sort'        => 0,
+		),
+	);
 }
 
 /**
@@ -387,6 +405,9 @@ function gbif_navigation_menutab_visibility() {
 	if (drupal_match_path($current_path, 'search/*')) { // Don't show menu tab for search results.
 		return FALSE;
 	}
+	elseif (drupal_match_path($current_path, 'analytics/*')) {
+		return FALSE;
+	}
 	elseif (drupal_match_path($current_path, 'node/*')) { // Do show menu tab for normal pages.
 		return TRUE;
 	}
@@ -400,5 +421,4 @@ function gbif_navigation_menutab_visibility() {
 	else {
 		return TRUE;
 	}
-
 }

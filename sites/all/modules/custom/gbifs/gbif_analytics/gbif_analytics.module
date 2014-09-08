@@ -13,7 +13,8 @@ function gbif_analytics_menu() {
 		'description' => 'The page callback can use the arguments provided after the path used as key',
 		'page callback' => 'gbif_analytics_url_router',
 		'access callback' => TRUE,
-		'weight' => 10,
+		'type' => MENU_NORMAL_ITEM,
+		'menu-name' => 'analytics',
 	);
 	return $items;
 }
@@ -35,7 +36,10 @@ function gbif_analytics_theme($existing, $type, $theme, $path) {
 function gbif_analytics_url_router($type, $iso2, $subType) {
 	$dataSharing = 'This chart shows the total number of records published through GBIF over time, with separate colours for records published from within the country where the species occurred, and those shared by publishers from other countries.';
 	$baseURL = 'http://analytics.gbif-uat.org/';
-	if ($type == 'country' && $subType == 'about'){
+	if ($type == NULL && $iso2 == NULL && $subType == NULL) {
+		drupal_goto('analytics/global');
+	}
+	elseif ($type == 'country' && $subType == 'about') {
 		$baseURL = $baseURL . 'country' . '/' . $iso2 . '/about/figure' ;
 		$dataSharing = 'This chart shows the number of records about biodiversity occurring in '
 			. $iso2
@@ -43,14 +47,16 @@ function gbif_analytics_url_router($type, $iso2, $subType) {
 			. $iso2
 			. ', and those shared by publishers from other countries.';
 
-	} else if ($type == 'country' && $subType == 'published') {
+	}
+	elseif ($type == 'country' && $subType == 'published') {
 		$baseURL = $baseURL . 'country' . '/' . $iso2 . '/publishedBy/figure' ;
 		$dataSharing = 'This chart shows the number of records shared by publishers within '
         . $iso2
         . ' over time, with separate colours for records about species occurring in '
         . $iso2
         . ' and those occurring in other countries.';
-	} else {
+	}
+	else {
 		$baseURL = $baseURL . 'global/figure';
 	}
 
@@ -100,8 +106,48 @@ function gbif_analytics_library() {
  * Implements hook_preprocess_page().
  */
 function gbif_analytics_preprocess_page(&$variables) {
+
 	// load in lightbox CSS and JS
 	watchdog('analytics', 'Loading custom libraries for module', array(), WATCHDOG_DEBUG);
 	drupal_add_library('gbif_analytics', 'lightbox');
 	drupal_add_library('gbif_analytics', 'analytics');
+
+	// Preprocess for the menu tabs.
+	// Todo: to fully utilise hook_menu() to potentially avoid working on this here.
+	/*
+	 * The following snippet is for you to adjust the URL in order to keep the
+	 * menu tab active when the country code is in the URL.
+	if (isset($variables['page']['menu']['gbif_navigation_analytics'])) {
+		foreach ($variables['page']['menu']['gbif_navigation_analytics']['#content'] as $k => $tab) {
+			if (gettype($k) == 'integer') {
+				$path = explode('/', $tab['#href']);
+				$iso2 = arg(1);
+				$new_path = $path[0] . '/' . $iso2 . '/' . $path[1];
+				$variables['page']['menu']['gbif_navigation_analytics']['#content'][$k]['#href'] = $new_path;
+			}
+			// If it's not a participant, take the participation menu tab away.
+			if (gettype($k) == 'integer' && $tab['#title'] == 'Participation' && count($results) == 0) {
+				unset($variables['page']['menu']['gbif_navigation_analytics']['#content'][$k]);
+			}
+		}
+	}
+	*/
+
+}
+
+/**
+ * Implements hook_page_build().
+ */
+function gbif_analytics_page_build(&$page) {
+	if (isset($page) && arg(0) == 'analytics') {
+
+		// BKO: Please put logic here to determine the title and slogan in the banner area.
+		$title = t('Data Trend of GBIF');
+		$slogan = t('Some text here when needed.');
+
+		$page['highlighted_title'] = array(
+			'name' => $title,
+			'description' => $slogan,
+		);
+	}
 }

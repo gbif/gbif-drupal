@@ -1,0 +1,29 @@
+<?php
+
+/**
+ * Implements hook_install().
+ */
+function gbif_analytics_install() {
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function gbif_analytics_uninstall() {
+}
+
+
+/**
+ * Helper function to register menus provided by this module.
+ */
+function _gbif_analytics_default_menus() {
+	$t = get_t();
+	$menus = array(
+		array(
+			'menu_name' => 'analytics',
+			'title' => $t('Analytics'),
+			'description' => $t('The <em>Analytics Menu</em> contains links for menu tabs that are shown when visiting analytics pages.'),
+		),
+	);
+	return $menus;
+}

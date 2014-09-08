@@ -1,0 +1,4 @@
+Global {"url":"analytics\/global"}
+About A Country {"url":"analytics\/country\/about"}
+Published by Country {"url":"analytics\/country\/published"}
+FAQ {"url":"analytics\/faq"}

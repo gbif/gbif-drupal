@@ -14,7 +14,7 @@ function gbif_participant_menu() {
 		'page callback' => 'gbif_participant_page_render',
 		'access callback' => TRUE,
 		'type' => MENU_NORMAL_ITEM,
-		'menu-name' => 'menu-country',
+		'menu-name' => 'country-page',
 	);
 	$items['admin/config/gbif/participant'] = array(
 		'title' => 'GBIF participant',

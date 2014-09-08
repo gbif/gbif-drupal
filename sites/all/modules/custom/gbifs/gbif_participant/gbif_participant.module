@@ -658,7 +658,7 @@ function _gbif_participant_format_social_media($gp_comm_social) {
 	$html .= '<h3>Social Media</h3>';
 	foreach ($gp_comm_social as $media) {
 		$media_type = strtolower($media['title']);
-		$html .= '<a href="' . $media['url'] . '">';
+		$html .= '<a href="' . $media['url'] . '" target="_blank">';
 		$html .= '<img src="' . $path . '/' . $media_type . '.png">';
 		$html .= '</a>';
 	}

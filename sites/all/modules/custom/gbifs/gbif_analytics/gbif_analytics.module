@@ -5,6 +5,21 @@
  */
 
 /**
+ * Sets up the data directory from which the images will be served.  It is up the site administrator to
+ * populate the directory outside of Drupal (e.g. scp the contents in, and set permission etc).
+ * See https://github.com/gbif/analytics for the project to produce the images.
+ *
+ * Implements hook_install().
+ */
+function gbif_analytics_install() {
+	$data_dir = 'public://gbif_analytics';
+  $dir_exists = file_prepare_directory($data_dir);
+  if (!$dir_exists) {
+  	drupal_mkdir($data_dir);
+  }
+}
+
+/**
  * Implements hook_menu().
  */
 function gbif_analytics_menu() {
@@ -34,42 +49,45 @@ function gbif_analytics_theme($existing, $type, $theme, $path) {
  * This does the routing based on the URL.
  */
 function gbif_analytics_url_router($type, $iso2, $subType) {
-	$dataSharing = 'This chart shows the total number of records published through GBIF over time, with separate colours for records published from within the country where the species occurred, and those shared by publishers from other countries.';
-	$baseURL = 'http://analytics.gbif-uat.org/';
-	if ($type == NULL && $iso2 == NULL && $subType == NULL) {
-		drupal_goto('analytics/global');
-	}
-	elseif ($type == 'country' && $subType == 'about') {
-		$baseURL = $baseURL . 'country' . '/' . $iso2 . '/about/figure' ;
-		$dataSharing = 'This chart shows the number of records about biodiversity occurring in '
+	$data_sharing = 'This chart shows the total number of records published through GBIF over time, with separate colours for records published from within the country where the species occurred, and those shared by publishers from other countries.';
+
+	# set the images URLs to be served from this machine
+	global $base_url;
+	$base_images_url = $base_url . "/sites/default/files/gbif_analytics/";
+
+	# assets (e.g. the images) are included in the module, and needed by the template
+	$assets_url = $base_url . "/" . drupal_get_path('module', 'gbif_analytics');
+
+
+	if ($type == 'country' && $subType == 'about'){
+		$base_images_url = $base_images_url . 'country' . '/' . $iso2 . '/about/figure' ;
+		$data_sharing = 'This chart shows the number of records about biodiversity occurring in '
 			. $iso2
 			. ', with separate colours for records published from within '
 			. $iso2
 			. ', and those shared by publishers from other countries.';
 
-	}
-	elseif ($type == 'country' && $subType == 'published') {
-		$baseURL = $baseURL . 'country' . '/' . $iso2 . '/publishedBy/figure' ;
-		$dataSharing = 'This chart shows the number of records shared by publishers within '
+	} else if ($type == 'country' && $subType == 'published') {
+		$base_images_url = $base_images_url . 'country' . '/' . $iso2 . '/publishedBy/figure' ;
+		$data_sharing = 'This chart shows the number of records shared by publishers within '
         . $iso2
         . ' over time, with separate colours for records about species occurring in '
         . $iso2
         . ' and those occurring in other countries.';
-	}
-	else {
-		$baseURL = $baseURL . 'global/figure';
+	} else {
+		$base_images_url = $base_images_url . 'global/figure';
 	}
 
-	// TODO: set the imgBaseUrl based on the params
 	return theme('gbif_analytics_home', array(
-		'imgBaseUrl' => $baseURL,
-		'assetsUrl' => 'http://analytics.gbif-uat.org/assets',
-		'datasharingDescription' => $dataSharing
+		'img_base_url' => $base_images_url,
+		'assets_url' => $assets_url,
+		'datasharing_description' => $data_sharing
 	));
 }
 
 /**
  * Custom libraries for this module to load lightbox, and custom styling.
+ *
  * Implements hook_library().
  */
 function gbif_analytics_library() {
@@ -103,6 +121,8 @@ function gbif_analytics_library() {
 }
 
 /**
+ * Load lightbox and custom page styling.
+ *
  * Implements hook_preprocess_page().
  */
 function gbif_analytics_preprocess_page(&$variables) {

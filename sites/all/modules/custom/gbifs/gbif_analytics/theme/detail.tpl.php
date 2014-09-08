@@ -28,13 +28,13 @@
 			</div>
 			<div class="row">
 				<div class="col-md-4">
-					<a href="<?php print $imgBaseUrl;?>/occ_kingdom.png" data-lightbox="occ_kingdom"><img onerror="this.src='<?php print $assetsUrl;?>/img/insufficient-data.png'" src="<?php print $imgBaseUrl;?>/occ_kingdom.png" class="img-thumbnail"></a>
+					<a href="<?php print $img_base_url;?>/occ_kingdom.png" data-lightbox="occ_kingdom"><img onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" src="<?php print $img_base_url;?>/occ_kingdom.png" class="img-thumbnail"></a>
 				</div>
 				<div class="col-md-4">
-					<a href="<?php print $imgBaseUrl;?>/occ_animaliaBoR.png" data-lightbox="occ_AnimaliaBoR"><img onerror="this.src='<?php print $assetsUrl;?>/img/insufficient-data.png'" src="<?php print $imgBaseUrl;?>/occ_animaliaBoR.png" class="img-thumbnail"></a>
+					<a href="<?php print $img_base_url;?>/occ_animaliaBoR.png" data-lightbox="occ_AnimaliaBoR"><img onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" src="<?php print $img_base_url;?>/occ_animaliaBoR.png" class="img-thumbnail"></a>
 				</div>
 				<div class="col-md-4">
-					<a href="<?php print $imgBaseUrl;?>/occ_plantaeBoR.png" data-lightbox="occ_PlantaeBoR"><img onerror="this.src='<?php print $assetsUrl;?>/img/insufficient-data.png'" src="<?php print $imgBaseUrl;?>/occ_plantaeBoR.png" class="img-thumbnail"></a>
+					<a href="<?php print $img_base_url;?>/occ_plantaeBoR.png" data-lightbox="occ_PlantaeBoR"><img onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" src="<?php print $img_base_url;?>/occ_plantaeBoR.png" class="img-thumbnail"></a>
 				</div>
 			</div>
 		</section>
@@ -70,13 +70,13 @@
 			</div>
 			<div class="row">
 				<div class="col-md-4">
-					<a href="<?php print $imgBaseUrl;?>/spe_kingdom.png" data-lightbox="spe_kingdom"><img onerror="this.src='<?php print $assetsUrl;?>/img/insufficient-data.png'" src="<?php print $imgBaseUrl;?>/spe_kingdom.png" class="img-thumbnail"></a>
+					<a href="<?php print $img_base_url;?>/spe_kingdom.png" data-lightbox="spe_kingdom"><img onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" src="<?php print $img_base_url;?>/spe_kingdom.png" class="img-thumbnail"></a>
 				</div>
 				<div class="col-md-4">
-					<a href="<?php print $imgBaseUrl;?>/spe_kingdom_specimen.png" data-lightbox="spe_kingdom_specimen"><img onerror="this.src='<?php print $assetsUrl;?>/img/insufficient-data.png'" onerror="this.src='<?php print $assetsUrl;?>/img/insufficient-data.png'" src="<?php print $imgBaseUrl;?>/spe_kingdom_specimen.png" class="img-thumbnail"></a>
+					<a href="<?php print $img_base_url;?>/spe_kingdom_specimen.png" data-lightbox="spe_kingdom_specimen"><img onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" src="<?php print $img_base_url;?>/spe_kingdom_specimen.png" class="img-thumbnail"></a>
 				</div>
 				<div class="col-md-4">
-					<a href="<?php print $imgBaseUrl;?>/spe_kingdom_observation.png" data-lightbox="spe_kingdom_observation"><img onerror="this.src='<?php print $assetsUrl;?>/img/insufficient-data.png'" src="<?php print $imgBaseUrl;?>/spe_kingdom_observation.png" class="img-thumbnail"></a>
+					<a href="<?php print $img_base_url;?>/spe_kingdom_observation.png" data-lightbox="spe_kingdom_observation"><img onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" src="<?php print $img_base_url;?>/spe_kingdom_observation.png" class="img-thumbnail"></a>
 				</div>
 			</div>
 		</section>
@@ -104,10 +104,10 @@
 			</div>
 			<div class="row">
 				<div class="col-md-4">
-					<a href="<?php print $imgBaseUrl;?>/occ_yearCollected.png" data-lightbox="occ_yearCollected"><img onerror="this.src='<?php print $assetsUrl;?>/img/insufficient-data.png'" src="<?php print $imgBaseUrl;?>/occ_yearCollected.png" class="img-thumbnail"></a>
+					<a href="<?php print $img_base_url;?>/occ_yearCollected.png" data-lightbox="occ_yearCollected"><img onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" src="<?php print $img_base_url;?>/occ_yearCollected.png" class="img-thumbnail"></a>
 				</div>
 				<div class="col-md-4">
-					<a href="<?php print $imgBaseUrl;?>/spe_yearCollected.png" data-lightbox="spe_yearCollected"><img onerror="this.src='<?php print $assetsUrl;?>/img/insufficient-data.png'" src="<?php print $imgBaseUrl;?>/spe_yearCollected.png" class="img-thumbnail"></a>
+					<a href="<?php print $img_base_url;?>/spe_yearCollected.png" data-lightbox="spe_yearCollected"><img onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" src="<?php print $img_base_url;?>/spe_yearCollected.png" class="img-thumbnail"></a>
 				</div>
 			</div>
 			<div class="row">
@@ -122,10 +122,10 @@
 			</div>
 			<div class="row">
 				<div class="col-md-4">
-					<a href="<?php print $imgBaseUrl;?>/occ_dayCollected.png" data-lightbox="occ_dayCollected"><img onerror="this.src='<?php print $assetsUrl;?>/img/insufficient-data.png'" src="<?php print $imgBaseUrl;?>/occ_dayCollected.png" class="img-thumbnail"></a>
+					<a href="<?php print $img_base_url;?>/occ_dayCollected.png" data-lightbox="occ_dayCollected"><img onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" src="<?php print $img_base_url;?>/occ_dayCollected.png" class="img-thumbnail"></a>
 				</div>
 				<div class="col-md-4">
-					<a href="<?php print $imgBaseUrl;?>/spe_dayCollected.png" data-lightbox="spe_dayCollected"><img onerror="this.src='<?php print $assetsUrl;?>/img/insufficient-data.png'" src="<?php print $imgBaseUrl;?>/spe_dayCollected.png" class="img-thumbnail"></a>
+					<a href="<?php print $img_base_url;?>/spe_dayCollected.png" data-lightbox="spe_dayCollected"><img onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" src="<?php print $img_base_url;?>/spe_dayCollected.png" class="img-thumbnail"></a>
 				</div>
 			</div>
 			<div class="row">
@@ -174,13 +174,13 @@
 			</div>
 			<div class="row">
 				<div class="col-md-4">
-					<a href="<?php print $imgBaseUrl;?>/occ_complete.png" data-lightbox="occ_complete"><img onerror="this.src='<?php print $assetsUrl;?>/img/insufficient-data.png'" src="<?php print $imgBaseUrl;?>/occ_complete.png" class="img-thumbnail"></a>
+					<a href="<?php print $img_base_url;?>/occ_complete.png" data-lightbox="occ_complete"><img onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" src="<?php print $img_base_url;?>/occ_complete.png" class="img-thumbnail"></a>
 				</div>
 				<div class="col-md-4">
-					<a href="<?php print $imgBaseUrl;?>/occ_complete_specimen.png" data-lightbox="occ_complete_specimen"><img onerror="this.src='<?php print $assetsUrl;?>/img/insufficient-data.png'" src="<?php print $imgBaseUrl;?>/occ_complete_specimen.png" class="img-thumbnail"></a>
+					<a href="<?php print $img_base_url;?>/occ_complete_specimen.png" data-lightbox="occ_complete_specimen"><img onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" src="<?php print $img_base_url;?>/occ_complete_specimen.png" class="img-thumbnail"></a>
 				</div>
 				<div class="col-md-4">
-					<a href="<?php print $imgBaseUrl;?>/occ_complete_observation.png" data-lightbox="occ_complete_observation"><img onerror="this.src='<?php print $assetsUrl;?>/img/insufficient-data.png'" src="<?php print $imgBaseUrl;?>/occ_complete_observation.png" class="img-thumbnail"></a>
+					<a href="<?php print $img_base_url;?>/occ_complete_observation.png" data-lightbox="occ_complete_observation"><img onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" src="<?php print $img_base_url;?>/occ_complete_observation.png" class="img-thumbnail"></a>
 				</div>
 			</div>
 			<div class="row">
@@ -202,13 +202,13 @@
 			</div>
 			<div class="row">
 				<div class="col-md-4">
-					<a href="<?php print $imgBaseUrl;?>/occ_complete_kingdom.png" data-lightbox="occ_complete_kingdom"><img onerror="this.src='<?php print $assetsUrl;?>/img/insufficient-data.png'" src="<?php print $imgBaseUrl;?>/occ_complete_kingdom.png" class="img-thumbnail"></a>
+					<a href="<?php print $img_base_url;?>/occ_complete_kingdom.png" data-lightbox="occ_complete_kingdom"><img onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" src="<?php print $img_base_url;?>/occ_complete_kingdom.png" class="img-thumbnail"></a>
 				</div>
 				<div class="col-md-4">
-					<a href="<?php print $imgBaseUrl;?>/occ_complete_kingdom_specimen.png" data-lightbox="occ_complete_kingdom_specimen"><img onerror="this.src='<?php print $assetsUrl;?>/img/insufficient-data.png'" src="<?php print $imgBaseUrl;?>/occ_complete_kingdom_specimen.png" class="img-thumbnail"></a>
+					<a href="<?php print $img_base_url;?>/occ_complete_kingdom_specimen.png" data-lightbox="occ_complete_kingdom_specimen"><img onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" src="<?php print $img_base_url;?>/occ_complete_kingdom_specimen.png" class="img-thumbnail"></a>
 				</div>
 				<div class="col-md-4">
-					<a href="<?php print $imgBaseUrl;?>/occ_complete_kingdom_observation.png" data-lightbox="occ_complete_kingdom_observation"><img onerror="this.src='<?php print $assetsUrl;?>/img/insufficient-data.png'" src="<?php print $imgBaseUrl;?>/occ_complete_kingdom_observation.png" class="img-thumbnail"></a>
+					<a href="<?php print $img_base_url;?>/occ_complete_kingdom_observation.png" data-lightbox="occ_complete_kingdom_observation"><img onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" src="<?php print $img_base_url;?>/occ_complete_kingdom_observation.png" class="img-thumbnail"></a>
 				</div>
 			</div>
 			<div class="row">
@@ -230,13 +230,13 @@
 			</div>
 			<div class="row">
 				<div class="col-md-4">
-					<a href="<?php print $imgBaseUrl;?>/occ_complete_geo.png" data-lightbox="occ_complete_geo"><img onerror="this.src='<?php print $assetsUrl;?>/img/insufficient-data.png'" src="<?php print $imgBaseUrl;?>/occ_complete_geo.png" class="img-thumbnail"></a>
+					<a href="<?php print $img_base_url;?>/occ_complete_geo.png" data-lightbox="occ_complete_geo"><img onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" src="<?php print $img_base_url;?>/occ_complete_geo.png" class="img-thumbnail"></a>
 				</div>
 				<div class="col-md-4">
-					<a href="<?php print $imgBaseUrl;?>/occ_complete_geo_specimen.png" data-lightbox="occ_complete_geo_specimen"><img onerror="this.src='<?php print $assetsUrl;?>/img/insufficient-data.png'" src="<?php print $imgBaseUrl;?>/occ_complete_geo_specimen.png" class="img-thumbnail"></a>
+					<a href="<?php print $img_base_url;?>/occ_complete_geo_specimen.png" data-lightbox="occ_complete_geo_specimen"><img onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" src="<?php print $img_base_url;?>/occ_complete_geo_specimen.png" class="img-thumbnail"></a>
 				</div>
 				<div class="col-md-4">
-					<a href="<?php print $imgBaseUrl;?>/occ_complete_geo_observation.png" data-lightbox="occ_complete_geo_observation"><img onerror="this.src='<?php print $assetsUrl;?>/img/insufficient-data.png'" src="<?php print $imgBaseUrl;?>/occ_complete_geo_observation.png" class="img-thumbnail"></a>
+					<a href="<?php print $img_base_url;?>/occ_complete_geo_observation.png" data-lightbox="occ_complete_geo_observation"><img onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" src="<?php print $img_base_url;?>/occ_complete_geo_observation.png" class="img-thumbnail"></a>
 				</div>
 			</div>
 			<div class="row">
@@ -258,13 +258,13 @@
 			</div>
 			<div class="row">
 				<div class="col-md-4">
-					<a href="<?php print $imgBaseUrl;?>/occ_complete_date.png" data-lightbox="occ_complete_date"><img onerror="this.src='<?php print $assetsUrl;?>/img/insufficient-data.png'" src="<?php print $imgBaseUrl;?>/occ_complete_date.png" class="img-thumbnail"></a>
+					<a href="<?php print $img_base_url;?>/occ_complete_date.png" data-lightbox="occ_complete_date"><img onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" src="<?php print $img_base_url;?>/occ_complete_date.png" class="img-thumbnail"></a>
 				</div>
 				<div class="col-md-4">
-					<a href="<?php print $imgBaseUrl;?>/occ_complete_date_specimen.png" data-lightbox="occ_complete_date"><img onerror="this.src='<?php print $assetsUrl;?>/img/insufficient-data.png'" src="<?php print $imgBaseUrl;?>/occ_complete_date_specimen.png" class="img-thumbnail"></a>
+					<a href="<?php print $img_base_url;?>/occ_complete_date_specimen.png" data-lightbox="occ_complete_date"><img onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" src="<?php print $img_base_url;?>/occ_complete_date_specimen.png" class="img-thumbnail"></a>
 				</div>
 				<div class="col-md-4">
-					<a href="<?php print $imgBaseUrl;?>/occ_complete_date_observation.png" data-lightbox="occ_complete_date_observation"><img onerror="this.src='<?php print $assetsUrl;?>/img/insufficient-data.png'" src="<?php print $imgBaseUrl;?>/occ_complete_date_observation.png" class="img-thumbnail"></a>
+					<a href="<?php print $img_base_url;?>/occ_complete_date_observation.png" data-lightbox="occ_complete_date_observation"><img onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" src="<?php print $img_base_url;?>/occ_complete_date_observation.png" class="img-thumbnail"></a>
 				</div>
 			</div>
 		</section>
@@ -294,13 +294,13 @@
 			</div>
 			<div class="row">
 				<div class="col-md-4">
-					<a href="<?php print $imgBaseUrl;?>/occ_cells_one_deg.png" data-lightbox="occ_cells_one_deg"><img onerror="this.src='<?php print $assetsUrl;?>/img/insufficient-data.png'" src="<?php print $imgBaseUrl;?>/occ_cells_one_deg.png" class="img-thumbnail"></a>
+					<a href="<?php print $img_base_url;?>/occ_cells_one_deg.png" data-lightbox="occ_cells_one_deg"><img onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" src="<?php print $img_base_url;?>/occ_cells_one_deg.png" class="img-thumbnail"></a>
 				</div>
 				<div class="col-md-4">
-					<a href="<?php print $imgBaseUrl;?>/occ_cells_half_deg.png" data-lightbox="occ_cells_half_deg"><img onerror="this.src='<?php print $assetsUrl;?>/img/insufficient-data.png'" src="<?php print $imgBaseUrl;?>/occ_cells_half_deg.png" class="img-thumbnail"></a>
+					<a href="<?php print $img_base_url;?>/occ_cells_half_deg.png" data-lightbox="occ_cells_half_deg"><img onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" src="<?php print $img_base_url;?>/occ_cells_half_deg.png" class="img-thumbnail"></a>
 				</div>
 				<div class="col-md-4">
-					<a href="<?php print $imgBaseUrl;?>/occ_cells_point_one_deg.png" data-lightbox="occ_cells_point_one_deg"><img onerror="this.src='<?php print $assetsUrl;?>/img/insufficient-data.png'" src="<?php print $imgBaseUrl;?>/occ_cells_point_one_deg.png" class="img-thumbnail"></a>
+					<a href="<?php print $img_base_url;?>/occ_cells_point_one_deg.png" data-lightbox="occ_cells_point_one_deg"><img onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" src="<?php print $img_base_url;?>/occ_cells_point_one_deg.png" class="img-thumbnail"></a>
 				</div>
 			</div>
 		</section>
@@ -314,12 +314,12 @@
 			<div class="row">
 				<div class="col-md-4">
 					<h4>Origin of occurrence records</h4>
-					<p><?php print $datasharingDescription;?></p>
+					<p><?php print $datasharing_description;?></p>
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-md-4">
-					<a href="<?php print $imgBaseUrl;?>/occ_repatriation.png" data-lightbox="occ_repatriation"><img onerror="this.src='<?php print $assetsUrl;?>/img/insufficient-data.png'" src="<?php print $imgBaseUrl;?>/occ_repatriation.png" class="img-thumbnail"></a>
+					<a href="<?php print $img_base_url;?>/occ_repatriation.png" data-lightbox="occ_repatriation"><img onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" src="<?php print $img_base_url;?>/occ_repatriation.png" class="img-thumbnail"></a>
 				</div>
 			</div>
 

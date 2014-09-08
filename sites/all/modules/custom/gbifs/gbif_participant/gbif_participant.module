@@ -229,7 +229,7 @@ function gbif_participant_preprocess_node(&$variables) {
  * Implements hook_page_build().
  */
 function gbif_participant_page_build(&$page) {
-	if (isset($page)) {
+	if (isset($page) && arg(0) == 'country_php') {
 		// Prepare the text for use in the banner region.
 		// @todo To move this into an earlier phase of processing.
 		$results = _gbif_participant_participant_query(NULL, arg(1));

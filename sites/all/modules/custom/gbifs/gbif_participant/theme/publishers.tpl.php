@@ -79,103 +79,26 @@
  * @ingroup themeable
  */
 ?>
-<article id="node-<?php print $node->nid; ?>" class="container <?php print $classes; ?>">
+<div class="back-to-previous">
+	<div class="container">
+		<div class="row">
+			<p>&lt; <u><a href="/country_php/<?php print $iso2; ?>/participation#endorsed-publishers">Back to participation page</a></u></p>
+		</div>
+	</div>
+</div>
+<article id="country-publishers" class="container <?php print $classes; ?>">
 	<div class="row">
-      <section id="participation" class="col-md-12 well well-lg well-margin-top clearfix"<?php print $attributes; ?>>
+      <section id="publishers" class="col-md-12 well well-lg well-margin-top clearfix"<?php print $attributes; ?>>
         <div class="row">
 					<header class="content-header col-md-8">
-						<h2>Participation</h2>
-					</header>
-					<header class="content-header sidebar-header-country col-md-4">
-						<h2>Node</h2>
+						<h2><?php print $html['title']; ?></h2>
 					</header>
         </div>
         <div class="row">
-          <div class="content col-md-8">
-						<h3>Member Status</h3>
-						<p><?php print $participant_ims->gbif_membership; ?></p>
-						<h3>GBIF Participant since</h3>
-						<p><?php print $participant_ims->member_as_of; ?></p>
-						<?php print $participant_ims->gbif_region; ?>
-						<?php print $participant_ims->contact_participation; ?>
-          </div>
-          <aside class="content content-sidebar col-md-4">
-						<h3>Node name</h3>
-						<p><?php print $participant_ims->node_name_full; ?></p>
-						<h3>Address</h3>
-						<address>
-							<?php print _gbif_participant_print_address_fields($participant_ims->institution_name); ?>
-							<?php print _gbif_participant_print_address_fields($participant_ims->institution_address); ?>
-							<?php print _gbif_participant_print_address_fields($participant_ims->institution_zip_code); ?>
-							<?php print _gbif_participant_print_address_fields($participant_ims->institution_city); ?>
-							<?php print _gbif_participant_print_address_fields($participant_ims->institution_state_province); ?>
-							<?php print _gbif_participant_print_address_fields($participant_ims->country); ?>
-							<?php print _gbif_participant_print_address_fields($participant_ims->institution_email); ?>
-							<?php print _gbif_participant_print_address_fields($participant_ims->institution_telephone); ?>
-						</address>
-						<?php if (isset($participant_node['node_established'])): ?>
-							<h3>Node Established</h3>
-							<p><?php print $participant_node['node_established']; ?></p>
-						<?php endif; ?>
-						<h3>Website</h3>
-						<p><?php print l($participant_ims->node_url, $participant_ims->node_url); ?></p>
-          </aside>
+					<div class="content content-full">
+						<?php print $html['list']; ?>
+					</div>
         </div>
       </section>
-
-			<?php if (count($participant_node) != 0): ?>
-			<section id="description" class="col-md-12 well well-lg">
-				<div class="row">
-					<header class="content-header col-md-12">
-						<h2>Learn more</h2>
-					</header>
-				</div>
-				<div class="row">
-					<div class="content col-md-8">
-						<?php print render($content['gp_history']); ?>
-						<?php print render($content['gp_vision_mission']); ?>
-						<?php print render($content['gp_structure']); ?>
-						<?php print render($content['gp_national_funding']); ?>
-					</div>
-					<aside class="content content-sidebar col-md-4">
-						<?php if (isset($participant_node['social_media'])): ?>
-							<?php print $participant_node['social_media']; ?>
-						<?php endif; ?>
-						<?php print render($content['gp_comm_rss']); ?>
-						<?php print render($content['gp_comm_newsletter']); ?>
-						<?php print render($content['gp_other_links']); ?>
-						<?php print render($content['gp_quick_links']); ?>
-					</aside>
-				</div>
-			</section>
-			<?php endif; ?>
-
-			<section id="contacts" class="col-md-12 well well-lg">
-				<div class="row">
-					<header class="content-header col-md-12">
-						<h2>Contacts</h2>
-					</header>
-				</div>
-				<div class="row">
-					<div class="content col-md-8">
-						<?php print $participant_ims->contact_contacts; ?>
-					</div>
-					<aside class="col-md-4">
-
-					</aside>
-				</div>
-			</section>
-			<section id="endorsed-publishers" class="col-md-12 well well-lg">
-				<div class="row">
-					<header class="content-header col-md-12">
-						<h2>Endorsed Publishers</h2>
-					</header>
-				</div>
-				<div class="row">
-					<div class="content content-full">
-						<?php print $participant_ims->endorsed_publishers['list']; ?>
-					</div>
-				</div>
-			</section>
 	</div>
 </article>

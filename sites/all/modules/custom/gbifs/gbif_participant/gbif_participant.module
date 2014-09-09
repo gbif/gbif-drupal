@@ -128,6 +128,20 @@ function gbif_participant_theme($existing, $type, $theme, $path) {
 			'template' => 'node--gbif_participant',
 			'path' => $path . '/theme',
 		),
+		'gbif_participant_publishers' => array(
+			'template' => 'publishers',
+			'path' => $path . '/theme',
+			'variables' => array('participantID' => NULL, 'iso2' => NULL, 'node' => NULL, 'participant_ims' => NULL, 'html' => NULL),
+		),
+		'gbif_participant_publishers_list_item' => array(
+			'template' => 'publishers-list-item',
+			'path' => $path . '/theme',
+			'variables' => array(
+				'publishers' => NULL,
+				'env' => NULL,
+				'mode' => NULL,
+			),
+		),
 		'gbif_participant_news' => array(
 			'template' => 'news',
 			'path' => $path . '/theme',
@@ -177,6 +191,11 @@ function gbif_participant_preprocess_page(&$variables) {
 				if (gettype($k) == 'integer' && $tab['#title'] == 'Participation' && count($results) == 0) {
 					unset($variables['page']['menu']['menu_block_gbif_navigation_country_page']['#content'][$k]);
 				}
+				// If on the list of publisher, highlight the tab with class '.back-menu'.
+				$current_path = current_path();
+				if (gettype($k) == 'integer' && $tab['#title'] == 'Participation' && drupal_match_path($current_path, '*/'. $iso2 . '/publishers')) {
+					$variables['page']['menu']['menu_block_gbif_navigation_country_page']['#content'][$k]['#attributes']['class'][] = 'back-menu';
+				}
 			}
 		}
 	}
@@ -192,7 +211,7 @@ function gbif_participant_preprocess_node(&$variables) {
 		$participant = _gbif_participant_participant_query($participantID);
 		$participant = $participant[0];
 
-		$country = countries_country_lookup($participant->iso2, 'iso2');
+		$country = gbif_participant_country_lookup($participant->iso2, 'iso2', 'title');
 		$participant->country = $country->name;
 		$variables['participant_ims'] = $participant;
 		$variables['participant_node'] = array();
@@ -222,7 +241,7 @@ function gbif_participant_preprocess_node(&$variables) {
 		$variables['participant_ims']->contact_contacts = _gbif_participant_print_contacts('contacts', $contacts);
 
 		// Endorsed publishers
-		$variables['participant_ims']->endorsed_publishers = _gbif_participant_print_endorsed_publishers($participantID);
+		$variables['participant_ims']->endorsed_publishers = _gbif_participant_print_endorsed_publishers($participantID, $participant->iso2, 'digest');
 
 		// Social media
 		if (count($variables['gp_comm_social']) != 0) {
@@ -282,22 +301,8 @@ function gbif_participant_page_build(&$page) {
 function gbif_participant_page_render($iso2, $chapter) {
 
 	if (!isset($iso2) && !isset($chapter)) {
-		// If both variables are not set, then show the list of countries.
-		// Prepare the list of participants for rendering.
-		if (arg(0) == 'country_php' && arg(1) == NULL) {
-			$countries = gbif_participant_country_query();
-		}
-		$country_list = '<ul>';
-		foreach ($countries as $country) {
-			$link = l($country->country_name_full, 'country_php/' . $country->iso2);
-			$country_list .= '<li class="country ';
-			$country_list .= (!empty($country->gbif_membership)) ? 'participant' : '';
-			$country_list .= '">';
-			$country_list .= $link;
-			$country_list .= '</li>';
-		}
-		$country_list .= '</ul>';
-		return theme('gbif_participant_countries', array('country_list' => $country_list));
+		$columns = _gbif_participant_country_list();
+		return theme('gbif_participant_countries', array('columns' => $columns));
 	}
 	elseif (isset($iso2) && !isset($chapter)) {
 		drupal_goto('country_php/' . $iso2 . '/summary');
@@ -356,6 +361,15 @@ function gbif_participant_page_render($iso2, $chapter) {
 				case 'participation':
 					$page = node_page_view($node);
 					return print drupal_render_page($page);
+				case 'publishers':
+					$html = _gbif_participant_print_endorsed_publishers($participantID, $iso2, 'full');
+					return theme('gbif_participant_publishers', array(
+						'participantID' => $participantID,
+						'iso2' => $iso2,
+						'node' => $node,
+						'ims_result' => $results[0],
+						'html' => $html,
+					));
 				case 'news':
 					return theme('gbif_participant_news', array('participantID' => $participantID, 'iso2' => $iso2, 'node' => $node, 'participant_ims' => $results[0]));
 				case 'publications':
@@ -638,29 +652,50 @@ function _gbif_participant_print_region($region) {
 /**
  * Helper function for getting the list of endorsed publishers for
  * a participant.
+ * @param $mode 'full', 'digest'
+ * @see http://knackforge.com/blog/sabareesh/creating-pager-drupal-without-dbselect-and-pagerdefault
  */
-function _gbif_participant_print_endorsed_publishers($participantID) {
-	$api_call = _gbif_participant_api_registry_node() . '/' . _gbif_participant_get_uuid($participantID) . '/organization';
-	$json = json_decode(file_get_contents($api_call));
-	$count = $json->count;
-	$publishers = $json->results;
+function _gbif_participant_print_endorsed_publishers($participantID, $iso2, $mode) {
+	$env = variable_get('environment_settings');
+	$api_call = _gbif_participant_api_registry_node() . '/' . _gbif_participant_get_uuid($participantID) . '/organization?limit=1000';
+	$json = json_decode(file_get_contents($api_call), TRUE);
+	$count = $json['count'];
+	$publishers = $json['results'];
+	$output = array();
 
-	$html = '<ul>';
-	foreach ($publishers as $publisher) {
-		$html .= '<li>';
-		$html .= '<a href="/publisher/' . $publisher->key . '">' . $publisher->title . '</a><br>';
-		$html .= '<p>' . 'A data publisher from ' . $publisher->city . ', ' . $publisher->country . ' with ' . $publisher->numPublishedDatasets . ' ';
-		$html .= format_plural($publisher->numPublishedDatasets,
-			'dataset',
-			'datasets',
-			array()
-		);
-		$html .= '</p>';
-		$html .= '</li>';
+	switch ($mode) {
+		case 'full':
+			$per_page = 25;
+			$current_page = pager_default_initialize($count, $per_page);
+			$chunks = array_chunk($publishers, $per_page, TRUE);
+			$html = theme('gbif_participant_publishers_list_item', array('publishers' => $chunks[$current_page], 'env' => $env, 'mode' => $mode));
+			$html .= '<hr>';
+			$html .= theme('pager', array('page', count($publishers)));
+
+			$title = $count;
+			$title .= format_plural($count,
+				' endorsed data publisher for ',
+				' endorsed data publishers for ',
+				array()
+			);
+			$title .= gbif_participant_country_lookup($iso2, 'iso2', 'title');
+			$output['title'] = $title;
+			break;
+
+		case 'digest':
+			$first_ten = array_slice($publishers, 0, 10, TRUE);
+			$html = theme('gbif_participant_publishers_list_item', array('publishers' => $first_ten, 'env' => $env, 'mode' => $mode));
+			if ($count > 10) {
+				$remain_count = $count - 10;
+				$link_more = $remain_count . ' ' . l('more', 'country_php/' . $iso2 . '/publishers');
+				$html .= $link_more . '...';
+			}
+			break;
 	}
-	$html .= '</ul>';
 
-	return $html;
+	$output['list'] = $html;
+
+	return $output;
 }
 
 
@@ -922,12 +957,60 @@ function _gbif_participant_country_data($iso2, $participant_ims) {
  * @param $cols number of columns to split into
  * @return array of input data split into the columns
  */
-function _columular_countries($json, $cols) {
+function _gbif_participant_columular_countries($json, $cols) {
 	// sort by country name
 	usort($json, function($a, $b) {
-		return (strnatcasecmp($a['name'], $b['name']));
+		return (strnatcasecmp($a['title'], $b['title']));
 	});
 
 	$col_size = ceil(count($json) / $cols);
 	return array_chunk($json, $col_size);
+}
+
+/**
+ * Looking up in GBIF defined countries.
+ * @param $value the value as the key to lookup
+ * @param $query_type 'title', 'enumName', 'official', 'isNumerical', 'iso3', 'iso2'
+ * @param $return_type 'title', 'enumName', 'official', 'isNumerical', 'iso3', 'iso2'
+ */
+function gbif_participant_country_lookup($value, $query_type, $return_type) {
+	$result = '';
+	$countries = json_decode(file_get_contents(drupal_get_path('module', 'gbif_participant') . '/country.json'), TRUE);
+	foreach ($countries as $country) {
+		if ($country[$query_type] == $value) $result = $country[$return_type];
+	}
+	return $result;
+}
+
+function _gbif_participant_country_list() {
+	$countries = json_decode(file_get_contents(drupal_get_path('module', 'gbif_participant') . '/country.json'), TRUE);
+	$participant_ims = _gbif_participant_participant_query();
+	// Insert bits for determining if a country is a participant.
+	foreach ($countries as $k => $country) {
+		foreach ($participant_ims as $participant) {
+			if ($country['iso2'] == $participant->iso2) {
+				$countries[$k]['gbif_membership'] = $participant->gbif_membership;
+			}
+		}
+	}
+	$chunks = _gbif_participant_columular_countries($countries, 4);
+
+	$columns = array();
+	foreach ($chunks as $chunk) {
+		$country_list = '<ul>';
+		foreach ($chunk as $country) {
+			if ($country['official'] == "true") {
+				$link = l($country['title'], 'country_php/' . $country['iso2']);
+				$country_list .= '<li class="country ';
+				$country_list .= (!empty($country['gbif_membership'])) ? 'participant' : '';
+				$country_list .= '">';
+				$country_list .= $link;
+				$country_list .= '</li>';
+			}
+		}
+		$country_list .= '</ul>';
+		$columns[] = $country_list;
+	}
+
+	return $columns;
 }

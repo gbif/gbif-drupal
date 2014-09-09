@@ -1,5 +1,6 @@
 <?php
-
+	// Make sure the country code is in UPPERCASE so the map tiles will show.
+	$iso2 = strtoupper($iso2);
 ?>
 <article id="country-summary" class="container">
 	<div class="row">

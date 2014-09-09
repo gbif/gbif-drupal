@@ -112,17 +112,17 @@ function gbif_participant_theme($existing, $type, $theme, $path) {
 		'gbif_participant_summary' => array(
 			'template' => 'summary',
 			'path' => $path . '/theme',
-			'variables' => array('participantID' => NULL, 'iso2' => NULL, 'node' => NULL, 'ims_result' => NULL),
+			'variables' => array('participantID' => NULL, 'iso2' => NULL, 'node' => NULL, 'participant_ims' => NULL, 'html' => NULL),
 		),
 		'gbif_participant_about' => array(
 			'template' => 'about',
 			'path' => $path . '/theme',
-			'variables' => array('participantID' => NULL, 'iso2' => NULL, 'node' => NULL, 'ims_result' => NULL),
+			'variables' => array('participantID' => NULL, 'iso2' => NULL, 'node' => NULL, 'participant_ims' => NULL, 'html' => NULL),
 		),
 		'gbif_participant_publishing' => array(
 			'template' => 'publishing',
 			'path' => $path . '/theme',
-			'variables' => array('participantID' => NULL, 'iso2' => NULL, 'node' => NULL, 'ims_result' => NULL),
+			'variables' => array('participantID' => NULL, 'iso2' => NULL, 'node' => NULL, 'participant_ims' => NULL, 'html' => NULL),
 		),
 		'node__gbif_participant' => array(
 			'template' => 'node--gbif_participant',
@@ -131,12 +131,12 @@ function gbif_participant_theme($existing, $type, $theme, $path) {
 		'gbif_participant_news' => array(
 			'template' => 'news',
 			'path' => $path . '/theme',
-			'variables' => array('participantID' => NULL, 'iso2' => NULL, 'node' => NULL, 'ims_result' => NULL),
+			'variables' => array('participantID' => NULL, 'iso2' => NULL, 'node' => NULL, 'participant_ims' => NULL, 'html' => NULL),
 		),
 		'gbif_participant_publications' => array(
 			'template' => 'publications',
 			'path' => $path . '/theme',
-			'variables' => array('participantID' => NULL, 'iso2' => NULL, 'node' => NULL, 'ims_result' => NULL),
+			'variables' => array('participantID' => NULL, 'iso2' => NULL, 'node' => NULL, 'participant_ims' => NULL, 'html' => NULL),
 		),
 	);
 }
@@ -327,16 +327,37 @@ function gbif_participant_page_render($iso2, $chapter) {
 			// Todo: We might need the $node object for other chapters in the future.
 			switch ($chapter) {
 				case 'summary':
-					return theme('gbif_participant_summary', array('participantID' => $participantID, 'iso2' => $iso2, 'node' => $node, 'ims_result' => $results[0]));
+					$html = _gbif_participant_country_data($iso2, $results[0]);
+					return theme('gbif_participant_summary', array(
+						'participantID' => $participantID,
+						'iso2' => $iso2,
+						'node' => $node,
+						'participant_ims' => $results[0],
+						'html' => $html,
+					));
 				case 'about':
-					return theme('gbif_participant_about', array('participantID' => $participantID, 'iso2' => $iso2, 'node' => $node, 'ims_result' => $results[0]));
+					$html = _gbif_participant_country_data($iso2, $results[0]);
+					return theme('gbif_participant_about', array(
+						'participantID' => $participantID,
+						'iso2' => $iso2,
+						'node' => $node,
+						'participant_ims' => $results[0],
+						'html' => $html,
+					));
 				case 'publishing':
-					return theme('gbif_participant_publishing', array('participantID' => $participantID, 'iso2' => $iso2, 'node' => $node, 'ims_result' => $results[0]));
+					$html = _gbif_participant_country_data($iso2, $results[0]);
+					return theme('gbif_participant_publishing', array(
+						'participantID' => $participantID,
+						'iso2' => $iso2,
+						'node' => $node,
+						'participant_ims' => $results[0],
+						'html' => $html,
+					));
 				case 'participation':
 					$page = node_page_view($node);
 					return print drupal_render_page($page);
 				case 'news':
-					return theme('gbif_participant_news', array('participantID' => $participantID, 'iso2' => $iso2, 'node' => $node, 'ims_result' => $results[0]));
+					return theme('gbif_participant_news', array('participantID' => $participantID, 'iso2' => $iso2, 'node' => $node, 'participant_ims' => $results[0]));
 				case 'publications':
 					return theme('gbif_participant_publications', array('participantID' => $participantID, 'iso2' => $iso2, 'node' => $node, 'ims_result' => $results[0]));
 			}
@@ -451,7 +472,8 @@ function gbif_participant_populate() {
 }
 
 /**
- * @todo Check the source of the list.
+ * @todo Use local json to produce the list.
+ * @todo Use http://api.gbif.org/v1/enumeration/country for the source.
  * @return mixed
  */
 function gbif_participant_country_query() {
@@ -717,4 +739,195 @@ function _gbif_participant_format_social_media($gp_comm_social) {
 	}
 	$html .= '</div>';
 	return $html;
+}
+
+/**
+ * Helper function for getting counts for a country.
+ * @todo Better calculation with 'limit'.
+ */
+function gbif_participant_country_count($iso2) {
+	$counts = array();
+	$calls = array(
+		'dataset_about' => 'http://api.gbif.org/v1/occurrence/counts/datasets?country=',
+		'occurrence_about' => 'http://api.gbif.org/v1/occurrence/count?country=',
+		'checklist_about' => 'http://api.gbif.org/v1/dataset/search?limit=10000&type=CHECKLIST&country=',
+		'metadata_about' => 'http://api.gbif.org/v1/dataset/search?limit=10000&type=METADATA&country=',
+		'contributed_by' => 'http://api.gbif.org/v1/occurrence/counts/publishingCountries?country=',
+		'dataset_from' => 'http://api.gbif.org/v1/dataset/search?limit=10000&type=OCCURRENCE&publishingCountry=',
+		'occurrence_from' => 'http://api.gbif.org/v1/occurrence/count?publishingCountry=',
+		'checklist_from' => 'http://api.gbif.org/v1/dataset/search?limit=10000&type=CHECKLIST&publishingCountry=',
+		'metadata_from' => 'http://api.gbif.org/v1/dataset/search?limit=10000&type=METADATA&publishingCountry=',
+		'contributing_to' => 'http://api.gbif.org/v1/occurrence/counts/countries?publishingCountry=',
+	);
+	foreach ($calls as $call_type => $call) {
+		$json = json_decode(file_get_contents($call . $iso2));
+
+		if (isset($json->count)) {
+			$counts[$call_type . '_count'] = $json->count;
+		}
+		elseif (!in_array($call_type, array('occurrence_from', 'occurrence_about'))) {
+			$counts[$call_type . '_count'] = count((array)$json);
+		}
+
+		if (in_array($call_type, array('checklist_about', 'checklist_from')) && isset($json->count)) {
+			// Assuming there are results since count != 0.
+			$usage_count = 0;
+			foreach ($json->results as $k => $result) {
+				$metrics_call = 'http://api.gbif.org/v1/dataset/' . $result->key . '/metrics';
+				$metrics_json = json_decode(file_get_contents($metrics_call));
+				$usage_count = $usage_count + $metrics_json->usagesCount;
+			}
+			$counts[$call_type . '_record_count'] = $usage_count;
+		}
+
+		if (in_array($call_type, array('dataset_about', 'contributed_by', 'contributing_to'))) {
+			$record_count = 0;
+			foreach ($json as $k => $v) {
+				$record_count = $record_count + $v;
+			}
+			$counts[$call_type . '_record_count'] = $record_count;
+		}
+
+		switch ($call_type) {
+			case 'occurrence_about':
+				$counts['dataset_about_record_count'] = $json;
+				break;
+			case 'occurrence_from':
+				$counts['dataset_from_record_count'] = $json;
+				break;
+		}
+
+		$counts[$call_type] = $json;
+	}
+	ksort($counts);
+	return $counts;
+}
+
+/**
+ * Helper function for preparing HTML for data sections in country pages.
+ */
+function _gbif_participant_country_data($iso2, $participant_ims) {
+	$data_types = array(
+		'dataset' => array(
+			'text' => t('occurrence dataset'),
+			'about_dataset_url' => 'country/' . $iso2 . '/about/datasets',
+			'about_dataset_query' => array(),
+			'about_record_url' => 'occurrence/search',
+			'about_record_query' => array('country' => $iso2),
+			'from_dataset_url' => 'dataset/search',
+			'from_dataset_query' => array('publishingCountry' => $iso2, 'type' => 'OCCURRENCE'),
+			'from_record_url' => 'occurrence/search',
+			'from_record_query' => array('publishingCountry' => $iso2),
+		),
+		'checklist' => array(
+			'text' => t('checklist dataset'),
+			'about_dataset_url' => 'dataset/search',
+			'about_dataset_query' => array('country' => $iso2, 'type' => 'CHECKLIST'),
+			'from_dataset_url' => 'dataset/search',
+			'from_dataset_query' => array('publishingCountry' => $iso2, 'type' => 'CHECKLIST'),
+		),
+		'metadata' => array(
+			'text' => t('metadata-only dataset'),
+			'about_dataset_url' => 'dataset/search',
+			'about_dataset_query' => array('country' => $iso2, 'type' => 'METADATA'),
+			'from_dataset_url' => 'dataset/search',
+			'from_dataset_query' => array('publishingCountry' => $iso2, 'type' => 'METADATA'),
+		)
+	);
+
+	$counts = gbif_participant_country_count($iso2);
+
+	$output = array();
+	foreach (array('about', 'from') as $type) {
+		$html = '';
+		$html .= '<ul>';
+		foreach ($data_types as $data_type => $attr) {
+			$key_count = $data_type . '_' . $type . '_count';
+			$key_record_count = $data_type . '_' . $type . '_record_count';
+			if ($counts[$key_count] != 0) {
+				// Dataset count item.
+				$link_text_datasets = format_plural($counts[$key_count],
+					'1 !type_text',
+					'!count !type_text' . 's',
+					array('!count' => number_format($counts[$key_count]), '!type_text' => $attr['text'])
+				);
+				$key_dataset_link = $type . '_dataset_url';
+				$key_dataset_query = $type . '_dataset_query';
+				$link_datasets = l($link_text_datasets, $attr[$key_dataset_link], array('query' => $attr[$key_dataset_query]));
+				// Record count item when available.
+				$link_text_records = format_plural($counts[$key_record_count],
+					'1 record',
+					'!count records',
+					array('!count' => number_format($counts[$key_record_count]))
+				);
+				$key_record_link = $type . '_record_url';
+				$key_record_query = $type . '_record_query';
+				if (isset($attr[$key_record_link])) {
+					$link_records = l($link_text_records, $attr[$key_record_link], array('query' => $attr[$key_record_query]));
+				}
+				else {
+					$link_records = $link_text_records;
+				}
+
+				$html .= '<li>';
+				$html .= $link_datasets . ' ' . t('with') . ' ' . $link_records;
+				$html .= ($data_type == 'metadata' && $type == 'about') ? t(' relevant to !country', array('!country' => $participant_ims->participant_name_full)) : '';
+				$html .= '.</li>';
+			}
+			else {
+				$html .= '<li>';
+				$html .= t('No ') . $attr['text'] . 's';
+				$html .= ($data_type == 'metadata' && $type == 'about') ? t(' relevant to !country', array('!country' => $participant_ims->participant_name_full)) : '';
+				$html .= '.</li>';
+			}
+		}
+
+		switch ($type) {
+			case 'about':
+				// contributed by
+				$link_text_contributed_by = format_plural($counts['contributed_by_count'],
+					'1 country',
+					'!count countries',
+					array('!count' => number_format($counts['contributed_by_count']))
+				);
+				$link_text_contributed_by = l($link_text_contributed_by, 'country/' . $iso2 . '/about/countries');
+				$link_text_contributed_by .= format_plural($counts['contributed_by_count'],
+					' contributes data about !country',
+					' contribute data about !country',
+					array('!count' => number_format($counts['contributed_by_count']), '!country' => $participant_ims->participant_name_full)
+				);
+				$html .= '<li>' . $link_text_contributed_by . '.</li>';
+				break;
+
+			case 'from':
+				// contributing to
+				$html .= '<li>';
+					$html .= t('!country publishes data covering ', array('!country' => $participant_ims->participant_name_full));
+				$link_text_contributing_to = t('@count countries, territories and islands', array('@count' => $counts['contributing_to_count']));
+				$link_contributing_to = l($link_text_contributing_to, 'country/' . $iso2 . '/publishing/countries');
+				$html .= $link_contributing_to;
+				$html .= '.</li>';
+				break;
+		}
+
+		$html .= '</ul>';
+		$output[$type] = $html;
+  }
+	return $output;
+}
+
+/**
+ * Splits the provided JSON into an array of columns, sorted by the name.
+ * @param $json which must be an array
+ * @param $cols number of columns to split into
+ * @return array of input data split into the columns
+ */
+function _columular_countries($json, $cols) {
+	// sort by country name
+	usort($json, function($a, $b) {
+		return (strnatcasecmp($a['name'], $b['name']));
+	});
+
+	$col_size = ceil(count($json) / $cols);
+	return array_chunk($json, $col_size);
 }

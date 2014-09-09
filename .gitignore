@@ -58,3 +58,5 @@ Thumbs.db
 .settings
 .classpath
 .sass-cache/
+sites/all/themes/custom/bvng/less/node_modules
+sites/all/themes/custom/bvng/less/package.json

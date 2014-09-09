@@ -1,4 +1,4 @@
-Global {"url":"analytics\/global"}
+Global {"url":"analytics"}
 About A Country {"url":"analytics\/country\/about"}
 Published by Country {"url":"analytics\/country\/published"}
 FAQ {"url":"analytics\/faq"}

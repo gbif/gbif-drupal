@@ -7,8 +7,19 @@
 			<div class="content-header">
 				<p>Current GBIF Participants are marked with a *. A complete list of GBIF Participants, including organizations and economies, can be found <a href="/participation/list">here</a>.</p>
 			</div>
-			<div class="content content-country-list">
-				<?php print $country_list; ?>
+			<div class="country-list">
+				<div class="column col-md-3">
+					<?php print $columns[0]; ?>
+				</div>
+				<div class="column col-md-3">
+					<?php print $columns[1]; ?>
+				</div>
+				<div class="column col-md-3">
+					<?php print $columns[2]; ?>
+				</div>
+				<div class="column col-md-3">
+					<?php print $columns[3]; ?>
+				</div>
 			</div>
 		</section>
 	</div>

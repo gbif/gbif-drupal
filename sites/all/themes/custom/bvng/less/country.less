@@ -1,8 +1,8 @@
 .country-map {
   width: 630px;
   height: 425px;
-  margin-top: -69px;
-  margin-left: -10px;
+  margin-top: -94px;
+  margin-left: -9px;
   padding-right: 0px;
   padding-left: 0px;
   overflow: hidden;
@@ -39,7 +39,7 @@
     margin-bottom: 18px;
     font-size: 15px;
   }
-
+  
   address {
     font-size: 13px;
     margin-bottom: 18px;
@@ -54,6 +54,7 @@
     
     p {
       margin-bottom: 7px;
+      font-size: 13px;
     }
   }
   
@@ -98,6 +99,48 @@
   }
 }
 
+.column {
+  padding-right: 0px;
+  padding-left: 0px;
+  ul {
+    padding-left: 10px;
+    list-style: none;
+    list-style-position: outside;
+  }
+}  
+
+.country-list {
+  padding-top: 20px;
+  border-top: 1px solid @page-header-border-color;
+  
+  .participant::after {
+    content: ' *';
+  }
+}
+
+.back-to-previous {
+  background-color: #ffffcc;
+  height: 42px;
+  padding-top: 9px;
+  border-bottom: 1px solid @cGray4;
+  a {
+    color: @cGray2;
+  }
+}
+
+.list-publisher-published {
+  font-size: 13px;
+}
+
+.back-menu {
+  > a {
+    background-color: #ffffcc !important;
+    opacity: 1 !important;
+    color: @cGray2 !important;
+  }
+}
+
+// CSS3 rules to be tested.
 .content-country-list {
   margin-left: 0px;
   -webkit-column-count: 4;

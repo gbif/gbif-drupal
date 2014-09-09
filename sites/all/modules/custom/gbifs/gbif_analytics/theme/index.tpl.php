@@ -6,19 +6,20 @@
 					<h2><?php print $heading;?></h2>
 				</header>
 			</div>
+			<p>
+				<?php print $description;?>
+			</p>
 			<div class="row">
-				<div class="col-md-12">
-					<?php print $description;?>
-					<ul>
-						<?php
-						foreach ($columular_countries as $country_json) {
-							print '<li><a href="' . $country_json->iso . '/' . $type . '">' . $country_json->name . '</a></li>';
+				<?php
+				  foreach ($columular_countries as $col) {
+					  print '<div class="col-md-3"><ul class="list-unstyled">';
+						foreach ($col as $country_json) {
+						  print '<li><a href="' . $country_json['iso'] . '/' . $type . '">' . $country_json['name'] . '</a></li>';
 						}
-						?>
-					</ul>
-				</div>
+						print '</ul></div>';
+					}
+				?>
 			</div>
 		</section>
 	</div>
 </article>
-

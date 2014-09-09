@@ -172,7 +172,7 @@
 					</header>
 				</div>
 				<div class="row">
-					<div class="content content-full col-md-12">
+					<div class="content content-full">
 						<?php print $participant_ims->endorsed_publishers; ?>
 					</div>
 				</div>

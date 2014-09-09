@@ -9,12 +9,15 @@
 
 					</header>
 					<header class="content-header sidebar-header-country col-md-4">
-						<h2>Data about</h2>
+						<h2>Data about <?php print $participant_ims->participant_name_full; ?></h2>
 					</header>
         </div>
         <div class="row">
-					<div id="map-about" class="country-map">
-						<iframe id="mapAboutFrame" name="map" src="http://cdn.gbif.org/v1/map/index.html?type=COUNTRY&amp;key=<?php print $iso2; ?>" allowfullscreen="" height="100%" width="100%" frameborder="0"></iframe>
+					<div id="map-about" class="country-map col-md-8">
+						<iframe id="mapAboutFrame" name="map" src="http://api.gbif.org/v1/map/index.html?type=COUNTRY&amp;key=<?php print $iso2; ?>" allowfullscreen="" height="100%" width="100%" frameborder="0"></iframe>
+					</div>
+					<div class="content content-sidebar col-md-4">
+						<?php print $html['about']; ?>
 					</div>
         </div>
       </section>
@@ -25,22 +28,26 @@
 
 					</header>
 					<header class="content-header sidebar-header-country col-md-4">
-						<h2>Data from</h2>
+						<h2>Data from <?php print $participant_ims->participant_name_full; ?></h2>
 					</header>
 				</div>
 				<div class="row">
-					<div id="map-from" class="country-map">
-						<iframe id="mapByFrame" name="map" src="http://cdn.gbif.org/v1/map/index.html?type=PUBLISHING_COUNTRY&amp;key=<?php print $iso2; ?>" allowfullscreen="" height="100%" width="100%" frameborder="0"></iframe>
+					<div id="map-from" class="country-map col-md-8">
+						<iframe id="mapByFrame" name="map" src="http://api.gbif.org/v1/map/index.html?type=PUBLISHING_COUNTRY&amp;key=<?php print $iso2; ?>" allowfullscreen="" height="100%" width="100%" frameborder="0"></iframe>
 					</div>
-					<aside class="content content-sidebar col-md-4">
-					</aside>
+					<div class="content content-sidebar col-md-4">
+						<?php print $html['from']; ?>
+					</div>
 				</div>
 			</section>
 
 			<section id="participation" class="col-md-12 well well-lg">
 				<div class="row">
-					<header class="content-header col-md-12">
+					<header class="content-header col-md-8">
 						<h2>Participation</h2>
+					</header>
+					<header class="content-header sidebar-header-country col-md-4">
+						<h2>Node</h2>
 					</header>
 				</div>
 				<div class="row">
@@ -62,12 +69,14 @@
 							<?php print _gbif_participant_print_address_fields($participant_ims->institution_zip_code); ?>
 							<?php print _gbif_participant_print_address_fields($participant_ims->institution_city); ?>
 							<?php print _gbif_participant_print_address_fields($participant_ims->institution_state_province); ?>
-							<?php print _gbif_participant_print_address_fields($participant_ims->participant_name_full); ?>
+							<?php print _gbif_participant_print_address_fields($participant_ims->country); ?>
 							<?php print _gbif_participant_print_address_fields($participant_ims->institution_email); ?>
 							<?php print _gbif_participant_print_address_fields($participant_ims->institution_telephone); ?>
 						</address>
-						<h3>Node Established</h3>
-						<p><?php print $participant_node['node_established']; ?></p>
+						<?php if (isset($participant_node['node_established'])): ?>
+							<h3>Node Established</h3>
+							<p><?php print $participant_node['node_established']; ?></p>
+						<?php endif; ?>
 						<h3>Website</h3>
 						<p><?php print l($participant_ims->node_url, $participant_ims->node_url); ?></p>
 					</aside>
@@ -81,7 +90,7 @@
 					</header>
 				</div>
 				<div class="row">
-					<div class="content content-full col-md-12">
+					<div class="content content-full">
 					</div>
 				</div>
 			</section>

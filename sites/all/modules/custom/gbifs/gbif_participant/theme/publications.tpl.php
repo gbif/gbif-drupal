@@ -88,7 +88,7 @@
 					</header>
         </div>
         <div class="row">
-					<div class="content col-md-12">
+					<div class="content content-full">
 
 					</div>
         </div>
@@ -101,7 +101,7 @@
 					</header>
 				</div>
 				<div class="row">
-					<div class="content col-md-12">
+					<div class="content content-full">
 					</div>
 				</div>
 			</section>

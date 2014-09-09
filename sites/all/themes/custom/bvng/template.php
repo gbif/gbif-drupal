@@ -751,7 +751,7 @@ function _bvng_well_types($req_path, $system_main) {
 			return 'none';
 		}
   }
-	elseif (drupal_match_path($req_path, 'country_php/*')) {
+	elseif (drupal_match_path($req_path, 'country_php*')) {
 		return 'none';
 	}
   elseif ($req_path) {

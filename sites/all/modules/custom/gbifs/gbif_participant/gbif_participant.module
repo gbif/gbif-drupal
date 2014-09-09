@@ -104,6 +104,11 @@ function gbif_participant_form_gbif_participant_node_form_alter(&$form, &$form_s
 function gbif_participant_theme($existing, $type, $theme, $path) {
 	$path = drupal_get_path('module', 'gbif_participant');
 	return array(
+		'gbif_participant_countries' => array(
+			'template' => 'countries',
+			'path' => $path . '/theme',
+			'variables' => array('country_list' => NULL),
+		),
 		'gbif_participant_summary' => array(
 			'template' => 'summary',
 			'path' => $path . '/theme',
@@ -234,7 +239,11 @@ function gbif_participant_page_build(&$page) {
 		// Prepare the text for use in the banner region.
 		// @todo To move this into an earlier phase of processing.
 		$results = _gbif_participant_participant_query(NULL, arg(1));
-		if (count($results) == 0) {
+		if (arg(1) == NULL && arg(2) == NULL) {
+			$title = t('Countries, territories and islands');
+			$slogan = '';
+		}
+		elseif (count($results) == 0) {
 			$country = countries_country_lookup(arg(1), 'iso2');
 			$title = $country->name;
 			$slogan = '';
@@ -274,7 +283,21 @@ function gbif_participant_page_render($iso2, $chapter) {
 
 	if (!isset($iso2) && !isset($chapter)) {
 		// If both variables are not set, then show the list of countries.
-		return 'country list';
+		// Prepare the list of participants for rendering.
+		if (arg(0) == 'country_php' && arg(1) == NULL) {
+			$countries = gbif_participant_country_query();
+		}
+		$country_list = '<ul>';
+		foreach ($countries as $country) {
+			$link = l($country->country_name_full, 'country_php/' . $country->iso2);
+			$country_list .= '<li class="country ';
+			$country_list .= (!empty($country->gbif_membership)) ? 'participant' : '';
+			$country_list .= '">';
+			$country_list .= $link;
+			$country_list .= '</li>';
+		}
+		$country_list .= '</ul>';
+		return theme('gbif_participant_countries', array('country_list' => $country_list));
 	}
 	elseif (isset($iso2) && !isset($chapter)) {
 		drupal_goto('country_php/' . $iso2 . '/summary');
@@ -425,6 +448,22 @@ function gbif_participant_populate() {
 		}
 		return $message;
 	}
+}
+
+/**
+ * @todo Check the source of the list.
+ * @return mixed
+ */
+function gbif_participant_country_query() {
+	$query = db_select('gbif_ims_country', 'c');
+	$query->leftjoin('gbif_ims_participant', 'p', 'p.countryID = c.countryID');
+	$query->addField('p', 'participantID', 'participantID');
+	$query->addField('c', 'name', 'country_name_full');
+	$query->addField('p', 'name_full', 'participant_name_full');
+	$query->addField('p', 'gbif_membership');
+	$query->addField('c', 'iso2', 'iso2');
+	$result = $query->execute()->fetchAll();
+	return $result;
 }
 
 function _gbif_participant_participant_query($participantID = NULL, $iso2 = NULL) {

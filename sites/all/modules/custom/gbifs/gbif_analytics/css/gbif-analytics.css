@@ -1,6 +1,3 @@
-/**
- * TODO: These all seem like they should be part of the GBIF standard styling...
- */
 .bs-callout {
     color: #666666;
     padding: 20px;
@@ -26,4 +23,7 @@
 }
 h4 {
     font-size: 18px !important;
+}
+dl.faq dt {
+    margin-top: 15px;
 }

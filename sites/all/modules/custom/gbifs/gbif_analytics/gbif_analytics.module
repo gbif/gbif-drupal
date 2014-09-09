@@ -9,10 +9,14 @@
  * Implements hook_menu().
  */
 function gbif_analytics_menu() {
+	$items['analytics'] = array(
+		'page callback' => '_gbif_analytics_detail_view',
+		'access callback' => TRUE, // unrestricted access to callback (no auth required)
+	);
 	$items['analytics/global'] = array(
 		'page callback' => '_gbif_analytics_detail_view',
 		'page arguments' => array('global'),
-		'access callback' => TRUE, // unrestricted access to callback (no auth required)
+		'access callback' => TRUE,
 	);
 	$items['analytics/faq'] = array(
 		'page callback' => '_gbif_analytics_faq_view',
@@ -48,7 +52,7 @@ function gbif_analytics_menu() {
  */
 function _gbif_analytics_detail_view($type, $iso2, $extra_args) {
 	// safeguard against bad URLs
-	if (!is_null($extra_args) || ($type == 'global' && !is_null($iso2))) {
+	if (is_null($type) || !is_null($extra_args) || ($type == 'global' && !is_null($iso2))) {
 		drupal_goto('analytics/global'); // redirect
 	}
 

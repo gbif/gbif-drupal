@@ -687,7 +687,7 @@ function _gbif_participant_print_endorsed_publishers($participantID, $iso2, $mod
 			$html = theme('gbif_participant_publishers_list_item', array('publishers' => $first_ten, 'env' => $env, 'mode' => $mode));
 			if ($count > 10) {
 				$remain_count = $count - 10;
-				$link_more = $remain_count . ' ' . l('more', 'country_php/' . $iso2 . '/publishers');
+				$link_more = l($remain_count . ' more', 'country_php/' . $iso2 . '/publishers');
 				$html .= $link_more . '...';
 			}
 			break;

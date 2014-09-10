@@ -140,6 +140,16 @@ function gbif_participant_theme($existing, $type, $theme, $path) {
 			'path' => $path . '/theme',
 			'variables' => array('participantID' => NULL, 'iso2' => NULL, 'node' => NULL, 'participant_ims' => NULL, 'html' => NULL),
 		),
+		'gbif_participant_datasets_list_item' => array(
+			'template' => 'datasets-list-item',
+			'path' => $path . '/theme',
+			'variables' => array(
+				'datasets' => NULL,
+				'env' => NULL,
+				'iso2' => NULL,
+				'mode' => NULL,
+			),
+		),
 		'gbif_participant_publishers_list_item' => array(
 			'template' => 'publishers-list-item',
 			'path' => $path . '/theme',
@@ -348,6 +358,7 @@ function gbif_participant_page_router($iso2, $chapter) {
 			// Todo: We might need the $node object for other chapters in the future.
 			switch ($chapter) {
 				case 'summary':
+					$datasets = _gbif_participant_print_latest_datasets($iso2, NULL);
 					$html = _gbif_participant_country_data($iso2, $results[0]);
 					return theme('gbif_participant_summary', array(
 						'participantID' => $participantID,
@@ -698,6 +709,14 @@ function _gbif_participant_print_endorsed_publishers($participantID, $iso2, $mod
 	return $output;
 }
 
+function _gbif_participant_print_latest_datasets($iso2, $mode) {
+	$env = variable_get('environment_settings');
+	$api_call = _gbif_participant_api_dataset() . '/search?limit=7&publishingCountry=' . $iso2;
+	$json = json_decode(file_get_contents($api_call), TRUE);
+	$count = $json['count'];
+	$datasets = $json['results'];
+	$html = theme('gbif_participant_datasets_list_item', array('datasets' => $datasets, 'env' => $env, 'iso2' => $iso2, 'mode' => $mode));
+}
 
 /**
  * Helper function for getting the corresponding participant info from
@@ -727,6 +746,11 @@ function _gbif_participant_get_uuid($participantID) {
 function _gbif_participant_api_registry_node() {
 	$env = variable_get('environment_settings');
 	return $env['gbif_api_base_url'] . '/v' . $env['gbif_api_version'] . '/node';
+}
+
+function _gbif_participant_api_dataset() {
+	$env = variable_get('environment_settings');
+	return $env['gbif_api_base_url'] . '/v' . $env['gbif_api_version'] . '/dataset';
 }
 
 /**

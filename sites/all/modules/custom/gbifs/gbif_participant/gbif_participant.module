@@ -358,8 +358,8 @@ function gbif_participant_page_router($iso2, $chapter) {
 			// Todo: We might need the $node object for other chapters in the future.
 			switch ($chapter) {
 				case 'summary':
-					$datasets = _gbif_participant_print_latest_datasets($iso2, NULL);
 					$html = _gbif_participant_country_data($iso2, $results[0]);
+					$html['latest_dataset'] = _gbif_participant_print_latest_datasets($iso2, NULL);
 					return theme('gbif_participant_summary', array(
 						'participantID' => $participantID,
 						'iso2' => $iso2,
@@ -715,7 +715,32 @@ function _gbif_participant_print_latest_datasets($iso2, $mode) {
 	$json = json_decode(file_get_contents($api_call), TRUE);
 	$count = $json['count'];
 	$datasets = $json['results'];
-	$html = theme('gbif_participant_datasets_list_item', array('datasets' => $datasets, 'env' => $env, 'iso2' => $iso2, 'mode' => $mode));
+
+	foreach ($datasets as &$dataset) {
+		$dataset['type_formatted'] = _gbif_participant_format_datatype($dataset['type']);
+		switch ($dataset['type']) {
+			case 'OCCURRENCE':
+				$count_call = $env['gbif_api_base_url'] . '/v' . $env['gbif_api_version'] . '/occurrence/count?datasetKey=' . $dataset['key'];
+				$dataset['occurrence_count'] = json_decode(file_get_contents($count_call), TRUE);
+				$geo_call = $env['gbif_api_base_url'] . '/v' . $env['gbif_api_version'] . '/occurrence/count?datasetKey=' . $dataset['key'] . '&isGeoreferenced=true';
+				$dataset['occurrence_geo'] = json_decode(file_get_contents($geo_call), TRUE);
+				break;
+			case 'CHECKLIST': // http://api.gbif.org/v1/dataset/66dd0960-2d7d-46ee-a491-87b9adcfe7b1/metrics
+				$metrics_call = $env['gbif_api_base_url'] . '/v' . $env['gbif_api_version'] . '/dataset/' . $dataset['key'] . '/metrics';
+				$dataset['checklist_metrics'] = json_decode(file_get_contents($metrics_call), TRUE);
+				break;
+		}
+	}
+
+	$output = theme('gbif_participant_datasets_list_item', array('datasets' => $datasets, 'env' => $env, 'iso2' => $iso2, 'mode' => $mode));
+
+	if ($count > 7) {
+		$remain_count = $count - 7;
+		$link_more = l($remain_count . ' more', $env['data_portal_base_url'] . '/dataset/search?publishingCountry=' . $iso2);
+		$output .= $link_more . '...';
+	}
+
+	return $output;
 }
 
 /**
@@ -781,6 +806,14 @@ function _gbif_participant_format_role($role) {
 		'NODE_STAFF' => t('Node Staff'),
 	);
 	return $roles[$role];
+}
+
+function _gbif_participant_format_datatype($type) {
+	$types = array(
+		'OCCURRENCE' => t('Occurrence dataset'),
+		'CHECKLIST' => t('Checklist dataset'),
+	);
+	return $types[$type];
 }
 
 /**

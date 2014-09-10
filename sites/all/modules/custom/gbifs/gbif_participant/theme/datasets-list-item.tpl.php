@@ -1,30 +1,35 @@
 <ul>
-	<?php foreach ($datasets as $k => $dataset): ?>
+<?php foreach ($datasets as $k => $dataset): ?>
+<?php switch ($dataset['type']): ?>
+<?php case 'OCCURRENCE': ?>
 		<?php
-			$title_link = l($publisher['title'], $env['data_portal_base_url'] . '/publisher/' . $publisher['key']);
-			$paragraph = t('A data publisher from ');
-			$paragraph .= (!empty($publisher['city'])) ? trim($publisher['city']) . ', ' : '';
-			$country_title = gbif_participant_country_lookup($publisher['country'], 'iso2', 'title');
-			$paragraph .= $country_title. ' with ';
-			$published = format_plural($publisher['numPublishedDatasets'],
-				'1 published dataset',
-				'@count published datasets'
-			);
-			$paragraph .= $published;
-			$paragraph .= '.';
+			$title_link = l($dataset['title'], $env['data_portal_base_url'] . '/dataset/' . $dataset['key']);
+			$paragraph = $dataset['type_formatted'] . '. ';
+			$paragraph .= format_plural($dataset['occurrence_count'],
+				'1 record',
+				'@count records',
+				array('@count' => number_format($dataset['occurrence_count']))
+			) . ' ';
+			$paragraph .= '(' . number_format($dataset['occurrence_geo']) . ' georeferenced). ';
+			$paragraph .= t('Published by ');
+			$paragraph .= l($dataset['publishingOrganizationTitle'], $env['data_portal_base_url'] . '/publisher/' . $dataset['publishingOrganizationKey']) . '.';
 		?>
-		<?php if ($mode == 'digest'): ?>
-		<li>
-			<?php print $title_link; ?><br>
-			<p><?php print $paragraph; ?></p>
-		</li>
-		<?php else: ?>
-			<li>
-				<strong><?php print $title_link; ?></strong> <span class="list-publisher-published"><?php print $published; ?></span><br>
-				<?php if (!empty($publisher['description'])): ?>
-				<p><?php print $publisher['description']; ?></p>
-				<?php endif; ?>
-			</li>
-		<?php endif; ?>
-	<?php endforeach; ?>
+<?php case 'CHECKLIST': ?>
+			<?php
+			$title_link = l($dataset['title'], $env['data_portal_base_url'] . '/dataset/' . $dataset['key']);
+			$paragraph = $dataset['type_formatted'] . '. ';
+			$paragraph .= format_plural($dataset['checklist_metrics']['usagesCount'],
+					'1 record',
+					'!count records',
+					array('!count' => number_format($dataset['checklist_metrics']['usagesCount']))
+			) . '. ';
+			$paragraph .= t('Published by ');
+			$paragraph .= l($dataset['publishingOrganizationTitle'], $env['data_portal_base_url'] . '/publisher/' . $dataset['publishingOrganizationKey']) . '.';
+			?>
+<?php endswitch; ?>
+	<li>
+		<?php print $title_link; ?><br>
+		<p><?php print $paragraph; ?></p>
+	</li>
+<?php endforeach; ?>
 </ul>

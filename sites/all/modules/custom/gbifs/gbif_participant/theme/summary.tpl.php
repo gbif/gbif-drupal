@@ -109,6 +109,7 @@
 				</div>
 				<div class="row">
 					<div class="content content-full">
+						<?php print $html['latest_dataset']; ?>
 					</div>
 				</div>
 			</section>

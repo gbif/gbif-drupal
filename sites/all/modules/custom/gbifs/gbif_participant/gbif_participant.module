@@ -11,7 +11,7 @@ function gbif_participant_menu() {
 	$items['country_php'] = array(
 		'title' => t('Countries, territories and islands'),
 		'description' => 'The entrance page for GBIF Participant countries',
-		'page callback' => 'gbif_participant_page_render',
+		'page callback' => 'gbif_participant_page_router',
 		'access callback' => TRUE,
 		'type' => MENU_NORMAL_ITEM,
 		'menu-name' => 'menu-country',
@@ -112,7 +112,14 @@ function gbif_participant_theme($existing, $type, $theme, $path) {
 		'gbif_participant_summary' => array(
 			'template' => 'summary',
 			'path' => $path . '/theme',
-			'variables' => array('participantID' => NULL, 'iso2' => NULL, 'node' => NULL, 'participant_ims' => NULL, 'html' => NULL),
+			'variables' => array(
+				'participantID' => NULL,
+				'iso2' => NULL,
+				'node' => NULL,
+				'participant_ims' => NULL,
+				'html' => NULL,
+				'registry_json' => NULL,
+			),
 		),
 		'gbif_participant_about' => array(
 			'template' => 'about',
@@ -237,8 +244,8 @@ function gbif_participant_preprocess_node(&$variables) {
 
 		// Contacts
 		$contacts = $json->contacts;
-		$variables['participant_ims']->contact_participation = _gbif_participant_print_contacts('participation', $contacts);
-		$variables['participant_ims']->contact_contacts = _gbif_participant_print_contacts('contacts', $contacts);
+		$variables['participant_ims']->contact_participation = _gbif_participant_print_contacts('participation', $contacts, $participant->iso2);
+		$variables['participant_ims']->contact_contacts = _gbif_participant_print_contacts('contacts', $contacts, $participant->iso2);
 
 		// Endorsed publishers
 		$variables['participant_ims']->endorsed_publishers = _gbif_participant_print_endorsed_publishers($participantID, $participant->iso2, 'digest');
@@ -248,6 +255,13 @@ function gbif_participant_preprocess_node(&$variables) {
 			$variables['participant_node']['social_media'] = _gbif_participant_format_social_media($variables['gp_comm_social']);
 		}
 	}
+}
+
+/**
+ * @todo Build an integrated participant data array from IMS, the Registry and Drupal.
+ */
+function gbif_participant_data_build($gp_id, $iso2) {
+
 }
 
 /**
@@ -298,7 +312,7 @@ function gbif_participant_page_build(&$page) {
  * @param $chapter
  * @return int|null|string
  */
-function gbif_participant_page_render($iso2, $chapter) {
+function gbif_participant_page_router($iso2, $chapter) {
 
 	if (!isset($iso2) && !isset($chapter)) {
 		$columns = _gbif_participant_country_list();
@@ -323,6 +337,8 @@ function gbif_participant_page_render($iso2, $chapter) {
 				->fieldCondition('gp_id', 'value', $participantID, '=');
 			$entity_query->execute();
 
+			$registry_json = _gbif_participant_get_registry_participant($participantID);
+
 			// Make sure there is only one node returned.
 			if (isset($entity_query->ordered_results) && count($entity_query->ordered_results) == 1) {
 				$nid = $entity_query->ordered_results[0]->entity_id;
@@ -339,6 +355,7 @@ function gbif_participant_page_render($iso2, $chapter) {
 						'node' => $node,
 						'participant_ims' => $results[0],
 						'html' => $html,
+						'registry_json' => $registry_json,
 					));
 				case 'about':
 					$html = _gbif_participant_country_data($iso2, $results[0]);
@@ -485,23 +502,6 @@ function gbif_participant_populate() {
 	}
 }
 
-/**
- * @todo Use local json to produce the list.
- * @todo Use http://api.gbif.org/v1/enumeration/country for the source.
- * @return mixed
- */
-function gbif_participant_country_query() {
-	$query = db_select('gbif_ims_country', 'c');
-	$query->leftjoin('gbif_ims_participant', 'p', 'p.countryID = c.countryID');
-	$query->addField('p', 'participantID', 'participantID');
-	$query->addField('c', 'name', 'country_name_full');
-	$query->addField('p', 'name_full', 'participant_name_full');
-	$query->addField('p', 'gbif_membership');
-	$query->addField('c', 'iso2', 'iso2');
-	$result = $query->execute()->fetchAll();
-	return $result;
-}
-
 function _gbif_participant_participant_query($participantID = NULL, $iso2 = NULL) {
 	$query = db_select('gbif_ims_participant', 'p');
 	$query->join('gbif_ims_node', 'n', 'n.participantID = p.participantID');
@@ -558,8 +558,8 @@ function _gbif_participant_print_address_fields($value) {
  * @todo Emit proper URLs for contacts.
  * @todo Rewire the IMS tables for contacts.
  */
-function _gbif_participant_print_contacts($position, $contacts) {
-	$current_path = current_path();
+function _gbif_participant_print_contacts($position, $contacts, $iso2) {
+	$contact_url_base = '/country_php/' . $iso2 . '/participation';
 	$html = '';
 	switch ($position) {
 		case 'participation':
@@ -568,7 +568,7 @@ function _gbif_participant_print_contacts($position, $contacts) {
 					case 'HEAD_OF_DELEGATION':
 						$html .= '<h3>Head of Delegation</h3>';
 						$html .= '<p>';
-						$html .= '<a href="#contact' . $contact->key . '">';
+						$html .= '<a href="' . $contact_url_base . '#contact' . $contact->key . '">';
 						$html .= $contact->firstName . ' ' . $contact->lastName;
 						$html .= '</a>';
 						$html .= '</p>';
@@ -576,7 +576,7 @@ function _gbif_participant_print_contacts($position, $contacts) {
 					case 'NODE_MANAGER':
 						$html .= '<h3>Participant Node Manager</h3>';
 						$html .= '<p>';
-						$html .= '<a href="#contact' . $contact->key . '">';
+						$html .= '<a href="' . $contact_url_base . '#contact' . $contact->key . '">';
 						$html .= $contact->firstName . ' ' . $contact->lastName;
 						$html .= '</a>';
 						$html .= '</p>';

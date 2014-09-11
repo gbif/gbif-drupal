@@ -4,7 +4,7 @@
 <div class="back-to-previous">
 	<div class="container">
 		<div class="row">
-			<p>&lt; <u><a href="/country/<?php print $iso2; ?>/participation#endorsed-publishers">Back to participation page</a></u></p>
+			<p>&lt; <u><?php print $html['link_back']; ?></u></p>
 		</div>
 	</div>
 </div>
@@ -13,12 +13,12 @@
       <section id="publishers" class="col-md-12 well well-lg well-margin-top clearfix"<?php print $attributes; ?>>
         <div class="row">
 					<header class="content-header col-md-8">
-						<h2><?php print $html['title']; ?></h2>
+						<h2><?php print $html['countries_title']; ?></h2>
 					</header>
         </div>
         <div class="row">
 					<div class="content content-full">
-						<?php print $html['list']; ?>
+						<?php print $html['countries_list']; ?>
 					</div>
         </div>
       </section>

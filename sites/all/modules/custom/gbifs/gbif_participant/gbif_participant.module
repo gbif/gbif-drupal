@@ -99,6 +99,30 @@ function gbif_participant_form_gbif_participant_node_form_alter(&$form, &$form_s
 }
 
 /**
+ * Implements hook_library().
+ */
+function gbif_participant_library() {
+	$path = drupal_get_path('module', 'gbif_participant');
+	$libraries['metrics'] = array(
+		'title' => 'Occurrence metrics',
+		'js' => array(
+			$path . '/js/loadMetrics.js' => array(
+				'type' => 'file',
+				'scope' => 'footer',
+				'weight' => 20,
+			)
+		),
+		'css' => array(
+			$path . '/css/metrics.css' => array(
+				'type' => 'file',
+				'weight' => 20,
+			),
+		)
+	);
+	return $libraries;
+}
+
+/**
  * Implements hook_theme().
  */
 function gbif_participant_theme($existing, $type, $theme, $path) {
@@ -206,6 +230,11 @@ function gbif_participant_theme($existing, $type, $theme, $path) {
 			'path' => $path . '/theme',
 			'variables' => array('participantID' => NULL, 'iso2' => NULL, 'node' => NULL, 'participant_ims' => NULL, 'html' => NULL),
 		),
+		'gp_metrics' => array(
+			'template' => 'metrics',
+			'path' => $path . '/theme',
+			'variables' => array('iso2' => NULL, 'repatri_mode' => NULL),
+		),
 	);
 }
 
@@ -229,11 +258,13 @@ function gbif_participant_menu_block_tree_alter(&$tree, &$config) {
  */
 function gbif_participant_preprocess_page(&$variables) {
 	if (isset($variables)) {
+
 		// Check if it's a participant.
 		$results = _gbif_participant_participant_query(NULL, arg(1));
 
 		// Preprocess for the menu tabs.
 		if (isset($variables['page']['menu']['menu_block_gbif_navigation_country_page'])) {
+			drupal_add_library('gbif_participant', 'metrics');
 			foreach ($variables['page']['menu']['menu_block_gbif_navigation_country_page']['#content'] as $k => $tab) {
 				if (gettype($k) == 'integer') {
 					$path = explode('/', $tab['#href']);

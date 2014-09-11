@@ -1,5 +1,5 @@
 <?php
-
+	$metrics_title = t('Data published by ') . gbif_participant_country_lookup($iso2, 'iso2', 'title');
 ?>
 <article id="country-data-publishing" class="container">
 	<div class="row">
@@ -51,11 +51,12 @@
 			<section id="data-published-by" class="col-md-12 well well-lg">
 				<div class="row">
 					<header class="content-header col-md-12">
-						<h2>Data published by</h2>
+						<h2><?php print $metrics_title; ?></h2>
 					</header>
 				</div>
 				<div class="row">
 					<div class="content content-full">
+						<?php print theme('gp_metrics', array('iso2' => $iso2, 'repatri_mode' => 'from')); ?>
 					</div>
 				</div>
 			</section>

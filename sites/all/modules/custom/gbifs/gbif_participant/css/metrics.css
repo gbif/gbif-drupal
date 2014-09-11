@@ -1,0 +1,21 @@
+table.metrics .total, tr.total td {
+  font-weight: bold !important;
+  background-color: #FFFFDF !important;
+}
+
+table.metrics td.title {
+  font-weight: bold !important;
+}
+
+table.metrics thead>tr>th {
+  border-bottom: none;
+  border-top: 1px solid #ddd !important;
+}
+
+table.metrics th:first-child {
+  border-radius: 0;
+}
+
+table.metrics th:last-child {
+    border-radius: 0;
+}

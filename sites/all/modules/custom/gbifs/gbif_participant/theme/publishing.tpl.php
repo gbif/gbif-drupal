@@ -30,6 +30,7 @@
 				</div>
 				<div class="row">
 					<div class="content content-full">
+						<?php print $html['latest_dataset']; ?>
 					</div>
 				</div>
 			</section>
@@ -37,11 +38,12 @@
 			<section id="countries-origin" class="col-md-12 well well-lg">
 				<div class="row">
 					<header class="content-header col-md-12">
-						<h2>Countries of origin</h2>
+						<h2><?php print $html['countries_title']; ?></h2>
 					</header>
 				</div>
 				<div class="row">
 					<div class="content content-full">
+						<?php print $html['countries_list']; ?>
 					</div>
 				</div>
 			</section>

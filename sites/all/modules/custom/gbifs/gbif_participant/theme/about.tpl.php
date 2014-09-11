@@ -25,11 +25,12 @@
 			<section id="largest-occurrence-datasets" class="col-md-12 well well-lg">
 				<div class="row">
 					<header class="content-header col-md-12">
-						<h2>Largest occurrence datasets about</h2>
+						<h2><?php print $html['largest_datasets_title']; ?></h2>
 					</header>
 				</div>
 				<div class="row">
 					<div class="content content-full">
+						<?php print $html['largest_datasets_list']; ?>
 					</div>
 				</div>
 			</section>

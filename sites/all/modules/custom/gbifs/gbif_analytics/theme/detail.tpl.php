@@ -163,13 +163,13 @@
 			</div>
 			<div class="row">
 				<div class="col-md-4">
-					<h4>All records</h4>
+					<h4 class="text-center">All records</h4>
 				</div>
 				<div class="col-md-4">
-					<h4>Specimen records</h4>
+					<h4 class="text-center">Specimen records</h4>
 				</div>
 				<div class="col-md-4">
-					<h4>Observation records</h4>
+					<h4 class="text-center">Observation records</h4>
 				</div>
 			</div>
 			<div class="row row-chart">
@@ -191,13 +191,13 @@
 			</div>
 			<div class="row">
 				<div class="col-md-4">
-					<h4>All records</h4>
+					<h4 class="text-center">All records</h4>
 				</div>
 				<div class="col-md-4">
-					<h4>Specimen records</h4>
+					<h4 class="text-center">Specimen records</h4>
 				</div>
 				<div class="col-md-4">
-					<h4>Observation records</h4>
+					<h4 class="text-center">Observation records</h4>
 				</div>
 			</div>
 			<div class="row row-chart">
@@ -219,13 +219,13 @@
 			</div>
 			<div class="row">
 				<div class="col-md-4">
-					<h4>All records</h4>
+					<h4 class="text-center">All records</h4>
 				</div>
 				<div class="col-md-4">
-					<h4>Specimen records</h4>
+					<h4 class="text-center">Specimen records</h4>
 				</div>
 				<div class="col-md-4">
-					<h4>Observation records</h4>
+					<h4 class="text-center">Observation records</h4>
 				</div>
 			</div>
 			<div class="row row-chart">
@@ -247,13 +247,13 @@
 			</div>
 			<div class="row">
 				<div class="col-md-4">
-					<h4>All records</h4>
+					<h4 class="text-center">All records</h4>
 				</div>
 				<div class="col-md-4">
-					<h4>Specimen records</h4>
+					<h4 class="text-center">Specimen records</h4>
 				</div>
 				<div class="col-md-4">
-					<h4>Observation records</h4>
+					<h4 class="text-center">Observation records</h4>
 				</div>
 			</div>
 			<div class="row row-chart">
@@ -283,13 +283,13 @@
 			</div>
 			<div class="row">
 				<div class="col-md-4">
-					<h4>1.0 degree</h4>
+					<h4 class="text-center">1.0 degree</h4>
 				</div>
 				<div class="col-md-4">
-					<h4>0.5 degree</h4>
+					<h4 class="text-center">0.5 degree</h4>
 				</div>
 				<div class="col-md-4">
-					<h4>0.1 degree</h4>
+					<h4 class="text-center">0.1 degree</h4>
 				</div>
 			</div>
 			<div class="row row-chart">

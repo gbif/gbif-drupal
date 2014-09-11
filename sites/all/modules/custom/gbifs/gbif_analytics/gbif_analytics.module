@@ -169,7 +169,7 @@ function _gbif_analytics_index_view($type, $extra_args) {
 function _columular_countries($json, $cols) {
 	// sort by country name
 	usort($json, function($a, $b) {
-		return (strnatcasecmp($a['name'], $b['name']));
+		return (strnatcasecmp($a['title'], $b['title']));
   });
 
 	$col_size = ceil(count($json) / $cols);
@@ -209,7 +209,7 @@ function _gbif_analytics_country_name($type, $iso2) {
 		$json = json_decode(file_get_contents(file_create_url($file)), true); // true required to return an array
 		foreach($json as $country) {
 			if($country['iso'] == $iso2) {
-				return $country['name'];
+				return $country['title'];
 			}
 		}
 	}

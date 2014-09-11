@@ -118,7 +118,7 @@
 							<p><?php print $participant_node['node_established']; ?></p>
 						<?php endif; ?>
 						<h3>Website</h3>
-						<p><?php print l($participant_ims->node_url, $participant_ims->node_url); ?></p>
+						<p><?php print l($participant_ims->node_url, $participant_ims->node_url, array('attributes' => array('target' => '_blank'))); ?></p>
           </aside>
         </div>
       </section>

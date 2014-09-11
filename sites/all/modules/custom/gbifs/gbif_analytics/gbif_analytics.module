@@ -1,0 +1,323 @@
+<?php
+/**
+ * @file
+ * gbif_analytics.module
+ */
+
+/**
+ * Provides the URL routing for the /analytics/* URLs.
+ * Implements hook_menu().
+ */
+function gbif_analytics_menu() {
+	$items['analytics'] = array(
+		'page callback' => '_gbif_analytics_detail_view',
+		'access callback' => TRUE, // unrestricted access to callback (no auth required)
+	);
+	$items['analytics/global'] = array(
+		'page callback' => '_gbif_analytics_detail_view',
+		'page arguments' => array('global'),
+		'access callback' => TRUE,
+	);
+	$items['analytics/faq'] = array(
+		'page callback' => '_gbif_analytics_faq_view',
+		'access callback' => TRUE,
+	);
+	$items['analytics/country/about'] = array(
+		'page callback' => '_gbif_analytics_index_view',
+		'page arguments' => array('about'),
+		'access callback' => TRUE,
+	);
+	$items['analytics/country/published'] = array(
+		'page callback' => '_gbif_analytics_index_view',
+		'page arguments' => array('published'),
+		'access callback' => TRUE,
+	);
+	$items['analytics/country/%/published'] = array(
+		'page callback' => '_gbif_analytics_detail_view',
+		'page arguments' => array('published', 2), // 3rd element in path (0 indexed)
+		'access callback' => TRUE,
+	);
+	$items['analytics/country/%/about'] = array(
+		'page callback' => '_gbif_analytics_detail_view',
+		'page arguments' => array('about', 2),
+		'access callback' => TRUE,
+	);
+	return $items;
+}
+
+/**
+ * Determines the template variables based on the options supplied, and returns the theme for the view.
+ * @param $type one of global, about or published
+ * @param $iso2 the country of interest (optional)
+ */
+function _gbif_analytics_detail_view($type, $iso2, $extra_args) {
+	// safeguard against bad URLs
+	if (is_null($type) || !is_null($extra_args) || ($type == 'global' && !is_null($iso2))) {
+		drupal_goto('analytics/global'); // redirect
+	}
+
+	# set the images URLs to be served from this machine
+	global $base_url;
+
+	# assets (e.g. the images) are included in the module, and needed by the template
+	$assets_url = $base_url . '/' . drupal_get_path('module', 'gbif_analytics');
+
+	$base_images_url = $base_url . '/sites/default/files/gbif_analytics/';
+	$country_name = _gbif_analytics_country_name($type, $iso2);
+
+	// safeguard against URLs with countries not found
+	if (is_null($country_name) && !is_null($iso2)) {
+		drupal_goto('analytics/global'); // redirect
+	}
+
+
+	if ($type == 'global') {
+		watchdog('analytics', 'ISO: ' . $iso2, array(), WATCHDOG_DEBUG);
+		$base_images_url = $base_images_url . "global/figure";
+		$data_sharing =
+			'This chart shows the total number of records published through GBIF over time, with separate colours for '
+			. 'records published from within the country where the species occurred, and those shared by publishers from '
+			. 'other countries.';
+	}
+	elseif ($type == 'about') {
+		$base_images_url = $base_images_url . 'country' . '/' . $iso2 . '/about/figure' ;
+		$data_sharing = 'This chart shows the number of records about biodiversity occurring in '
+			. $country_name
+			. ', with separate colours for records published from within '
+			. $country_name
+			. ', and those shared by publishers from other countries.';
+
+	} else {
+		$base_images_url = $base_images_url . 'country' . '/' . $iso2 . '/publishedBy/figure' ;
+		$data_sharing = 'This chart shows the number of records shared by publishers within '
+			. $country_name
+			. ' over time, with separate colours for records about species occurring in '
+			. $country_name
+			. ' and those occurring in other countries.';
+	}
+
+	return theme('detail', array(
+		'img_base_url' => $base_images_url,
+		'assets_url' => $assets_url,
+		'datasharing_description' => $data_sharing,
+	));
+}
+
+/**
+ * Renders the FAQ.
+ */
+function _gbif_analytics_faq_view($extra_args) {
+	// safeguard against bad URLs
+	if (!is_null($extra_args)) {
+		drupal_goto('analytics/global'); // redirect
+	}
+
+	return theme('faq', array());
+}
+
+/**
+ * Loads the index of countries (about or published by), prepares them for display and renders the template.
+ * @param $type either "about" or "published"
+ */
+function _gbif_analytics_index_view($type, $extra_args) {
+	// safeguard against bad URLs
+	if (!is_null($extra_args)) {
+		drupal_goto('analytics/global'); // redirect
+	}
+
+	// find the country index
+	$file = drupal_realpath(file_build_uri('gbif_analytics/countries_' . $type . '.json'));
+
+  if (file_exists(drupal_realpath($file)) == TRUE) {
+		$json = json_decode(file_get_contents(file_create_url($file)), true); // true required to return an array
+		watchdog('analytics', 'Number of countries: ' . count($json), array(), WATCHDOG_DEBUG);
+
+		// turn it into 4 columns for display
+		$columular_countries = _columular_countries($json, 4);
+	}
+	else {
+		watchdog('analytics', 'JSON country inventory file missing: ' . $file, array(), WATCHDOG_WARNING);
+		$columular_countries = array(); // defensive coding
+	}
+
+	if ($type == 'about') {
+		$heading = 'Available reports';
+		$description = 'Please select a country, territory or island to view a standard report summarizing the available ' .
+			'data about the location.';
+
+	}
+	else {
+		$heading = 'Available reports';
+		$description = 'Please select a country, territory or island to view a standard report summarizing the available ' .
+			'data published by institutions located there.';
+	}
+
+	return theme('index', array(
+		'heading' => $heading,
+		'type' => $type,
+		'columular_countries' => $columular_countries,
+		'description' => $description,
+	));
+}
+
+/**
+ * Splits the provided JSON into an array of columns, sorted by the name.
+ * @param $json which must be an array
+ * @param $cols number of columns to split into
+ * @return array of input data split into the columns
+ */
+function _columular_countries($json, $cols) {
+	// sort by country name
+	usort($json, function($a, $b) {
+		return (strnatcasecmp($a['name'], $b['name']));
+  });
+
+	$col_size = ceil(count($json) / $cols);
+  return array_chunk($json, $col_size);
+}
+
+/**
+ * Provides the mapping between the named action and the template location.
+ * Implements hook_theme().
+ */
+function gbif_analytics_theme() {
+	return array(
+		'detail' => array(
+			'template' => 'theme/detail',
+		),
+		'faq' => array(
+			'template' => 'theme/faq',
+		),
+		// select a country for data about
+		'index' => array(
+			'template' => 'theme/index',
+		),
+	);
+}
+
+/**
+ * Looks up the country name from the index file, using either the published, or about index file.
+ * The name must exist in the index for this to return a value.
+ * @param $type about or published
+ * @param $iso2 the iso code for the country
+ */
+function _gbif_analytics_country_name($type, $iso2) {
+	// find the country index
+	$file = drupal_realpath(file_build_uri('gbif_analytics/countries_' . $type . '.json'));
+
+	if (file_exists(drupal_realpath($file)) == TRUE) {
+		$json = json_decode(file_get_contents(file_create_url($file)), true); // true required to return an array
+		foreach($json as $country) {
+			if($country['iso'] == $iso2) {
+				return $country['name'];
+			}
+		}
+	}
+	return NULL;
+}
+
+/**
+ * Custom libraries for this module to load lightbox, and custom styling.
+ *
+ * Implements hook_library().
+ */
+function gbif_analytics_library() {
+	$path = drupal_get_path('module', 'gbif_analytics');
+	$libraries['lightbox'] = array(
+		'title' => 'Lightbox',
+		'js' => array(
+			$path . '/js/lightbox.min.js' => array(
+				'type' => 'file',
+				'scope' => 'footer',
+				'weight' => 20,
+			)
+		),
+		'css' => array(
+			$path . '/css/lightbox.css' => array(
+				'type' => 'file',
+				'weight' => 20,
+			),
+		)
+	);
+	$libraries['analytics'] = array(
+		'title' => 'GBIF Analytics custom styling',
+		'css' => array(
+			$path . '/css/gbif-analytics.css' => array(
+				'type' => 'file',
+				'weight' => 20,
+			),
+		)
+	);
+	return $libraries;
+}
+
+/**
+ * Load lightbox and custom page styling.
+ *
+ * Implements hook_preprocess_page().
+ */
+function gbif_analytics_preprocess_page(&$variables) {
+
+	// load in lightbox CSS and JS
+	watchdog('analytics', 'Loading custom libraries for module', array(), WATCHDOG_DEBUG);
+	drupal_add_library('gbif_analytics', 'lightbox');
+	drupal_add_library('gbif_analytics', 'analytics');
+
+	// Detect the URLs with the ISO code, and ensure the tab is highlighted
+	if (isset($variables['page']['menu']['menu_block_gbif_navigation_analytics'])) {
+		$current_path = explode('/', current_path());
+		// e.g. analytics/country/<ISO>/about or analytics/country/<ISO>/published
+		if (count($current_path) == 4) {
+			// items are registered in menu without the ISO
+			$menu_item = $current_path[0]  . '/' . $current_path[1] . '/' . $current_path[3];
+			// find the registered menu item and add the "active" CSS class to the attributes
+			foreach ($variables['page']['menu']['menu_block_gbif_navigation_analytics']['#content'] as $k => $tab) {
+				if (gettype($k) == 'integer') {
+					if ($tab['#href'] == $menu_item) {
+						watchdog('analytics', 'setting it!', array(), WATCHDOG_DEBUG);
+						// make it active
+						array_push($variables['page']['menu']['menu_block_gbif_navigation_analytics']['#content'][$k]['#attributes']['class'], "active");
+					}
+				}
+			}
+		}
+	}
+}
+
+/**
+ * Sets the menu title and slogan based on the URL.
+ * Implements hook_page_build().
+ */
+function gbif_analytics_page_build(&$page) {
+	if (isset($page) && arg(0) == 'analytics') {
+
+		$title = t('Global data trends');
+		$slogan = t('Trends in data availability on the GBIF network');
+
+		$current_path = explode('/', current_path());
+		if ($current_path[1] == 'faq') {
+			$title = t('FAQ');
+			$link_contact = l(t('contact us'), 'mailto:dev@gbif.org');
+			$slogan = t('Please !contact for questions about the data trends', array('!contact' => $link_contact));
+		}
+		else if (count($current_path) == 3) {
+			$title = t('Reports for a country');
+			$slogan = t('Trends in data availability on the GBIF network');
+		}
+		else if (count($current_path) == 4) {
+			// lookup the country name based on the iso code
+			$country_name = _gbif_analytics_country_name($current_path[3], $current_path[2]);
+			$title = $country_name . ' data trends';
+			if ($current_path[3] == 'published') {
+				$slogan = t('Summarizing the data published by institutions within !country_name available in the GBIF index over time.', array('!country_name' => $country_name));
+			}
+			else {
+				$slogan = t('Summarizing the data about !country_name available in the GBIF index over time.', array('!country_name' => $country_name));
+			}
+		}
+		$page['highlighted_title'] = array(
+			'name' => $title,
+			'description' => $slogan,
+		);
+	}
+}

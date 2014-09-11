@@ -11,10 +11,10 @@ function gbif_participant_menu() {
 	$items['country_php'] = array(
 		'title' => t('Countries, territories and islands'),
 		'description' => 'The entrance page for GBIF Participant countries',
-		'page callback' => 'gbif_participant_page_render',
+		'page callback' => 'gbif_participant_page_router',
 		'access callback' => TRUE,
 		'type' => MENU_NORMAL_ITEM,
-		'menu-name' => 'menu-country',
+		'menu-name' => 'country-page',
 	);
 	$items['admin/config/gbif/participant'] = array(
 		'title' => 'GBIF participant',
@@ -112,7 +112,14 @@ function gbif_participant_theme($existing, $type, $theme, $path) {
 		'gbif_participant_summary' => array(
 			'template' => 'summary',
 			'path' => $path . '/theme',
-			'variables' => array('participantID' => NULL, 'iso2' => NULL, 'node' => NULL, 'participant_ims' => NULL, 'html' => NULL),
+			'variables' => array(
+				'participantID' => NULL,
+				'iso2' => NULL,
+				'node' => NULL,
+				'participant_ims' => NULL,
+				'html' => NULL,
+				'registry_json' => NULL,
+			),
 		),
 		'gbif_participant_about' => array(
 			'template' => 'about',
@@ -132,6 +139,16 @@ function gbif_participant_theme($existing, $type, $theme, $path) {
 			'template' => 'publishers',
 			'path' => $path . '/theme',
 			'variables' => array('participantID' => NULL, 'iso2' => NULL, 'node' => NULL, 'participant_ims' => NULL, 'html' => NULL),
+		),
+		'gbif_participant_datasets_list_item' => array(
+			'template' => 'datasets-list-item',
+			'path' => $path . '/theme',
+			'variables' => array(
+				'datasets' => NULL,
+				'env' => NULL,
+				'iso2' => NULL,
+				'mode' => NULL,
+			),
 		),
 		'gbif_participant_publishers_list_item' => array(
 			'template' => 'publishers-list-item',
@@ -237,8 +254,8 @@ function gbif_participant_preprocess_node(&$variables) {
 
 		// Contacts
 		$contacts = $json->contacts;
-		$variables['participant_ims']->contact_participation = _gbif_participant_print_contacts('participation', $contacts);
-		$variables['participant_ims']->contact_contacts = _gbif_participant_print_contacts('contacts', $contacts);
+		$variables['participant_ims']->contact_participation = _gbif_participant_print_contacts('participation', $contacts, $participant->iso2);
+		$variables['participant_ims']->contact_contacts = _gbif_participant_print_contacts('contacts', $contacts, $participant->iso2);
 
 		// Endorsed publishers
 		$variables['participant_ims']->endorsed_publishers = _gbif_participant_print_endorsed_publishers($participantID, $participant->iso2, 'digest');
@@ -248,6 +265,13 @@ function gbif_participant_preprocess_node(&$variables) {
 			$variables['participant_node']['social_media'] = _gbif_participant_format_social_media($variables['gp_comm_social']);
 		}
 	}
+}
+
+/**
+ * @todo Build an integrated participant data array from IMS, the Registry and Drupal.
+ */
+function gbif_participant_data_build($gp_id, $iso2) {
+
 }
 
 /**
@@ -298,7 +322,7 @@ function gbif_participant_page_build(&$page) {
  * @param $chapter
  * @return int|null|string
  */
-function gbif_participant_page_render($iso2, $chapter) {
+function gbif_participant_page_router($iso2, $chapter) {
 
 	if (!isset($iso2) && !isset($chapter)) {
 		$columns = _gbif_participant_country_list();
@@ -323,6 +347,8 @@ function gbif_participant_page_render($iso2, $chapter) {
 				->fieldCondition('gp_id', 'value', $participantID, '=');
 			$entity_query->execute();
 
+			$registry_json = _gbif_participant_get_registry_participant($participantID);
+
 			// Make sure there is only one node returned.
 			if (isset($entity_query->ordered_results) && count($entity_query->ordered_results) == 1) {
 				$nid = $entity_query->ordered_results[0]->entity_id;
@@ -333,12 +359,14 @@ function gbif_participant_page_render($iso2, $chapter) {
 			switch ($chapter) {
 				case 'summary':
 					$html = _gbif_participant_country_data($iso2, $results[0]);
+					$html['latest_dataset'] = _gbif_participant_print_latest_datasets($iso2, NULL);
 					return theme('gbif_participant_summary', array(
 						'participantID' => $participantID,
 						'iso2' => $iso2,
 						'node' => $node,
 						'participant_ims' => $results[0],
 						'html' => $html,
+						'registry_json' => $registry_json,
 					));
 				case 'about':
 					$html = _gbif_participant_country_data($iso2, $results[0]);
@@ -558,8 +586,8 @@ function _gbif_participant_print_address_fields($value) {
  * @todo Emit proper URLs for contacts.
  * @todo Rewire the IMS tables for contacts.
  */
-function _gbif_participant_print_contacts($position, $contacts) {
-	$current_path = current_path();
+function _gbif_participant_print_contacts($position, $contacts, $iso2) {
+	$contact_url_base = '/country_php/' . $iso2 . '/participation';
 	$html = '';
 	switch ($position) {
 		case 'participation':
@@ -568,7 +596,7 @@ function _gbif_participant_print_contacts($position, $contacts) {
 					case 'HEAD_OF_DELEGATION':
 						$html .= '<h3>Head of Delegation</h3>';
 						$html .= '<p>';
-						$html .= '<a href="#contact' . $contact->key . '">';
+						$html .= '<a href="' . $contact_url_base . '#contact' . $contact->key . '">';
 						$html .= $contact->firstName . ' ' . $contact->lastName;
 						$html .= '</a>';
 						$html .= '</p>';
@@ -576,7 +604,7 @@ function _gbif_participant_print_contacts($position, $contacts) {
 					case 'NODE_MANAGER':
 						$html .= '<h3>Participant Node Manager</h3>';
 						$html .= '<p>';
-						$html .= '<a href="#contact' . $contact->key . '">';
+						$html .= '<a href="' . $contact_url_base . '#contact' . $contact->key . '">';
 						$html .= $contact->firstName . ' ' . $contact->lastName;
 						$html .= '</a>';
 						$html .= '</p>';
@@ -687,7 +715,7 @@ function _gbif_participant_print_endorsed_publishers($participantID, $iso2, $mod
 			$html = theme('gbif_participant_publishers_list_item', array('publishers' => $first_ten, 'env' => $env, 'mode' => $mode));
 			if ($count > 10) {
 				$remain_count = $count - 10;
-				$link_more = $remain_count . ' ' . l('more', 'country_php/' . $iso2 . '/publishers');
+				$link_more = l($remain_count . ' more', 'country_php/' . $iso2 . '/publishers');
 				$html .= $link_more . '...';
 			}
 			break;
@@ -698,6 +726,39 @@ function _gbif_participant_print_endorsed_publishers($participantID, $iso2, $mod
 	return $output;
 }
 
+function _gbif_participant_print_latest_datasets($iso2, $mode) {
+	$env = variable_get('environment_settings');
+	$api_call = _gbif_participant_api_dataset() . '/search?limit=7&publishingCountry=' . $iso2;
+	$json = json_decode(file_get_contents($api_call), TRUE);
+	$count = $json['count'];
+	$datasets = $json['results'];
+
+	foreach ($datasets as &$dataset) {
+		$dataset['type_formatted'] = _gbif_participant_format_datatype($dataset['type']);
+		switch ($dataset['type']) {
+			case 'OCCURRENCE':
+				$count_call = $env['gbif_api_base_url'] . '/v' . $env['gbif_api_version'] . '/occurrence/count?datasetKey=' . $dataset['key'];
+				$dataset['occurrence_count'] = json_decode(file_get_contents($count_call), TRUE);
+				$geo_call = $env['gbif_api_base_url'] . '/v' . $env['gbif_api_version'] . '/occurrence/count?datasetKey=' . $dataset['key'] . '&isGeoreferenced=true';
+				$dataset['occurrence_geo'] = json_decode(file_get_contents($geo_call), TRUE);
+				break;
+			case 'CHECKLIST': // http://api.gbif.org/v1/dataset/66dd0960-2d7d-46ee-a491-87b9adcfe7b1/metrics
+				$metrics_call = $env['gbif_api_base_url'] . '/v' . $env['gbif_api_version'] . '/dataset/' . $dataset['key'] . '/metrics';
+				$dataset['checklist_metrics'] = json_decode(file_get_contents($metrics_call), TRUE);
+				break;
+		}
+	}
+
+	$output = theme('gbif_participant_datasets_list_item', array('datasets' => $datasets, 'env' => $env, 'iso2' => $iso2, 'mode' => $mode));
+
+	if ($count > 7) {
+		$remain_count = $count - 7;
+		$link_more = l($remain_count . ' more', $env['data_portal_base_url'] . '/dataset/search?publishingCountry=' . $iso2);
+		$output .= $link_more . '...';
+	}
+
+	return $output;
+}
 
 /**
  * Helper function for getting the corresponding participant info from
@@ -729,6 +790,11 @@ function _gbif_participant_api_registry_node() {
 	return $env['gbif_api_base_url'] . '/v' . $env['gbif_api_version'] . '/node';
 }
 
+function _gbif_participant_api_dataset() {
+	$env = variable_get('environment_settings');
+	return $env['gbif_api_base_url'] . '/v' . $env['gbif_api_version'] . '/dataset';
+}
+
 /**
  * Helper function for formatting the region text.
  * @param $region
@@ -757,6 +823,14 @@ function _gbif_participant_format_role($role) {
 		'NODE_STAFF' => t('Node Staff'),
 	);
 	return $roles[$role];
+}
+
+function _gbif_participant_format_datatype($type) {
+	$types = array(
+		'OCCURRENCE' => t('Occurrence dataset'),
+		'CHECKLIST' => t('Checklist dataset'),
+	);
+	return $types[$type];
 }
 
 /**

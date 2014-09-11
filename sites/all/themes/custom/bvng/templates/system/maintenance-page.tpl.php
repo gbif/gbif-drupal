@@ -16,7 +16,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<link rel="shortcut icon" href="/sites/all/themes/custom/bvng/favicon.ico" type="image/vnd.microsoft.icon" />
 	<meta name="Generator" content="Drupal 7 (http://drupal.org)" />
-  <title>Page not found | GBIF.ORG</title>
+  <title>Page not found | GBIF.org</title>
   <style>@import url("/modules/system/system.base.css?n7sm76");</style>
 	<style>@import url("/sites/all/themes/custom/bvng/css/style.css?n7sm76");</style>
   <!-- HTML5 element support for IE6-8 -->
@@ -47,7 +47,7 @@
     		<div class="navbar-header">
     			<div id="branding">
         		<a class="logo" href="/" title="Home"><img src="/sites/all/themes/custom/bvng/logo.png" alt="Home" /></a>
-        		<h1><a href="/" title="Home">GBIF.ORG</a></h1>
+        		<h1><a href="/" title="Home">GBIF.org</a></h1>
         		<span>Free and Open Access to Biodiversity Data</span>
           </div>
           <div id="navigation-menu" class="nav-inline">
@@ -66,7 +66,7 @@
   <div class="container">
     <div class="row">
       <div id="region-highlighted" class="col-md-12">
-        <h1>GBIF.ORG is under maintenance</h1>
+        <h1>GBIF.org is under maintenance</h1>
         <h5>We are sorry for the inconvenience</h5>
   		</div>
       <div id="region-menu" class="col-md-11"></div>

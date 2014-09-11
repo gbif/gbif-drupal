@@ -1,6 +1,22 @@
 <?php
 	// Make sure the country code is in UPPERCASE so the map tiles will show.
 	$iso2 = strtoupper($iso2);
+	// Process node information from the Registry.
+	// @todo To combine this with what's done in _preprocess_node().
+	// Format the date to only show year.
+	$timestamp = strtotime($participant_ims->member_as_of);
+	$year = date('Y', $timestamp);
+	$participant_ims->member_as_of = $year;
+	// GBIF region
+	$participant_ims->gbif_region = _gbif_participant_print_region($registry_json->gbifRegion);
+	// Contacts
+	$participant_ims->contact_participation = _gbif_participant_print_contacts('participation', $registry_json->contacts, $iso2);
+	// Node established
+	$timestamp = strtotime($node->gp_node_established['und'][0]['value']);
+	if ($timestamp != FALSE) {
+		$year = date('Y', $timestamp);
+		$participant_node['node_established'] = $year;
+	}
 ?>
 <article id="country-summary" class="container">
 	<div class="row">
@@ -79,7 +95,7 @@
 							<p><?php print $participant_node['node_established']; ?></p>
 						<?php endif; ?>
 						<h3>Website</h3>
-						<p><?php print l($participant_ims->node_url, $participant_ims->node_url); ?></p>
+						<p><?php print l($participant_ims->node_url, $participant_ims->node_url, array('attributes' => array('target' => '_blank'))); ?></p>
 					</aside>
 				</div>
 			</section>
@@ -92,6 +108,7 @@
 				</div>
 				<div class="row">
 					<div class="content content-full">
+						<?php print $html['latest_dataset']; ?>
 					</div>
 				</div>
 			</section>

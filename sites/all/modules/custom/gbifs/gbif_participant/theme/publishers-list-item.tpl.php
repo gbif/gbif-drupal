@@ -5,11 +5,10 @@
 			$paragraph = t('A data publisher from ');
 			$paragraph .= (!empty($publisher['city'])) ? trim($publisher['city']) . ', ' : '';
 			$country_title = gbif_participant_country_lookup($publisher['country'], 'iso2', 'title');
-			$paragraph .= $country_title. ' with ' . $publisher['numPublishedDatasets'] . ' ';
+			$paragraph .= $country_title. ' with ';
 			$published = format_plural($publisher['numPublishedDatasets'],
-				'@count published dataset',
-				'@count published datasets',
-				array()
+				'1 published dataset',
+				'@count published datasets'
 			);
 			$paragraph .= $published;
 			$paragraph .= '.';

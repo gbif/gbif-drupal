@@ -1,6 +1,6 @@
-Summary {"url":"country_php\/summary"}
-Data About {"url":"country_php\/about"}
-Data Publishing {"url":"country_php\/publishing"}
-Participation {"url":"country_php\/participation"}
-News {"url":"country_php\/news"}
-Publications {"url":"country_php\/publications"}
+Summary {"url":"country\/summary"}
+Data About {"url":"country\/about"}
+Data Publishing {"url":"country\/publishing"}
+Participation {"url":"country\/participation"}
+News {"url":"country\/news"}
+Publications {"url":"country\/publications"}

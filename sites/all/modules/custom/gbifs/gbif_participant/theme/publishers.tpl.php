@@ -82,7 +82,7 @@
 <div class="back-to-previous">
 	<div class="container">
 		<div class="row">
-			<p>&lt; <u><a href="/country_php/<?php print $iso2; ?>/participation#endorsed-publishers">Back to participation page</a></u></p>
+			<p>&lt; <u><a href="/country/<?php print $iso2; ?>/participation#endorsed-publishers">Back to participation page</a></u></p>
 		</div>
 	</div>
 </div>

@@ -8,7 +8,7 @@
  * Implements hook_menu().
  */
 function gbif_participant_menu() {
-	$items['country_php'] = array(
+	$items['country'] = array(
 		'title' => t('Countries, territories and islands'),
 		'description' => 'The entrance page for GBIF Participant countries',
 		'page callback' => 'gbif_participant_page_router',
@@ -278,7 +278,7 @@ function gbif_participant_data_build($gp_id, $iso2) {
  * Implements hook_page_build().
  */
 function gbif_participant_page_build(&$page) {
-	if (isset($page) && arg(0) == 'country_php') {
+	if (isset($page) && arg(0) == 'country') {
 		// Prepare the text for use in the banner region.
 		// @todo To move this into an earlier phase of processing.
 		$results = _gbif_participant_participant_query(NULL, arg(1));
@@ -329,7 +329,7 @@ function gbif_participant_page_router($iso2, $chapter) {
 		return theme('gbif_participant_countries', array('columns' => $columns));
 	}
 	elseif (isset($iso2) && !isset($chapter)) {
-		drupal_goto('country_php/' . $iso2 . '/summary');
+		drupal_goto('country/' . $iso2 . '/summary');
 	}
 	elseif (isset($iso2) && isset($chapter)) {
 		// Use ISO 2-digit code to look up the content about the participation.
@@ -587,7 +587,7 @@ function _gbif_participant_print_address_fields($value) {
  * @todo Rewire the IMS tables for contacts.
  */
 function _gbif_participant_print_contacts($position, $contacts, $iso2) {
-	$contact_url_base = '/country_php/' . $iso2 . '/participation';
+	$contact_url_base = '/country/' . $iso2 . '/participation';
 	$html = '';
 	switch ($position) {
 		case 'participation':
@@ -715,7 +715,7 @@ function _gbif_participant_print_endorsed_publishers($participantID, $iso2, $mod
 			$html = theme('gbif_participant_publishers_list_item', array('publishers' => $first_ten, 'env' => $env, 'mode' => $mode));
 			if ($count > 10) {
 				$remain_count = $count - 10;
-				$link_more = l($remain_count . ' more', 'country_php/' . $iso2 . '/publishers');
+				$link_more = l($remain_count . ' more', 'country/' . $iso2 . '/publishers');
 				$html .= $link_more . '...';
 			}
 			break;
@@ -1074,7 +1074,7 @@ function _gbif_participant_country_list() {
 		$country_list = '<ul>';
 		foreach ($chunk as $country) {
 			if ($country['official'] == "true") {
-				$link = l($country['title'], 'country_php/' . $country['iso2']);
+				$link = l($country['title'], 'country/' . $country['iso2']);
 				$country_list .= '<li class="country ';
 				$country_list .= (!empty($country['gbif_membership'])) ? 'participant' : '';
 				$country_list .= '">';

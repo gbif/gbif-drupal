@@ -2,8 +2,8 @@ Data {"url":"<front>"}
 -Explore occurrences {"url":"occurrence", "non_drupal_url":true}
 -Explore species {"url":"species", "non_drupal_url":true}
 -Explore dataset {"url":"dataset", "non_drupal_url":true}
--Explore by country {"url":"country", "non_drupal_url":true}
--Explore data trends {"url":"analytics/global"}
+-Explore by country {"url":"country"}
+-Explore data trends {"url":"analytics\/global"}
 -Separator {"url":"<separator>"}        
 -Publishing data {"url":"publishingdata\/summary", "description": "How and why you should make biodiversity datasets accessible through GBIF"}
 --Summary {"url":"publishingdata\/summary", "description": "How and why you should make biodiversity datasets accessible through GBIF"}

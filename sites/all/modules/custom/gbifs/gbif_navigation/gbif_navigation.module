@@ -83,7 +83,7 @@ function gbif_navigation_block_info_alter(&$block, $theme, $code_blocks) {
 			$block['menu_block']['gbif_navigation_country_page']['region'] = 'menu';
 			$block['menu_block']['gbif_navigation_country_page']['title'] = '<none>';
 			$block['menu_block']['gbif_navigation_country_page']['visibility'] = BLOCK_VISIBILITY_LISTED;
-			$block['menu_block']['gbif_navigation_country_page']['pages'] = "country_php/*";
+			$block['menu_block']['gbif_navigation_country_page']['pages'] = "country/*";
 
 			$block['menu_block']['gbif_navigation_analytics']['weight'] = 6;
 			$block['menu_block']['gbif_navigation_analytics']['status'] = 1;

@@ -17,7 +17,6 @@
 		$year = date('Y', $timestamp);
 		$participant_node['node_established'] = $year;
 	}
-
 ?>
 <article id="country-summary" class="container">
 	<div class="row">

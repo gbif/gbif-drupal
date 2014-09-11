@@ -18,7 +18,7 @@
 				  foreach ($columular_countries as $col) {
 					  print '<div class="col-md-3"><ul class="list-unstyled">';
 						foreach ($col as $country_json) {
-						  print '<li><a href="' . $country_json['iso'] . '/' . $type . '">' . $country_json['name'] . '</a></li>';
+						  print '<li><a href="' . $country_json['iso'] . '/' . $type . '">' . $country_json['title'] . '</a></li>';
 						}
 						print '</ul></div>';
 					}

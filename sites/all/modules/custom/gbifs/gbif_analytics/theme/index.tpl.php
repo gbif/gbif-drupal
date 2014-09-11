@@ -1,3 +1,5 @@
+// @todo to comply with the alternative syntax for control structures
+// @see http://php.net/manual/en/control-structures.alternative-syntax.php
 <article class="container">
 	<div class="row">
 		<section id="countries" class="col-md-12 well well-lg">

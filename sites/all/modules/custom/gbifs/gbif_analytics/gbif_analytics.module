@@ -297,7 +297,8 @@ function gbif_analytics_page_build(&$page) {
 		$current_path = explode('/', current_path());
 		if ($current_path[1] == 'faq') {
 			$title = t('FAQ');
-			$slogan = 'Please <a href="mailto:dev@gbif.org">contact us</a> for questions about the data trends';
+			$link_contact = l(t('contact us'), 'mailto:dev@gbif.org');
+			$slogan = t('Please !contact for questions about the data trends', array('!contact' => $link_contact));
 		}
 		else if (count($current_path) == 3) {
 			$title = t('Reports for a country');
@@ -308,10 +309,10 @@ function gbif_analytics_page_build(&$page) {
 			$country_name = _gbif_analytics_country_name($current_path[3], $current_path[2]);
 			$title = $country_name . ' data trends';
 			if ($current_path[3] == 'published') {
-				$slogan = t('Summarizing the data published by institutions within ' . $country_name . ' available in the GBIF index over time.');
+				$slogan = t('Summarizing the data published by institutions within !country_name available in the GBIF index over time.', array('!country_name' => $country_name));
 			}
 			else {
-				$slogan = t('Summarizing the data about ' . $country_name . ' available in the GBIF index over time.');
+				$slogan = t('Summarizing the data about !country_name available in the GBIF index over time.', array('!country_name' => $country_name));
 			}
 		}
 		$page['highlighted_title'] = array(

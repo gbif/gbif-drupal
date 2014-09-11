@@ -823,6 +823,7 @@ function _gbif_participant_print_endorsed_publishers($participantID, $iso2, $mod
 
 function _gbif_participant_print_latest_datasets($iso2, $mode) {
 	$env = variable_get('environment_settings');
+	// E.g. http://api.gbif.org/v1/dataset/search?limit=7&publishingCountry=ES
 	$api_call = _gbif_participant_api_dataset() . '/search?limit=7&publishingCountry=' . $iso2;
 	$json = json_decode(file_get_contents($api_call), TRUE);
 	$count = $json['count'];
@@ -830,6 +831,11 @@ function _gbif_participant_print_latest_datasets($iso2, $mode) {
 
 	foreach ($datasets as &$dataset) {
 		$dataset['type_formatted'] = _gbif_participant_format_datatype($dataset['type']);
+		$m_call = _gbif_participant_api_dataset() . '/' . $dataset['key'];
+		$m_json = json_decode(file_get_contents($m_call), TRUE);
+		$dataset['timestamp'] = strtotime($m_json['modified']);
+		$dataset['updated'] = t('Updated') . ' ' . date('d M, Y', $dataset['timestamp']);
+
 		switch ($dataset['type']) {
 			case 'OCCURRENCE':
 				$count_call = $env['gbif_api_base_url'] . '/v' . $env['gbif_api_version'] . '/occurrence/count?datasetKey=' . $dataset['key'];
@@ -843,6 +849,8 @@ function _gbif_participant_print_latest_datasets($iso2, $mode) {
 				break;
 		}
 	}
+
+	usort($datasets, 'cmp_by_timestamp');
 
 	$output = theme('gbif_participant_datasets_list_item', array('datasets' => $datasets, 'env' => $env, 'iso2' => $iso2, 'mode' => $mode));
 
@@ -1391,4 +1399,8 @@ function _gbif_participant_country_list() {
 	}
 
 	return $columns;
+}
+
+function cmp_by_timestamp($a, $b) {
+	return $b['timestamp'] - $a['timestamp'];
 }

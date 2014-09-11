@@ -5,10 +5,11 @@
 		<?php
 			$title_link = l($dataset['title'], $env['data_portal_base_url'] . '/dataset/' . $dataset['key']);
 			$paragraph = $dataset['type_formatted'] . '. ';
+			$paragraph .= $dataset['updated'] . '. ';
 			$paragraph .= format_plural($dataset['occurrence_count'],
-				'1 record',
-				'@count records',
-				array('@count' => number_format($dataset['occurrence_count']))
+				' record',
+				'!count records',
+				array('!count' => number_format($dataset['occurrence_count']))
 			) . ' ';
 			$paragraph .= '(' . number_format($dataset['occurrence_geo']) . ' georeferenced). ';
 			$paragraph .= t('Published by ');
@@ -19,6 +20,7 @@
 			<?php
 			$title_link = l($dataset['title'], $env['data_portal_base_url'] . '/dataset/' . $dataset['key']);
 			$paragraph = $dataset['type_formatted'] . '. ';
+			$paragraph .= $dataset['updated'] . '. ';
 			$paragraph .= format_plural($dataset['checklist_metrics']['usagesCount'],
 					'1 record',
 					'!count records',

@@ -8,7 +8,7 @@
 				</header>
 			</div>
 			<div class="row">
-				<div class="col-md-12">
+				<div class="content content-full">
 					<dl class="faq">
 						<dt><a href="#context1" id="context1">Who is producing these charts and why?</a></dt>
 						<dd>The GBIF Secretariat is producing information on data mobilization trends observed on the GBIF network.
@@ -17,8 +17,8 @@
 							to be targeted to improve the fitness-for-use of the data.</dd>
 
 						<dt><a href="#context2" id="context2">Are these reports available as a download?</a></dt>
-						<dd>Not currently, but if considered useful this can be implemented.  Please use the feedback button on the
-							site to request this feature.</dd>
+						<dd>Not currently, but we plan to add this feature in 2015. If you are interested in being able to download these reports,
+							please use the feedback button on the side of this page to explain how you would wish to see this feature implemented.</dd>
 
 						<dt><a href="#context3" id="context3">Can I reproduce these charts in my national reports?</a></dt>
 						<dd>Yes, however we encourage that they be reviewed before doing so.</dd>
@@ -44,7 +44,7 @@
 				</header>
 			</div>
 			<div class="row">
-				<div class="col-md-12">
+				<div class="content content-full">
 					<dl class="faq">
 						<dt><a href="#imp1" id="imp1">How have these trends been produced?</a></dt>
 						<dd>The project is documented on the <a href="https://github.com/gbif/analytics">GitHub project site</a>.
@@ -93,7 +93,7 @@
 				</header>
 			</div>
 			<div class="row">
-				<div class="col-md-12">
+				<div class="content content-full">
 					<dl class="faq">
 						<dt><a href="#inv1" id="inv1">What can I do to improve the completeness of records available through GBIF?</a></dt>
 						<dd>A complete record is here defined as having species identification, valid coordinates and the full date of

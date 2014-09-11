@@ -140,8 +140,23 @@ function gbif_participant_theme($existing, $type, $theme, $path) {
 			'path' => $path . '/theme',
 			'variables' => array('participantID' => NULL, 'iso2' => NULL, 'node' => NULL, 'participant_ims' => NULL, 'html' => NULL),
 		),
+		'gp_about_datasets' => array(
+			'template' => 'about-datasets',
+			'path' => $path . '/theme',
+			'variables' => array('participantID' => NULL, 'iso2' => NULL, 'node' => NULL, 'participant_ims' => NULL, 'html' => NULL),
+		),
 		'gbif_participant_datasets_list_item' => array(
 			'template' => 'datasets-list-item',
+			'path' => $path . '/theme',
+			'variables' => array(
+				'datasets' => NULL,
+				'env' => NULL,
+				'iso2' => NULL,
+				'mode' => NULL,
+			),
+		),
+		'gp_largest_datasets_list_item' => array(
+			'template' => 'largest-datasets-list-item',
 			'path' => $path . '/theme',
 			'variables' => array(
 				'datasets' => NULL,
@@ -211,6 +226,9 @@ function gbif_participant_preprocess_page(&$variables) {
 				// If on the list of publisher, highlight the tab with class '.back-menu'.
 				$current_path = current_path();
 				if (gettype($k) == 'integer' && $tab['#title'] == 'Participation' && drupal_match_path($current_path, '*/'. $iso2 . '/publishers')) {
+					$variables['page']['menu']['menu_block_gbif_navigation_country_page']['#content'][$k]['#attributes']['class'][] = 'back-menu';
+				}
+				if (gettype($k) == 'integer' && $tab['#title'] == 'Data About' && drupal_match_path($current_path, '*/'. $iso2 . '/about/datasets')) {
 					$variables['page']['menu']['menu_block_gbif_navigation_country_page']['#content'][$k]['#attributes']['class'][] = 'back-menu';
 				}
 			}
@@ -369,14 +387,30 @@ function gbif_participant_page_router($iso2, $chapter) {
 						'registry_json' => $registry_json,
 					));
 				case 'about':
-					$html = _gbif_participant_country_data($iso2, $results[0]);
-					return theme('gbif_participant_about', array(
-						'participantID' => $participantID,
-						'iso2' => $iso2,
-						'node' => $node,
-						'participant_ims' => $results[0],
-						'html' => $html,
-					));
+					if (arg(3) == 'datasets') {
+					$html = array();
+					$largest_dataset = _gbif_participant_print_largest_datasets($iso2, 'full');
+					$html = array_merge($html, $largest_dataset);
+						return theme('gp_about_datasets', array(
+							'participantID' => $participantID,
+							'iso2' => $iso2,
+							'node' => $node,
+							'participant_ims' => $results[0],
+							'html' => $html,
+						));
+					}
+					else {
+						$html = _gbif_participant_country_data($iso2, $results[0]);
+						$largest_dataset = _gbif_participant_print_largest_datasets($iso2, 'digest');
+						$html = array_merge($html, $largest_dataset);
+						return theme('gbif_participant_about', array(
+							'participantID' => $participantID,
+							'iso2' => $iso2,
+							'node' => $node,
+							'participant_ims' => $results[0],
+							'html' => $html,
+						));
+					}
 				case 'publishing':
 					$html = _gbif_participant_country_data($iso2, $results[0]);
 					return theme('gbif_participant_publishing', array(
@@ -760,6 +794,86 @@ function _gbif_participant_print_latest_datasets($iso2, $mode) {
 	return $output;
 }
 
+function _gbif_participant_print_largest_datasets($iso2, $mode) {
+	$env = variable_get('environment_settings');
+	$api_call = _gbif_participant_api_occurrence() . '/counts/datasets?country=' . $iso2;
+	$json = json_decode(file_get_contents($api_call), TRUE);
+	$count = count($json);
+	$datasets = $json;
+	if ($mode == 'digest') {
+		$datasets = array_slice($datasets, 0, 6, TRUE);
+	}
+	$country_title = gbif_participant_country_lookup($iso2, 'iso2', 'title');
+	$output = array();
+
+	foreach ($datasets as $k => &$dataset) {
+		$d_count = $dataset;
+		$d = array('count_within_country' => $d_count);
+		$d['dataset_key'] = $k;
+
+		// Get country name
+		$d['country'] = $country_title;
+
+		// Get dataset metadata
+		$d_call = _gbif_participant_api_dataset() . '/' . $k;
+		$d_json = json_decode(file_get_contents($d_call), TRUE);
+
+		$d['title'] = $d_json['title'];
+		$d['description'] = $d_json['description'];
+		$d['modified'] = $d_json['modified'];
+		$d['type_formatted'] = _gbif_participant_format_datatype($d_json['type']);
+
+		// Get dataset counts
+		$d_call = _gbif_participant_api_occurrence() . '/count?datasetKey=' . $k;
+		$d_json = json_decode(file_get_contents($d_call), TRUE);
+
+		$d['occurrence_count'] = $d_json;
+		$percentage = $d['count_within_country'] / $d['occurrence_count'];
+		$d['percentage'] = number_format((float)$percentage, 2, '.', '');
+
+		$dataset = $d;
+	}
+
+	switch ($mode) {
+		case 'full':
+			$per_page = 25;
+			$current_page = pager_default_initialize($count, $per_page);
+			$chunks = array_chunk($datasets, $per_page, TRUE);
+			$html = theme('gp_largest_datasets_list_item', array('datasets' => $chunks[$current_page], 'env' => $env, 'iso2' => $iso2, 'mode' => $mode));
+			$html .= '<hr>';
+			$html .= theme('pager', array('page', count($datasets)));
+
+			$title = $count;
+			$title .= format_plural($count,
+				' occurrence dataset about ',
+				' occurrence datasets about ',
+				array()
+			);
+			$title .= $country_title;
+			$output['largest_datasets_title'] = $title;
+
+			$link_back = t('Back to data about !country', array('!country' => $country_title));
+			$link_back = l($link_back, 'country/' . $iso2 . '/about');
+			$output['link_back'] = $link_back;
+
+			break;
+
+		case 'digest':
+			$output['largest_datasets_title'] = t('Largest occurrence datasets about') . ' ' . $country_title;
+			$html = theme('gp_largest_datasets_list_item', array('datasets' => $datasets, 'env' => $env, 'iso2' => $iso2, 'mode' => $mode));
+			if ($count > 6) {
+				$remain_count = $count - 6;
+				$link_more = l($remain_count . ' more', 'country/' . $iso2 . '/about/datasets');
+				$html .= $link_more . '...';
+			}
+			break;
+	}
+
+	$output['largest_datasets_list'] = $html;
+
+	return $output;
+}
+
 /**
  * Helper function for getting the corresponding participant info from
  * the Registry.
@@ -793,6 +907,11 @@ function _gbif_participant_api_registry_node() {
 function _gbif_participant_api_dataset() {
 	$env = variable_get('environment_settings');
 	return $env['gbif_api_base_url'] . '/v' . $env['gbif_api_version'] . '/dataset';
+}
+
+function _gbif_participant_api_occurrence() {
+	$env = variable_get('environment_settings');
+	return $env['gbif_api_base_url'] . '/v' . $env['gbif_api_version'] . '/occurrence';
 }
 
 /**

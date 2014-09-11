@@ -126,6 +126,32 @@ function gbif_participant_theme($existing, $type, $theme, $path) {
 			'path' => $path . '/theme',
 			'variables' => array('participantID' => NULL, 'iso2' => NULL, 'node' => NULL, 'participant_ims' => NULL, 'html' => NULL),
 		),
+		'gp_country_repatriation_list_item' => array(
+			'template' => 'country-repatriation-list-item',
+			'path' => $path . '/theme',
+			'variables' => array(
+				'countries' => NULL,
+				'env' => NULL,
+				'iso2' => NULL,
+				'list_mode' => NULL,
+			),
+		),
+		'gp_about_datasets' => array(
+			'template' => 'about-datasets',
+			'path' => $path . '/theme',
+			'variables' => array('participantID' => NULL, 'iso2' => NULL, 'node' => NULL, 'participant_ims' => NULL, 'html' => NULL),
+		),
+		'gp_about_countries' => array(
+			'template' => 'countries-full-list',
+			'path' => $path . '/theme',
+			'variables' => array(
+				'participantID' => NULL,
+				'iso2' => NULL,
+				'node' => NULL,
+				'participant_ims' => NULL,
+				'html' => NULL
+			),
+		),
 		'gbif_participant_publishing' => array(
 			'template' => 'publishing',
 			'path' => $path . '/theme',
@@ -137,11 +163,6 @@ function gbif_participant_theme($existing, $type, $theme, $path) {
 		),
 		'gbif_participant_publishers' => array(
 			'template' => 'publishers',
-			'path' => $path . '/theme',
-			'variables' => array('participantID' => NULL, 'iso2' => NULL, 'node' => NULL, 'participant_ims' => NULL, 'html' => NULL),
-		),
-		'gp_about_datasets' => array(
-			'template' => 'about-datasets',
 			'path' => $path . '/theme',
 			'variables' => array('participantID' => NULL, 'iso2' => NULL, 'node' => NULL, 'participant_ims' => NULL, 'html' => NULL),
 		),
@@ -229,6 +250,9 @@ function gbif_participant_preprocess_page(&$variables) {
 					$variables['page']['menu']['menu_block_gbif_navigation_country_page']['#content'][$k]['#attributes']['class'][] = 'back-menu';
 				}
 				if (gettype($k) == 'integer' && $tab['#title'] == 'Data About' && drupal_match_path($current_path, '*/'. $iso2 . '/about/datasets')) {
+					$variables['page']['menu']['menu_block_gbif_navigation_country_page']['#content'][$k]['#attributes']['class'][] = 'back-menu';
+				}
+				if (gettype($k) == 'integer' && $tab['#title'] == 'Data About' && drupal_match_path($current_path, '*/'. $iso2 . '/about/countries')) {
 					$variables['page']['menu']['menu_block_gbif_navigation_country_page']['#content'][$k]['#attributes']['class'][] = 'back-menu';
 				}
 			}
@@ -399,10 +423,24 @@ function gbif_participant_page_router($iso2, $chapter) {
 							'html' => $html,
 						));
 					}
+					elseif (arg(3) == 'countries') {
+						$html = array();
+						$full_list = _gp_country_repatriation($iso2, 'full', 'about');
+						$html = array_merge($html, $full_list);
+						return theme('gp_about_countries', array(
+							'participantID' => $participantID,
+							'iso2' => $iso2,
+							'node' => $node,
+							'participant_ims' => $results[0],
+							'html' => $html,
+						));
+					}
 					else {
 						$html = _gbif_participant_country_data($iso2, $results[0]);
 						$largest_dataset = _gbif_participant_print_largest_datasets($iso2, 'digest');
 						$html = array_merge($html, $largest_dataset);
+						$contributed_by = _gp_country_repatriation($iso2, 'digest', 'about');
+						$html = array_merge($html, $contributed_by);
 						return theme('gbif_participant_about', array(
 							'participantID' => $participantID,
 							'iso2' => $iso2,
@@ -853,7 +891,7 @@ function _gbif_participant_print_largest_datasets($iso2, $mode) {
 			$output['largest_datasets_title'] = $title;
 
 			$link_back = t('Back to data about !country', array('!country' => $country_title));
-			$link_back = l($link_back, 'country/' . $iso2 . '/about');
+			$link_back = l($link_back, 'country/' . $iso2 . '/about', array('fragment' => 'largest-occurrence-datasets'));
 			$output['link_back'] = $link_back;
 
 			break;
@@ -870,6 +908,85 @@ function _gbif_participant_print_largest_datasets($iso2, $mode) {
 	}
 
 	$output['largest_datasets_list'] = $html;
+
+	return $output;
+}
+
+/**
+ * @param $iso2
+ * @param $list_mode
+ * @param $repatri_mode 'about', 'from'
+ */
+function _gp_country_repatriation($iso2, $list_mode, $repatri_mode) {
+	$env = variable_get('environment_settings');
+	switch ($repatri_mode) {
+		case 'about':
+			$api_call = _gbif_participant_api_occurrence() . '/counts/publishingCountries?country=' . $iso2;
+			break;
+		case 'from':
+			$api_call = _gbif_participant_api_occurrence() . '/counts/countries?publishingCountry=' . $iso2;
+			break;
+	}
+	$json = json_decode(file_get_contents($api_call), TRUE);
+	$num_countries = count($json);
+	$countries = $json;
+	if ($list_mode == 'digest') {
+		$countries = array_slice($countries, 0, 6, TRUE);
+	}
+	$country_title = gbif_participant_country_lookup($iso2, 'iso2', 'title');
+	$output = array();
+
+	// Prepare attributes for each country.
+	foreach ($countries as $enum_name => &$count ) {
+		$d_count = $count;
+		$d = array('total_count' => $d_count);
+		$d['iso2'] = gbif_participant_country_lookup($enum_name, 'enumName', 'iso2');
+		$d['title'] = gbif_participant_country_lookup($enum_name, 'enumName', 'title');
+
+		// @todo geo-referenced count.
+		$d_call = _gbif_participant_api_occurrence() . '/count?publishingCountry=' . $d['iso2'] . '&isGeoreferenced=true';
+		$d_json = json_decode(file_get_contents($d_call), TRUE);
+		$d['geo_count'] = $d_json;
+		$percentage = $d['geo_count'] / $d['total_count'];
+		$d['percentage'] = number_format((float)$percentage, 3, '.', '');
+		$count = $d;
+	}
+
+	switch ($list_mode) {
+		case 'full':
+			$per_page = 25;
+			$current_page = pager_default_initialize($num_countries, $per_page);
+			$chunks = array_chunk($countries, $per_page, TRUE);
+			$html = theme('gp_country_repatriation_list_item', array('countries' => $chunks[$current_page], 'env' => $env, 'iso2' => $iso2, 'list_mode' => $list_mode));
+			$html .= '<hr>';
+			$html .= theme('pager', array('page', count($countries)));
+
+			$title = $num_countries;
+			$title .= format_plural($num_countries,
+				' country publishing data about ',
+				' countries publishing data about ',
+				array()
+			);
+			$title .= $country_title;
+			$output['countries_title'] = $title;
+
+			$link_back = t('Back to data about !country', array('!country' => $country_title));
+			$link_back = l($link_back, 'country/' . $iso2 . '/about', array('fragment' => 'countries-publishing-data-about'));
+			$output['link_back'] = $link_back;
+
+			break;
+		case 'digest':
+			$output['countries_title'] = t('Countries, territories or islands publishing data about') . ' ' . $country_title;
+			$html = theme('gp_country_repatriation_list_item', array('countries' => $countries, 'env' => $env, 'iso2' => $iso2, 'list_mode' => $list_mode));
+			if ($num_countries > 6) {
+				$remain_count = $num_countries - 6;
+				$link_more = l($remain_count . ' more', 'country/' . $iso2 . '/about/countries');
+				$html .= $link_more . '...';
+			}
+			break;
+	}
+
+	$output['countries_list'] = $html;
 
 	return $output;
 }

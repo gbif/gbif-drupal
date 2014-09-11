@@ -14,6 +14,7 @@
 			$paragraph .= t('Published by ');
 			$paragraph .= l($dataset['publishingOrganizationTitle'], $env['data_portal_base_url'] . '/publisher/' . $dataset['publishingOrganizationKey']) . '.';
 		?>
+<?php break; ?>
 <?php case 'CHECKLIST': ?>
 			<?php
 			$title_link = l($dataset['title'], $env['data_portal_base_url'] . '/dataset/' . $dataset['key']);
@@ -26,6 +27,7 @@
 			$paragraph .= t('Published by ');
 			$paragraph .= l($dataset['publishingOrganizationTitle'], $env['data_portal_base_url'] . '/publisher/' . $dataset['publishingOrganizationKey']) . '.';
 			?>
+<?php break; ?>
 <?php endswitch; ?>
 	<li>
 		<?php print $title_link; ?><br>

@@ -20,7 +20,7 @@
 		</li>
 		<?php else: ?>
 			<li>
-				<strong><?php print $title_link; ?></strong> <span class="list-publisher-published"><?php print $published; ?></span><br>
+				<strong><?php print $title_link; ?></strong> <span class="title-annotating-text"><?php print $published; ?></span><br>
 				<?php if (!empty($publisher['description'])): ?>
 				<p><?php print $publisher['description']; ?></p>
 				<?php endif; ?>

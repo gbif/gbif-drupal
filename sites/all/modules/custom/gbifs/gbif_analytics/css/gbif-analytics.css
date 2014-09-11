@@ -21,9 +21,36 @@
 .img-thumbnail {
     background-color: #FFF !important;
 }
-h4 {
-    font-size: 18px !important;
-}
 dl.faq dt {
     margin-top: 15px;
+}
+.row-chart {
+    margin: 0 0 20px 0;
+}
+
+/**
+ * Introduced as the usual styling just does not work with long headers on  3 column layout.
+ */
+article.container h3 {
+    margin-bottom: 5px;
+    margin-top: 10px;
+    font-size: 15px ;
+    font-weight: bold;
+}
+/**
+ * Copied from usual GBIF h3.
+ */
+article.container h4 {
+    margin-bottom: 5px;
+    margin-top: 0px;
+    font-size: 14px ;
+    font-weight: normal;
+    text-transform: uppercase;
+    text-shadow: 0 1px white;
+}
+/**
+ * Hack: something is overwriting the bootstrap default spacing.
+ */
+article.container p {
+    margin: 0 0 10px !important;
 }

@@ -143,12 +143,20 @@ function gbif_participant_theme($existing, $type, $theme, $path) {
 				'participant_ims' => NULL,
 				'html' => NULL,
 				'registry_json' => NULL,
+				'env' => NULL,
 			),
 		),
 		'gbif_participant_about' => array(
 			'template' => 'about',
 			'path' => $path . '/theme',
-			'variables' => array('participantID' => NULL, 'iso2' => NULL, 'node' => NULL, 'participant_ims' => NULL, 'html' => NULL),
+			'variables' => array(
+				'participantID' => NULL,
+				'iso2' => NULL,
+				'node' => NULL,
+				'participant_ims' => NULL,
+				'html' => NULL,
+				'env' => NULL,
+			),
 		),
 		'gp_country_repatriation_list_item' => array(
 			'template' => 'country-repatriation-list-item',
@@ -180,7 +188,14 @@ function gbif_participant_theme($existing, $type, $theme, $path) {
 		'gbif_participant_publishing' => array(
 			'template' => 'publishing',
 			'path' => $path . '/theme',
-			'variables' => array('participantID' => NULL, 'iso2' => NULL, 'node' => NULL, 'participant_ims' => NULL, 'html' => NULL),
+			'variables' => array(
+				'participantID' => NULL,
+				'iso2' => NULL,
+				'node' => NULL,
+				'participant_ims' => NULL,
+				'html' => NULL,
+				'env' => NULL,
+			),
 		),
 		'node__gbif_participant' => array(
 			'template' => 'node--gbif_participant',
@@ -422,6 +437,7 @@ function gbif_participant_page_build(&$page) {
  * @return int|null|string
  */
 function gbif_participant_page_router($iso2, $chapter) {
+	$env = variable_get('environment_settings');
 
 	if (!isset($iso2) && !isset($chapter)) {
 		$columns = _gbif_participant_country_list();
@@ -468,6 +484,7 @@ function gbif_participant_page_router($iso2, $chapter) {
 						'participant_ims' => $results[0],
 						'html' => $html,
 						'registry_json' => $registry_json,
+						'env' => $env,
 					));
 				case 'about':
 					if (arg(3) == 'datasets') {
@@ -507,6 +524,7 @@ function gbif_participant_page_router($iso2, $chapter) {
 							'node' => $node,
 							'participant_ims' => $results[0],
 							'html' => $html,
+							'env' => $env,
 						));
 					}
 				case 'publishing':
@@ -535,6 +553,7 @@ function gbif_participant_page_router($iso2, $chapter) {
 							'node' => $node,
 							'participant_ims' => $results[0],
 							'html' => $html,
+							'env' => $env,
 						));
 					}
 				case 'participation':

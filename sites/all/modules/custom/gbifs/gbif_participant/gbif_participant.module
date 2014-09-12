@@ -198,7 +198,6 @@ function gbif_participant_theme($existing, $type, $theme, $path) {
 				'datasets' => NULL,
 				'env' => NULL,
 				'iso2' => NULL,
-				'mode' => NULL,
 			),
 		),
 		'gp_largest_datasets_list_item' => array(
@@ -441,7 +440,7 @@ function gbif_participant_page_router($iso2, $chapter) {
 			switch ($chapter) {
 				case 'summary':
 					$html = _gbif_participant_country_data($iso2, $results[0]);
-					$html['latest_dataset'] = _gbif_participant_print_latest_datasets($iso2, NULL);
+					$html['latest_dataset'] = _gbif_participant_print_latest_datasets($iso2, $registry_json->key);
 					return theme('gbif_participant_summary', array(
 						'participantID' => $participantID,
 						'iso2' => $iso2,
@@ -506,7 +505,7 @@ function gbif_participant_page_router($iso2, $chapter) {
 					}
 					else {
 						$html = _gbif_participant_country_data($iso2, $results[0]);
-						$html['latest_dataset'] = _gbif_participant_print_latest_datasets($iso2, NULL);
+						$html['latest_dataset'] = _gbif_participant_print_latest_datasets($iso2, $registry_json->key);
 						$contributing_to = _gp_country_repatriation($iso2, 'digest', 'from');
 						$html = array_merge($html, $contributing_to);
 						return theme('gbif_participant_publishing', array(
@@ -858,13 +857,14 @@ function _gbif_participant_print_endorsed_publishers($participantID, $iso2, $mod
 	return $output;
 }
 
-function _gbif_participant_print_latest_datasets($iso2, $mode) {
+function _gbif_participant_print_latest_datasets($iso2, $uuid) {
 	$env = variable_get('environment_settings');
-	// E.g. http://api.gbif.org/v1/dataset/search?limit=7&publishingCountry=ES
-	$api_call = _gbif_participant_api_dataset() . '/search?limit=7&publishingCountry=' . $iso2;
+	// E.g. http://api.gbif.org/v1/node/fb11cfe1-ebc3-45af-9159-17d9fddbcdac/dataset?limit=7
+	$api_call = _gbif_participant_api_registry_node() . '/' . $uuid . '/dataset?limit=7';
 	$json = json_decode(file_get_contents($api_call), TRUE);
 	$count = $json['count'];
 	$datasets = $json['results'];
+	$datasets = array_slice($datasets, 0, 6, TRUE);
 
 	foreach ($datasets as &$dataset) {
 		$dataset['type_formatted'] = _gbif_participant_format_datatype($dataset['type']);
@@ -872,6 +872,10 @@ function _gbif_participant_print_latest_datasets($iso2, $mode) {
 		$m_json = json_decode(file_get_contents($m_call), TRUE);
 		$dataset['timestamp'] = strtotime($m_json['modified']);
 		$dataset['updated'] = t('Updated') . ' ' . date('d M, Y', $dataset['timestamp']);
+		$dataset['publishingOrganizationKey'] = $m_json['publishingOrganizationKey'];
+		$org_call = _gbif_participant_api_registry_org() . '/' . $dataset['publishingOrganizationKey'];
+		$org_json = json_decode(file_get_contents($org_call), TRUE);
+		$dataset['publishingOrganizationTitle'] = $org_json['title'];
 
 		switch ($dataset['type']) {
 			case 'OCCURRENCE':
@@ -887,12 +891,12 @@ function _gbif_participant_print_latest_datasets($iso2, $mode) {
 		}
 	}
 
-	usort($datasets, 'cmp_by_timestamp');
+	//usort($datasets, 'cmp_by_timestamp');
 
 	$output = theme('gbif_participant_datasets_list_item', array('datasets' => $datasets, 'env' => $env, 'iso2' => $iso2, 'mode' => $mode));
 
-	if ($count > 7) {
-		$remain_count = $count - 7;
+	if ($count > 6) {
+		$remain_count = $count - 6;
 		$link_more = l($remain_count . ' more', $env['data_portal_base_url'] . '/dataset/search?publishingCountry=' . $iso2);
 		$output .= $link_more . '...';
 	}
@@ -1006,16 +1010,6 @@ function _gp_country_repatriation($iso2, $list_mode, $repatri_mode) {
 	$num_countries = count($json);
 	$countries = $json;
 
-	// Total excluding the publishing country.
-	if ($repatri_mode == 'from') {
-		$total_excl = 0;
-		foreach ($countries as $enum_name => $count) {
-			if (gbif_participant_country_lookup($enum_name, 'enumName', 'iso2') != $iso2) {
-				$total_excl = $total_excl + $count;
-			}
-		}
-	}
-
 	if ($list_mode == 'digest') {
 		$countries = array_slice($countries, 0, 6, TRUE);
 	}
@@ -1097,12 +1091,16 @@ function _gp_country_repatriation($iso2, $list_mode, $repatri_mode) {
 			// E.g. http://api.gbif.org/v1/occurrence/count?publishingCountry=BE
 			$tn_call = _gbif_participant_api_occurrence() . '/count?publishingCountry=' . $iso2;
 			$total_num = json_decode(file_get_contents($tn_call), TRUE);
+			$selftn_call = _gbif_participant_api_occurrence() . '/count?publishingCountry=' . $iso2 . '&country=' . $iso2;
+			$total_selftn = json_decode(file_get_contents($selftn_call), TRUE);
+			$other_num = $total_num - $total_selftn;
+			$percentage_repatri = $other_num / $total_num * 100;
 
 			$html = '<p>';
 			$html .= t('!country_title publishes ', array('!country_title' => $country_title));
-			$html .= format_plural($total_num, 'record','records', array());
+			$html .= format_plural($other_num, 'record','!count records', array('!count' => number_format($other_num)));
 			$html .= t(' relating to biodiversity from !num_countries other countries, territories and islands.', array('!num_countries' => $num_countries)) . '<br>';
-			$html .= t('These records account for !total_percentage% of the total data published from !country_title.', array('!total_percentage' => $total_percentage, '!country_title' => $country_title));
+			$html .= t('These records account for !percentage_repatri% of the total data published from !country_title.', array('!percentage_repatri' => number_format($percentage_repatri, 3, '.', ''), '!country_title' => $country_title));
 			$html .= '</p>';
 			$html .= theme('gp_country_repatriation_list_item', array('countries' => $countries, 'env' => $env, 'iso2' => $iso2, 'list_mode' => $list_mode, 'repatri_mode' => $repatri_mode));
 			if ($num_countries > 6) {
@@ -1180,6 +1178,11 @@ function _gbif_participant_get_uuid($participantID) {
 function _gbif_participant_api_registry_node() {
 	$env = variable_get('environment_settings');
 	return $env['gbif_api_base_url'] . '/v' . $env['gbif_api_version'] . '/node';
+}
+
+function _gbif_participant_api_registry_org() {
+	$env = variable_get('environment_settings');
+	return $env['gbif_api_base_url'] . '/v' . $env['gbif_api_version'] . '/organization';
 }
 
 function _gbif_participant_api_dataset() {

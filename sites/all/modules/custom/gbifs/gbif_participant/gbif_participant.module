@@ -1235,17 +1235,22 @@ function gp_print_publications($iso2) {
 	$publications = json_decode(file_get_contents(file_build_uri('npt_mendeley/countries/' . $iso2 . '.json')), TRUE);
 	$count = count($publications);
 
-	$per_page = 10;
-	$current_page = pager_default_initialize($count, $per_page);
-	$chunks = array_chunk($publications, $per_page, TRUE);
-	$html = theme('gp_publications_list_item', array('iso2' => $iso2, 'publications' => $chunks[$current_page]));
-	$html .= '<hr>';
-	$html .= theme('pager', array('page', $count));
+	if ($count > 0) {
+		$per_page = 10;
+		$current_page = pager_default_initialize($count, $per_page);
+		$chunks = array_chunk($publications, $per_page, TRUE);
+		$html = theme('gp_publications_list_item', array('iso2' => $iso2, 'publications' => $chunks[$current_page]));
+		$html .= '<hr>';
+		$html .= theme('pager', array('page', $count));
+		$output['list_publications'] = $html;
+	}
+	else {
+		$output['list_publications'] = t('There are no publications known for !country_name.', array('!country_name' => gbif_participant_country_lookup($iso2, 'iso2', 'title')));
+	}
 
 	$output['intro_title'] = $intro_title;
 	$output['intro_para'] = $intro_para;
 	$output['list_title'] = $list_title;
-	$output['list_publications'] = $html;
 	return $output;
 }
 

@@ -1,4 +1,4 @@
-<ul>
+<ul class="publication-list">
 	<?php foreach ($publications as $k => $p): ?>
 		<?php
 			$title_link = l($p['title'], $p['url']);
@@ -32,7 +32,7 @@
 		?>
 		<li>
 			<h3><?php print $authors; ?></h3>
-			<h2><?php print $title_link; ?></h2>
+			<h4><?php print $title_link; ?></h4>
 			<p><?php print $journal; ?></p>
 			<p><?php print $p['abstract']; ?></p>
 			<p class="keywords"><?php print $keywords; ?></p>

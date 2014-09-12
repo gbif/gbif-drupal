@@ -18,6 +18,9 @@
 
 			<?php if ($html['count'] > 0): ?>
       <section id="data-from" class="col-md-12 well well-lg well-margin-top clearfix"<?php print $attributes; ?>>
+				<div id="map-from" class="country-map">
+					<iframe id="mapByFrame" name="map" src="<?php print $env['gbif_api_base_url']; ?>/v1/map/index.html?type=PUBLISHING_COUNTRY&amp;key=<?php print $iso2; ?>" allowfullscreen="" height="100%" width="100%" frameborder="0"></iframe>
+				</div>
 				<div class="row">
 					<header class="content-header col-md-8">
 
@@ -27,10 +30,9 @@
 					</header>
 				</div>
 				<div class="row">
-					<div id="map-from" class="country-map col-md-8">
-						<iframe id="mapByFrame" name="map" src="<?php print $env['gbif_api_base_url']; ?>/v1/map/index.html?type=PUBLISHING_COUNTRY&amp;key=<?php print $iso2; ?>" allowfullscreen="" height="100%" width="100%" frameborder="0"></iframe>
+					<div class="col-md-8">
 					</div>
-					<div class="content content-sidebar col-md-4">
+					<div class="content content-sidebar map-right col-md-4">
 						<?php print $html['from']; ?>
 					</div>
 				</div>

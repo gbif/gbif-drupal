@@ -1045,7 +1045,7 @@ function _gbif_participant_print_news($node, $registry_json) {
 	uasort($items, 'cmp_by_timestamp');
 
 	$title_text = t('News items tagged with !country_name', array('!country_name' => $node->title));
-	$feed_url = 'taxonomy/term/' . $tid . '/feed';
+	$feed_url = '/taxonomy/term/' . $tid . '/feed';
 	$output['title'] = $title_text;
 	$output['feed_url'] = $feed_url;
 

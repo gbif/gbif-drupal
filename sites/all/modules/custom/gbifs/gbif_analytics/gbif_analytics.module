@@ -317,11 +317,11 @@ function gbif_analytics_page_build(&$page) {
 
 			if ($current_path[3] == 'published') {
 				$title = $country_name . ' publishing trends';
-				$slogan = 'Change over time in the data published by institutions within ' . $country_name . 'available from GBIF.org';
+				$slogan = 'Change over time in the data published by institutions within ' . $country_name . ' available from GBIF.org';
 			}
 			else {
 				$title = $country_name . ' data trends';
-				$slogan = 'Change over time in data about species from ' . $country_name . 'available from GBIF.org';
+				$slogan = 'Change over time in data about species from ' . $country_name . ' available from GBIF.org';
 			}
 		}
 		$page['highlighted_title'] = array(

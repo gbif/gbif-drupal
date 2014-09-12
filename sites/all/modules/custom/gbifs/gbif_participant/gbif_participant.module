@@ -1626,7 +1626,7 @@ function _gbif_participant_country_list() {
 	// Insert bits for determining if a country is a participant.
 	foreach ($countries as $k => $country) {
 		foreach ($participant_ims as $participant) {
-			if ($country['iso2'] == $participant->iso2) {
+			if ($country['iso2'] == $participant->iso2 && (in_array($participant->gbif_membership, array('Voting Participant', 'Associate Country Participant')) || $participant->iso2 == 'TW')) {
 				$countries[$k]['gbif_membership'] = $participant->gbif_membership;
 			}
 		}

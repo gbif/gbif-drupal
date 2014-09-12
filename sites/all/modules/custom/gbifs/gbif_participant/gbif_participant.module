@@ -235,6 +235,11 @@ function gbif_participant_theme($existing, $type, $theme, $path) {
 			'path' => $path . '/theme',
 			'variables' => array('iso2' => NULL, 'repatri_mode' => NULL),
 		),
+		'gp_publications_list_item' => array(
+			'template' => 'publications-list-item',
+			'path' => $path . '/theme',
+			'variables' => array('iso2' => NULL, 'publications' => NULL),
+		),
 	);
 }
 
@@ -527,7 +532,8 @@ function gbif_participant_page_router($iso2, $chapter) {
 				case 'news':
 					return theme('gbif_participant_news', array('participantID' => $participantID, 'iso2' => $iso2, 'node' => $node, 'participant_ims' => $results[0]));
 				case 'publications':
-					return theme('gbif_participant_publications', array('participantID' => $participantID, 'iso2' => $iso2, 'node' => $node, 'ims_result' => $results[0]));
+					$html = gp_print_publications($iso2);
+					return theme('gbif_participant_publications', array('participantID' => $participantID, 'iso2' => $iso2, 'node' => $node, 'participant_ims' => $results[0], 'html' => $html));
 			}
 
 		}
@@ -1118,6 +1124,31 @@ function _gp_country_repatriation($iso2, $list_mode, $repatri_mode) {
 
 	$output['countries_list'] = $html;
 
+	return $output;
+}
+
+function gp_print_publications($iso2) {
+	$output = array();
+	$intro_title = t('Uses of GBIF in scientific research');
+	$intro_para = t('Peer-reviewed research citing GBIF as a data source, with at least one author from !country.', array('!country' => gbif_participant_country_lookup($iso2, 'iso2', 'title'))) . '<br>';
+	$intro_para .= t('Extracted from the !mendeley.', array('!mendeley' => l('Mendeley GBIF Public Library', 'http://www.mendeley.com/groups/1068301/gbif-public-library/')));
+	$list_title = t('List of publications');
+
+	// Get memdeley json for the country.
+	$publications = json_decode(file_get_contents(file_build_uri('npt_mendeley/countries/' . $iso2 . '.json')), TRUE);
+	$count = count($publications);
+
+	$per_page = 10;
+	$current_page = pager_default_initialize($count, $per_page);
+	$chunks = array_chunk($publications, $per_page, TRUE);
+	$html = theme('gp_publications_list_item', array('iso2' => $iso2, 'publications' => $chunks[$current_page]));
+	$html .= '<hr>';
+	$html .= theme('pager', array('page', $count));
+
+	$output['intro_title'] = $intro_title;
+	$output['intro_para'] = $intro_para;
+	$output['list_title'] = $list_title;
+	$output['list_publications'] = $html;
 	return $output;
 }
 

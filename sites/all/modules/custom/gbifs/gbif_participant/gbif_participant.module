@@ -400,7 +400,12 @@ function gbif_participant_page_build(&$page) {
 			$node = node_load($nid);
 
 			$title = gbif_participant_country_lookup($json->country, 'iso2', 'title');
-			$slogan = t('A GBIF !gbif_membership from !region', array('!gbif_membership' => $gbif_membership, '!region' => $region)) . '<br>';
+			if ($json->country == 'TW') {
+				$slogan = t('A GBIF Associate Participant Economy from !region', array('!region' => $region)) . '<br>';
+			}
+			else {
+				$slogan = t('A GBIF !gbif_membership from !region', array('!gbif_membership' => $gbif_membership, '!region' => $region)) . '<br>';
+			}
 		}
 		$slogan .= t('Names of countries, territories and islands are based on the !url standard.', array('!url' => l('ISO 3166-1', 'https://www.iso.org/obp/ui/#search')));
 		$page['highlighted_title'] = array(
@@ -1041,7 +1046,7 @@ function _gbif_participant_print_news($iso2, $node, $registry_json) {
 	// Prepare an entity query here.
 	$entity_query = new EntityFieldQuery();
 	$entity_query->entityCondition('entity_type', 'node')
-		->entityCondition('bundle', array('newsarticle', 'event_ims'), 'IN')
+		->entityCondition('bundle', array('newsarticle', 'event_ims', 'usesofdata'), 'IN')
 		->propertyCondition('status', 1)
 		->fieldCondition('field_country', 'tid', $tid, '=');
 	$results = $entity_query->execute();

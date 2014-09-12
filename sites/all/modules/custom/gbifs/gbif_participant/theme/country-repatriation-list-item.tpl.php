@@ -21,7 +21,7 @@
 				$paragraph .= '.';
 			}
 			else {
-				$paragraph .= ', ' . number_format((float)$country['percentage'], 3, '.', '') . t('% geo-referenced.');
+				$paragraph .= ', ' . number_format((float)$country['percentage'], 2, '.', '') . t('% geo-referenced.');
 			}
 		?>
 		<li>
@@ -48,7 +48,7 @@
 				$paragraph .= '.';
 			}
 			else {
-				$paragraph .= ', ' . number_format((float)$country['percentage'], 3, '.', '') . t('% geo-referenced.');
+				$paragraph .= ', ' . number_format((float)$country['percentage'], 2, '.', '') . t('% geo-referenced.');
 			}
 		?>
 		<li>

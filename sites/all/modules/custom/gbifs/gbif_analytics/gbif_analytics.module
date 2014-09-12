@@ -303,18 +303,25 @@ function gbif_analytics_page_build(&$page) {
 			$slogan = t('Please !contact for questions about the data trends', array('!contact' => $link_contact));
 		}
 		else if (count($current_path) == 3) {
-			$title = t('Reports for a country');
-			$slogan = t('Trends in data availability on the GBIF network');
+			$title = t('National data trends');
+			if ($current_path[2] == 'published') {
+				$slogan = t('Changes in species data available from a country');
+			}
+			else {
+				$slogan = t('Changes in occurrence data available for a country’s species');
+			}
 		}
 		else if (count($current_path) == 4) {
 			// lookup the country name based on the iso code
 			$country_name = _gbif_analytics_country_name($current_path[3], $current_path[2]);
-			$title = $country_name . ' data trends';
+
 			if ($current_path[3] == 'published') {
-				$slogan = t('Summarizing the data published by institutions within !country_name available in the GBIF index over time.', array('!country_name' => $country_name));
+				$title = $country_name . ' publishing trends';
+				$slogan = 'Change over time in the data published by institutions within ' . $country_name;
 			}
 			else {
-				$slogan = t('Summarizing the data about !country_name available in the GBIF index over time.', array('!country_name' => $country_name));
+				$title = $country_name . ' data trends';
+				$slogan = 'Change over time in data about species from ' . $country_name;
 			}
 		}
 		$page['highlighted_title'] = array(

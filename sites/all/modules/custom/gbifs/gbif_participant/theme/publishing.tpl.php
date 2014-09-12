@@ -3,13 +3,27 @@
 ?>
 <article id="country-data-publishing" class="container">
 	<div class="row">
+
+			<?php if ($html['count'] == NULL): ?>
+			<section id="activity" class="col-md-12 well well-lg no-activity">
+				<div class="row">
+					<div class="content">
+						<div class="notice-icon"></div>
+						<h3><?php print $html['no_activity_title']; ?></h3>
+						<p><?php print $html['no_activity_text']; ?></p>
+					</div>
+				</div>
+			</section>
+			<?php endif; ?>
+
+			<?php if ($html['count'] > 0): ?>
       <section id="data-from" class="col-md-12 well well-lg well-margin-top clearfix"<?php print $attributes; ?>>
 				<div class="row">
 					<header class="content-header col-md-8">
 
 					</header>
 					<header class="content-header sidebar-header-country col-md-4">
-						<h2>Data from <?php print $participant_ims->participant_name_full; ?></h2>
+						<h2><?php print $html['from_title']; ?></h2>
 					</header>
 				</div>
 				<div class="row">
@@ -21,11 +35,12 @@
 					</div>
 				</div>
       </section>
+			<?php endif; ?>
 
 			<section id="latest-datasets-published" class="col-md-12 well well-lg">
 				<div class="row">
 					<header class="content-header col-md-12">
-						<h2>Latest datasets published</h2>
+						<h2><?php print $html['title']; ?></h2>
 					</header>
 				</div>
 				<div class="row">
@@ -35,6 +50,7 @@
 				</div>
 			</section>
 
+			<?php if ($html['count'] > 0): ?>
 			<section id="countries-origin" class="col-md-12 well well-lg">
 				<div class="row">
 					<header class="content-header col-md-12">
@@ -47,7 +63,9 @@
 					</div>
 				</div>
 			</section>
+			<?php endif; ?>
 
+			<?php if ($html['count'] > 0): ?>
 			<section id="data-published-by" class="col-md-12 well well-lg">
 				<div class="row">
 					<header class="content-header col-md-12">
@@ -60,5 +78,7 @@
 					</div>
 				</div>
 			</section>
+			<?php endif; ?>
+
 	</div>
 </article>

@@ -9,7 +9,7 @@
 
 					</header>
 					<header class="content-header sidebar-header-country col-md-4">
-						<h2>Data about <?php print $participant_ims->participant_name_full; ?></h2>
+						<h2><?php print $html['about_title']; ?></h2>
 					</header>
 				</div>
 				<div class="row">

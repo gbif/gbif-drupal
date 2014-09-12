@@ -999,6 +999,17 @@ function _gp_country_repatriation($iso2, $list_mode, $repatri_mode) {
 	$json = json_decode(file_get_contents($api_call), TRUE);
 	$num_countries = count($json);
 	$countries = $json;
+
+	// Total excluding the publishing country.
+	if ($repatri_mode == 'from') {
+		$total_excl = 0;
+		foreach ($countries as $enum_name => $count) {
+			if (gbif_participant_country_lookup($enum_name, 'enumName', 'iso2') != $iso2) {
+				$total_excl = $total_excl + $count;
+			}
+		}
+	}
+
 	if ($list_mode == 'digest') {
 		$countries = array_slice($countries, 0, 6, TRUE);
 	}
@@ -1075,7 +1086,19 @@ function _gp_country_repatriation($iso2, $list_mode, $repatri_mode) {
 					$output['countries_title'] = t('Countries of origin');
 					break;
 			}
-			$html = theme('gp_country_repatriation_list_item', array('countries' => $countries, 'env' => $env, 'iso2' => $iso2, 'list_mode' => $list_mode, 'repatri_mode' => $repatri_mode));
+
+			// Total count here.
+			// E.g. http://api.gbif.org/v1/occurrence/count?publishingCountry=BE
+			$tn_call = _gbif_participant_api_occurrence() . '/count?publishingCountry=' . $iso2;
+			$total_num = json_decode(file_get_contents($tn_call), TRUE);
+
+			$html = '<p>';
+			$html .= t('!country_title publishes ', array('!country_title' => $country_title));
+			$html .= format_plural($total_num, 'record','records', array());
+			$html .= t(' relating to biodiversity from !num_countries other countries, territories and islands.', array('!num_countries' => $num_countries)) . '<br>';
+			$html .= t('These records account for !total_percentage% of the total data published from !country_title.', array('!total_percentage' => $total_percentage, '!country_title' => $country_title));
+			$html .= '</p>';
+			$html .= theme('gp_country_repatriation_list_item', array('countries' => $countries, 'env' => $env, 'iso2' => $iso2, 'list_mode' => $list_mode, 'repatri_mode' => $repatri_mode));
 			if ($num_countries > 6) {
 				$remain_count = $num_countries - 6;
 
@@ -1354,7 +1377,7 @@ function _gbif_participant_country_data($iso2, $participant_ims) {
 			case 'from':
 				// contributing to
 				$html .= '<li>';
-					$html .= t('!country publishes data covering ', array('!country' => $participant_ims->participant_name_full));
+				$html .= t('!country publishes data covering ', array('!country' => $participant_ims->participant_name_full));
 				$link_text_contributing_to = t('@count countries, territories and islands', array('@count' => $counts['contributing_to_count']));
 				$link_contributing_to = l($link_text_contributing_to, 'country/' . $iso2 . '/publishing/countries');
 				$html .= $link_contributing_to;

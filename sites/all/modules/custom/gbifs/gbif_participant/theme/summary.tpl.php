@@ -26,7 +26,7 @@
 
 					</header>
 					<header class="content-header sidebar-header-country col-md-4">
-						<h2>Data about <?php print $participant_ims->participant_name_full; ?></h2>
+						<h2><?php print $html['about_title']; ?></h2>
 					</header>
         </div>
         <div class="row">
@@ -39,13 +39,14 @@
         </div>
       </section>
 
+			<?php if ($node != NULL && $participantID != NULL): ?>
 			<section id="data-from" class="col-md-12 well well-lg">
 				<div class="row">
 					<header class="content-header col-md-8">
 
 					</header>
 					<header class="content-header sidebar-header-country col-md-4">
-						<h2>Data from <?php print $participant_ims->participant_name_full; ?></h2>
+						<h2><?php print $html['from_title']; ?></h2>
 					</header>
 				</div>
 				<div class="row">
@@ -100,10 +101,11 @@
 				</div>
 			</section>
 
+
 			<section id="latest-datasets-published" class="col-md-12 well well-lg">
 				<div class="row">
 					<header class="content-header col-md-12">
-						<h2>Latest datasets published</h2>
+						<h2><?php print $html['title']; ?></h2>
 					</header>
 				</div>
 				<div class="row">
@@ -112,5 +114,6 @@
 					</div>
 				</div>
 			</section>
+			<?php endif; ?>
 	</div>
 </article>

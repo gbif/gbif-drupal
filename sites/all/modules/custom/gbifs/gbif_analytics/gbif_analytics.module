@@ -294,7 +294,7 @@ function gbif_analytics_page_build(&$page) {
 	if (isset($page) && arg(0) == 'analytics') {
 
 		$title = t('Global data trends');
-		$slogan = t('Trends in data availability on the GBIF network');
+		$slogan = t('Trends in data availability on the GBIF network, 2008 to 2014');
 
 		$current_path = explode('/', current_path());
 		if ($current_path[1] == 'faq') {
@@ -305,10 +305,10 @@ function gbif_analytics_page_build(&$page) {
 		else if (count($current_path) == 3) {
 			$title = t('National data trends');
 			if ($current_path[2] == 'published') {
-				$slogan = t('Changes in species data available from a country');
+				$slogan = t('Changes in species data available from a country, 2008 to 2014');
 			}
 			else {
-				$slogan = t('Changes in occurrence data available for a country’s species');
+				$slogan = t('Changes in occurrence data available for a country’s species, 2008 to 2014');
 			}
 		}
 		else if (count($current_path) == 4) {
@@ -317,11 +317,11 @@ function gbif_analytics_page_build(&$page) {
 
 			if ($current_path[3] == 'published') {
 				$title = $country_name . ' publishing trends';
-				$slogan = 'Change over time in the data published by institutions within ' . $country_name;
+				$slogan = 'Change over time in the data published by institutions within ' . $country_name . 'available from GBIF.org';
 			}
 			else {
 				$title = $country_name . ' data trends';
-				$slogan = 'Change over time in data about species from ' . $country_name;
+				$slogan = 'Change over time in data about species from ' . $country_name . 'available from GBIF.org';
 			}
 		}
 		$page['highlighted_title'] = array(

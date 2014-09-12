@@ -259,9 +259,11 @@ function gbif_analytics_library() {
 function gbif_analytics_preprocess_page(&$variables) {
 
 	// load in lightbox CSS and JS
-	watchdog('analytics', 'Loading custom libraries for module', array(), WATCHDOG_DEBUG);
-	drupal_add_library('gbif_analytics', 'lightbox');
-	drupal_add_library('gbif_analytics', 'analytics');
+	if (drupal_match_path(current_path(), 'analytics*')) {
+		watchdog('analytics', 'Loading custom libraries for module', array(), WATCHDOG_DEBUG);
+		drupal_add_library('gbif_analytics', 'lightbox');
+		drupal_add_library('gbif_analytics', 'analytics');
+	}
 
 	// Detect the URLs with the ISO code, and ensure the tab is highlighted
 	if (isset($variables['page']['menu']['menu_block_gbif_navigation_analytics'])) {

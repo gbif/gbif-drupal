@@ -224,6 +224,20 @@ function gbif_participant_theme($existing, $type, $theme, $path) {
 			'path' => $path . '/theme',
 			'variables' => array('participantID' => NULL, 'iso2' => NULL, 'node' => NULL, 'participant_ims' => NULL, 'html' => NULL),
 		),
+		'gp_news_list_item' => array(
+			'template' => 'news-list-item',
+			'path' => $path . '/theme',
+			'variables' => array(
+				'items' => NULL,
+			),
+		),
+		'gp_node_feed_item' => array(
+			'template' => 'node-feed-item',
+			'path' => $path . '/theme',
+			'variables' => array(
+				'feed_items' => NULL,
+			),
+		),
 		'gbif_participant_publications' => array(
 			'template' => 'publications',
 			'path' => $path . '/theme',
@@ -529,7 +543,14 @@ function gbif_participant_page_router($iso2, $chapter) {
 						'html' => $html,
 					));
 				case 'news':
-					return theme('gbif_participant_news', array('participantID' => $participantID, 'iso2' => $iso2, 'node' => $node, 'participant_ims' => $results[0]));
+					$html = _gbif_participant_print_news($node, $registry_json);
+					return theme('gbif_participant_news', array(
+						'participantID' => $participantID,
+						'iso2' => $iso2,
+						'node' => $node,
+						'participant_ims' => $results[0],
+						'html' => $html,
+					));
 				case 'publications':
 					$html = gp_print_publications($iso2);
 					return theme('gbif_participant_publications', array('participantID' => $participantID, 'iso2' => $iso2, 'node' => $node, 'participant_ims' => $results[0], 'html' => $html));
@@ -893,7 +914,7 @@ function _gbif_participant_print_latest_datasets($iso2, $uuid) {
 
 	//usort($datasets, 'cmp_by_timestamp');
 
-	$output = theme('gbif_participant_datasets_list_item', array('datasets' => $datasets, 'env' => $env, 'iso2' => $iso2, 'mode' => $mode));
+	$output = theme('gbif_participant_datasets_list_item', array('datasets' => $datasets, 'env' => $env, 'iso2' => $iso2));
 
 	if ($count > 6) {
 		$remain_count = $count - 6;
@@ -985,6 +1006,84 @@ function _gbif_participant_print_largest_datasets($iso2, $mode) {
 	}
 
 	$output['largest_datasets_list'] = $html;
+
+	return $output;
+}
+
+function _gbif_participant_print_news($node, $registry_json) {
+	// Look up country tid.
+	$terms = taxonomy_get_term_by_name($node->title, 'countries');
+	if (count($terms) == 1) {
+		foreach ($terms as $t => $term) {
+			$tid = $t;
+		}
+	}
+
+	$output = array();
+	// Prepare an entity query here.
+	$entity_query = new EntityFieldQuery();
+	$entity_query->entityCondition('entity_type', 'node')
+		->entityCondition('bundle', array('newsarticle', 'event_ims'), 'IN')
+		->propertyCondition('status', 1)
+		->fieldCondition('field_country', 'tid', $tid, '=');
+	$results = $entity_query->execute();
+
+	$items = array();
+	foreach ($results['node'] as $nid => $node_ids) {
+		$node_obj = node_load($nid);
+		$items[$nid]['title'] = $node_obj->title;
+
+		$node_wrapper = entity_metadata_wrapper('node', $node_obj);
+		$body = $node_wrapper->body->value();
+		$items[$nid]['body'] = (!empty($body['summary'])) ? $body['summary'] : $body['value'];
+		$items[$nid]['type'] = _gp_get_type_name($node_obj->type);
+		$items[$nid]['timing'] = human_timing($node_obj->revision_timestamp) . t(' ago');
+		$items[$nid]['timestamp'] =$node_obj->revision_timestamp;
+	}
+
+	// Sort by time
+	uasort($items, 'cmp_by_timestamp');
+
+	$title_text = t('News items tagged with !country_name', array('!country_name' => $node->title));
+	$feed_url = 'taxonomy/term/' . $tid . '/feed';
+	$output['title'] = $title_text;
+	$output['feed_url'] = $feed_url;
+
+	$output['list'] = theme('gp_news_list_item', array('items' => $items));
+
+	// Process RSS feed from the node
+	foreach ($registry_json->endpoints as $k => $endpoint) {
+		if ($endpoint->type == 'FEED') {
+			$node_feed_url = $endpoint->url;
+		}
+	}
+	include_once(drupal_get_path('module', 'gbif_participant') . '/simple/autoloader.php');
+	$feed = new SimplePie();
+	$feed->set_feed_url($node_feed_url);
+	$feed->enable_cache(false);
+	$feed->set_output_encoding('UTF-8');
+	$feed->init();
+	$site_title = $feed->get_title();
+	$site_desc = $feed->get_description();
+	$item_count = $feed->get_item_quantity();
+	$nf_items = $feed->get_items();
+	$feed_items = array();
+	foreach($nf_items as $k => $nf_item) {
+		$feed_items[$k]['url'] = $nf_item->get_permalink();
+		$feed_items[$k]['title'] = $nf_item->get_title();
+		$feed_items[$k]['desc'] = $nf_item->get_description();
+		$feed_items[$k]['date'] = $nf_item->get_date();
+		$timestamp = rss_to_time($nf_item->data['date']['raw']);
+		$feed_items[$k]['timestamp'] = $timestamp;
+		$feed_items[$k]['timing'] = human_timing($timestamp) . ' ago';
+		if ($category = $nf_item->get_category()) $cat_name = $category->get_label();
+	}
+	uasort($feed_items, 'cmp_by_timestamp');
+	$feed_items = array_slice($feed_items, 0, 10, TRUE);
+
+	$output['node_feed_title'] = t('News from node');
+	$output['node_feed_url'] = $node_feed_url;
+	$output['node_feed_list'] = theme('gp_node_feed_item', array('feed_items' => $feed_items));
 
 	return $output;
 }
@@ -1491,4 +1590,67 @@ function _gbif_participant_country_list() {
 
 function cmp_by_timestamp($a, $b) {
 	return $b['timestamp'] - $a['timestamp'];
+}
+
+function _gp_get_type_name($type_mname) {
+	$types = node_type_get_types();
+	foreach ($types as $m_name => $type) {
+		if ($m_name == $type_mname) {
+			return $type->name;
+		}
+	}
+	return '';
+}
+
+function human_timing($time) {
+	$time = time() - $time; // to get the time since that moment
+
+	$tokens = array (
+		31536000 => 'year',
+		2592000 => 'month',
+		604800 => 'week',
+		86400 => 'day',
+		3600 => 'hour',
+		60 => 'minute',
+		1 => 'second'
+	);
+
+	foreach ($tokens as $unit => $text) {
+		if ($time < $unit) continue;
+		$numberOfUnits = floor($time / $unit);
+		return $numberOfUnits.' '.$text.(($numberOfUnits>1)?'s':'');
+	}
+
+	return '';
+}
+
+function rss_to_time($rss_time) {
+	$day = substr($rss_time, 5, 2);
+	$month = substr($rss_time, 8, 3);
+	$month = date('m', strtotime("$month 1 2011"));
+	$year = substr($rss_time, 12, 4);
+	$hour = substr($rss_time, 17, 2);
+	$min = substr($rss_time, 20, 2);
+	$second = substr($rss_time, 23, 2);
+	$timezone = substr($rss_time, 26);
+
+	$timestamp = mktime($hour, $min, $second, $month, $day, $year);
+
+	date_default_timezone_set('UTC');
+
+	if(is_numeric($timezone)) {
+		$hours_mod = $mins_mod = 0;
+		$modifier = substr($timezone, 0, 1);
+		$hours_mod = (int) substr($timezone, 1, 2);
+		$mins_mod = (int) substr($timezone, 3, 2);
+		$hour_label = $hours_mod>1 ? 'hours' : 'hour';
+		$strtotimearg = $modifier.$hours_mod.' '.$hour_label;
+		if($mins_mod) {
+			$mins_label = $mins_mod>1 ? 'minutes' : 'minute';
+			$strtotimearg .= ' '.$mins_mod.' '.$mins_label;
+		}
+		$timestamp = strtotime($strtotimearg, $timestamp);
+	}
+
+	return $timestamp;
 }

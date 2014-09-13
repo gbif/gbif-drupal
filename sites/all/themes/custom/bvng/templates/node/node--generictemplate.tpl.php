@@ -90,10 +90,10 @@
 <?php if (!empty($body)): ?>
 <div class="container well well-lg well-margin-top">
   <div class="row">
-    <div class="col-md-12">
+    <div class="col-xs-12">
       <?php if ((!$page && !empty($title)) || !empty($title_prefix) || !empty($title_suffix) || $display_submitted): ?>
       <div class="row">
-        <header class="content-header col-md-12">
+        <header class="content-header col-xs-12">
           <?php print render($title_prefix); ?>
           <?php if (!empty($title)): ?>
           <h2<?php print $title_attributes; ?>><?php print $title; ?></h2>
@@ -103,7 +103,7 @@
       </div>
       <?php endif; ?>
       <div class="row">
-        <div class="node-content col-md-8">
+        <div class="node-content col-xs-8">
 
           <?php if ($display_submitted && user_is_logged_in()): ?>
           <div class="submitted">
@@ -117,7 +117,7 @@
           <?php print render($content['body']); ?>
 
         </div>
-        <div class="node-sidebar col-md-3">
+        <div class="node-sidebar col-xs-3">
     			<?php if (!empty($node->field_image)): ?> 
     			<?php print render(field_view_field('node', $node, 'field_image', array('settings' => array('image_style' => 'mainimage')))); ?>
     			<?php endif; ?>
@@ -136,9 +136,9 @@
   <article>
     <div class="container well well-lg<?php print $top_well . $last_well; ?>">
       <div class="row">
-        <div class="col-md-12">
+        <div class="col-xs-12">
           <div class="row">
-            <header class="content-header col-md-12">
+            <header class="content-header col-xs-12">
       				<?php if (!empty($cchunks_title[$k])): ?>
       					<h2><?php print $cchunks_title[$k]; ?></h2>
       				<?php endif; ?>
@@ -147,7 +147,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="node-content col-md-8">
+        <div class="node-content col-xs-8">
           <?php if (empty($body) && $k == 0): // Show contextual links in the first cchunk well if body field is not used. ?>
             <?php if ($display_submitted && user_is_logged_in()): ?>
             <div class="submitted">
@@ -160,7 +160,7 @@
           <?php endif; ?>
   				<?php print check_markup(token_replace($cchunks_content[$k]), 'full_html', '', FALSE); ?>
         </div>
-        <div class="node-sidebar col-md-3">
+        <div class="node-sidebar col-xs-3">
           <?php if (!empty($cchunks_sidebar[$k])): ?>
           <?php print $cchunks_sidebar[$k]; ?>
           <?php endif; ?>

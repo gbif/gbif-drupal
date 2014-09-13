@@ -6,7 +6,7 @@ unset($form['field_country_mono']['und']['#attributes']['class'][0]);
 ?>
 <div class="container">
   <div class="row">
-    <div class="col-md-9 well well-lg well-margin-top">
+    <div class="col-xs-9 well well-lg well-margin-top">
       <form action="<?php echo $base_url?>/user/register" method="post" autocomplete="off">
 
         <div class="row user-login-row">

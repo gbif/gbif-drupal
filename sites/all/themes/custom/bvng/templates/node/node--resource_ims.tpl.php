@@ -81,12 +81,12 @@
 ?>
 <div class="container well well-lg well-margin-top<?php print (empty($next_node)) ? ' well-margin-bottom' : ''; ?>">
   <div class="row">
-    <div class="col-md-12">
+    <div class="col-xs-12">
 
       <article id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?> clearfix"<?php print $attributes; ?>>
         <?php if ((!$page && !empty($title)) || !empty($title_prefix) || !empty($title_suffix) || $display_submitted): ?>
         <div class="row">
-					<header class="content-header col-md-8">
+					<header class="content-header col-xs-8">
 						<h3><?php print render($type_title); ?></h3>
 						<?php print render($title_prefix); ?>
 						<?php if (!empty($title)): ?>
@@ -98,7 +98,7 @@
         </div>
         <?php endif; ?>
         <div class="row">
-          <div class="node-content col-md-8">
+          <div class="node-content col-xs-8">
 
             <?php if ($display_submitted && user_is_logged_in()): ?>
 	            <div class="submitted">
@@ -133,7 +133,7 @@
             <?php endif; ?>
 
           </div>
-          <div class="node-sidebar col-md-3">
+          <div class="node-sidebar col-xs-3">
             <?php print render($content['field_orc_resource_thumbnail']) ; ?>
 						<?php print $sidebar; ?>
           </div>

@@ -33,13 +33,13 @@
 ?>
 <div class="container well well-lg well-margin-bottom">
   <div class="row news-summary">
-    <header class="col-md-12">
+    <header class="col-xs-12">
       <h2><?php print $view->get_title(); ?></h2>
       <h3><?php print $view->description; ?></h3>
     </header>
   </div>
   <div class="row">
-    <div class="view-column-summary col-md-8">
+    <div class="view-column-summary col-xs-8">
       <div class="<?php print $classes; ?>">
         <?php print render($title_prefix); ?>
         <?php if ($title): ?>
@@ -88,7 +88,7 @@
         <?php endif; ?>
       </div>
     </div>
-    <div class="sidebar-signup col-md-3">
+    <div class="sidebar-signup col-xs-3">
       <div class="subscribe">
         <a id="signup"></a>
         <h4>GBITS NEWSLETTER</h4>
@@ -104,7 +104,7 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-md-12">
+    <div class="col-xs-12">
       <a href="/newsroom/news" class="btn btn-primary">More GBIF news</a>
       <?php if ($footer): ?>
         <div class="view-footer">

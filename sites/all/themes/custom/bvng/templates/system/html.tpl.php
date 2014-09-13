@@ -48,7 +48,11 @@
 <html lang="<?php print $language->language; ?>" dir="<?php print $language->dir; ?>"<?php print $rdf_namespaces;?>>
 <head profile="<?php print $grddl_profile; ?>">
   <meta charset="utf-8">
-  <meta name="viewport" content="width=1024, user-scalable=yes">
+
+  <!-- Disabled responsiveness
+	<meta name="viewport" content="width=1024, user-scalable=yes">
+	 -->
+
   <?php print $head; ?>
   <title><?php print $head_title; ?></title>
   <?php print $styles; ?>

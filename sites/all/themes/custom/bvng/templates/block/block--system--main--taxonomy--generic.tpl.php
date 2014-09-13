@@ -50,19 +50,19 @@
  */
 ?>
 <div class="row">
-  <header class="content-header col-md-8">
+  <header class="content-header col-xs-8">
     <div class="feed"><?php print $block->icon; ?></div>
     <h2><?php print $block->title; ?></h2> 
   </header>
-  <div class="content-header sidebar-header col-md-3 .col-md-offset-1">
+  <div class="content-header sidebar-header col-xs-3 .col-xs-offset-1">
     <h2>More search options</h2>
   </div>
 </div>
 <div class="row">
-  <div class="view-column col-md-8">
+  <div class="view-column col-xs-8">
     <?php print $content ?>
   </div>
-  <div class="sidebar-filter col-md-3">
+  <div class="sidebar-filter col-xs-3">
     <?php print _bvng_get_more_search_options(arg(2)); ?>
   </div>
 </div>

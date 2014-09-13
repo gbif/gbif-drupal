@@ -32,7 +32,7 @@
   if ($current_path == 'taxonomy/term/565'): ?>
 <div class="container well well-lg">
   <div class="row">
-    <header class="news-summary col-md-12">
+    <header class="news-summary col-xs-12">
       <h2><?php print $view_title = $view->get_title(); ?></h2>
       <h3><?php print $view->description; ?></h3>
     </header>
@@ -42,7 +42,7 @@
 <div class="container well well-lg well-margin-bottom">
 <?php endif; ?>
 <div class="row">
-  <div class="view-content-featured col-md-12">
+  <div class="view-content-featured col-xs-12">
     <div class="<?php print $classes; ?>">
       <?php if ($rows): ?>
         <div class="view-content">

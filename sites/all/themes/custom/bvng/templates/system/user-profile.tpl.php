@@ -36,7 +36,7 @@
 ?>
 <div class="container">
   <div class="row">
-    <div class="col-md-9 well well-lg well-margin-top">
+    <div class="col-xs-9 well well-lg well-margin-top">
 
       <div class="row">
         <div class="content-header user-header">

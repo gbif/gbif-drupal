@@ -290,7 +290,14 @@ function gbif_participant_menu_block_tree_alter(&$tree, &$config) {
  * Implements hook_preprocess_page().
  */
 function gbif_participant_preprocess_page(&$variables) {
-	if (isset($variables)) {
+	$status = drupal_get_http_header("status");
+	if ($status == '404 Not Found') {
+		// Take all menu tabs away.
+		if (isset($variables['page']['menu']['menu_block_gbif_navigation_country_page'])) {
+			unset($variables['page']['menu']['menu_block_gbif_navigation_country_page']);
+		}
+	}
+	elseif (isset($variables)) {
 
 		// Check if it's a participant.
 		$results = _gbif_participant_participant_query(NULL, arg(1));
@@ -388,7 +395,11 @@ function gbif_participant_data_build($gp_id, $iso2) {
  * Implements hook_page_build().
  */
 function gbif_participant_page_build(&$page) {
-	if (isset($page) && arg(0) == 'country') {
+	$status = drupal_get_http_header("status");
+	if ($status == '404 Not Found') {
+		// Do nothing.
+	}
+	elseif (isset($page) && arg(0) == 'country') {
 		// Prepare the text for use in the banner region.
 		// @todo To move this into an earlier phase of processing.
 		$results = _gbif_participant_participant_query(NULL, arg(1));
@@ -437,6 +448,15 @@ function gbif_participant_page_build(&$page) {
  * @return int|null|string
  */
 function gbif_participant_page_router($iso2, $chapter) {
+
+	// Sanity check for URL
+	$valid_iso2 = gbif_participant_country_lookup($iso2, 'iso2', 'iso2');
+	$valid_chapter = in_array($chapter, array('', 'summary', 'about', 'publishing', 'participation', 'news', 'publications'));
+
+	if (empty($valid_iso2) || $valid_chapter == FALSE) {
+		return MENU_NOT_FOUND;
+	}
+
 	$env = variable_get('environment_settings');
 
 	if (!isset($iso2) && !isset($chapter)) {

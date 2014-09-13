@@ -1,7 +1,7 @@
 <ul class="publication-list">
 	<?php foreach ($publications as $k => $p): ?>
 		<?php
-			$title_link = l($p['title'], $p['url']);
+			$title_link = l($p['title'], $p['url'], array('attributes' => array('target' => '_blank')));
 
 			// Authors
 			$authors = '';

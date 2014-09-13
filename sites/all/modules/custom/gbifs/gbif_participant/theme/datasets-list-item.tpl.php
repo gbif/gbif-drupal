@@ -10,9 +10,9 @@
 				' record',
 				'!count records',
 				array('!count' => number_format($dataset['occurrence_count']))
-			) . ' ';
+			);
 			if ($dataset['occurrence_geo'] != 0) {
-				$paragraph .= '(' . number_format($dataset['occurrence_geo']) . ' geo-referenced). ';
+				$paragraph .= ' (' . number_format($dataset['occurrence_geo']) . ' geo-referenced). ';
 			}
 			else {
 				$paragraph .= '. ';

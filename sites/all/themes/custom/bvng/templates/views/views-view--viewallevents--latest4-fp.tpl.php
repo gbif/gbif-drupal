@@ -28,7 +28,7 @@
  *
  */
 ?>
-<div class="col-md-4 latest4-fp">
+<div class="col-xs-4 latest4-fp">
 	<h3>Upcoming Events</h3>
 	<?php if ($attachment_before): ?>
 		<div class="attachment attachment-before">

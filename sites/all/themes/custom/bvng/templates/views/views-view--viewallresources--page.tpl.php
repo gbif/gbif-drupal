@@ -28,7 +28,7 @@
  */
 ?>
 <div class="row">
-  <header class="content-header col-md-8">
+  <header class="content-header col-xs-8">
     <h2>
     <?php
       $view_title = $view->get_title();
@@ -38,12 +38,12 @@
 			<a href="/resources/archive/rss"><img class="rss-icon" src="/sites/all/themes/custom/bvng/images/rss-feed.gif"/></a>
     </h2>
   </header>
-	<div class="content-header sidebar-header col-md-3">
+	<div class="content-header sidebar-header col-xs-3">
 		<h2>More GBIF resources</h2>
 	</div>
 </div>
 <div class="row">
-  <div class="view-column col-md-8">
+  <div class="view-column col-xs-8">
     <div class="<?php print $classes; ?>">
       <?php print render($title_prefix); ?>
       <?php if ($title): ?>
@@ -89,7 +89,7 @@
       <?php endif; ?>
     </div>
   </div>
-  <div class="sidebar-filter col-md-3">
+  <div class="sidebar-filter col-xs-3">
 		<ul class="filter-list">
 			<li>Filters coming soon...</li>
 		</ul>

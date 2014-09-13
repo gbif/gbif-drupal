@@ -85,12 +85,12 @@ $env = variable_get('environment_settings');
 <section id="masthead-fp">
 	<div class="container">
 		<div class="row">
-			<div class="col-md-3 col-md-push-9"> 
+			<div class="col-xs-3 col-xs-push-9"> 
 				<?php print render($page['account']); ?>
 			</div>
 		</div>
 		<div class="row">
-			<div id="region-navigation" class="col-md-12 fp">
+			<div id="region-navigation" class="col-xs-12 fp">
 				<div class="navbar-header">
 					<div id="branding">
 						<?php if ($logo): ?>
@@ -137,7 +137,7 @@ $env = variable_get('environment_settings');
 	<div class="region region-intro">
 		<div class="container well well-lg well-fp">
 			<div class="row row-intro-fp">
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<h3>Sharing biodiversity <br/>data for re-use</h3>
 					<ul>
 						<li><a href="whatisgbif">Learn about GBIF</a></li>
@@ -145,7 +145,7 @@ $env = variable_get('environment_settings');
 						<li><a href="<?php print_r($env['data_portal_base_url']); ?>/infrastructure/summary">Technical infrastructure</a></li>
 					</ul>
 				</div>
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<h3>Providing evidence for research and decisions</h3>
 					<ul>
 						<li><a href="usingdata/summary">Using data through GBIF</a></li>
@@ -153,7 +153,7 @@ $env = variable_get('environment_settings');
 						<li><a href="usingdata/policyrelevance">Supporting global targets</a></li>
 					</ul>
 				</div>
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<h3>Collaborating as a <br/> global community</h3>
 					<ul>
 						<li><a href="<?php print_r($env['data_portal_base_url']); ?>/participation/list">Current Participants</a></li>
@@ -220,7 +220,7 @@ $env = variable_get('environment_settings');
   <div id="footer-links">
     <div class="container">
       <div class="row">
-	<div class="footer col-md-12">
+	<div class="footer col-xs-12">
 	  <?php print render($page['links']); ?>
 	</div>
       </div>
@@ -229,7 +229,7 @@ $env = variable_get('environment_settings');
   <div id="footer-credits">
     <div class="container">
       <div class="row">
-	<div class="footer col-md-12">
+	<div class="footer col-xs-12">
 	    <?php print render($page['credits']); ?>
 	    <!-- Print the footer here for compatibility reason. -->
 	    <?php print render($page['footer']); ?>

@@ -28,7 +28,7 @@
  *
  */
 ?>
-<div class="col-md-4 featured-story-fp">
+<div class="col-xs-4 featured-story-fp">
 	<h3>Featured story</h3>
 	<?php if ($attachment_before): ?>
 		<div class="attachment attachment-before">

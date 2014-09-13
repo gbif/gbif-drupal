@@ -28,7 +28,7 @@
  */
 ?>
 <div class="row">
-  <header class="content-header col-md-8">
+  <header class="content-header col-xs-8">
     <h2>
 			<?php print $view->get_title(); ?>
 			<?php if (current_path() != 'newsroom/events/archive'): ?>
@@ -36,12 +36,12 @@
 			<?php endif; ?>
 		</h2>
 	</header>
-	<div class="content-header sidebar-header col-md-3">
+	<div class="content-header sidebar-header col-xs-3">
 		<h2></h2>
 	</div>
 </div>
 <div class="row">
-  <div class="view-column col-md-8">
+  <div class="view-column col-xs-8">
     <div class="<?php print $classes; ?>">
       <?php print render($title_prefix); ?>
       <?php if ($title): ?>
@@ -88,7 +88,7 @@
     </div>
   </div>
 
-  <div class="sidebar-filter col-md-3">
+  <div class="sidebar-filter col-xs-3">
 		<?php print _bvng_get_event_links(); ?>
   </div>
 

@@ -1,9 +1,9 @@
 <article class="container">
 	<div class="row">
 
-		<section id="species-occurrence" class="col-md-12 well well-lg">
+		<section id="species-occurrence" class="col-xs-12 well well-lg">
 			<div class="row">
-				<header class="content-header col-md-12">
+				<header class="content-header col-xs-12">
 					<h2>Number of occurrence records</h2>
 				</header>
 			</div>
@@ -13,35 +13,35 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<h3>Records by kingdom</h3>
 					<p>The number of available records categorized by kingdom.  "Unknown" includes records with taxonomic information that cannot be linked to available taxonomic checklists.</p>
 				</div>
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<h3>Records for Animalia</h3>
 					<p>The number of animal records categorized by the basis of record. "Unknown" includes records without defined basis of record or with an unrecognised value for basis of record.</p>
 				</div>
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<h3>Records for Plantae</h3>
 					<p>The number of plant records categorized by the basis of record. "Unknown" includes records without defined basis of record or with an unrecognised value for basis of record.</p>
 				</div>
 			</div>
 			<div class="row row-chart">
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<a href="<?php print $img_base_url;?>/occ_kingdom.png" data-lightbox="occ_kingdom"><img onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" src="<?php print $img_base_url;?>/occ_kingdom.png" class="img-thumbnail"></a>
 				</div>
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<a href="<?php print $img_base_url;?>/occ_animaliaBoR.png" data-lightbox="occ_AnimaliaBoR"><img onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" src="<?php print $img_base_url;?>/occ_animaliaBoR.png" class="img-thumbnail"></a>
 				</div>
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<a href="<?php print $img_base_url;?>/occ_plantaeBoR.png" data-lightbox="occ_PlantaeBoR"><img onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" src="<?php print $img_base_url;?>/occ_plantaeBoR.png" class="img-thumbnail"></a>
 				</div>
 			</div>
 		</section>
 
-		<section id="species-occurrence" class="col-md-12 well well-lg">
+		<section id="species-occurrence" class="col-xs-12 well well-lg">
 			<div class="row">
-				<header class="content-header col-md-12">
+				<header class="content-header col-xs-12">
 					<h2>Species counts</h2>
 				</header>
 			</div>
@@ -55,35 +55,35 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<h3>Species count by kingdom</h3>
 					<p>The number of species with available occurrence records, categorized by kingdom.</p>
 				</div>
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<h3>Species count for specimen records</h3>
 					<p>The number of species associated with specimen records.</p>
 				</div>
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<h3>Species count for observation records</h3>
 					<p>The number of species associated with observation records.</p>
 				</div>
 			</div>
 			<div class="row row-chart">
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<a href="<?php print $img_base_url;?>/spe_kingdom.png" data-lightbox="spe_kingdom"><img onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" src="<?php print $img_base_url;?>/spe_kingdom.png" class="img-thumbnail"></a>
 				</div>
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<a href="<?php print $img_base_url;?>/spe_kingdom_specimen.png" data-lightbox="spe_kingdom_specimen"><img onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" src="<?php print $img_base_url;?>/spe_kingdom_specimen.png" class="img-thumbnail"></a>
 				</div>
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<a href="<?php print $img_base_url;?>/spe_kingdom_observation.png" data-lightbox="spe_kingdom_observation"><img onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" src="<?php print $img_base_url;?>/spe_kingdom_observation.png" class="img-thumbnail"></a>
 				</div>
 			</div>
 		</section>
 
-		<section id="occurrence-temporal" class="col-md-12 well well-lg">
+		<section id="occurrence-temporal" class="col-xs-12 well well-lg">
 			<div class="row">
-				<header class="content-header col-md-12">
+				<header class="content-header col-xs-12">
 					<h2>Time and seasonality</h2>
 				</header>
 			</div>
@@ -93,43 +93,43 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<h3>Records by year of occurrence</h3>
 					<p>The number of occurrence records available for each year since 1950.</p>
 				</div>
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<h3>Species by year of occurrence</h3>
 					<p>The number of species (see above) for which records are available for each year since 1950.</p>
 				</div>
 			</div>
 			<div class="row row-chart">
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<a href="<?php print $img_base_url;?>/occ_yearCollected.png" data-lightbox="occ_yearCollected"><img onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" src="<?php print $img_base_url;?>/occ_yearCollected.png" class="img-thumbnail"></a>
 				</div>
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<a href="<?php print $img_base_url;?>/spe_yearCollected.png" data-lightbox="spe_yearCollected"><img onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" src="<?php print $img_base_url;?>/spe_yearCollected.png" class="img-thumbnail"></a>
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<h3>Records by day of year</h3>
 					<p>The number of occurrence records available for each day of the year.</p>
 				</div>
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<h3>Species by day of year</h3>
 					<p>The number of species (see above) for which records are available for each day of the year.</p>
 				</div>
 			</div>
 			<div class="row row-chart">
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<a href="<?php print $img_base_url;?>/occ_dayCollected.png" data-lightbox="occ_dayCollected"><img onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" src="<?php print $img_base_url;?>/occ_dayCollected.png" class="img-thumbnail"></a>
 				</div>
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<a href="<?php print $img_base_url;?>/spe_dayCollected.png" data-lightbox="spe_dayCollected"><img onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" src="<?php print $img_base_url;?>/spe_dayCollected.png" class="img-thumbnail"></a>
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-12">
+				<div class="col-xs-12">
 					<div class="bs-callout bs-callout-warning">
 						<h3>Note</h3>
 						<p>These charts may reveal patterns that represent biases in data collection (seasonality, public holidays) or potential issues in data management (disproportionate numbers of records shown for the first or last days in the year or each month or week).
@@ -140,9 +140,9 @@
 			</div>
 		</section>
 
-		<section id="occurrence-completeness" class="col-md-12 well well-lg">
+		<section id="occurrence-completeness" class="col-xs-12 well well-lg">
 			<div class="row">
-				<header class="content-header col-md-12">
+				<header class="content-header col-xs-12">
 					<h2>Completeness and precision</h2>
 				</header>
 			</div>
@@ -156,122 +156,122 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-12">
+				<div class="col-xs-12">
 					<h3>Completeness</h3>
 					<p>These charts illustrate changes in the number of records considered complete according to the definition above.  Separate charts separately show the same information for specimen records and for observation records. Subsequent charts illustrate the component elements that affect the number of complete records.</p>
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<h4 class="text-center">All records</h4>
 				</div>
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<h4 class="text-center">Specimen records</h4>
 				</div>
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<h4 class="text-center">Observation records</h4>
 				</div>
 			</div>
 			<div class="row row-chart">
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<a href="<?php print $img_base_url;?>/occ_complete.png" data-lightbox="occ_complete"><img onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" src="<?php print $img_base_url;?>/occ_complete.png" class="img-thumbnail"></a>
 				</div>
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<a href="<?php print $img_base_url;?>/occ_complete_specimen.png" data-lightbox="occ_complete_specimen"><img onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" src="<?php print $img_base_url;?>/occ_complete_specimen.png" class="img-thumbnail"></a>
 				</div>
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<a href="<?php print $img_base_url;?>/occ_complete_observation.png" data-lightbox="occ_complete_observation"><img onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" src="<?php print $img_base_url;?>/occ_complete_observation.png" class="img-thumbnail"></a>
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-12">
+				<div class="col-xs-12">
 					<h3>Taxonomic precision</h3>
 					<p>These charts illustrate changes in the number of available records which include an identification at least to the species rank.  The numbers of records identified to an infraspecific rank or to a genus are also shown.</p>
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<h4 class="text-center">All records</h4>
 				</div>
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<h4 class="text-center">Specimen records</h4>
 				</div>
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<h4 class="text-center">Observation records</h4>
 				</div>
 			</div>
 			<div class="row row-chart">
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<a href="<?php print $img_base_url;?>/occ_complete_kingdom.png" data-lightbox="occ_complete_kingdom"><img onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" src="<?php print $img_base_url;?>/occ_complete_kingdom.png" class="img-thumbnail"></a>
 				</div>
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<a href="<?php print $img_base_url;?>/occ_complete_kingdom_specimen.png" data-lightbox="occ_complete_kingdom_specimen"><img onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" src="<?php print $img_base_url;?>/occ_complete_kingdom_specimen.png" class="img-thumbnail"></a>
 				</div>
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<a href="<?php print $img_base_url;?>/occ_complete_kingdom_observation.png" data-lightbox="occ_complete_kingdom_observation"><img onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" src="<?php print $img_base_url;?>/occ_complete_kingdom_observation.png" class="img-thumbnail"></a>
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-12">
+				<div class="col-xs-12">
 					<h3>Geographic precision</h3>
 					<p>These charts illustrate changes in the number of available records which include coordinates for which no known issues have been detected.  For records without accepted valid coordinates, these charts also show the number of records for which the country of occurrence is known.</p>
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<h4 class="text-center">All records</h4>
 				</div>
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<h4 class="text-center">Specimen records</h4>
 				</div>
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<h4 class="text-center">Observation records</h4>
 				</div>
 			</div>
 			<div class="row row-chart">
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<a href="<?php print $img_base_url;?>/occ_complete_geo.png" data-lightbox="occ_complete_geo"><img onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" src="<?php print $img_base_url;?>/occ_complete_geo.png" class="img-thumbnail"></a>
 				</div>
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<a href="<?php print $img_base_url;?>/occ_complete_geo_specimen.png" data-lightbox="occ_complete_geo_specimen"><img onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" src="<?php print $img_base_url;?>/occ_complete_geo_specimen.png" class="img-thumbnail"></a>
 				</div>
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<a href="<?php print $img_base_url;?>/occ_complete_geo_observation.png" data-lightbox="occ_complete_geo_observation"><img onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" src="<?php print $img_base_url;?>/occ_complete_geo_observation.png" class="img-thumbnail"></a>
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-12">
+				<div class="col-xs-12">
 					<h3>Temporal precision</h3>
 					<p>These charts illustrate changes in the number of available records which include a complete date including year, month and day.  The numbers of records including only the month and year or only the year are also shown.</p>
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<h4 class="text-center">All records</h4>
 				</div>
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<h4 class="text-center">Specimen records</h4>
 				</div>
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<h4 class="text-center">Observation records</h4>
 				</div>
 			</div>
 			<div class="row row-chart">
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<a href="<?php print $img_base_url;?>/occ_complete_date.png" data-lightbox="occ_complete_date"><img onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" src="<?php print $img_base_url;?>/occ_complete_date.png" class="img-thumbnail"></a>
 				</div>
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<a href="<?php print $img_base_url;?>/occ_complete_date_specimen.png" data-lightbox="occ_complete_date"><img onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" src="<?php print $img_base_url;?>/occ_complete_date_specimen.png" class="img-thumbnail"></a>
 				</div>
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<a href="<?php print $img_base_url;?>/occ_complete_date_observation.png" data-lightbox="occ_complete_date_observation"><img onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" src="<?php print $img_base_url;?>/occ_complete_date_observation.png" class="img-thumbnail"></a>
 				</div>
 			</div>
 		</section>
 
-		<section id="occurrence-cells" class="col-md-12 well well-lg">
+		<section id="occurrence-cells" class="col-xs-12 well well-lg">
 			<div class="row">
-				<header class="content-header col-md-12">
+				<header class="content-header col-xs-12">
 					<h2>Geographic coverage for recorded species</h2>
 				</header>
 			</div>
@@ -282,32 +282,32 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<h4 class="text-center">1.0 degree</h4>
 				</div>
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<h4 class="text-center">0.5 degree</h4>
 				</div>
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<h4 class="text-center">0.1 degree</h4>
 				</div>
 			</div>
 			<div class="row row-chart">
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<a href="<?php print $img_base_url;?>/occ_cells_one_deg.png" data-lightbox="occ_cells_one_deg"><img onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" src="<?php print $img_base_url;?>/occ_cells_one_deg.png" class="img-thumbnail"></a>
 				</div>
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<a href="<?php print $img_base_url;?>/occ_cells_half_deg.png" data-lightbox="occ_cells_half_deg"><img onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" src="<?php print $img_base_url;?>/occ_cells_half_deg.png" class="img-thumbnail"></a>
 				</div>
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<a href="<?php print $img_base_url;?>/occ_cells_point_one_deg.png" data-lightbox="occ_cells_point_one_deg"><img onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" src="<?php print $img_base_url;?>/occ_cells_point_one_deg.png" class="img-thumbnail"></a>
 				</div>
 			</div>
 		</section>
 
-		<section id="occurrence-repatriation" class="col-md-12 well well-lg">
+		<section id="occurrence-repatriation" class="col-xs-12 well well-lg">
 			<div class="row">
-				<header class="content-header col-md-12">
+				<header class="content-header col-xs-12">
 					<h2>Data sharing with country of origin</h2>
 				</header>
 			</div>
@@ -319,7 +319,7 @@
 				</div>
 			</div>
 			<div class="row row-chart">
-				<div class="col-md-4">
+				<div class="col-xs-4">
 					<a href="<?php print $img_base_url;?>/occ_repatriation.png" data-lightbox="occ_repatriation"><img onerror="this.src='<?php print $assets_url;?>/img/insufficient-data.png'" src="<?php print $img_base_url;?>/occ_repatriation.png" class="img-thumbnail"></a>
 				</div>
 			</div>

@@ -1,9 +1,9 @@
 <article class="container">
 	<div class="row">
 
-		<section id="context" class="col-md-12 well well-lg">
+		<section id="context" class="col-xs-12 well well-lg">
 			<div class="row">
-				<header class="content-header col-md-12">
+				<header class="content-header col-xs-12">
 					<h2>Context</h2>
 				</header>
 			</div>
@@ -37,9 +37,9 @@
 			</div>
 		</section>
 
-		<section id="improving" class="col-md-12 well well-lg">
+		<section id="improving" class="col-xs-12 well well-lg">
 			<div class="row">
-				<header class="content-header col-md-12">
+				<header class="content-header col-xs-12">
 					<h2>Understanding the trends and improving the charts</h2>
 				</header>
 			</div>
@@ -86,9 +86,9 @@
 			</div>
 		</section>
 
-		<section id="involved" class="col-md-12 well well-lg">
+		<section id="involved" class="col-xs-12 well well-lg">
 			<div class="row">
-				<header class="content-header col-md-12">
+				<header class="content-header col-xs-12">
 					<h2>How to get involved</h2>
 				</header>
 			</div>

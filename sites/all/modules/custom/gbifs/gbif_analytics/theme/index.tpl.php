@@ -4,9 +4,9 @@
 ?>
 <article class="container">
 	<div class="row">
-		<section id="countries" class="col-md-12 well well-lg">
+		<section id="countries" class="col-xs-12 well well-lg">
 			<div class="row">
-				<header class="content-header col-md-12">
+				<header class="content-header col-xs-12">
 					<p>
 						<?php print $description;?>
 					</p>
@@ -16,7 +16,7 @@
 				<div class="content content-full">
   				<?php
 	  			  foreach ($columular_countries as $col) {
-		  			  print '<div class="col-md-3"><ul class="list-unstyled">';
+		  			  print '<div class="col-xs-3"><ul class="list-unstyled">';
 			  			foreach ($col as $country_json) {
 				  		  print '<li><a href="' . $country_json['iso'] . '/' . $type . '">' . $country_json['title'] . '</a></li>';
 					  	}

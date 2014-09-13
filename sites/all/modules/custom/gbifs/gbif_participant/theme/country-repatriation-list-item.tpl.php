@@ -1,3 +1,7 @@
+<?php
+	$count = count($countries);
+	$i = 0;
+?>
 <ul>
 <?php foreach ($countries as $k => $country): ?>
 <?php	switch ($list_mode): ?>
@@ -54,8 +58,12 @@
 		<li>
 			<strong><?php print $title_link; ?></strong>
 			<p><?php print $paragraph; ?></p>
+			<?php if ($i < $count - 1): ?>
+				<hr>
+			<?php endif; ?>
 		</li>
 <?php break; ?>
 <?php endswitch; ?>
+<?php $i++; ?>
 <?php endforeach; ?>
 </ul>

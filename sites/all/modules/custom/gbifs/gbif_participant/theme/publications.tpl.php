@@ -20,7 +20,7 @@
 					</header>
 				</div>
 				<div class="row">
-					<div class="content publication-list content-full">
+					<div class="content flat-list content-full">
 						<?php print $html['list_publications']; ?>
 					</div>
 				</div>

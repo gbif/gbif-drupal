@@ -81,17 +81,17 @@
 ?>
 <article id="node-<?php print $node->nid; ?>" class="container <?php print $classes; ?>">
 	<div class="row">
-      <section id="participation" class="col-md-12 well well-lg well-margin-top clearfix"<?php print $attributes; ?>>
+      <section id="participation" class="col-xs-12 well well-lg well-margin-top clearfix"<?php print $attributes; ?>>
         <div class="row">
-					<header class="content-header col-md-8">
+					<header class="content-header col-xs-8">
 						<h2>Participation</h2>
 					</header>
-					<header class="content-header sidebar-header-country col-md-4">
+					<header class="content-header sidebar-header-country col-xs-4">
 						<h2>Node</h2>
 					</header>
         </div>
         <div class="row">
-          <div class="content col-md-8">
+          <div class="content col-xs-8">
 						<h3>Member Status</h3>
 						<p><?php print $participant_ims->gbif_membership; ?></p>
 						<h3>GBIF Participant since</h3>
@@ -99,7 +99,7 @@
 						<?php print $participant_ims->gbif_region; ?>
 						<?php print $participant_ims->contact_participation; ?>
           </div>
-          <aside class="content content-sidebar col-md-4">
+          <aside class="content content-sidebar col-xs-4">
 						<h3>Node name</h3>
 						<p><?php print $participant_ims->node_name_full; ?></p>
 						<h3>Address</h3>
@@ -124,20 +124,20 @@
       </section>
 
 			<?php if (count($participant_node) != 0): ?>
-			<section id="description" class="col-md-12 well well-lg">
+			<section id="description" class="col-xs-12 well well-lg">
 				<div class="row">
-					<header class="content-header col-md-12">
+					<header class="content-header col-xs-12">
 						<h2>Learn more</h2>
 					</header>
 				</div>
 				<div class="row">
-					<div class="content col-md-8">
+					<div class="content col-xs-8">
 						<?php print render($content['gp_history']); ?>
 						<?php print render($content['gp_vision_mission']); ?>
 						<?php print render($content['gp_structure']); ?>
 						<?php print render($content['gp_national_funding']); ?>
 					</div>
-					<aside class="content content-sidebar col-md-4">
+					<aside class="content content-sidebar col-xs-4">
 						<?php if (isset($participant_node['social_media'])): ?>
 							<?php print $participant_node['social_media']; ?>
 						<?php endif; ?>
@@ -150,24 +150,24 @@
 			</section>
 			<?php endif; ?>
 
-			<section id="contacts" class="col-md-12 well well-lg">
+			<section id="contacts" class="col-xs-12 well well-lg">
 				<div class="row">
-					<header class="content-header col-md-12">
+					<header class="content-header col-xs-12">
 						<h2>Contacts</h2>
 					</header>
 				</div>
 				<div class="row">
-					<div class="content col-md-8">
+					<div class="content col-xs-8">
 						<?php print $participant_ims->contact_contacts; ?>
 					</div>
-					<aside class="col-md-4">
+					<aside class="col-xs-4">
 
 					</aside>
 				</div>
 			</section>
-			<section id="endorsed-publishers" class="col-md-12 well well-lg">
+			<section id="endorsed-publishers" class="col-xs-12 well well-lg">
 				<div class="row">
-					<header class="content-header col-md-12">
+					<header class="content-header col-xs-12">
 						<h2>Endorsed Publishers</h2>
 					</header>
 				</div>

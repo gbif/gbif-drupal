@@ -5,7 +5,7 @@
 	<div class="row">
 
 			<?php if ($html['count'] == NULL): ?>
-			<section id="activity" class="col-md-12 well well-lg no-activity">
+			<section id="activity" class="col-xs-12 well well-lg no-activity">
 				<div class="row">
 					<div class="content">
 						<div class="notice-icon"></div>
@@ -17,23 +17,23 @@
 			<?php endif; ?>
 
 			<?php if ($html['count'] > 0): ?>
-      <section id="data-from" class="col-md-12 well well-lg well-margin-top clearfix"<?php print $attributes; ?>>
+      <section id="data-from" class="col-xs-12 well well-lg well-margin-top clearfix"<?php print $attributes; ?>>
 				<div id="map-from" class="country-map">
 					<iframe id="mapByFrame" name="map" src="<?php print $env['gbif_api_base_url']; ?>/v1/map/index.html?type=PUBLISHING_COUNTRY&amp;key=<?php print $iso2; ?>" allowfullscreen="" height="100%" width="100%" frameborder="0"></iframe>
 				</div>
 				<div class="block-map-sidebar">
 					<div class="row">
-						<header class="content-header col-md-8">
+						<header class="content-header col-xs-8">
 
 						</header>
-						<header class="content-header sidebar-header-country col-md-4">
+						<header class="content-header sidebar-header-country col-xs-4">
 							<h2><?php print $html['from_title']; ?></h2>
 						</header>
 					</div>
 					<div class="row">
-						<div class="col-md-8">
+						<div class="col-xs-8">
 						</div>
-						<div class="content content-sidebar map-right col-md-4">
+						<div class="content content-sidebar map-right col-xs-4">
 							<?php print $html['from']; ?>
 						</div>
 					</div>
@@ -41,9 +41,9 @@
       </section>
 			<?php endif; ?>
 
-			<section id="latest-datasets-published" class="col-md-12 well well-lg">
+			<section id="latest-datasets-published" class="col-xs-12 well well-lg">
 				<div class="row">
-					<header class="content-header col-md-12">
+					<header class="content-header col-xs-12">
 						<h2><?php print $html['title']; ?></h2>
 					</header>
 				</div>
@@ -55,9 +55,9 @@
 			</section>
 
 			<?php if ($html['count'] > 0): ?>
-			<section id="countries-origin" class="col-md-12 well well-lg">
+			<section id="countries-origin" class="col-xs-12 well well-lg">
 				<div class="row">
-					<header class="content-header col-md-12">
+					<header class="content-header col-xs-12">
 						<h2><?php print $html['countries_title']; ?></h2>
 					</header>
 				</div>
@@ -70,9 +70,9 @@
 			<?php endif; ?>
 
 			<?php if ($html['count'] > 0): ?>
-			<section id="data-published-by" class="col-md-12 well well-lg">
+			<section id="data-published-by" class="col-xs-12 well well-lg">
 				<div class="row">
-					<header class="content-header col-md-12">
+					<header class="content-header col-xs-12">
 						<h2><?php print $metrics_title; ?></h2>
 					</header>
 				</div>

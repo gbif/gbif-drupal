@@ -10,9 +10,9 @@
 </div>
 <article id="country-publishers" class="container <?php print $classes; ?>">
 	<div class="row">
-      <section id="publishers" class="col-md-12 well well-lg well-margin-top clearfix"<?php print $attributes; ?>>
+      <section id="publishers" class="col-xs-12 well well-lg well-margin-top clearfix"<?php print $attributes; ?>>
         <div class="row">
-					<header class="content-header col-md-12">
+					<header class="content-header col-xs-12">
 						<h2><?php print $html['largest_datasets_title']; ?></h2>
 					</header>
         </div>

@@ -591,7 +591,12 @@ function gbif_participant_page_router($iso2, $chapter, $sub_chapter) {
 						));
 					}
 				case 'participation':
-					$page = node_page_view($node);
+					if ($participantID == NULL) {
+						return MENU_NOT_FOUND;
+					}
+					else {
+						$page = node_page_view($node);
+					}
 					return print drupal_render_page($page);
 				case 'publishers':
 					$html = _gbif_participant_print_endorsed_publishers($participantID, $iso2, 'full');

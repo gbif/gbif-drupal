@@ -8,12 +8,14 @@
 			$paragraph = t('A data publisher from ');
 			$paragraph .= (!empty($publisher['city'])) ? trim($publisher['city']) . ', ' : '';
 			$country_title = gbif_participant_country_lookup($publisher['country'], 'iso2', 'title');
-			$paragraph .= $country_title. ' with ';
-			$published = format_plural($publisher['numPublishedDatasets'],
-				'1 published dataset',
-				'@count published datasets'
-			);
-			$paragraph .= $published;
+			$paragraph .= $country_title;
+			if ($publisher['numPublishedDatasets'] != 0) {
+				$published = format_plural($publisher['numPublishedDatasets'],
+					'1 published dataset',
+					'@count published datasets'
+				);
+				$paragraph .= ' with ' . $published;
+			}
 			$paragraph .= '.';
 		?>
 		<?php if ($mode == 'digest'): ?>

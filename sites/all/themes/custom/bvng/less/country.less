@@ -1,19 +1,57 @@
-.country-map {
-  width: 630px;
-  height: 425px;
-  margin-top: -24px;
-  margin-left: -24px;
-  padding-right: 0px;
-  padding-left: 0px;
-  overflow: hidden;
-  border-top-left-radius: 3px;
-  border-bottom-left-radius: 3px;
-  position: absolute;
+@media screen and (min-width: 1000px) {
+  .country-map {
+    width: 630px;
+    height: 425px;
+    margin-top: -24px;
+    margin-left: -24px;
+    padding-right: 0px;
+    padding-left: 0px;
+    overflow: hidden;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+    position: absolute;
+  }
+
+  .content-sidebar.map-right {
+    margin-left: 45px;
+    float: left;
+  }
+
+  #data-about, #data-from {
+    height: 425px;
+  }
+  
 }
 
-#data-about, #data-from {
-  height: 425px;
+@media screen and (min-width: 700px) and (max-width: 1000px) {
+  .country-map {
+    width: 630px;
+    height: 425px;
+    margin-top: -24px;
+    margin-left: -24px;
+    padding-right: 0px;
+    padding-left: 0px;
+    overflow: hidden;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+  }
+
+  .content-sidebar.map-right {
+    margin-left: 45px;
+  }
+  
+  .block-map-sidebar {
+    margin-top: 20px;
+  }
+
+  #data-about, #data-from, #participation {
+    height: 750px;
+    width: 630px;
+  }
+  
 }
+
+
 
 .sidebar-header-country {
   margin-left: 30px;
@@ -101,10 +139,6 @@
     }
     
   }
-}
-
-.content-sidebar.map-right {
-  margin-left: 45px;
 }
 
 .column {

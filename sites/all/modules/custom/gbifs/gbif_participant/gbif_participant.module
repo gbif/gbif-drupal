@@ -1563,7 +1563,10 @@ function _gbif_participant_country_data($iso2) {
 				}
 
 				$html .= '<li>';
-				$html .= $link_datasets . ' ' . t('with') . ' ' . $link_records;
+				$html .= $link_datasets;
+				if ($data_type != 'metadata') {
+					$html .= ' ' . t('with') . ' ' . $link_records;
+				}
 				$html .= ($data_type == 'metadata' && $type == 'about') ? t(' relevant to !country', array('!country' => $country_name)) : '';
 				$html .= '.</li>';
 			}

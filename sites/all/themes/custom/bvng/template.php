@@ -716,6 +716,9 @@ function bvng_js_alter(&$js) {
 }
 
 function _bvng_well_types($req_path, $system_main) {
+
+	$status = drupal_get_http_header("status");
+
   // Term pages that has a special layout, hence no filter well.
   $special_layout = array(
     '565',
@@ -752,7 +755,12 @@ function _bvng_well_types($req_path, $system_main) {
 		}
   }
 	elseif (drupal_match_path($req_path, 'country*') || drupal_match_path($req_path, 'analytics*')) {
-		return 'none';
+		if ($status == '404 Not Found') {
+			return 'normal';
+		}
+		else {
+			return 'none';
+		}
 	}
   elseif ($req_path) {
     // Others are views.

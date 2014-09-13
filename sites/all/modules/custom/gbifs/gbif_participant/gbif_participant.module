@@ -456,7 +456,7 @@ function gbif_participant_page_router($iso2, $chapter) {
 	if (arg(0) == 'country' && !isset($iso2) && !isset($chapter)) {
 		// Do nothing.
 	}
-	elseif (empty($valid_iso2) || $valid_chapter == FALSE) {
+	elseif (empty($valid_iso2) || (!empty($chapter) && $valid_chapter == FALSE)) {
 		return MENU_NOT_FOUND;
 	}
 

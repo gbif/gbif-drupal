@@ -1440,16 +1440,16 @@ function _gbif_participant_format_social_media($gp_comm_social) {
 function gbif_participant_country_count($iso2) {
 	$counts = array();
 	$calls = array(
-		'dataset_about' => 'http://api.gbif.org/v1/occurrence/counts/datasets?country=',
-		'occurrence_about' => 'http://api.gbif.org/v1/occurrence/count?country=',
-		'checklist_about' => 'http://api.gbif.org/v1/dataset/search?limit=10000&type=CHECKLIST&country=',
-		'metadata_about' => 'http://api.gbif.org/v1/dataset/search?limit=10000&type=METADATA&country=',
-		'contributed_by' => 'http://api.gbif.org/v1/occurrence/counts/publishingCountries?country=',
-		'dataset_from' => 'http://api.gbif.org/v1/dataset/search?limit=10000&type=OCCURRENCE&publishingCountry=',
-		'occurrence_from' => 'http://api.gbif.org/v1/occurrence/count?publishingCountry=',
-		'checklist_from' => 'http://api.gbif.org/v1/dataset/search?limit=10000&type=CHECKLIST&publishingCountry=',
-		'metadata_from' => 'http://api.gbif.org/v1/dataset/search?limit=10000&type=METADATA&publishingCountry=',
-		'contributing_to' => 'http://api.gbif.org/v1/occurrence/counts/countries?publishingCountry=',
+		'dataset_about' => _gbif_participant_api_occurrence() . '/counts/datasets?country=',
+		'occurrence_about' => _gbif_participant_api_occurrence() . '/count?country=',
+		'checklist_about' => _gbif_participant_api_dataset() . '/search?limit=10000&type=CHECKLIST&country=',
+		'metadata_about' => _gbif_participant_api_dataset() . '/search?limit=10000&type=METADATA&country=',
+		'contributed_by' => _gbif_participant_api_occurrence() . '/counts/publishingCountries?country=',
+		'dataset_from' => _gbif_participant_api_dataset() . '/search?limit=10000&type=OCCURRENCE&publishingCountry=',
+		'occurrence_from' => _gbif_participant_api_occurrence() . '/count?publishingCountry=',
+		'checklist_from' => _gbif_participant_api_dataset() . '/search?limit=10000&type=CHECKLIST&publishingCountry=',
+		'metadata_from' => _gbif_participant_api_dataset() . '/search?limit=10000&type=METADATA&publishingCountry=',
+		'contributing_to' => _gbif_participant_api_occurrence() . '/counts/countries?publishingCountry=',
 	);
 	foreach ($calls as $call_type => $call) {
 		$json = json_decode(file_get_contents($call . $iso2));

@@ -17,7 +17,7 @@
 					</header>
         </div>
         <div class="row">
-					<div class="content content-full">
+					<div class="content content-full flat-list">
 						<?php print $html['list']; ?>
 					</div>
         </div>

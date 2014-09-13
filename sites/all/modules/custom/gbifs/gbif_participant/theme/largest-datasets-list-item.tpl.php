@@ -1,3 +1,7 @@
+<?php
+	$count = count($datasets);
+	$i = 0;
+?>
 <ul>
 <?php foreach ($datasets as $k => $dataset): ?>
 		<?php
@@ -30,6 +34,10 @@
 	<li>
 		<?php print $title_link; ?><br>
 		<p><?php print $paragraph; ?></p>
+		<?php if ($mode == 'full' && $i < $count - 1): ?>
+			<hr>
+		<?php endif; ?>
 	</li>
+<?php $i++; ?>
 <?php endforeach; ?>
 </ul>

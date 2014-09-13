@@ -1,4 +1,7 @@
-<ul>
+<?php
+	$count = count($publishers);
+	$i = 0;
+?><ul>
 	<?php foreach ($publishers as $k => $publisher): ?>
 		<?php
 			$title_link = l($publisher['title'], $env['data_portal_base_url'] . '/publisher/' . $publisher['key']);
@@ -24,7 +27,11 @@
 				<?php if (!empty($publisher['description'])): ?>
 				<p><?php print $publisher['description']; ?></p>
 				<?php endif; ?>
+				<?php if ($i < $count - 1): ?>
+					<hr>
+				<?php endif; ?>
 			</li>
 		<?php endif; ?>
+		<?php $i++; ?>
 	<?php endforeach; ?>
 </ul>

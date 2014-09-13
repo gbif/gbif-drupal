@@ -12,12 +12,12 @@
 	<div class="row">
       <section id="publishers" class="col-md-12 well well-lg well-margin-top clearfix"<?php print $attributes; ?>>
         <div class="row">
-					<header class="content-header col-md-8">
+					<header class="content-header col-md-12">
 						<h2><?php print $html['countries_title']; ?></h2>
 					</header>
         </div>
         <div class="row">
-					<div class="content content-full">
+					<div class="content content-full flat-list">
 						<?php print $html['countries_list']; ?>
 					</div>
         </div>

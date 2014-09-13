@@ -19,7 +19,7 @@
 					</header>
         </div>
         <div class="row">
-					<div class="content news-list col-md-8">
+					<div class="content flat-list col-md-8">
 						<?php print $html['list']; ?>
 					</div>
 					<div class="content content-sidebar col-md-4">

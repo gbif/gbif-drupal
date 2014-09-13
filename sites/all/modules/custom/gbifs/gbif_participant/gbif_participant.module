@@ -447,16 +447,27 @@ function gbif_participant_page_build(&$page) {
  * @param $chapter
  * @return int|null|string
  */
-function gbif_participant_page_router($iso2, $chapter) {
+function gbif_participant_page_router($iso2, $chapter, $sub_chapter) {
 
 	// Sanity check for URL
+	$current_path = current_path();
+	$url = drupal_parse_url($current_path);
+	$arg = arg();
+
 	$valid_iso2 = gbif_participant_country_lookup($iso2, 'iso2', 'iso2');
 	$valid_chapter = in_array($chapter, array('summary', 'about', 'publishing', 'publishers', 'participation', 'news', 'publications'));
+	$valid_sub_chapter = in_array($sub_chapter, array('datasets', 'countries'));
 
 	if (arg(0) == 'country' && !isset($iso2) && !isset($chapter)) {
-		// Do nothing.
+		// Do nothing. This should directs to the country list.
 	}
 	elseif (empty($valid_iso2) || (!empty($chapter) && $valid_chapter == FALSE)) {
+		return MENU_NOT_FOUND;
+	}
+	elseif (!empty($sub_chapter) && $valid_sub_chapter == FALSE) {
+		return MENU_NOT_FOUND;
+	}
+	elseif (count($arg) > 4) {
 		return MENU_NOT_FOUND;
 	}
 

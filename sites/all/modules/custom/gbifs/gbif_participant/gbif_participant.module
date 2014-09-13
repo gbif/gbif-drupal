@@ -451,7 +451,14 @@ function gbif_participant_page_router($iso2, $chapter) {
 
 	// Sanity check for URL
 	$valid_iso2 = gbif_participant_country_lookup($iso2, 'iso2', 'iso2');
-	$valid_chapter = in_array($chapter, array('', 'summary', 'about', 'publishing', 'participation', 'news', 'publications'));
+	$valid_chapter = in_array($chapter, array('summary', 'about', 'publishing', 'participation', 'news', 'publications'));
+
+	if (arg(0) == 'country' && !isset($iso2) && !isset($chapter)) {
+		// Do nothing.
+	}
+	elseif (empty($valid_iso2) || $valid_chapter == FALSE) {
+		return MENU_NOT_FOUND;
+	}
 
 	$env = variable_get('environment_settings');
 

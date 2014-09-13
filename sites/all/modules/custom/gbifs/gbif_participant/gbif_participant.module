@@ -915,8 +915,9 @@ function _gbif_participant_print_endorsed_publishers($participantID, $iso2, $mod
 			$first_ten = array_slice($publishers, 0, 10, TRUE);
 			$html = theme('gbif_participant_publishers_list_item', array('publishers' => $first_ten, 'env' => $env, 'mode' => $mode));
 			if ($count > 10) {
-				$remain_count = $count - 10;
-				$link_more = l($remain_count . ' more', 'country/' . $iso2 . '/publishers');
+				// $remain_count = $count - 10;
+				$view_all_text = t('View all !count endorsed publishers', array('!count' => $count));
+				$link_more = l($view_all_text, 'country/' . $iso2 . '/publishers');
 				$html .= $link_more . '...';
 			}
 			break;
@@ -1063,8 +1064,8 @@ function _gbif_participant_print_largest_datasets($iso2, $mode) {
 			$output['largest_datasets_title'] = t('Largest occurrence datasets about') . ' ' . $country_title;
 			$html = theme('gp_largest_datasets_list_item', array('datasets' => $datasets, 'env' => $env, 'iso2' => $iso2, 'mode' => $mode));
 			if ($count > 6) {
-				$remain_count = $count - 6;
-				$link_more = l($remain_count . ' more', 'country/' . $iso2 . '/about/datasets');
+				$view_all_text = t('View all !count results', array('!count' => $count));
+				$link_more = l($view_all_text, 'country/' . $iso2 . '/about/datasets');
 				$html .= $link_more . '...';
 			}
 			break;

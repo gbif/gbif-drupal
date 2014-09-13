@@ -11,7 +11,12 @@
 				'!count records',
 				array('!count' => number_format($dataset['occurrence_count']))
 			) . ' ';
-			$paragraph .= '(' . number_format($dataset['occurrence_geo']) . ' geo-referenced). ';
+			if ($dataset['occurrence_geo'] != 0) {
+				$paragraph .= '(' . number_format($dataset['occurrence_geo']) . ' geo-referenced). ';
+			}
+			else {
+				$paragraph .= '. ';
+			}
 			$paragraph .= t('Published by ');
 			$paragraph .= l($dataset['publishingOrganizationTitle'], $env['data_portal_base_url'] . '/publisher/' . $dataset['publishingOrganizationKey']) . '.';
 		?>

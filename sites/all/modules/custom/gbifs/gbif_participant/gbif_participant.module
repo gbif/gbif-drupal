@@ -451,7 +451,7 @@ function gbif_participant_page_router($iso2, $chapter) {
 
 	// Sanity check for URL
 	$valid_iso2 = gbif_participant_country_lookup($iso2, 'iso2', 'iso2');
-	$valid_chapter = in_array($chapter, array('summary', 'about', 'publishing', 'participation', 'news', 'publications'));
+	$valid_chapter = in_array($chapter, array('summary', 'about', 'publishing', 'publishers', 'participation', 'news', 'publications'));
 
 	if (arg(0) == 'country' && !isset($iso2) && !isset($chapter)) {
 		// Do nothing.
@@ -929,8 +929,9 @@ function _gbif_participant_print_endorsed_publishers($participantID, $iso2, $mod
 
 function _gbif_participant_print_latest_datasets($iso2, $uuid) {
 	$env = variable_get('environment_settings');
-	// E.g. http://api.gbif.org/v1/node/fb11cfe1-ebc3-45af-9159-17d9fddbcdac/dataset?limit=7
-	$api_call = _gbif_participant_api_registry_node() . '/' . $uuid . '/dataset?limit=7';
+	// E.g. http://api.gbif.org/v1/node/fb11cfe1-ebc3-45af-9159-17d9fddbcdac/dataset?limit=7 => this one is not correct.
+	// E.g. http://api.gbif.org/v1/dataset?country=DK
+	$api_call = _gbif_participant_api_dataset() . '?country=' . $iso2;
 	$json = json_decode(file_get_contents($api_call), TRUE);
 	$count = $json['count'];
 	$datasets = $json['results'];
@@ -967,8 +968,9 @@ function _gbif_participant_print_latest_datasets($iso2, $uuid) {
 		$html = theme('gbif_participant_datasets_list_item', array('datasets' => $datasets, 'env' => $env, 'iso2' => $iso2));
 
 		if ($count > 6) {
-			$remain_count = $count - 6;
-			$link_more = l($remain_count . ' more', $env['data_portal_base_url'] . '/dataset/search?publishingCountry=' . $iso2);
+			// $remain_count = $count - 6;
+			$view_all_text = t('View all !count datasets', array('!count' => $count));
+			$link_more = l($view_all_text, $env['data_portal_base_url'] . '/dataset/search?publishingCountry=' . $iso2);
 			$html .= $link_more . '...';
 		}
 	}
@@ -1282,14 +1284,14 @@ function _gp_country_repatriation($iso2, $list_mode, $repatri_mode) {
 			}
 			$html .= theme('gp_country_repatriation_list_item', array('countries' => $countries, 'env' => $env, 'iso2' => $iso2, 'list_mode' => $list_mode, 'repatri_mode' => $repatri_mode));
 			if ($num_countries > 6) {
-				$remain_count = $num_countries - 6;
+				$view_all_text = t('View all !count results', array('!count' => $num_countries));
 
 				switch ($repatri_mode) {
 					case 'about':
-						$link_more = l($remain_count . ' more', 'country/' . $iso2 . '/about/countries');
+						$link_more = l($view_all_text, 'country/' . $iso2 . '/about/countries');
 						break;
 					case 'from':
-						$link_more = l($remain_count . ' more', 'country/' . $iso2 . '/publishing/countries');
+						$link_more = l($view_all_text, 'country/' . $iso2 . '/publishing/countries');
 						break;
 				}
 

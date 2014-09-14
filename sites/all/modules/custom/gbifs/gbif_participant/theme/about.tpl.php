@@ -10,7 +10,7 @@
 				</div>
 				<div class="block-map-sidebar">
 					<div class="row">
-						<header class="content-header sidebar-header-country col-xs-4">
+						<header class="content-header sidebar-header-country-map col-xs-4">
 							<h2><?php print $html['about_title']; ?></h2>
 						</header>
 					</div>

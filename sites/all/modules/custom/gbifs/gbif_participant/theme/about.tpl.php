@@ -49,19 +49,6 @@
 				</div>
 			</section>
 
-			<section id="occurrence-located-in" class="col-xs-12 well well-lg">
-				<div class="row">
-					<header class="content-header col-xs-12">
-						<h2><?php print $metrics_title; ?></h2>
-					</header>
-				</div>
-				<div class="row">
-					<div class="content content-full">
-						<?php print theme('gp_metrics', array('iso2' => $iso2, 'repatri_mode' => 'about')); ?>
-					</div>
-				</div>
-			</section>
-
 		<?php if ($html['trends']['availability'] == TRUE): ?>
 			<section id="trends-about" class="col-xs-12 well well-lg">
 				<div class="row">
@@ -74,6 +61,19 @@
 				</div>
 			</section>
 		<?php endif; ?>
+
+			<section id="occurrence-located-in" class="col-xs-12 well well-lg">
+				<div class="row">
+					<header class="content-header col-xs-12">
+						<h2><?php print $metrics_title; ?></h2>
+					</header>
+				</div>
+				<div class="row">
+					<div class="content content-full">
+						<?php print theme('gp_metrics', array('iso2' => $iso2, 'repatri_mode' => 'about')); ?>
+					</div>
+				</div>
+			</section>
 
 	</div>
 </article>

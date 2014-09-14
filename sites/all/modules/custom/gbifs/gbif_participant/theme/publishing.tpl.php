@@ -66,7 +66,20 @@
 			</section>
 			<?php endif; ?>
 
-			<?php if ($html['count'] > 0): ?>
+		<?php if ($html['trends']['availability'] == TRUE): ?>
+			<section id="trends-publishing" class="col-xs-12 well well-lg">
+				<div class="row">
+					<header class="content-header col-xs-12">
+						<h2><?php print $html['trends']['trends_title']; ?></h2>
+					</header>
+				</div>
+				<div class="row">
+					<?php print $html['trends']['section_trends']; ?>
+				</div>
+			</section>
+		<?php endif; ?>
+
+		<?php if ($html['count'] > 0): ?>
 			<section id="data-published-by" class="col-xs-12 well well-lg">
 				<div class="row">
 					<header class="content-header col-xs-12">
@@ -79,20 +92,7 @@
 					</div>
 				</div>
 			</section>
-			<?php endif; ?>
-
-			<?php if ($html['trends']['availability'] == TRUE): ?>
-			<section id="trends-publishing" class="col-xs-12 well well-lg">
-				<div class="row">
-					<header class="content-header col-xs-12">
-            <h2><?php print $html['trends']['trends_title']; ?></h2>
-					</header>
-				</div>
-				<div class="row">
-					<?php print $html['trends']['section_trends']; ?>
-				</div>
-			</section>
-			<?php endif; ?>
+		<?php endif; ?>
 
 	</div>
 </article>

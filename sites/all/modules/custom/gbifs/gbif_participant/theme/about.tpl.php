@@ -1,5 +1,6 @@
 <?php
 	$metrics_title = t('Occurrence located in ') . gbif_participant_country_lookup($iso2, 'iso2', 'title');
+  drupal_set_title($html['about_title']);
 ?>
 <article id="country-data-about" class="container">
 	<div class="row">

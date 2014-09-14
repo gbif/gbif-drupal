@@ -1,3 +1,8 @@
+<?php
+	$country_name = gbif_participant_country_lookup($iso2, 'iso2', 'title');
+	$title = $country_name . ' - ' . strtotitle($html['intro_title']);
+	drupal_set_title($title);
+?>
 <article id="country-publications" class="container <?php print $classes; ?>">
 	<div class="row">
       <section id="publication-intro" class="col-xs-12 well well-lg well-margin-top clearfix"<?php print $attributes; ?>>

@@ -1,5 +1,6 @@
 <?php
 	$metrics_title = t('Data published by ') . gbif_participant_country_lookup($iso2, 'iso2', 'title');
+  drupal_set_title($html['from_title']);
 ?>
 <article id="country-data-publishing" class="container">
 	<div class="row">

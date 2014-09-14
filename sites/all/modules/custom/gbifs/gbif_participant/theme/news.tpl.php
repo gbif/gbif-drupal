@@ -1,5 +1,5 @@
 <?php
-
+	drupal_set_title(strtotitle($html['title']));
 ?>
 <article id="country-news" class="container">
 	<div class="row">

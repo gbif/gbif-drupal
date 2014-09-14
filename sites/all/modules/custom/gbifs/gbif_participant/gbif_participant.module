@@ -1231,7 +1231,7 @@ function _gp_print_data_trends($iso2, $mode) {
 		foreach ($img_files as $t => $img) {
 			$url = file_create_url(file_build_uri($img));
 			$img_html = '<img src="' . $url . '" alt="' . $image_title[$t] . '" class="img-thumbnail" onerror="' . $assets_img . "'" . '">';
-			$image_links[$t] = '<a href="' . $url . '" data-lightbox="' . $t . '_kingdom">' . $img_html . '</a>';
+			$image_links[$t] = '<a href="' . $url . '" class="colorbox">' . $img_html . '</a>';
 		}
 
 		$content = array(

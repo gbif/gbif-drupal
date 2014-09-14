@@ -223,22 +223,6 @@ function _gbif_analytics_country_name($type, $iso2) {
  */
 function gbif_analytics_library() {
 	$path = drupal_get_path('module', 'gbif_analytics');
-	$libraries['lightbox'] = array(
-		'title' => 'Lightbox',
-		'js' => array(
-			$path . '/js/lightbox.min.js' => array(
-				'type' => 'file',
-				'scope' => 'footer',
-				'weight' => 20,
-			)
-		),
-		'css' => array(
-			$path . '/css/lightbox.css' => array(
-				'type' => 'file',
-				'weight' => 20,
-			),
-		)
-	);
 	$libraries['analytics'] = array(
 		'title' => 'GBIF Analytics custom styling',
 		'css' => array(
@@ -261,7 +245,6 @@ function gbif_analytics_preprocess_page(&$variables) {
 	// load in lightbox CSS and JS
 	if (drupal_match_path(current_path(), 'analytics*')) {
 		watchdog('analytics', 'Loading custom libraries for module', array(), WATCHDOG_DEBUG);
-		drupal_add_library('gbif_analytics', 'lightbox');
 		drupal_add_library('gbif_analytics', 'analytics');
 	}
 

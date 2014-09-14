@@ -78,6 +78,9 @@
  *
  * @ingroup themeable
  */
+
+	drupal_set_title($title . ' - ' . t('Participation in GBIF'));
+
 ?>
 <article id="node-<?php print $node->nid; ?>" class="container <?php print $classes; ?>">
 	<div class="row">

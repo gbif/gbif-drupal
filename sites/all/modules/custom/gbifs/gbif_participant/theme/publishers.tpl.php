@@ -1,5 +1,5 @@
 <?php
-
+	drupal_set_title(strtotitle($html['title']));
 ?>
 <div class="back-to-previous">
 	<div class="container">

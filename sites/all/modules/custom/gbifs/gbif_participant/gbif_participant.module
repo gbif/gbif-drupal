@@ -268,6 +268,11 @@ function gbif_participant_theme($existing, $type, $theme, $path) {
 			'path' => $path . '/theme',
 			'variables' => array('iso2' => NULL, 'publications' => NULL),
 		),
+    'gp_data_trends' => array(
+			'template' => 'data-trends',
+			'path' => $path . '/theme',
+			'variables' => array('iso2' => NULL, 'content' => NULL),
+    ),
 	);
 }
 
@@ -552,6 +557,7 @@ function gbif_participant_page_router($iso2, $chapter, $sub_chapter) {
 						$html = array_merge($html, $largest_dataset);
 						$contributed_by = _gp_country_repatriation($iso2, 'digest', 'about');
 						$html = array_merge($html, $contributed_by);
+						$html['trends'] = _gp_print_data_trends($iso2, 'about');
 						return theme('gbif_participant_about', array(
 							'participantID' => $participantID,
 							'iso2' => $iso2,
@@ -581,6 +587,7 @@ function gbif_participant_page_router($iso2, $chapter, $sub_chapter) {
 						$html = array_merge($html, $output);
 						$contributing_to = _gp_country_repatriation($iso2, 'digest', 'from');
 						$html = array_merge($html, $contributing_to);
+						$html['trends'] = _gp_print_data_trends($iso2, 'published');
 						return theme('gbif_participant_publishing', array(
 							'participantID' => $participantID,
 							'iso2' => $iso2,
@@ -1181,6 +1188,90 @@ function _gbif_participant_print_news($iso2, $node, $registry_json) {
 		$output['node_feed_count'] = $item_count;
 	}
 	return $output;
+}
+
+/**
+ * @param $iso2
+ * @param $mode 'about', 'published'
+ * @todo Make $mode value consistent across all modules.
+ */
+function _gp_print_data_trends($iso2, $mode) {
+	$output = array();
+  // Look for the trend data.
+  $availability = _gp_trend_availability($iso2, $mode);
+	$output['availability'] = $availability;
+
+	if ($availability == TRUE) {
+		$assets_img = drupal_get_path('module', 'gbif_analytics') . '/img/insufficient-data.png';
+		$country_name = gbif_participant_country_lookup($iso2, 'iso2', 'title');
+		// Image source and link.
+		switch ($mode) {
+			case 'about':
+				$img_files = array(
+					'occ' => 'gbif_analytics/country/' . $iso2 . '/about/figure/occ_kingdom.png',
+					'spe' => 'gbif_analytics/country/' . $iso2 . '/about/figure/spe_kingdom.png',
+				);
+				$img_title = array(
+					'occ' => t('Data trend of records by kingdom about !country', array('!country' => $country_name)),
+					'spe' => t('Data trend of species count by kingdom about !country', array('!country' => $country_name)),
+				);
+				break;
+			case 'published':
+				$img_files = array(
+					'occ' => 'gbif_analytics/country/' . $iso2 . '/publishedBy/figure/occ_kingdom.png',
+					'spe' => 'gbif_analytics/country/' . $iso2 . '/publishedBy/figure/spe_kingdom.png',
+				);
+				$img_title = array(
+					'occ' => t('Data trend of records by kingdom published by !country', array('!country' => $country_name)),
+					'spe' => t('Data trend of species count by kingdom published !country', array('!country' => $country_name)),
+				);
+				break;
+		}
+		$image_links = array();
+		foreach ($img_files as $t => $img) {
+			$url = file_create_url(file_build_uri($img));
+			$img_html = '<img src="' . $url . '" alt="' . $image_title[$t] . '" class="img-thumbnail" onerror="' . $assets_img . "'" . '">';
+			$image_links[$t] = '<a href="' . $url . '" data-lightbox="' . $t . '_kingdom">' . $img_html . '</a>';
+		}
+
+		$content = array(
+			'records_by_kingdom' => array(
+				'title' => t('Records by kingdom'),
+				'text' => t('The number of available records categorized by kingdom. "Unknown" includes records with taxonomic information that cannot be linked to available taxonomic checklists.'),
+				'img' => $image_links['occ'],
+			),
+			'species_by_kingdom' => array(
+				'title' => t('Species count by kingdom'),
+				'text' => t('The number of species with available occurrence records, categorized by kingdom.'),
+				'img' => $image_links['spe'],
+			),
+			'more' => array(
+				'text' => t('You can explore more data trends, allowing you to visualize data mobilization over time through different lenses – by kingdom, by types of record, by completeness and precision of the data, and much more:'),
+				'link_more' => l('View more trends', 'analytics/country/' . $iso2 . '/' . $mode),
+			),
+		);
+
+		$output['trends_title'] = t('Data trends');
+		$output['section_trends'] = theme('gp_data_trends', array('iso2' => $iso2, 'content' => $content));
+
+	}
+
+	return $output;
+}
+
+function _gp_trend_availability($iso2, $mode) {
+	// find the country index
+	$file = drupal_realpath(file_build_uri('gbif_analytics/countries_' . $mode . '.json'));
+
+	if (file_exists(drupal_realpath($file)) == TRUE) {
+		$json = json_decode(file_get_contents(file_create_url($file)), true); // true required to return an array
+		foreach($json as $country) {
+			if($country['iso'] == $iso2) {
+				return TRUE;
+			}
+		}
+	}
+	return FALSE;
 }
 
 /**

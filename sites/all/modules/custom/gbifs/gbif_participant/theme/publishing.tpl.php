@@ -23,9 +23,6 @@
 				</div>
 				<div class="block-map-sidebar">
 					<div class="row">
-						<header class="content-header col-xs-8">
-
-						</header>
 						<header class="content-header sidebar-header-country col-xs-4">
 							<h2><?php print $html['from_title']; ?></h2>
 						</header>
@@ -80,6 +77,19 @@
 					<div class="content content-full">
 						<?php print theme('gp_metrics', array('iso2' => $iso2, 'repatri_mode' => 'from')); ?>
 					</div>
+				</div>
+			</section>
+			<?php endif; ?>
+
+			<?php if ($html['trends']['availability'] == TRUE): ?>
+			<section id="trends-publishing" class="col-xs-12 well well-lg">
+				<div class="row">
+					<header class="content-header col-xs-12">
+            <h2><?php print $html['trends']['trends_title']; ?></h2>
+					</header>
+				</div>
+				<div class="row">
+					<?php print $html['trends']['section_trends']; ?>
 				</div>
 			</section>
 			<?php endif; ?>

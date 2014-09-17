@@ -105,310 +105,245 @@ function _gbif_ims_sync() {
 	return t('Synchronisation finished.');
 }
 
-function _gbif_ims_get_ParticipantsList( $type ) {
-$PList = '' ;
-
-switch ($type) {
-	case 'Voting Participant':
-		$where = 'gbifims_Participant.GBIFMembership = :ptype';
-	case 'Associate Country Participant':
-		$where = 'gbifims_Participant.GBIFMembership = :ptype';
-	case 'Other Associate Participant':
-		$where = 'gbifims_Participant.GBIFMembership = :ptype';
-		// explicitelly fall through from all above
-		$ptype = array ( ':ptype'=> $type );
-		break ;
-	case 'All':
-		$where = "(gbifims_Participant.GBIFMembership = 'Voting Participant' OR gbifims_Participant.GBIFMembership = 'Associate Country Participant' OR gbifims_Participant.GBIFMembership = 'Other Associate Participant') ";
-		$ptype = array ();
-}
-	
-$result = db_query('SELECT gbifims_Participant.Name_Short, gbifims_Participant.Name_Full, Contacts.Name_First, Contacts.Name_Last, Contacts.CountryNameAdd, 
-						Contacts.GrouproleName, Contacts.Job_Position, Contacts.Institution, Contacts.Address, Contacts.AddrInstitution, Contacts.Email, Contacts.City, Contacts.ZipCode, Contacts.Phone_Office, Contacts.Fax
-					FROM gbifims_Participant
-					LEFT JOIN gbifims_Institution ON gbifims_Participant.InstitutionID = gbifims_Institution.InstitutionID
-					LEFT JOIN gbifims_Country ON gbifims_Participant.CountryID = gbifims_Country.CountryID
-					LEFT JOIN ( SELECT gbifims_Participant.ParticipantId AS PId, gbifims_Contact.Name_First, gbifims_Contact.Name_Last, gbifims_ContactGrouproleNodeParticipant.Active, c2.Name AS CountryNameAdd, 
-									gbifims_Grouprole.Name AS GrouproleName, gbifims_Contact.Job_Position, gbifims_Institution.Name AS Institution, AddrInstitution.Name AS AddrInstitution, gbifims_Grouprole.SortOrder, gbifims_Contact.Address, gbifims_Contact.Email, gbifims_Contact.City, gbifims_Contact.ZipCode, gbifims_Contact.Phone_Office, gbifims_Contact.Fax
-								FROM gbifims_Participant
-								LEFT JOIN gbifims_Institution ON gbifims_Participant.InstitutionID = gbifims_Institution.InstitutionID
-								LEFT JOIN gbifims_Country ON gbifims_Participant.CountryID = gbifims_Country.CountryID
-								LEFT JOIN gbifims_ContactGrouproleNodeParticipant ON gbifims_Participant.ParticipantID = gbifims_ContactGrouproleNodeParticipant.ParticipantID
-								LEFT JOIN gbifims_Contact ON gbifims_ContactGrouproleNodeParticipant.ContactID = gbifims_Contact.ContactID
-								LEFT JOIN gbifims_Institution AddrInstitution ON gbifims_Contact.InstitutionID = AddrInstitution.InstitutionID
-								LEFT JOIN gbifims_Country c2 ON gbifims_Contact.CountryID_Address = c2.CountryID 
-								LEFT JOIN gbifims_Grouprole ON gbifims_ContactGrouproleNodeParticipant.GrouproleID = gbifims_Grouprole.GrouproleID
-								WHERE '.$where.'
-								AND gbifims_ContactGrouproleNodeParticipant.Active = 1
-					) AS Contacts ON gbifims_Participant.ParticipantID = Contacts.PID
-					WHERE '.$where.'
-					ORDER BY gbifims_Participant.Name_Full, Contacts.SortOrder, Contacts.Name_First', 
-					array(':ptype'=>$type)
-					);
-
-$dbrows = $result->fetchAll();
-/* Wanna build an array keyed by Name_Short; for countries short and full are the same
-	['Argentina'][0] = array (
-          'Name_Full' => 'Argentina' 
-          'Name_First' => 'Edgardo Juan' 
-          'Name_Last' => 'Romero'
-          'GrouproleName' => 'Head of delegation'
-          'Job_Position' => 'Programmer'
-          'CountryNameAdd' => 'Argentina'
-          'Address' => 'Av. Angel Gallardo 470'
-          'Email' => 'ejromero@macn.gov.ar'
-          'City' => 'Buenos Aires'
-          'ZipCode' => string '1405 '
-          'Phone_Office' => '++54 11 4982 0306' 
-          'Fax' => '++54  11  4982  5243' )
-	['Argentina'][1] = array (
-          'Name_Full' => 'Argentina'
-          'Name_First' => 'Arturo Jose'
-          'Name_Last' => 'Martinez'
-          'GrouproleName' => 'Additional delegate'
-          'CountryNameAdd' => null
-          'Address' => 'Consejo Nacional de Investigaciones Cientificas y Técnicas (CONICET)'
-          ...
-*/
-
-$resultsize = count( array_keys( $dbrows ) ); 
-$row = 0 ;
-
-while ( $row < $resultsize ) {
-	$i = 0;
-
-	do {
-		$participants[$dbrows[$row]->Name_Short][$i] = array( 'Name_Full'=>$dbrows[$row+$i]->Name_Full, 
-															'Name_First'=>$dbrows[$row+$i]->Name_First, 
-															'Name_Last'=>$dbrows[$row+$i]->Name_Last, 
-															'GrouproleName'=>$dbrows[$row+$i]->GrouproleName, 
-															'Institution'=>$dbrows[$row+$i]->Institution, 
-															'AddrInstitution'=>$dbrows[$row+$i]->AddrInstitution, 
-															'Job_Position'=>$dbrows[$row+$i]->Job_Position, 
-															'CountryNameAdd'=>$dbrows[$row+$i]->CountryNameAdd, 
-															'Address'=>$dbrows[$row+$i]->Address, 
-															'Email'=>$dbrows[$row+$i]->Email, 
-															'City'=>$dbrows[$row+$i]->City, 
-															'ZipCode'=>$dbrows[$row+$i]->ZipCode, 
-															'Phone_Office'=>$dbrows[$row+$i]->Phone_Office, 
-															'Fax'=>$dbrows[$row+$i]->Fax) ;
-		$i++;
-	} while ( $dbrows[$row]->Name_Short == $dbrows[$row+$i]->Name_Short ) ;
-
-	$row += $i ;
-
-} 
-
-$PList = '<table style="" class="table table-curved"><tbody><tr><th width="30%">Participant</th><th>Delegation members</th></tr>';
-
-foreach ( $participants as $p => $data ) {
-	$PList .= "<tr><td>{$p}</td><td>";
-	foreach ( $data as $d ) {
-		if ( !empty( $d['Name_First'] ) ) {
-			$PList .= " 
-			<div class='contact'>
-				<a name='{$d['Name_First']},{$d['Name_Last']}'></a>
-				<div class='contactName'>{$d['Name_First']} {$d['Name_Last']}  ({$d['GrouproleName']})</div>
-				<div style='display: none;'>
-					<div class='contactPosition'>{$d['Job_Position']}</div>
-					<div class='contactInstitution'>{$d['AddrInstitution']}</div>
-					<div class='address'>
-						<span>{$d['Address']}</span>
-						<span class='city'>{$d['City']}</span>
-						<span class='country'>{$d['CountryNameAdd']}</span>
-						<span class='email'><a href='mailto:{$d['Email']} title='email'>{$d['Email']}</a></span>
-						<span class='phone'>{$d['Phone_Office']}</span>
-						<span class='phone'>{$d['Fax']}</span>
-					</div>
-				</div>
-			</div>
-			";
-		} else {
- 			$PList .= "<em style='color:#D0D0D0'>No official delegation information</em> " ;
-		}
-	}
-	$PList .= '</td></tr>' ;
-}
-
-
-$PList .= '</tbody></table>' ;
-
-return $PList ;
-
-}
-
-
-function _gbif_ims_get_SecretariatList () {
-	$CList = '';
-
-	$result = db_query('SELECT * FROM gbifims_Contact WHERE GBIF_Staff = 1 ORDER BY GBIF_Order') ;
-
-	$CList = '<table style="" class="table table-curved"><tbody>';
-	// <thead><tr><th colspan="2" >'.$options[1].'</th><tr></thead>
-	foreach ($result as $row) {
-		$CList .= '<tr><td>';
-		$CList .= '<div class="contact">';
-		$CList .= '<a name="' . $row->Name_First . ',' . $row->Name_Last . '"></a>';
-		$CList .= '<div class="contactName">' . $row->Name_First . ' ' . $row->Name_Last . '</div>';
-		$CList .= '<div style="display: none;">';
-		$CList .= '<div class="contactPosition">' . $row->Job_Position . '</div>';
-		$CList .= '<div class="address">';
-		$CList .= '<span>' . $row->Address . '</span>';
-		$CList .= '<span class="city">' . $row->City . '</span>';
-		$CList .= '<span class="email"><a href="mailto:' . $row->Email . ' title="email">' . $row->Email . '</a></span>';
-		$CList .= '<span class="phone">' . $row->Phone_Office . '</span>';
-		$CList .= '<span class="phone">' . $row->Fax . '</span>';
-		$CList .= '</div>';
-		$CList .= '</div>';
-		$CList .= '</div>';
-		$CList .= '</td><td>' . $row->Job_Position . '</td>';
-	}
-	$CList .= '</tbody></table>' ;
-	return $CList ;
-}
-
-function _gbif_ims_get_CommitteeList( $committee ) {
-	$CList = '';
-
-	$tempres = db_query('SELECT DISTINCT Name_First, Name_Last, Address, Email, City, ZipCode, Phone_Office, Fax, Job_Position, gbifims_Country.Name AS CountryNameAdd, gbifims_Grouprole.Name AS Role, gbifims_Grouprole.SortOrder 
-						FROM {gbifims_Contact}, {gbifims_ContactGrouproleNodeParticipant}, {gbifims_Grouprole}, {gbifims_Country}
-						WHERE gbifims_Contact.ContactID = gbifims_ContactGrouproleNodeParticipant.ContactID 
-							AND gbifims_Contact.CountryID_Address = gbifims_Country.CountryID
-							AND gbifims_Grouprole.GrouproleID = gbifims_ContactGrouproleNodeParticipant.GrouproleID 
-							AND gbifims_ContactGrouproleNodeParticipant.Active = 1  
-							AND gbifims_ContactGrouproleNodeParticipant.GrouproleID IN 
-										(SELECT GrouproleID FROM {gbifims_Grouprole} 
-										WHERE gbifims_Grouprole.GroupID IN (SELECT GroupID FROM {gbifims_Group} WHERE gbifims_Group.Name= :rcom)
-										AND gbifims_Grouprole.Name <> :rSS  AND gbifims_Grouprole.Name <> :rscis) 
-							GROUP BY Name_First
-							ORDER BY gbifims_Grouprole.SortOrder, gbifims_Contact.GBIF_Order, Name_Last', 
-									array(':rcom'=>$committee, ':rSS'=>'Secretariat Support', ':rscis'=>'Sci-staff')) ;
-	$result = $tempres->fetchAll();
-	
-	// add the empty seats in the NSC by mathching the values from FM's __GBIFarea with the results above
-	if ( $committee == 'Nodes Steering Group' ) {
-		$tempres = db_query ('SELECT * FROM gbifims_GBIFarea ') ;
-		$areas = $tempres->fetchAll();
-		
-		foreach ($result as $row ) { 
-			foreach ( $areas as $key => $area ) {
-				$hasNodeRep = strpos( $row->Role, $area->GBIFarea ); 
-				if ( $hasNodeRep ) unset( $areas[$key] );
-			}
-		}
-		
-		if ( ! empty( $areas ) ) {
-			foreach ($areas as $area) {
-				$template = clone $result[0] ;
-				$template->Name_First = 'pending' ;
-				$template->Name_Last = 'appointment' ;
-				$template->Address = '' ;
-				$template->City = '' ;
-				$template->CountryNameAdd = '' ;
-				$template->Email = '' ;
-				$template->Phone_Office = '' ;
-				$template->Fax = '' ;
-				$template->Job_Position = '' ;
-				$template->Role = 'Regional Node Representative - '.$area->GBIFarea ;
-				array_push( $result, $template );
-			}
-		}
-
-	}
-
-
-	// hook_theme? What hook_theme... :-| 	
-	$CList = '<table style="" class="table table-curved"><tbody>';
-	// <thead><tr><th colspan="2" >'.$options[1].'</th><tr></thead>
-	foreach ( $result as $row) {
-		$contactNameCSS = $row->Name_First == 'pending' ? '':'contactName' ; 		// remove class for "pending" so it's not clickable
-		$job_or_role = ( $committee == 'GBIF Secretariat' ) ? $row->Job_Position : $row->Role ;
-		$CList .= "<tr><td>
-			<div class='contact'>
-				<a name='$row->Name_First,$row->Name_Last'></a>
-				<div class='".$contactNameCSS."'>$row->Name_First $row->Name_Last</div>
-				<div style='display: none;'>
-					<div class='contactPosition'>$row->Job_Position</div>
-					<div class='contactInstitution'></div>
-					<div class='address'>
-						<span>$row->Address</span>
-						<span class='city'>$row->City</span>
-						<span class='country'>$row->CountryNameAdd</span>
-						<span class='email'><a href='mailto:$row->Email' title='email'>$row->Email</a></span>
-						<span class='phone'>$row->Phone_Office</span>
-						<span class='phone'>$row->Fax</span>
-					</div>
-				</div>
-			</div>
-		</td><td>$job_or_role</td>";
-	}
-	$CList .= '</tbody></table>' ;
-	return $CList ;
-}
-
-/* 
- * Nodes committee is special! =:-o
+/**
+ * @param $group
+ * @return (array) query results.
  *
+ * @todo Evaluate whether we consolidate this query and combine it with others.
  */
-function _gbif_ims_get_NCList( ) {
+function _gi_get_participant_list($group) {
 
-	$CList = '';
+	$query = db_select('gbif_ims_participant', 'p');
+	$query->leftJoin('gbif_ims_institution', 'i', 'p.institutionID = i.institutionID');
+	$query->leftJoin('gbif_ims_country', 'cou', 'p.countryID = cou.countryID');
 
-	$result = db_query("SELECT N.Name_Full, N.Name_Acronym, 
-							P.Name_Full, P.Name_Short,
-							COALESCE( C.Name_First,'pending') AS Name_First, COALESCE( C.Name_Last,'appointment') AS Name_Last, C.Job_Position, C.Address, C.Email, C.City, C.ZipCode, C.Phone_Office, C.Fax, I.Acronym AS ContactInstitution, CO.Name AS ConctactCountry,
-							GR.Name AS GroupRoleName, G.Name AS GroupName,
-							COALESCE(GR.SortOrder,40) AS NewSort
-						FROM gbifims_Node AS N
-						LEFT JOIN gbifims_Participant AS P ON N.ParticipantID = P.ParticipantID
-						LEFT JOIN (
-							SELECT CGNP.*
-							FROM gbifims_Node AS N
-							LEFT JOIN gbifims_Participant AS P ON N.ParticipantID = P.ParticipantID
-							LEFT JOIN gbifims_ContactGrouproleNodeParticipant AS CGNP ON CGNP.NodeID = N.NodeID
-							LEFT JOIN gbifims_Grouprole AS GR ON CGNP.GrouproleID = GR.GrouproleID
-							LEFT JOIN gbifims_Group AS G ON GR.GroupID = G.GroupID
-							WHERE (P.GBIFMembership = 'Voting Participant' OR P.GBIFMembership = 'Associate Country Participant' OR P.GBIFMembership = 'Other Associate Participant' OR  P.ParticipantID IS NULL)
-								AND ( G.Name = :nc OR G.Name IS NULL )
-								AND ( GR.Name = 'Node Manager' OR GR.Name = 'Chair' OR GR.Name='1st Vice Chair' OR GR.Name='2nd Vice Chair' OR GR.Name IS NULL )
-								AND GR.Name <> :GSS
-								AND GR.Name <> :rSs
-								AND CGNP.Active = 1
-							) AS CGNP ON CGNP.NodeID = N.NodeID
-						LEFT JOIN gbifims_Grouprole AS GR ON CGNP.GrouproleID = GR.GrouproleID
-						LEFT JOIN gbifims_Group AS G ON GR.GroupID = G.GroupID
-						LEFT JOIN gbifims_Contact AS C ON CGNP.ContactID = C.ContactID
-						LEFT JOIN gbifims_Institution as I ON C.InstitutionID = I.InstitutionID
-						LEFT JOIN gbifims_Country as CO ON C.CountryID_Address = CO.CountryID
-						WHERE (P.GBIFMembership = 'Voting Participant' OR P.GBIFMembership = 'Associate Country Participant' OR P.GBIFMembership = 'Other Associate Participant' OR  P.ParticipantID IS NULL)
-						ORDER BY NewSort, P.Name_Short", array(':nc'=>'Nodes Committee', ':rSs'=>'Secretariat support', 'GSS'=>'GBIF Secretariat Staff' )) ;
+	// Subquery to be joined.
+	$subquery = db_select('gbif_ims_participant', 'p');
+	$subquery->leftJoin('gbif_ims_institution', 'i', 'p.institutionID = i.institutionID');
+	$subquery->leftJoin('gbif_ims_country', 'cou', 'p.countryID = cou.countryID');
+	$subquery->leftJoin('gbif_ims_contact_group_role_node_participant', 'cgrnp', 'p.participantID = cgrnp.participantID');
+	$subquery->leftJoin('gbif_ims_contact', 'con', 'cgrnp.contactID = con.contactID');
+	$subquery->leftJoin('gbif_ims_institution', 'i_adrs', 'con.institutionID = i_adrs.institutionID');
+	$subquery->leftJoin('gbif_ims_country', 'cou_adrs', 'con.countryID_address = cou_adrs.countryID');
+	$subquery->leftJoin('gbif_ims_group_role', 'gr', 'cgrnp.group_role_ID = gr.group_role_ID');
+	$subquery->addField('p', 'participantID', 'pid');
+	$subquery->addField('con', 'first_name');
+	$subquery->addField('con', 'last_name');
+	$subquery->addField('cgrnp', 'active');
+	$subquery->addField('cou_adrs', 'name', 'contact_country');
+	$subquery->addField('gr', 'name', 'group_role_name');
+	$subquery->addField('con', 'job_position');
+	$subquery->addField('i', 'name', 'institution');
+	$subquery->addField('i_adrs', 'name', 'contact_institution');
+	$subquery->addField('gr', 'sort_weight');
+	$subquery->addField('con', 'address');
+	$subquery->addField('con', 'email_address');
+	$subquery->addField('con', 'city');
+	$subquery->addField('con', 'zip_code');
+	$subquery->addField('con', 'phone_office');
+	$subquery->addField('con', 'fax');
+	$subquery->condition('p.gbif_membership', $group);
+	$subquery->condition('cgrnp.active', 1);
 
-	// hook_theme? What hook_theme... :-| 
+	$query->leftJoin($subquery, 'con', 'p.participantID = con.pid');
 
-	$CList = '<table style="" class="table table-curved"><tbody>';
-	// <thead><tr><th colspan="2" >'.$options[1].'</th><tr></thead>
-	foreach ( $result as $row) {
-		$contactNameCSS = $row->Name_First == 'pending' ? '':'contactName' ; 		// remove class for "pending" so it's not clickable
-		$CList .= "<tr><td>
-			<div class='contact'>
-				<a name='$row->Name_First,$row->Name_Last'></a>
-				<div class='".$contactNameCSS."'>$row->Name_First $row->Name_Last</div>
-				<div style='display: none;'>
-					<div class='contactPosition'>$row->Job_Position</div>
-					<div class='contactInstitution'>$row->ContactInstitution</div>
-					<div class='address'>
-						<span>$row->Address</span>
-						<span class='city'>$row->City</span>
-						<span class='country'>$row->ConctactCountry</span>
-						<span class='email'><a href='mailto:$row->Email' title='email'>$row->Email</a></span>
-						<span class='phone'>$row->Phone_Office</span>
-						<span class='phone'>$row->Fax</span>
-					</div>
-				</div>
-			</div>
-		</td><td width='20%'>$row->GroupRoleName</td><td width='25%'>$row->Name_Short</td>";
+	$query->addField('p', 'name_full', 'participant_name_full');
+	$query->addField('p', 'name_short', 'participant_name_short');
+	$query->addField('con', 'first_name');
+	$query->addField('con', 'last_name');
+	$query->addField('con', 'contact_country');
+	$query->addField('con', 'group_role_name');
+	$query->addField('con', 'job_position');
+	$query->addField('con', 'institution');
+	$query->addField('con', 'address');
+	$query->addField('con', 'contact_institution');
+	$query->addField('con', 'email_address');
+	$query->addField('con', 'city');
+	$query->addField('con', 'zip_code');
+	$query->addField('con', 'phone_office');
+	$query->addField('con', 'fax');
+
+	$query->condition('p.gbif_membership', $group);
+	$query->orderBy('p.name_full')
+		->orderBy('con.sort_weight')
+		->orderBy('con.first_name');
+
+	$results = $query->execute()->fetchAll();
+
+	// Group contacts according to participant.
+	$grouped_results = array();
+	foreach ($results as $k => $contact) {
+		$grouped_results[$contact->participant_name_short][] = $contact;
 	}
-	$CList .= '</tbody></table>' ;
 
-	return $CList ;
+	return $grouped_results;
+}
+
+
+function _gi_print_staff_list($group) {
+	$query = db_select('gbif_ims_contact', 'c')
+		->fields('c');
+	$query->condition('c.is_gbif_staff', 1);
+	$query->orderBy('c.sort_weight', 'ASC');
+	$results = $query->execute()->fetchAll();
+
+	return theme('gi_contact_list', array('results' => $results, 'group' => $group)) ;
+}
+
+/**
+ * With the same contact details as other lists, this list for Nodes Committee
+ * should return the Chair and Vice Chairs, which will be duplicated as they are
+ * also Node Managers, and nodes that don't have active Node Manager.
+ *
+ * The base table is different from _gi_get_committee_list() so for now it is a
+ * separate call.
+ *
+ * @todo To evaluate whether it's easier to maintain if we combine this with _gi_get_committee_list().
+ */
+function _gi_get_node_committee_list($group) {
+	$query = db_select('gbif_ims_node', 'n');
+	$query->leftJoin('gbif_ims_participant', 'p', 'p.participantID = n.participantID');
+	$query->leftJoin('gbif_ims_contact_group_role_node_participant', 'user_role', 'user_role.nodeID = n.nodeID');
+	// Join to the same user role and bring back the active "person".
+	$query->leftJoin('gbif_ims_contact_group_role_node_participant', 'active_user_role', 'user_role.group_role_ID = active_user_role.group_role_ID AND user_role.nodeID = active_user_role.nodeID AND active_user_role.active = :active', array(':active' => 1));
+	$query->leftJoin('gbif_ims_group_role', 'gr', 'gr.group_role_ID = user_role.group_role_ID');
+	$query->leftJoin('gbif_ims_group', 'g', 'g.groupID = gr.groupID');
+	// Only bring back contacts for the active "person".
+	$query->leftJoin('gbif_ims_contact', 'c', 'c.contactID = user_role.contactID AND user_role.active = :active', array(':active' => 1));
+	$query->leftJoin('gbif_ims_institution', 'i', 'i.institutionID = c.institutionID');
+	$query->leftJoin('gbif_ims_country', 'cou', 'c.countryID_address = cou.countryID');
+
+	$query->addField('n', 'name_full');
+	$query->addField('n', 'name_acronym');
+	$query->addField('p', 'name_full', 'participant_name_full');
+	$query->addField('p', 'name_short', 'participant_name_short');
+	$query->addField('c', 'first_name', 'first_name');
+	$query->addField('c', 'last_name', 'last_name');
+	$query->addField('c', 'address', 'address');
+	$query->addField('c', 'email_address');
+	$query->addField('c', 'city');
+	$query->addField('c', 'zip_code');
+	$query->addField('c', 'phone_office');
+	$query->addField('c', 'fax');
+	$query->addField('c', 'job_position');
+	$query->addField('i', 'acronym', 'contact_institution');
+	$query->addField('cou', 'name', 'contact_country');
+	$query->addField('gr', 'name', 'role');
+	$query->addField('g', 'name', 'group_name');
+	$query->addField('gr', 'sort_weight');
+
+	$query->condition(db_or()->condition('p.gbif_membership', array('Voting Participant', 'Associate Country Participant', 'Other Associate Participant'), 'IN')->isNull('p.participantID'));
+	$query->condition(db_or()->condition('g.name', $group, '=')->isNull('g.name'));
+	$query->condition(db_or()->condition('gr.name', array('Node Manager', 'Chair', '1st Vice Chair', '2nd Vice Chair'), 'IN')->isNull('gr.name'));
+	$query->condition('gr.name', array('Secretariat Support', 'Sci-staff', 'GBIF Secretariat Staff'), 'NOT IN');
+	// Restrict to active users or accept when there is no active Node Manager for the node.
+	$query->condition(db_or()->condition('user_role.active', 1, '=')->condition(db_and()->isNull('active_user_role.contact_group_role_node_participant_ID')->condition('gr.name', 'Node Manager', '=')));
+
+	$query->groupBy('user_role.participantID')
+		->groupBy('user_role.nodeID')
+		->groupBy('user_role.group_role_ID')
+		->groupBy('user_role.contactID');
+
+	$query->orderBy('gr.sort_weight')
+		->orderBy('p.name_short')
+		->orderBy('c.last_name');
+
+	$results = $query->execute()->fetchAll();
+
+	// Insert "pending appointment" if first_name is empty.
+	foreach ($results as &$row) {
+		if (empty($row->first_name)) $row->first_name = t('Pending appointment');
+	}
+
+	return $results;
+}
+
+/**
+ * Produce the list of various committees, except Nodes Committee.
+ * @param $group
+ * @return $results
+ */
+function _gi_get_committee_list($group) {
+
+	$query = db_select('gbif_ims_contact_group_role_node_participant', 'cgrnp');
+	$query->leftjoin('gbif_ims_contact', 'c', 'c.contactID = cgrnp.contactID');
+	$query->leftjoin('gbif_ims_group_role', 'gr', 'gr.group_role_ID = cgrnp.group_role_ID');
+	$query->leftjoin('gbif_ims_group', 'g', 'g.groupID = gr.groupID');
+	$query->leftjoin('gbif_ims_country', 'con', 'con.countryID = c.countryID_address');
+
+	$query->addField('c', 'first_name', 'first_name');
+	$query->addField('c', 'last_name', 'last_name');
+	$query->addField('c', 'address', 'address');
+	$query->addField('c', 'email_address');
+	$query->addField('c', 'city');
+	$query->addField('c', 'zip_code');
+	$query->addField('c', 'phone_office');
+	$query->addField('c', 'fax');
+	$query->addField('c', 'job_description');
+	$query->addField('con', 'name', 'contact_country');
+	$query->addField('gr', 'name', 'role');
+	$query->addField('gr', 'sort_weight');
+
+	$query->condition('cgrnp.active', 1, '=');
+	$query->condition('gr.name', 'Secretariat Support', '<>');
+	$query->condition('gr.name', 'Sci-staff', '<>');
+	$query->condition('g.name', $group);
+	$query->orderBy('gr.sort_weight', 'ASC')
+		->orderBy('c.sort_weight', 'ASC')
+		->orderBy('c.last_name', 'ASC');
+
+	$results = $query->execute()->fetchAll();
+
+	// For Nodes Steering Group, if there is no representative from a particular
+	// region, insert an empty seat "pending appointment".
+	// For Nodes Committee, insert "pending appointment" if there is no node
+	// manager.
+	if ($group == 'Nodes Steering Group') {
+		$areas = db_select('gbif_ims_gbif_area', 'ga')->fields('ga')->execute()->fetchAll();
+
+		// The role name of a regional representative has the name of the region.
+		// We test the existing of the region name from the role name in order to
+		// identify a missing representative.
+		foreach ($results as $row) {
+			foreach ($areas as $key => $area) {
+				$region_exists = strpos($row->role, $area->gbif_area);
+				if ($region_exists != FALSE) {
+					unset($areas[$key]);
+				}
+			}
+		}
+
+		if (!empty($areas)) {
+			foreach ($areas as $area) {
+				$contact = new stdClass();
+				$contact->first_name = t('Pending appointment');
+				$contact->last_name = '';
+				$contact->address = '';
+				$contact->email_address = '';
+				$contact->city = '';
+				$contact->zip_code = '';
+				$contact->phone_office = '';
+				$contact->fax = '';
+				$contact->job_description= '';
+				$contact->role = 'Regional Node Representative - ' . $area->gbif_area;
+				array_push($results, $contact);
+			}
+		}
+	}
+	return $results;
+}
+
+function _gi_print_committee_list($group) {
+	if ($group == 'Nodes Committee') {
+		$results = _gi_get_node_committee_list($group);
+	}
+	else {
+		$results = _gi_get_committee_list($group);
+	}
+	return theme('gi_contact_list', array('results' => $results, 'group' => $group));
+}
+
+function _gi_print_participant_list($group) {
+	$results = _gi_get_participant_list($group);
+	return theme('gi_participant_list', array('results' => $results, 'group' => $group));
 }

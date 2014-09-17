@@ -24,6 +24,19 @@
  * @see https://api.drupal.org/comment/49533#comment-49533
  *      The format being views-view-field--[view]--[display]--[field_name].tpl.php
  */
+
+	// Detects whether a content node has URL alias. If so, use the alias as the URL.
+	$url = 'node/' . $row->nid;
+	$url_alias = drupal_lookup_path('alias', $url);
+
+	if (!empty($url_alias)) {
+		$url = $url_alias;
+	}
+	else {
+		$url = 'page/' . $row->nid;
+	}
+
+
 ?>
 <?php print $output; ?>
-<p><a class="readmore" href="/page/<?php print $row->nid; ?>">Read more</a></p>
+<p><a class="readmore" href="/<?php print $url; ?>">Read more</a></p>

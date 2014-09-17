@@ -13,7 +13,6 @@ require_once(dirname(__FILE__)) . '/gbif_ims.fields.inc';
  */
 function gbif_ims_requirements($phase) {
   $requirements = array();
-
   if ($phase == "runtime") {
     // Try to load the API.
     filemaker_load_api();
@@ -57,19 +56,17 @@ function gbif_ims_uninstall() {
  * Fields settings need to have their mapping with the IMS, so a helper function
  * _gbif_ims_fields() is used to populate the tables and fields with their
  * IMS table and field name first, then here unnecessary values are trimmed
- * before returning from hook_schema().
+ * before returning for hook_schema().
  */
 function gbif_ims_schema() {
 	$schema = _gbif_ims_tables();
-
 	foreach ($schema as $table_name => $table) {
 		unset($schema[$table_name]['ims_eqv']);
 		foreach ($table['fields'] as $field_name => $field) {
 			if ($field_name == 'ims_eqv') {
-				unset($schma[$table_name]['fields']['ims_eqv']);
+				unset($schema[$table_name]['fields']['ims_eqv']);
 			}
 		}
 	}
-
 	return $schema;
 }

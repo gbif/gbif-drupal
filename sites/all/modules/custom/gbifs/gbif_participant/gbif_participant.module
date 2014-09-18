@@ -1595,10 +1595,10 @@ function gbif_participant_country_count($iso2) {
 
 		switch ($call_type) {
 			case 'occurrence_about':
-				$counts['dataset_about_record_count'] = $json;
+				$counts['dataset_about_record_count'] = (isset($json->count)) ? $json->count : $json;
 				break;
 			case 'occurrence_from':
-				$counts['dataset_from_record_count'] = $json;
+				$counts['dataset_from_record_count'] = (isset($json->count)) ? $json->count : $json;
 				break;
 		}
 

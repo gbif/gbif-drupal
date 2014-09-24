@@ -11,7 +11,7 @@ Key documents {"url":"<nolink>"}
 -Data use agreement {"url":"disclaimer\/datause"}
 -Data sharing agreement  {"url":"disclaimer\/datasharing"}
 -Memorandum of Understanding  {"url":"resources\/2605"}
--Annual Report  {"url":"resources\/2262"}
+-Annual Report  {"url":"resources\/9221"}
 -GBIF Strategic Plan  {"url":"resources\/2569"}
 -GBIF Work Programme  {"url":"resources\/2970"}
 -GBIF Travel guidelines  {"url":"http://links.gbif.org\/travel_guidelines.pdf"}

@@ -61,7 +61,6 @@ function gbif_pages_views_register() {
 		'usesofdatafeaturedarticles',
 		'datausearticles',
 		'featurednewsarticles',
-		'viewallevents',
 		'viewallresources',
 		'taxonomy_term_json',
 	);
@@ -202,10 +201,6 @@ function gbif_pages_term_view_relation() {
     '567' => array( // newsroom/uses
       'view' => 'usesofdatafeaturedarticles',
       'display' => 'latest6',
-    ),
-    '569' => array( // newsroom/events
-      'view' => 'viewallevents',
-      'display' => 'current',
     ),
     '764' => array( // resources/summary
     	'view' => 'viewallresources',

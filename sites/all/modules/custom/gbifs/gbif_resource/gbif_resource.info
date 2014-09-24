@@ -1,0 +1,8 @@
+name = GBIF Recource
+description = Implementation of the ORC in Drupal.
+core = 7.x
+version = 7.x-0.1
+package = GBIFS
+project = GBIF Portal
+
+dependencies[] = redirect

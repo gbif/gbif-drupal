@@ -1,0 +1,21 @@
+name = GBIF Event
+description = Handling events from the IMS.
+core = 7.x
+version = 7.x-0.1
+package = GBIFS
+project = GBIF Portal
+
+configure = admin/config/gbif/event
+
+;; This module relies on the gbif_ims module for calling FileMaker API and some core fields.
+dependencies[] = gbif_ims
+dependencies[] = smart_trim
+dependencies[] = redirect
+dependencies[] = addtocal
+dependencies[] = context
+dependencies[] = context_ui
+dependencies[] = ctools
+
+;features[ctools][] = context:context:3
+;features[context][] = event_node_menu
+;features[features_api][] = api:1

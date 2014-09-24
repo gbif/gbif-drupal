@@ -6,4 +6,3 @@ package = GBIFS
 project = GBIF Portal
 
 dependencies[] = nodetools
-dependencies[] = gbif_ims

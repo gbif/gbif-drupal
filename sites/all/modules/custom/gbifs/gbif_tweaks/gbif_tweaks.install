@@ -83,9 +83,7 @@ function gbif_tweaks_install() {
 
 /**
  * Implements hook_uninstall().
- * @todo Decide whether we should uninstall jquery_update if this
- *       module got uninstalled. jquery_update is required by
- *       bootstrap.
+ * @todo Decide whether we should uninstall jquery_update if this module got uninstalled. jquery_update is required by bootstrap.
  */
 function gbif_tweaks_uninstall() {
   // Hide "submitted by" by default.

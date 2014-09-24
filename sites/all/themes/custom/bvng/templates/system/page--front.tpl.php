@@ -181,7 +181,7 @@ $env = variable_get('environment_settings');
 			<div class="row">
 				<?php print views_embed_view('newsarticles', 'latest1_fp'); ?>
 				<?php print views_embed_view('newsarticles', 'latest4_fp'); ?>
-				<?php print views_embed_view('viewallevents', 'latest4_fp'); ?>
+				<?php print views_embed_view('events', 'latest4_fp'); ?>
 			</div>
 		</div>
 	</div>

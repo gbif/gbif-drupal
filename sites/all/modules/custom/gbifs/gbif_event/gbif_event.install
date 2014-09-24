@@ -1,0 +1,122 @@
+<?php
+
+module_load_include('inc', 'gbif_event', 'gbif_event.fields');
+
+/**
+ * Implements hook_install().
+ */
+function gbif_event_install() {
+	// Create a directory for storing relevant files for IMS events.
+	$uri = 'public://gbif_event/images';
+	$dir_exists = file_prepare_directory($uri);
+	if (!$dir_exists) {
+		$dir_created = drupal_mkdir($uri, NULL, TRUE);
+		if ($dir_created == TRUE) {
+			watchdog('gbif_event', '!directory created.', array('!directory' => $uri), WATCHDOG_NOTICE);
+		}
+		else {
+			watchdog('gbif_event', '!directory creation failed.', array('!directory' => $uri), WATCHDOG_ERROR);
+		}
+	}
+	else {
+		watchdog('gbif_event', '!directory already exists.', array('!directory' => $uri), WATCHDOG_WARNING);
+	}
+
+	node_types_rebuild();
+	_ge_create_custom_fields();
+
+	// Pathauto pattern for individual event nodes.
+	variable_set('pathauto_node_event_pattern', 'event/[node:nid]');
+
+	// Add redirection to connect to previous event_ims paths.
+	gbif_tweaks_redirects_handling('gbif_event', 'create');
+
+	// Load the default contexts.
+	gbif_event_contexts();
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function gbif_event_uninstall() {
+	// Detele the directory and generated data from this module
+	$uri = 'public://gbif_event';
+	$dir_exists = file_prepare_directory($uri);
+	if ($dir_exists) {
+		$deleted = file_unmanaged_delete_recursive($uri);
+	}
+	if ($deleted == TRUE) {
+		drupal_set_message('The events are successfully deleted.');
+	}
+
+	$type_to_delete = 'event';
+	$sql = 'SELECT nid FROM {node} n WHERE n.type = :type';
+	$result = db_query($sql, array(':type' => $type_to_delete));
+	$node_ids = array();
+	foreach ($result as $row) {
+		$node_ids[] = $row->nid;
+	}
+	node_delete_multiple($node_ids);
+	_ge_delete_custom_fields();
+	node_type_delete($type_to_delete);
+	field_purge_batch(500);
+
+	variable_del('pathauto_node_event_pattern');
+
+	// Remove redirection.
+	gbif_tweaks_redirects_handling('gbif_event', 'remove');
+}
+
+/**
+ * The list of redirects relevant to event handling.
+ * @return array
+ */
+function gbif_event_redirection_list() {
+	$redirections = array(
+		array(
+			'old' => 'newsroom/events',
+			'new' => 'newsroom/events/upcoming',
+		),
+		array(
+			'old' => 'newsroom/events/archive',
+			'new' => 'newsroom/events/past',
+		),
+	);
+	return $redirections;
+}
+
+/**
+ * We load default contexts here.
+ * The ctools hook doesn't seem to be working which forced us to manually save it
+ * here.
+ */
+function gbif_event_contexts() {
+	$context = new stdClass();
+	$context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
+	$context->api_version = 3;
+	$context->name = 'event_node_menu';
+	$context->description = '';
+	$context->tag = 'menu';
+	$context->conditions = array(
+		'node' => array(
+			'values' => array(
+				'event' => 'event',
+			),
+			'options' => array(
+				'node_form' => '1',
+			),
+		),
+	);
+	$context->reactions = array(
+		'menu' => array(
+			0 => 'gbif-menu:newsroom/events/upcoming',
+		),
+	);
+	$context->condition_mode = 0;
+
+// Translatables
+// Included for use with string extractors like potx.
+	t('menu');
+
+	context_save($context);
+}

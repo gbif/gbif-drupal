@@ -53,7 +53,7 @@ function bvng_theme() {
  * Implements template_preprocess().
  */
 function bvng_preprocess(&$variables, $hook) {
-	// Make the environmental settings available to the theming layer and javascript.
+	// Make the environmental settings available to the theme layer and javascript.
 	$env = variable_get('environment_settings');
 	$variables['data_portal_base_url'] = $env['data_portal_base_url'];
 	$variables['gbif_api_base_url'] = $env['gbif_api_base_url'];
@@ -142,10 +142,12 @@ function bvng_preprocess_page(&$variables) {
 				$altered_path = drupal_get_normal_path('newsroom/uses'); // taxonomy/term/567
 				$variables['node']->type_title = t('Featured Data Use');
 				break;
-			case 'event_ims':
-				$altered_path = drupal_get_normal_path('newsroom/events'); // taxonomy/term/569
-				$variables['node']->type_title = t('Event Details');
+			/*
+			case 'event':
+				$altered_path = drupal_get_normal_path('newsroom/events/upcoming');
+				$variables['node']->type_title = t('Events');
 				break;
+			*/
 			case 'resource_ims':
 				$altered_path = drupal_get_normal_path('resources/summary'); // taxonomy/term/569
 				$variables['node']->type_title = t('Resource Details');
@@ -163,9 +165,6 @@ function bvng_preprocess_page(&$variables) {
 	}
 	elseif (strpos($req_path, 'resources') !== FALSE) {
 		$altered_path = drupal_get_normal_path('resources/summary'); // taxonomy/term/764
-	}
-	elseif (strpos($req_path, 'events') !== FALSE) {
-		$altered_path = drupal_get_normal_path('newsroom/events'); // taxonomy/term/569
 	}
 	elseif (drupal_match_path($req_path, 'user') || drupal_match_path($req_path, 'user/*')) {
 		$altered_path = 'user';
@@ -194,7 +193,7 @@ function bvng_preprocess_page(&$variables) {
   }
 
 	if (!isset($variables['page']['highlighted_title'])) {
-		$variables['page']['highlighted_title'] = _bvng_get_title_data($node_count, $variables['user'], $req_path);
+		$variables['page']['highlighted_title'] = _bvng_get_title_data($node_count, $variables['user'], $req_path, $variables['node']);
 	}
 
   // Manually set page title.
@@ -489,12 +488,6 @@ function bvng_preprocess_node(&$variables) {
 		<div class="field-item even">' . $publisher_w_date . '</div></div></div>';
 	}
 
-	/* Process the date of event.
-	 */
-	if ($variables['node']->type == 'event_ims') {
-		$variables['event_date'] = _bvng_get_field_value('node', $variables['node'], 'field_dates');
-	}
-
   /* Process menu_local_tasks()
    */
   global $user;
@@ -531,28 +524,12 @@ function bvng_preprocess_node(&$variables) {
   /* Get also tagged
    */
   $variables['also_tagged'] = _bvng_get_also_tag_links($variables['node']);
-
-  /* Prepare event location
-   */
-  if (isset($variables['node']->type) && $variables['node']->type == 'event_ims') {
-  	$markup_location = '';
-  	$city = _bvng_get_field_value('node', $variables['node'], 'field_city');
-  	$venuecountry = _bvng_get_field_value('node', $variables['node'], 'field_venuecountry');
-  	$markup_location .= ($city == FALSE) ? '' : $city;
-  	$markup_location .= ($city == FALSE && $venuecountry == FALSE) ? '' : ', ';
-  	$markup_location .= ($venuecountry == FALSE) ? '' : $venuecountry;
-  }
-  if (strlen($markup_location) !== 0) {
-  	$variables['event_location'] = $markup_location;
-  }
-
+	
 }
 
 /**
  * Implements template_preprocess_taxonomy_term().
  */
-function bvng_preprocess_taxonomy_term(&$variables) {
-}
 
 /**
  * Implements hook_preprocess_views_view().
@@ -599,28 +576,10 @@ function bvng_preprocess_views_view(&$variables) {
 
 }
 
-function bvng_preprocess_views_view_field(&$variables, $hook) {                      
-	if ($variables['view']->name == 'featurednewsarticles') {                          
-		$new = '';                                                                       
-	}                                                                                  
-	elseif ($variables['view']->name == 'viewallevents' && $variables['view']->current_display == 'latest4_fp') {
-		if ($variables['field']->field == 'field_start_date') { 
-			// allow extra divs and classes at a later time in template
-			// any lang where the short name of the month has blanks?
-			$pattern = '/(<span\s.+?>)(\w+\s\d\d)(<\/span>)/';
-			$replacement = '$2';
-			$target = $variables['field']->original_value ;
-			
-			$q = preg_replace ( $pattern, $replacement, $target);
-			$d = explode ( ' ', $q );
-			$variables['month_year'] = array ('month'=>$d[0] , 'year'=>$d[1]);
-		}
-	}                                                                                  
-}                                                                                    
-
-function bvng_preprocess_field(&$variables) {                                        
-}                                                                                    
-
+/**
+ * Implements hook_preprocess_views_view_list().
+ * @param $variables
+ */
 function bvng_preprocess_views_view_list(&$variables) {
   switch ($variables['view']->name) {
     case 'usesofdatafeaturedarticles':
@@ -637,11 +596,6 @@ function bvng_preprocess_views_view_list(&$variables) {
 /**
  * Implements template_preprocess_search_results().
  */
-function bvng_preprocess_search_results(&$variables) {
-	if (isset($variables)) {
-
-	}
-}
 
 /**
  * Implements template_preprocess_search_result().
@@ -715,6 +669,25 @@ function bvng_js_alter(&$js) {
 	}
 }
 
+/**
+ * Overrides the presentation of ge_date_ical field.
+ */
+function bvng_field__ge_date_ical($variables) {
+	$output = '';
+
+	// Render only the items.
+	foreach ($variables['items'] as $delta => $item) {
+		unset($item['date']);
+		$output .= '<span>' . t('Add to calendar') . ": " . '</span>';
+		$output .= drupal_render($item);
+	}
+
+	// Render the top-level DIV.
+	$output = '<div class="' . $variables['classes'] . '"' . $variables['attributes'] . '>' . $output . '</div>';
+
+	return $output;
+}
+
 function _bvng_well_types($req_path, $system_main) {
 
 	$status = drupal_get_http_header("status");
@@ -778,13 +751,13 @@ function _bvng_well_types($req_path, $system_main) {
  *
  * The description is retrieved from the description of the menu item.
  */
-function _bvng_get_title_data($node_count = NULL, $user = NULL, $req_path = NULL) {
+function _bvng_get_title_data($node_count = NULL, $user = NULL, $req_path = NULL, $node = NULL) {
   $status = drupal_get_http_header("status");
 
 	// This way disassociates the taxanavigation voc, is more reasonable, but a bit heavy.
 	// Only 'GBIF Newsroom' has a shorter name in the nav.
 	$source_menu = (strpos($req_path, 'user') !== FALSE) ? 'user-menu' : 'gbif-menu';
-	$active_menu_item = menu_link_get_preferred(current_path(), $source_menu);
+	$active_menu_item = menu_link_get_preferred($req_path, $source_menu);
 	if (strpos(current_path(), 'user') !== FALSE) {
 		switch ($req_path) {
 	    case 'user/login':
@@ -875,10 +848,24 @@ function _bvng_get_title_data($node_count = NULL, $user = NULL, $req_path = NULL
 		else {
 		  $parent = menu_link_load($active_menu_item['plid']);
 		  $title = array(
-		      'mild' => $parent['mlid'],
-		      'name' => ($parent['link_title'] == 'GBIF News') ? 'GBIF Newsroom' : $parent['link_title'],
-		      'description' => $parent['options']['attributes']['title'],
+		    'mild' => $parent['mlid'],
+		    'name' => ($parent['link_title'] == 'GBIF News') ? 'GBIF Newsroom' : $parent['link_title'],
+		    'description' => $parent['options']['attributes']['title'],
 		  );
+		}
+	}
+	elseif ($active_menu_item == FALSE && isset($node)) {
+		if (in_array($node->type, array('usesofdata', 'newsarticle', 'event'))) {
+			$title = array(
+				'name' => t('GBIF Newsroom'),
+				'description' => t('News and events from around the GBIF community'),
+			);
+		}
+		elseif (in_array($node->type, array('resource_ims'))) {
+			$title = array(
+				'name' => t('Resources'),
+				'description' => t('Tools and information to support the GBIF community'),
+			);
 		}
 	}
 	elseif (strpos(current_path(), 'taxonomy/term') !== FALSE) {
@@ -1121,6 +1108,10 @@ function _bvng_get_regional_links() {
   return $links;
 }
 
+/**
+ * @todo To be deleted after gbif_event module takes off.
+ * @return string
+ */
 function _bvng_get_event_links() {
 	$options = array();
 	if (current_path() == 'taxonomy/term/569') {
@@ -1278,11 +1269,11 @@ function _bvng_get_also_tag_links($node) {
 function _bvng_get_container_well() {
   $well = array();
   $well['normal'] = array(
-    'top' => '<div class="container well well-lg well-margin-top well-margin-bottom">' . "\n" . '<div class="row">' . "\n" . '<div class="col-md-12">',
+    'top' => '<div class="container well well-lg well-margin-top well-margin-bottom">' . "\n" . '<div class="row">' . "\n" . '<div class="col-xs-12">',
     'bottom' => '</div>' . "\n" . '</div>' . "\n" . '</div>',
   );
   $well['filter'] = array(
-    'top' => '<div class="container well well-lg well-margin-top well-margin-bottom well-right-bg">' . "\n" . '<div class="row">' . "\n" . '<div class="col-md-12">',
+    'top' => '<div class="container well well-lg well-margin-top well-margin-bottom well-right-bg">' . "\n" . '<div class="row">' . "\n" . '<div class="col-xs-12">',
     'bottom' => '</div>' . "\n" . '</div>' . "\n" . '</div>',
   );
   return $well;

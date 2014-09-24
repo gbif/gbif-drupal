@@ -314,16 +314,16 @@ switch ($_GET['ot'])
 
 			// note "startdate" is missing from the array
 			$fields = array (	'image_url'=>'image_url',
-								'audience'=>'audience',
-								'HowToContact'=>'contact',
-								'venue'=>'venue',
-								'city'=>'city',
-								'country'=>'venuecountry',
+								'audience'=>'audience', //
+								'HowToContact'=>'contact', //
+								'venue'=>'venue', //
+								'city'=>'city', //
+								'country'=>'venuecountry', //
 								'Date_Text'=>'dates',
-								'status'=>'status',
-								'Language'=>'language',
-								'resources'=>'resources',
-								'participants'=>'participants',
+								'status'=>'status', //
+								'Language'=>'language', //
+								'resources'=>'resources', //
+								'participants'=>'participants', //
 								'relatedparticipants'=>'country',
 								'region'=>'regions',
 								) ;
@@ -1126,25 +1126,24 @@ if(FileMaker::isError($ListRelatedCountries_result)) {
 
 // Target audience
 
-if ($EventDetails_row->getField('NumberParticipants') != "") 
-	{
-		$audience .= $EventDetails_row->getField('NumberParticipants')." people";
-		If ($NumberNodes != 0)
-			{
-			$audience .= " from ".$NumberNodes." countries/organisations: ";
-			}
-	} 
-	// we show the number the origin of participants if there is anything to show
-	if ($ListCountriesString != "") 
-	{
-	$audience .= $ListCountriesString.".<br />";
-	} else {
-		if ($EventDetails_row->getField('NumberParticipants') != "") 
-		{
-		$audience .= ". ";
-		}
+if ($EventDetails_row->getField('NumberParticipants') != "") {
+	$audience .= $EventDetails_row->getField('NumberParticipants')." people";
+	If ($NumberNodes != 0) {
+		$audience .= " from ".$NumberNodes." countries/organisations: ";
 	}
-    $audience .= htmlspecialchars_decode($EventDetails_row->getField('TargetPublic'));
+}
+
+// we show the number the origin of participants if there is anything to show
+if ($ListCountriesString != "") {
+	$audience .= $ListCountriesString.".<br />";
+}
+else {
+	if ($EventDetails_row->getField('NumberParticipants') != "") {
+		$audience .= ". ";
+	}
+}
+$audience .= htmlspecialchars_decode($EventDetails_row->getField('TargetPublic'));
+
 
 // Venue
     
@@ -1197,7 +1196,25 @@ if ($NoResources != True) {
 
 $image_url = "http://imsgbif.gbif.org/CMS/W_TR_EventDetail.php?image=Thumbnail&recid=".$EventDetails_row->getRecordId();
 
-$array_event_details = array ("__kp_ID" => $EventDetails_row->getField('__kp_ID'), "Name_Full" => htmlspecialchars_decode($EventDetails_row->getField('Name_Full')), "Desc_Short" => htmlspecialchars_decode($EventDetails_row->getField('Desc_Short')), "audience" => $audience, "HowToContact" => htmlspecialchars_decode($EventDetails_row->getField('HowToContact')), "Date_Text" => htmlspecialchars_decode($EventDetails_row->getField('Date_Text')), "status" => htmlspecialchars_decode($EventDetails_row->getField('WEVE_Event_Eventstatus::Status')), "image_url" => htmlspecialchars_decode($image_url), "Language" => htmlspecialchars_decode($EventDetails_row->getField('Language')), "venue" => $venue, "city" => $city, "country" => $country, "participants" => $participants, "resources" => $resources, "startdate" => strtotime($EventDetails_row->getField('Date_Start')), "region" => $region, "relatedparticipants" => $ArrayRelatedParticipants,);
+$array_event_details = array(
+	"__kp_ID" => $EventDetails_row->getField('__kp_ID'),
+	"Name_Full" => htmlspecialchars_decode($EventDetails_row->getField('Name_Full')),
+	"Desc_Short" => htmlspecialchars_decode($EventDetails_row->getField('Desc_Short')),
+	"audience" => $audience,
+	"HowToContact" => htmlspecialchars_decode($EventDetails_row->getField('HowToContact')),
+	"Date_Text" => htmlspecialchars_decode($EventDetails_row->getField('Date_Text')),
+	"status" => htmlspecialchars_decode($EventDetails_row->getField('WEVE_Event_Eventstatus::Status')),
+	"image_url" => htmlspecialchars_decode($image_url),
+	"Language" => htmlspecialchars_decode($EventDetails_row->getField('Language')),
+	"venue" => $venue,
+	"city" => $city,
+	"country" => $country,
+	"participants" => $participants,
+	"resources" => $resources,
+	"startdate" => strtotime($EventDetails_row->getField('Date_Start')),
+	"region" => $region,
+	"relatedparticipants" => $ArrayRelatedParticipants
+);
 
 return $array_event_details;
 

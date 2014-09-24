@@ -1,7 +1,7 @@
 name = GBIF Tweaks
-description = Tweaks the Drupal so the fundamental settings increment along with the development.
+description = Tweaks Drupal so it runs as the GBIF Portal. This is also the module that stores shared settings and utility functions.
 core = 7.x
-version = 7.x-0.1
+version = 7.x-0.2
 package = GBIFS
 project = GBIF Portal
 

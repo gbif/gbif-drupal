@@ -6,7 +6,7 @@
  * Time: 5:50 PM
  */
 
-require_once(dirname(__FILE__)) . '/gbif_ims.fields.inc';
+module_load_include('inc', 'gbif_ims', 'gbif_ims.schema');
 
 /**
  * Implementation of hook_requiremensts()
@@ -40,7 +40,7 @@ function gbif_ims_requirements($phase) {
  * Implements hook_install().
  */
 function gbif_ims_install() {
-
+	_gbif_ims_create_custom_fields();
 }
 
 /**
@@ -48,6 +48,8 @@ function gbif_ims_install() {
  */
 function gbif_ims_uninstall() {
 	drupal_uninstall_schema('gbif_ims');
+	// @todo Look for established content and delete them.
+	_gbif_ims_delete_custom_fields();
 }
 
 /**
@@ -69,4 +71,72 @@ function gbif_ims_schema() {
 		}
 	}
 	return $schema;
+}
+
+function _gbif_ims_create_custom_fields() {
+	foreach (_gbif_ims_installed_fields() as $field) {
+		field_create_field($field);
+	}
+}
+
+function _gbif_ims_delete_custom_fields() {
+	foreach (array_keys(_gbif_ims_installed_fields()) as $field) {
+		field_delete_field($field);
+	}
+}
+
+/**
+ * Handling all common IMS fields.
+ * We create these common fields here and expect field instances are created in
+ * various modules that deal with IMS content units.
+ */
+function _gbif_ims_installed_fields() {
+	$t = get_t();
+	return array(
+		'ims_kp_id' => array(
+			'label' => $t('Primary ID for each IMS table.'),
+			'active' => '1',
+			'cardinality' => '1',
+			'deleted' => '0',
+			'entity_types' => array(), // Empty means can have instances in any entity type.
+			'field_name' => 'ims_kp_id',
+			'foreign keys' => array(),
+			'indexes' => array(),
+			'locked' => '1',
+			'module' => 'number',
+			'settings' => array(),
+			'translatable' => '0',
+			'type' => 'number_integer',
+		),
+		'ims_date' => array(
+			'label' => $t('For IMS contents that need to indicate date.'),
+			'active' => '1',
+			'cardinality' => '1',
+			'deleted' => '0',
+			'entity_types' => array(),
+			'field_name' => 'ims_date',
+			'foreign keys' => array(),
+			'indexes' => array(),
+			'locked' => '1',
+			'module' => 'date',
+			'settings' => array(
+				'cache_count' => '4',
+				'cache_enabled' => 1,
+				'granularity' => array(
+					'day' => 'day',
+					'hour' => 0,
+					'minute' => 0,
+					'month' => 'month',
+					'second' => 0,
+					'year' => 'year',
+				),
+				'repeat' => '0',
+				'timezone_db' => 'UTC',
+				'todate' => 'optional',
+				'tz_handling' => 'none',
+			),
+			'translatable' => '0',
+			'type' => 'datestamp',
+		),
+	);
 }

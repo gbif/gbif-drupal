@@ -1,4 +1,4 @@
-name = GBIF IMS 
+name = GBIF IMS Legacy
 description = "Provides a locally accessible copy for some relevant IMS data"
 package = GBIFS
 project = GBIF Portal

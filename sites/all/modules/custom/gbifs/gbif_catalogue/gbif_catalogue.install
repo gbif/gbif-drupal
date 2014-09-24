@@ -44,7 +44,7 @@ function gbif_catalogue_requirements($phase) {
 }
 
 /**
- * Implemtation of hook_install().
+ * Implementation of hook_install().
  */
 function gbif_catalogue_install() {
   // Populate all required vocabularies and their terms.

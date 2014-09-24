@@ -36,22 +36,21 @@ News {"url":"<front>"}
 ---A view of all GBIF news articles {"url":"newsroom\/archive\/allnewsarticles"}
 --Uses of data {"url":"newsroom\/uses"}
 --Opportunities {"url":"newsroom\/opportunities"}
---Events {"url":"newsroom\/events"}
----GBIF events archive {"url":"newsroom\/events\/archive", "description":"GBIF events archive"}
----GBIF upcoming events {"url":"newsroom\/events\/upcoming", "description":"GBIF upcoming events"}
+--Events {"url":"newsroom\/events\/upcoming"}
+---Past events {"url":"newsroom\/events\/past"}
 --Newsletter {"url":"newsroom\/newsletter"}
 --Consultations {"url":"newsroom\/consultations"}
 -Featured data use {"url":"newsroom\/uses"}
 --A view of all data use articles {"url":"newsroom\/archive\/alldatausearticles"}
 -Opportunities {"url":"newsroom\/opportunities"}
--Events {"url":"newsroom\/events"}
+-Events {"url":"newsroom\/events\/upcoming"}
 -Newsletter {"url":"newsroom\/newsletter"}
 -Consultations {"url":"newsroom\/consultations"}
 Community {"url":"<front>"}
 -Participation {"url":"participation\/summary", "description": "Being part of the GBIF community"}
 --Summary {"url":"participation\/summary"}
 --Membership {"url":"participation\/membership"}
---Participant list {"url":"participation\/list", "non_drupal_url":true}
+--Participant list {"url":"participation\/list"}
 --How to join {"url":"participation\/howtojoin"}
 -Capacity enhancement {"url":"capacityenhancement\/summary", "description": "Sharing expertise, experience and technology around the GBIF community"}
 --Summary {"url":"capacityenhancement\/summary"}

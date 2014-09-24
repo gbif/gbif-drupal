@@ -60,7 +60,12 @@
 </div>
 <div class="row">
   <div class="view-column col-xs-8">
-    <?php print $content ?>
+		<?php print render($variables['elements']['term_heading']); ?>
+		<?php print render($variables['elements']['nodes']); ?>
+		<?php if (!empty($variables['elements']['pager']['#children'])): ?>
+			<hr>
+			<?php print render($variables['elements']['pager']); ?>
+		<?php endif; ?>
   </div>
   <div class="sidebar-filter col-xs-3">
     <?php print _bvng_get_more_search_options(arg(2)); ?>

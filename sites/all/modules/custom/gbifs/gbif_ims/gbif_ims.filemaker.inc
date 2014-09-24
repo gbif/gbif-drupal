@@ -8,7 +8,7 @@
  * functions separate from the main module
  */
 
-require_once(dirname(__FILE__)) . '/gbif_ims.fields.inc';
+module_load_include('inc', 'gbif_ims', 'gbif_ims.schema');
 
 /**
  * Break apart each of the data migration tasks 
@@ -28,22 +28,38 @@ function _gbif_ims_sync() {
 		if (FileMaker::isError($result)) {
 			$error_message = $result->getMessage();
 			$error_code = $result->code;
-			drupal_set_message(t('FileMaker Error: @error_message. Code: @error_code', array('@error_message' => $error_message, '@error_code' => $error_code)), 'error');
+			drupal_set_message(t('FileMaker Error: @error_message. Code: @error_code', array(
+				'@error_message' => $error_message,
+				'@error_code' => $error_code
+			)), 'error');
+			return FALSE;
 		}
 		else {
 			$records = $result->getRecords();
-			// $num_records = count($records['contacts']);
 
 			foreach ($records as $k => $record) {
 				$values = array();
 				$valid_record = TRUE;
+
 				foreach ($table['fields'] as $field_name => $field) {
-					$value = $record->getField($field['ims_eqv']);
+					// Special case for event image record ID.
+					if ($field['ims_eqv'] == 'recordID') {
+						$value = $record->getRecordId();
+					}
+					else {
+						$value = $record->getField($field['ims_eqv']);
+					}
 
 					$is_empty = empty($value);
 					if ($is_empty == TRUE && $field['not null'] == TRUE) {
-						drupal_set_message(t('Null value conflict on record @id of table @table', array('@id' => $k + 1, '@table' => $table_name)), 'warning');
-						watchdog('GBIF', 'Null value conflict on record @id of table @table', array('@id' => $k + 1, '@table' => $table_name), WATCHDOG_WARNING);
+						drupal_set_message(t('Null value conflict on record @id of table @table', array(
+							'@id' => $k + 1,
+							'@table' => $table_name
+						)), 'warning');
+						watchdog('GBIF', 'Null value conflict on record @id of table @table', array(
+							'@id' => $k + 1,
+							'@table' => $table_name
+						), WATCHDOG_WARNING);
 						$valid_record = FALSE;
 						break;
 					}
@@ -51,7 +67,7 @@ function _gbif_ims_sync() {
 					if (isset($field['type'])) {
 						switch ($field['type']) {
 							case 'int':
-								$value = (int)$value;
+								$value = (int) $value;
 								if ($field_name == 'sort_weight') {
 									$values[$field_name] = (empty($value)) ? 0 : $value;
 								}
@@ -76,10 +92,12 @@ function _gbif_ims_sync() {
 											break;
 										case 'MOU2012_Date':
 											// format is (so far...) 'mm/dd/yyyy' so we only patch the time
-											$value .= ' 00:00' ;
+											$value .= ' 00:00';
 											$format = 'm/d/Y H:i';
 											break;
 										default:
+											// IMS timestamp format 06/12/2008 14:07:37
+											// @todo Store datetime as timestamp after importing to MySQL.
 											return t('Unexpected DATETIME field.');
 									}
 
@@ -88,7 +106,7 @@ function _gbif_ims_sync() {
 
 								}
 								else {
-									$values[$field_name] = NULL ;
+									$values[$field_name] = NULL;
 								}
 								break;
 						}
@@ -101,8 +119,8 @@ function _gbif_ims_sync() {
 			unset($IMS);
 		}
 	}
-
-	return t('Synchronisation finished.');
+	// @todo Test the real success.
+	return TRUE;
 }
 
 /**

@@ -4,6 +4,8 @@
  * gbif_participant.module
  */
 
+module_load_include('inc', 'gbif_participant', 'gbif_participant.api');
+
 /**
  * Implements hook_menu().
  */
@@ -24,6 +26,14 @@ function gbif_participant_menu() {
 		'access arguments' => array('administer site configuration'),
 		'type' => MENU_NORMAL_ITEM,
 		'file' => 'gbif_participant.admin.inc',
+	);
+	$items['participation/list'] = array(
+		'title' => t('Participant List'),
+		'description' => 'List of GBIF Participant.',
+		'page callback' => '_gp_participant_list_page',
+		'access callback' => TRUE,
+		'type' => MENU_NORMAL_ITEM,
+		'menu-name' => 'gbif-menu',
 	);
 	return $items;
 }
@@ -273,6 +283,16 @@ function gbif_participant_theme($existing, $type, $theme, $path) {
 			'path' => $path . '/theme',
 			'variables' => array('iso2' => NULL, 'content' => NULL),
     ),
+		'gp_participant_list_page' => array(
+			'template' => 'participant-list-page',
+			'path' => $path . '/theme',
+			'variables' => array('html' => NULL, 'types' => NULL),
+		),
+		'gp_participant_list' => array(
+			'template' => 'participant-list',
+			'path' => $path . '/theme',
+			'variables' => array('participants' => NULL, 'type' => NULL),
+		),
 	);
 }
 
@@ -356,9 +376,7 @@ function gbif_participant_preprocess_node(&$variables) {
 		$variables['participant_node'] = array();
 
 		// Format the date to only show year.
-		$timestamp = strtotime($variables['participant_ims']->member_as_of);
-		$year = date('Y', $timestamp);
-		$variables['participant_ims']->member_as_of = $year;
+		$variables['participant_ims']->member_as_of = date('Y', strtotime($variables['participant_ims']->member_as_of));
 
 		$timestamp = strtotime($variables['elements']['gp_node_established']['#items'][0]['value']);
 		if ($timestamp != FALSE) {
@@ -633,7 +651,7 @@ function gbif_participant_page_router($iso2, $chapter, $sub_chapter) {
 
 		}
 	}
-	return 'Generic rendering.';
+	return t('We are sorry that the country page you have just requested is not rendered correctly. Can you please let us know how did you come to this point by sending an email to !dev?', array('!dev' => l('dev@gbif.org', 'mailto:dev@gbif.org')));
 }
 
 /**
@@ -740,6 +758,28 @@ function gbif_participant_populate() {
 	}
 }
 
+function gbif_participant_membership_types() {
+	$types = array(
+		array(
+			'key' => 'voting',
+			'title' => t('Voting participant')
+		),
+		array(
+			'key' => 'associate',
+			'title' => t('Associate Country Participant')
+		),
+		array(
+			'key' => 'other',
+			'title' => t('Other Associate Participant')
+		),
+		array(
+			'key' => 'affiliate',
+			'title' => t('GBIF Affiliate')
+		),
+	);
+	return $types;
+}
+
 /**
  * @todo Use local json to produce the list.
  * @todo Use http://api.gbif.org/v1/enumeration/country for the source.
@@ -790,6 +830,27 @@ function _gbif_participant_participant_query($participantID = NULL, $iso2 = NULL
 		$query->condition('c.iso2', $iso2, '=');
 		$query->condition('p.gbif_membership', array('Other Associate Participant'), 'IN');
 	}
+	$result = $query->execute()->fetchAll();
+	return $result;
+}
+
+function _gbif_participant_membership_query($gbif_membership) {
+	$query = db_select('gbif_ims_participant', 'p');
+	$query->join('gbif_ims_node', 'n', 'n.participantID = p.participantID');
+	$query->leftjoin('gbif_ims_country', 'c', 'p.countryID = c.countryID');
+	$query->leftjoin('gbif_ims_institution', 'i', 'i.institutionID = p.institutionID');
+	$query->addField('p', 'participantID', 'participantID');
+	$query->addField('p', 'name_full', 'participant_name_full');
+	$query->addField('p', 'name_short', 'participant_abbrev');
+	$query->addField('p', 'member_as_of');
+	$query->addField('p', 'gbif_membership');
+	$query->addField('p', 'mou2012_date');
+	$query->addField('c', 'iso2', 'iso2');
+	$query->addField('n', 'name_full', 'node_name_full');
+	$query->addField('n', 'url', 'node_url');
+	$query->addField('i', 'name', 'institution_name');
+	$query->condition('p.gbif_membership', $gbif_membership);
+	$query->orderBy('p.name_full');
 	$result = $query->execute()->fetchAll();
 	return $result;
 }
@@ -1416,6 +1477,61 @@ function _gp_country_repatriation($iso2, $list_mode, $repatri_mode) {
 	return $output;
 }
 
+/**
+ * Prepare and print the list of participant.
+ * @return string
+ * @throws Exception
+ */
+function _gp_participant_list_page() {
+	$html = array();
+
+	// Prepare quick links and lists according to membership type.
+	$types = gbif_participant_membership_types();
+	$lists = array();
+	foreach ($types as &$type) {
+		$type['url'] = 'participant/list';
+		$lists[] = l($type['title'], $type['url'], array('fragment' =>  $type['key']));
+		$participants = _gbif_participant_membership_query($type['title']);
+		$count = count($participants);
+		$html[$type['key'] . '_metrics'] = format_plural($count,
+			'@count ' . $type['title'],
+			'@count ' . $type['title'] . 's'
+		);
+
+		// Format date to only year. Produce links.
+		foreach ($participants as &$participant) {
+			$participant->member_as_of = date('Y', strtotime($participant->member_as_of));
+			if (in_array($participant->gbif_membership, array('Voting Participant', 'Associate Country Participant'))) {
+				$participant->participant_link = l($participant->participant_name_full, 'country/' . $participant->iso2 . '/participation');
+			}
+			else {
+				$participant->participant_link = l($participant->participant_name_full, gbif_tweaks_get_data_portal_base_url() . '/node/' . _gbif_participant_get_uuid($participant->participantID));
+			}
+			if (!empty($participant->node_url)) {
+				$participant->node_link = l($participant->node_name_full, $participant->node_url);
+			}
+			else {
+				$participant->node_link = $participant->node_name_full;
+			}
+		}
+		$list_key = $type['key'] . '_list';
+		$html[$list_key] = theme('gp_participant_list', array('participants' => $participants, 'type' => $type['key']));
+	}
+	$vars = array(
+		'items' => $lists,
+		'type' => 'ul',
+		'attributes' => array(),
+	);
+	$html['quick_links'] = theme_item_list($vars);
+
+	$html['overview_paragraph'] = t('This is a list of all countries, organizations and economies currently participating in GBIF through signature of the Memorandum of Understanding (MoU). Click on the name of each Participant to get full contact details, as well as news and information about biodiversity data publication and use.');
+	$html['voting_paragraph'] = t('Countries that have signed the GBIF Memorandum of Understanding and agree to make a !contribution to GBIF core funds.', array('!contribution' => l(t('basic financial contribution'), 'governance/finance')));
+	$html['associate_paragraph'] = t('Countries that have signed the GBIF Memorandum of Understanding but do not make a financial contribution to GBIF core funds, and do not have a vote on the !gb.', array('!gb' => l(t('GBIF Governing Board'), 'governance/governingboard')));
+	$html['other_paragraph'] = t('Intergovernmental organizations, international organizations and other organizations with an international scope, and economies, that have signed the GBIF Memorandum of Understanding.');
+	$html['affiliate_paragraph'] = t('This is dummy text so obvious that we will remember to replace it.');
+	return theme('gp_participant_list_page', array('html' => $html, 'types' => $types));
+}
+
 function gp_print_publications($iso2) {
 	$output = array();
 	$intro_title = t('Uses of GBIF in scientific research');
@@ -1444,51 +1560,6 @@ function gp_print_publications($iso2) {
 	$output['intro_para'] = $intro_para;
 	$output['list_title'] = $list_title;
 	return $output;
-}
-
-/**
- * Helper function for getting the corresponding participant info from
- * the Registry.
- * @param int $pid Participant ID
- */
-function _gbif_participant_get_registry_participant($pid) {
-	$uuid = _gbif_participant_get_uuid($pid);
-	$p_call = _gbif_participant_api_registry_node() . '/' . $uuid;
-	$json = json_decode(file_get_contents($p_call));
-	return $json;
-}
-
-/**
- * Helper function for getting the UUID of the participant.
- */
-function _gbif_participant_get_uuid($participantID) {
-	$api_call = _gbif_participant_api_registry_node() . '?identifier=' . $participantID . '&identifierType=GBIF_PARTICIPANT';
-	$json = json_decode(file_get_contents($api_call));
-	$uuid = $json->results[0]->key;
-	return $uuid;
-}
-
-/**
- * Helper function for constructing the root for Registry calls.
- */
-function _gbif_participant_api_registry_node() {
-	$env = variable_get('environment_settings');
-	return $env['gbif_api_base_url'] . '/v' . $env['gbif_api_version'] . '/node';
-}
-
-function _gbif_participant_api_registry_org() {
-	$env = variable_get('environment_settings');
-	return $env['gbif_api_base_url'] . '/v' . $env['gbif_api_version'] . '/organization';
-}
-
-function _gbif_participant_api_dataset() {
-	$env = variable_get('environment_settings');
-	return $env['gbif_api_base_url'] . '/v' . $env['gbif_api_version'] . '/dataset';
-}
-
-function _gbif_participant_api_occurrence() {
-	$env = variable_get('environment_settings');
-	return $env['gbif_api_base_url'] . '/v' . $env['gbif_api_version'] . '/occurrence';
 }
 
 /**
@@ -1792,10 +1863,6 @@ function _gbif_participant_country_list() {
 	return $columns;
 }
 
-function cmp_by_timestamp($a, $b) {
-	return $b['timestamp'] - $a['timestamp'];
-}
-
 function _gp_get_type_name($type_mname) {
 	$types = node_type_get_types();
 	foreach ($types as $m_name => $type) {
@@ -1804,6 +1871,10 @@ function _gp_get_type_name($type_mname) {
 		}
 	}
 	return '';
+}
+
+function cmp_by_timestamp($a, $b) {
+	return $b['timestamp'] - $a['timestamp'];
 }
 
 function human_timing($time) {

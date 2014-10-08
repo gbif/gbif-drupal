@@ -1528,7 +1528,7 @@ function _gp_participant_list_page() {
 	$html['voting_paragraph'] = t('Countries that have signed the GBIF Memorandum of Understanding and agree to make a !contribution to GBIF core funds.', array('!contribution' => l(t('basic financial contribution'), 'governance/finance')));
 	$html['associate_paragraph'] = t('Countries that have signed the GBIF Memorandum of Understanding but do not make a financial contribution to GBIF core funds, and do not have a vote on the !gb.', array('!gb' => l(t('GBIF Governing Board'), 'governance/governingboard')));
 	$html['other_paragraph'] = t('Intergovernmental organizations, international organizations and other organizations with an international scope, and economies, that have signed the GBIF Memorandum of Understanding.');
-	$html['affiliate_paragraph'] = t('This is dummy text so obvious that we will remember to replace it.');
+	$html['affiliate_paragraph'] = t('Institutions with a formal partnership agreement with GBIF Secretariat defining specific areas of collaboration, in the form of a Memorandum of Cooperation or equivalent.');
 	return theme('gp_participant_list_page', array('html' => $html, 'types' => $types));
 }
 

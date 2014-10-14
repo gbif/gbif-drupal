@@ -835,11 +835,16 @@ function _gbif_participant_participant_query($participantID = NULL, $iso2 = NULL
 	return $result;
 }
 
+/**
+ * List participants according to membership types.
+ * @param $gbif_membership
+ * @return mixed
+ */
 function _gbif_participant_membership_query($gbif_membership) {
 	$query = db_select('gbif_ims_participant', 'p');
-	$query->join('gbif_ims_node', 'n', 'n.participantID = p.participantID');
-	$query->leftjoin('gbif_ims_country', 'c', 'p.countryID = c.countryID');
-	$query->leftjoin('gbif_ims_institution', 'i', 'i.institutionID = p.institutionID');
+	$query->leftJoin('gbif_ims_node', 'n', 'n.participantID = p.participantID');
+	$query->leftJoin('gbif_ims_country', 'c', 'p.countryID = c.countryID');
+	$query->leftJoin('gbif_ims_institution', 'i', 'i.institutionID = p.institutionID');
 	$query->addField('p', 'participantID', 'participantID');
 	$query->addField('p', 'name_full', 'participant_name_full');
 	$query->addField('p', 'name_short', 'participant_abbrev');
@@ -850,7 +855,9 @@ function _gbif_participant_membership_query($gbif_membership) {
 	$query->addField('n', 'name_full', 'node_name_full');
 	$query->addField('n', 'url', 'node_url');
 	$query->addField('i', 'name', 'institution_name');
+	$query->addField('p', 'url_hosting');
 	$query->condition('p.gbif_membership', $gbif_membership);
+	$query->isNotNull('p.member_as_of');
 	$query->orderBy('p.name_full');
 	$result = $query->execute()->fetchAll();
 	return $result;
@@ -1404,12 +1411,22 @@ function _gp_participant_list_page() {
 		// Format date to only year. Produce links.
 		foreach ($participants as &$participant) {
 			$participant->member_as_of = date('Y', strtotime($participant->member_as_of));
+
 			if (in_array($participant->gbif_membership, array('Voting Participant', 'Associate Country Participant'))) {
 				$participant->participant_link = l($participant->participant_name_full, 'country/' . $participant->iso2 . '/participation');
 			}
 			else {
-				$participant->participant_link = l($participant->participant_name_full, gbif_tweaks_get_data_portal_base_url() . '/node/' . _gbif_participant_get_uuid($participant->participantID));
+				if (!empty($participant->node_name_full)) {
+					$participant->participant_link = l($participant->participant_name_full, gbif_tweaks_get_data_portal_base_url() . '/node/' . _gbif_participant_get_uuid($participant->participantID));
+				}
+				elseif (!empty($participant->url_hosting)) {
+					$participant->participant_link = l($participant->participant_name_full, $participant->url_hosting, array('attributes' => array('target' => '_blank')));
+				}
+				else {
+					$participant->participant_link = $participant->participant_name_full;
+				}
 			}
+
 			if (!empty($participant->node_url)) {
 				$participant->node_link = l($participant->node_name_full, $participant->node_url);
 			}

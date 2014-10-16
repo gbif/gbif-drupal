@@ -26,8 +26,7 @@ CKEDITOR.editorConfig = function(config) {
 
   // [#1762328] Uncomment the line below to protect <code> tags in CKEditor (hide them in wysiwyg mode).
   // config.protectedSource.push(/<code>[\s\S]*?<\/code>/gi);
-  // Plugin added by bko on 26 Aug 14.
-  config.extraPlugins = 'dialogadvtab';
+  config.extraPlugins = '';
 
   /*
     * Append here extra CSS rules that should be applied into the editing area.
@@ -60,12 +59,6 @@ CKEDITOR.editorConfig = function(config) {
     config.bodyClass = 'singlepage';
     config.bodyId = 'primary';
   }
-
-  /**
-   * Allow custom classes in HTML tags, for example bootstrap table classes.
-   * Added by bko on 26 Aug 14.
-   */
-  config.allowedContent = true;
 }
 
 /*

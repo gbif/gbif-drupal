@@ -373,6 +373,10 @@ function bvng_preprocess_node(&$variables) {
         $next_node = node_load(prev_next_nid($variables['node']->nid, 'prev'));
     }
     $next_node = ($next_node->status == 1) ? $next_node : NULL; // Only refer to published node.
+		// Check whether an URL alias is available.
+		$url_alias = drupal_get_path_alias('node/' . $next_node->nid);
+		$next_node_url = (!empty($url_alias)) ? $url_alias : 'page/' . $next_node->nid;
+		$variables['next_node_link'] = l($next_node->title, $next_node_url);
     $variables['next_node'] = $next_node;
   }
 

@@ -143,7 +143,7 @@
       <div class="row">
       	<header class="next-header col-xs-12">
       		<h3>Next <?php print render($type_title); ?> Story</h3>
-      		<h2><a href="<?php print '/page/' . $next_node->nid; ?>"><?php print $next_node->title; ?></a></h2>
+      		<h2><?php print $next_node_link; ?></h2>
       	</header>
       </div>
     </article>

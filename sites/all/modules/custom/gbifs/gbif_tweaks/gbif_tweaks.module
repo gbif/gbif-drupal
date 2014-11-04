@@ -105,3 +105,8 @@ function gbif_tweaks_field_export($entity_type, $field_name, $bundle_name) {
 	$output .= "field_create_instance(" . drupal_var_export($info_instance) . ");";
 	drupal_set_message("<textarea rows=30 style=\"width: 100%;\">" . $output . '</textarea>');
 }
+
+function gbif_tweaks_get_data_portal_base_url() {
+	$env = variable_get('environment_settings');
+	return $env['data_portal_base_url'];
+}

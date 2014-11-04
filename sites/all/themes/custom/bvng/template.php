@@ -372,6 +372,10 @@ function bvng_preprocess_node(&$variables) {
         $next_node = node_load(prev_next_nid($variables['node']->nid, 'prev'));
     }
     $next_node = ($next_node->status == 1) ? $next_node : NULL; // Only refer to published node.
+		// Check whether an URL alias is available.
+		$url_alias = drupal_get_path_alias('node/' . $next_node->nid);
+		$next_node_url = (!empty($url_alias)) ? $url_alias : 'page/' . $next_node->nid;
+		$variables['next_node_link'] = l($next_node->title, $next_node_url);
     $variables['next_node'] = $next_node;
   }
 
@@ -727,7 +731,7 @@ function _bvng_well_types($req_path, $system_main) {
 			return 'none';
 		}
   }
-	elseif (drupal_match_path($req_path, 'country*') || drupal_match_path($req_path, 'analytics*')) {
+	elseif (drupal_match_path($req_path, 'country*') || drupal_match_path($req_path, 'analytics*') || drupal_match_path($req_path, 'participation/list')) {
 		if ($status == '404 Not Found') {
 			return 'normal';
 		}

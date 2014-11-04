@@ -32,7 +32,7 @@ function gbif_event_install() {
 	gbif_tweaks_redirects_handling('gbif_event', 'create');
 
 	// Load the default contexts.
-	gbif_event_contexts();
+	gbif_event_contexts_install();
 }
 
 /**
@@ -44,27 +44,22 @@ function gbif_event_uninstall() {
 	$dir_exists = file_prepare_directory($uri);
 	if ($dir_exists) {
 		$deleted = file_unmanaged_delete_recursive($uri);
+		if ($deleted == TRUE) {
+			drupal_set_message('The events are successfully deleted.');
+		}
 	}
-	if ($deleted == TRUE) {
-		drupal_set_message('The events are successfully deleted.');
-	}
-
-	$type_to_delete = 'event';
-	$sql = 'SELECT nid FROM {node} n WHERE n.type = :type';
-	$result = db_query($sql, array(':type' => $type_to_delete));
-	$node_ids = array();
-	foreach ($result as $row) {
-		$node_ids[] = $row->nid;
-	}
-	node_delete_multiple($node_ids);
+	gbif_tweaks_delete_all(array('event'));
 	_ge_delete_custom_fields();
-	node_type_delete($type_to_delete);
+	node_type_delete('event');
 	field_purge_batch(500);
 
 	variable_del('pathauto_node_event_pattern');
 
 	// Remove redirection.
 	gbif_tweaks_redirects_handling('gbif_event', 'remove');
+
+	// Remove contexts.
+	gbif_event_contexts_uninstall();
 }
 
 /**
@@ -81,6 +76,10 @@ function gbif_event_redirection_list() {
 			'old' => 'newsroom/events/archive',
 			'new' => 'newsroom/events/past',
 		),
+		array(
+			'old' => 'newsroom/events/rss',
+			'new' => 'newsroom/events/upcoming.xml',
+		),
 	);
 	return $redirections;
 }
@@ -90,7 +89,7 @@ function gbif_event_redirection_list() {
  * The ctools hook doesn't seem to be working which forced us to manually save it
  * here.
  */
-function gbif_event_contexts() {
+function gbif_event_contexts_install() {
 	$context = new stdClass();
 	$context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
 	$context->api_version = 3;
@@ -119,4 +118,9 @@ function gbif_event_contexts() {
 	t('menu');
 
 	context_save($context);
+}
+
+function gbif_event_contexts_uninstall() {
+	$context = context_load('event_node_menu');
+	context_delete($context);
 }

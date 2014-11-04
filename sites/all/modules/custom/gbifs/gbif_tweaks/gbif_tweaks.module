@@ -110,3 +110,20 @@ function gbif_tweaks_get_data_portal_base_url() {
 	$env = variable_get('environment_settings');
 	return $env['data_portal_base_url'];
 }
+
+/**
+ * @param (array) $node_types
+ */
+function gbif_tweaks_delete_all($node_types) {
+	foreach ($node_types as $node_type) {
+		$query = db_select('node', 'n');
+		$query->addField('n', 'nid');
+		$query->condition('n.type', $node_type);
+		$results = $query->execute()->fetchAll();
+		$node_ids = array();
+		foreach ($results as $row) {
+			$node_ids[] = $row->nid;
+		}
+		node_delete_multiple($node_ids);
+	}
+}

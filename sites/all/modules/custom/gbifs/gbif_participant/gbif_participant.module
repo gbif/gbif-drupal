@@ -961,6 +961,8 @@ function _gbif_participant_print_latest_datasets($iso2, $uuid) {
 			}
 		}
 
+		// The result from the current API call (dataset?country=DK) assumes the
+		// result is already sorted by created time. So we don't do usort() here.
 		//usort($datasets, 'cmp_by_timestamp');
 
 		$html = theme('gbif_participant_datasets_list_item', array('datasets' => $datasets, 'env' => $env, 'iso2' => $iso2));
@@ -1502,6 +1504,7 @@ function _gbif_participant_format_datatype($type) {
 	$types = array(
 		'OCCURRENCE' => t('Occurrence dataset'),
 		'CHECKLIST' => t('Checklist dataset'),
+		'METADATA' => t('Metadata dataset'),
 	);
 	return $types[$type];
 }

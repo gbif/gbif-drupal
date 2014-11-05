@@ -11,11 +11,11 @@ function addtocal_menu() {
   $items = array();
 
   foreach (addtocal_get_addtocal_entities() as $entity_name) {
-    $items[$entity_name . '/%entity_object/%/addtocal.ics'] = array(
+    $items['ical/' . $entity_name . '/%entity_object/%/addtocal.ics'] = array(
       'load arguments' => array($entity_name),
       'title' => 'Download Event',
       'page callback' => 'addtocal_download_ics',
-      'page arguments' => array(1, 2),
+      'page arguments' => array(2, 3),
       'access arguments' => array('access content'),
     );
   }
@@ -89,7 +89,7 @@ function addtocal_field_formatter_view($entity_type, $entity, $field, $instance,
 
         $start_date = $dates[(count($dates) - 1)]['value'];
 
-        $ics_url = $entity_type . '/' . $entity_id . '/' . $field['field_name'] . '/addtocal.ics';
+        $ics_url = 'ical/' . $entity_type . '/' . $entity_id . '/' . $field['field_name'] . '/addtocal.ics';
 
         // Check setting for past events and show widget accordingly
         if (strtotime($start_date) >= time() ||
@@ -382,19 +382,22 @@ function addtocal_render($entity_type, $entity_id, $label, $description, $locati
 	$img_path = drupal_get_path('module', 'addtocal') . '/img';
 	foreach ($calendars as $key => $cal) {
 		$item = array();
+		$title = t('Add to') . ' ' . $cal['title'];
 		$img_html = theme_image(array(
 			'path' => $img_path . '/cal-' . $key . '.png',
 			'width' => 24,
 			'height' => 24,
 			'alt' => $cal['title'],
-			'title' => t('Add to') . ' ' . $cal['title'],
+			'title' => $title,
 			'attributes' => array(),
 		));
+
+		// We use CSS sprites to decorate links, hence $img_html is not used but coded here for reference.
 		if (in_array($key, array('google', 'yahoo'))) {
-			$item['data'] = l($img_html, $cal['url'], array('html' => TRUE, 'attributes' => array('target' => '_blank')));
+			$item['data'] = l('', $cal['url'], array('html' => TRUE, 'attributes' => array('target' => '_blank', 'class' => array($key), 'title' => $title)));
 		}
 		else {
-			$item['data'] = l($img_html, $cal['url'], array('html' => TRUE));
+			$item['data'] = l('', $cal['url'], array('html' => TRUE, 'attributes' => array('class' => array($key), 'title' => $title)));
 		}
 		$item['class'] = array($key);
 		$items[] = $item;
@@ -477,7 +480,7 @@ function addtocal_download_ics($entity, $field_name) {
   drupal_add_http_header('Content-Type', 'application/calendar; charset=utf-8');
 
   // Get entity type from the current path
-  $entity_type = arg(0);
+  $entity_type = arg(1);
 
   list($entity_id) = entity_extract_ids($entity_type, $entity);
   $info = addtocal_extract_event_info($entity_type, $entity, $entity_id, $field_name);

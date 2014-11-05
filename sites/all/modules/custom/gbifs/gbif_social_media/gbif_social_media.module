@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the GBIF Social Media feature.
+ */
+
+include_once 'gbif_social_media.features.inc';

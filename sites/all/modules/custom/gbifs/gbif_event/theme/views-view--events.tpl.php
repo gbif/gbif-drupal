@@ -27,7 +27,7 @@
  * @ingroup views_templates
  */
 ?>
-<div class="row">
+<section class="row">
   <header class="content-header col-xs-8">
     <h2>
 			<?php print $view->get_title(); ?>
@@ -46,9 +46,9 @@
 	<div class="content-header sidebar-header col-xs-3">
 		<h2></h2>
 	</div>
-</div>
-<div class="row">
-  <div class="view-column col-xs-8">
+</section>
+<section class="row">
+  <section class="view-column col-xs-8">
     <div class="<?php print $classes; ?>">
       <?php print render($title_prefix); ?>
       <?php if ($title): ?>
@@ -93,11 +93,11 @@
 				<?php print $pager; ?>
       <?php endif; ?>
     </div>
-  </div>
+  </section>
 
-  <div class="sidebar-filter col-xs-3">
+  <section class="sidebar-filter col-xs-3">
 		<?php print $filter_links; ?>
-  </div>
+  </section>
 
     <?php if ($footer): ?>
       <div class="view-footer">
@@ -105,4 +105,4 @@
       </div>
     <?php endif; ?>
 
-</div><?php /* class view */ ?>
+</section><?php /* class view */ ?>

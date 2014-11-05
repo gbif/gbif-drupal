@@ -117,6 +117,31 @@ function gbif_pages_taxonomy_term_page($term) {
 }
 
 /**
+ * Implements hook_preprocess_page().
+ */
+function gbif_pages_preprocess_page(&$variables) {
+	$capacity_pages = array(
+		'node/226', // capacityenhancement/summary
+		'node/3669', // capacityenhancement/support-programme
+		'node/230', // capacityenhancement/regionalcollaboration
+		'node/227', // capacityenhancement/training
+		'node/229', // capacityenhancement/capacityprogrammes
+		'node/10270', // capacityenhancement/current-projects
+		'node/3672', // capacityenhancement/past-projects
+	);
+	if (in_array(current_path(), $capacity_pages)) {
+		if (isset($variables['page']['menu']['menu_block_gbif_navigation_menu_tabs'])) {
+			foreach ($variables['page']['menu']['menu_block_gbif_navigation_menu_tabs']['#content'] as $k => $tab) {
+				if (gettype($k) == 'integer') {
+					array_push($variables['page']['menu']['menu_block_gbif_navigation_menu_tabs']['#content'][$k]['#attributes']['class'], 'narrow-tab');
+					watchdog('gbif_pages', 'Extra class in capacity pages set.', array(), WATCHDOG_DEBUG);
+				}
+			}
+		}
+	}
+}
+
+/**
  * Override for search_view().
  * @see modules/search/search_pages.inc.
  * @see https://drupal.org/node/708590.

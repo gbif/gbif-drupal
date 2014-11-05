@@ -750,6 +750,26 @@ function _bvng_well_types($req_path, $system_main) {
 }
 
 /**
+ * Theme our own feed icon.
+ */
+function bvng_feed_icon($variables) {
+	$text = t('Subscribe to !feed-title', array('!feed-title' => $variables['title']));
+	if ($image = theme('image', array('path' => drupal_get_path('theme', 'bvng') . '/images/feed-icon.png', 'width' => 30, 'height' => 30, 'alt' => $text))) {
+		return l($image, $variables['url'], array('html' => TRUE, 'attributes' => array('class' => array('feed-icon'), 'title' => $text)));
+	}
+}
+
+/**
+ * Theme our own ical feed icon.
+ */
+function bvng_feed_ical_icon($variables) {
+	$text = t('Add !feed-title to my calendar', array('!feed-title' => $variables['title']));
+	if ($image = theme('image', array('path' => drupal_get_path('theme', 'bvng') . '/images/ical-icon.png', 'width' => 30, 'height' => 30, 'alt' => $text))) {
+		return l($image, $variables['url'], array('html' => TRUE, 'attributes' => array('class' => array('feed-ical-icon'), 'title' => $text)));
+	}
+}
+
+/**
  * Helper function for showing the title and subtitle of a site section in the
  * highlighted region.
  *

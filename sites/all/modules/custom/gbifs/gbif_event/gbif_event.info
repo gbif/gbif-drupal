@@ -15,6 +15,7 @@ dependencies[] = addtocal
 dependencies[] = context
 dependencies[] = context_ui
 dependencies[] = ctools
+dependencies[] = date_ical
 
 ;features[ctools][] = context:context:3
 ;features[context][] = event_node_menu

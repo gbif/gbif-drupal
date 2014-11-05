@@ -33,6 +33,7 @@ class date_ical_plugin_row_ical_entity extends views_plugin_row {
     $options = parent::option_definition();
     $options['date_field'] = array('default' => array());
     $options['summary_field'] = array('default' => array());
+		$options['description_field'] = array('default' => array());
     $options['location_field'] = array('default' => array());
     return $options;
   }
@@ -88,7 +89,24 @@ class date_ical_plugin_row_ical_entity extends views_plugin_row {
         Choose which text, taxonomy term reference or Node Reference field you would like to be output as the SUMMARY.
         If using a Node Reference, the Title of the referenced node will be used.'),
     );
-    
+
+		// Build the select dropdown for the text/node_reference field that the user
+		// wants to use to (optionally) populate the DESCRIPTION.
+		$description_fields = date_ical_get_description_fields($this->base_table);
+		$description_options = array('none' => t('- None -'));
+		foreach ($description_fields['name'] as $item => $value) {
+			$description_options[$item] = $value['label'];
+		}
+		$form['description_field'] = array(
+			'#type' => 'select',
+			'#title' => t('DESCRIPTION field'),
+			'#options' => $description_options,
+			'#default_value' => $this->options['description_field'],
+			'#description' => t('You may optionally include a DESCRIPTION component for each event in the iCal output.
+        Choose which text or Node Reference field you would like to be output as the DESCRIPTION.
+        If using a Node Reference, the Title of the referenced node will be used.'),
+		);
+
     // Build the select dropdown for the text/node_reference field that the user
     // wants to use to (optionally) populate the LOCATION.
     $location_fields = date_ical_get_location_fields($this->base_table);
@@ -291,6 +309,41 @@ class date_ical_plugin_row_ical_entity extends views_plugin_row {
       'description' => drupal_render($rendered_array),
       'summary' => entity_label($this->entity_type, $entity),
     );
+
+		if (!empty($this->options['description_field']) && $this->options['description_field'] != 'default_title') {
+			$description_fields = date_ical_get_description_fields();
+			$description_info = $description_fields['name'][$this->options['description_field']];
+			$description_field_name = $description_info['real_field_name'];
+			// Only attempt this is the entity actually has this field.
+			$items = field_get_items($this->entity_type, $entity, $description_field_name);
+			$description = '';
+			if ($items) {
+				$description_field = $items[0];
+				if ($description_info['type'] == 'node_reference') {
+					// Make sure this Node Reference actually references a node.
+					if ($description_field['nid']) {
+						$node = node_load($description_field['nid']);
+						$description = $node->title;
+					}
+				}
+				elseif ($description_info['type'] == 'taxonomy_term_reference') {
+					$terms = taxonomy_term_load_multiple($items);
+					// Make sure that there are terms that were loaded.
+					if ($terms) {
+						$term_names = array();
+						foreach ($terms as $term) {
+							$term_names[] = $term->name;
+						}
+						$description = implode(', ', $term_names);
+					}
+				}
+				else {
+					$description = trim($description_field['value']);
+				}
+				$data['description'] = $description ? $description : $data['description'];
+			}
+		}
+
     if (!empty($this->options['summary_field']) && $this->options['summary_field'] != 'default_title') {
       $summary_fields = date_ical_get_summary_fields();
       $summary_info = $summary_fields['name'][$this->options['summary_field']];

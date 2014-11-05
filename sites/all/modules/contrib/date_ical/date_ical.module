@@ -452,6 +452,89 @@ function _date_ical_get_summary_fields($base = 'node') {
 }
 
 /**
+ * Identify all potential fields which could be used as an iCal DESCRIPTION.
+ */
+function date_ical_get_description_fields($base = 'node', $reset = FALSE) {
+	static $fields = array();
+	$empty = array('name' => array(), 'alias' => array());
+
+	if (empty($fields[$base]) || $reset) {
+		$cid = 'date_ical_description_fields_' . $base;
+		if (!$reset && $cached = cache_get($cid, 'cache_views')) {
+			$fields[$base] = $cached->data;
+		}
+		else {
+			$fields[$base] = _date_ical_get_description_fields($base);
+		}
+	}
+	// Make sure that empty values will be arrays in the expected format.
+	return !empty($fields) && !empty($fields[$base]) ? $fields[$base] : $empty;
+}
+
+/**
+ * Internal helper function for date_ical_get_description_fields().
+ *
+ * This is a cut down version of _date_views_fields() from
+ * date_views_fields.inc in date_views module.
+ *
+ * @return array
+ *   Array with fieldname, type, and table.
+ *
+ * @see date_views_date_views_fields()
+ */
+function _date_ical_get_description_fields($base = 'node') {
+	// Make sure $base is never empty.
+	if (empty($base)) {
+		$base = 'node';
+	}
+
+	$cid = 'date_ical_description_fields_' . $base;
+	cache_clear_all($cid, 'cache_views');
+
+	// Iterate over all the fields that Views knows about.
+	$all_fields = date_views_views_fetch_fields($base, 'field');
+	$fields = array();
+	foreach ($all_fields as $alias => $val) {
+		$name = $alias;
+		$tmp = explode('.', $name);
+		$field_name = $tmp[1];
+		$table_name = $tmp[0];
+
+		// Skip unsupported field types and fields that weren't defined through
+		// the Field module.
+		$info = field_info_field($field_name);
+		$supported_description_fields = array(
+			'text',
+			'text_long',
+			'text_with_summary',
+			'node_reference',
+			'taxonomy_term_reference',
+		);
+		if (!$info || !in_array($info['type'], $supported_description_fields)) {
+			continue;
+		}
+
+		// Build an array of the field info that we'll need.
+		$alias = str_replace('.', '_', $alias);
+		$fields['name'][$name] = array(
+			'label' => "{$val['group']}: {$val['title']} ($field_name)",
+			'table_name' => $table_name,
+			'field_name' => $field_name,
+			'type' => $info['type'],
+		);
+
+		// These are here only to make this $field array conform to the same format
+		// as the one returned by _date_views_fields(). They're probably not needed,
+		// but I thought that consistency would be a good idea.
+		$fields['name'][$name]['real_field_name'] = $field_name;
+		$fields['alias'][$alias] = $fields['name'][$name];
+	}
+
+	cache_set($cid, $fields, 'cache_views');
+	return $fields;
+}
+
+/**
  * Convert an rrule array to the iCalcreator format.
  *
  * iCalcreator expects the BYDAY element to be an array like this:

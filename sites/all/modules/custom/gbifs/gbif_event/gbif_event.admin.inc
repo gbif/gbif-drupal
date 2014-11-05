@@ -174,6 +174,7 @@ function _gbif_event_sync() {
 		$node_wrapper->ge_language->set($value);
 
 		// Date and iCal.
+		// @todo Set time of start_date start from 9AM, and time of end_date ends at 5PM.
 		if (!empty($record->date_start)) {
 			$start_date = DateTime::createFromFormat('m/d/Y G:i:s', $record->date_start);
 			$start_date = ($start_date != FALSE) ? $start_date->getTimestamp() : NULL;
@@ -187,9 +188,10 @@ function _gbif_event_sync() {
 			'value2' => (isset($end_date)) ? $end_date : NULL,
 		));
 		// @todo Use timestamp when addtocal module supports.
+		// Changed date format from "Y-m-d H:i:s" to "Y-m-d" to just have date.
 		$node_wrapper->ge_date_ical->set(array(
-			'value' => (isset($start_date)) ? date("Y-m-d H:i:s", $start_date) : NULL,
-			'value2' => (isset($end_date)) ? date("Y-m-d H:i:s", $end_date) : NULL,
+			'value' => (isset($start_date)) ? date("Y-m-d", $start_date) : NULL,
+			'value2' => (isset($end_date)) ? date("Y-m-d", $end_date) : NULL,
 		));
 		$node_wrapper->ge_date_text->set(gbif_ims_format_value($record->date_text));
 

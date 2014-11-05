@@ -178,13 +178,26 @@ function gbif_event_preprocess_node(&$variables) {
  */
 function gbif_event_preprocess_views_view(&$variables) {
 	if (isset($variables) && $variables['view']->name == 'events') {
-		// Insert $feed_icon for the 'feed_upcoming' display.
-		if (empty($variables['feed_icon']) && current_path() != 'newsroom/events/past') {
+		// Invoke bvng theme functions.
+		// module_load_include() doesn't seem to be working for this.
+		include_once(drupal_get_path('theme', 'bvng') . '/template.php');
+
+		// Insert $feed_rss_icon for the 'feed_upcoming' display.
+		if (empty($variables['feed_rss_icon']) && current_path() != 'newsroom/events/past') {
 			$feed_icon_settings = array(
 				'url' => $variables['view']->display['feed_upcoming']->display_options['path'],
 				'title' => t('GBIF upcoming event'),
 			);
-			$variables['feed_icon'] = theme_feed_icon($feed_icon_settings);
+			$variables['feed_rss_icon'] = bvng_feed_icon($feed_icon_settings);
+
+			// iCal icon seems to be successfully attached to "upcoming" page display,
+			// but we want to use our own icon.
+			$url = str_replace(array('http://', 'https://'), 'webcal://', url($variables['view']->display['feed_ical']->display_options['path'], array('absolute' => TRUE)));
+			$ical_icon_settings = array(
+				'url' => $url,
+				'title' => t('GBIF upcoming event'),
+			);
+			$variables['feed_ical_icon'] = bvng_feed_ical_icon($ical_icon_settings);
 		}
 
 		// Insert filter links for the sidebar and to be printed out in views

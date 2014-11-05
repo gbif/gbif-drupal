@@ -186,6 +186,37 @@ function gbif_event_views_default_views() {
 		'past' => 0,
 	);
 	$handler->display->display_options['sitename_title'] = 0;
+
+	/* Display: Feed iCal */
+	$handler = $view->new_display('feed', 'Feed iCal', 'feed_ical');
+	$handler->display->display_options['defaults']['title'] = FALSE;
+	$handler->display->display_options['title'] = 'Upcoming events';
+	$handler->display->display_options['pager']['type'] = 'none';
+	$handler->display->display_options['pager']['options']['offset'] = '0';
+	$handler->display->display_options['style_plugin'] = 'date_ical';
+	$handler->display->display_options['style_options']['cal_name'] = 'GBIF Upcoming Events';
+	$handler->display->display_options['style_options']['no_calname'] = TRUE;
+	$handler->display->display_options['style_options']['exclude_dtstamp'] = TRUE;
+	$handler->display->display_options['style_options']['unescape_punctuation'] = TRUE;
+	$handler->display->display_options['row_plugin'] = 'date_ical';
+	$handler->display->display_options['row_options']['date_field'] = 'field_data_ge_date_ical.ge_date_ical_value';
+	$handler->display->display_options['row_options']['summary_field'] = 'default_title';
+	$handler->display->display_options['row_options']['description_field'] = 'field_data_body.body';
+	$handler->display->display_options['row_options']['location_field'] = 'field_data_ge_location.ge_location';
+	$handler->display->display_options['defaults']['fields'] = FALSE;
+	/* Field: Content: Body */
+	$handler->display->display_options['fields']['body']['id'] = 'body';
+	$handler->display->display_options['fields']['body']['table'] = 'field_data_body';
+	$handler->display->display_options['fields']['body']['field'] = 'body';
+	$handler->display->display_options['fields']['body']['label'] = '';
+	$handler->display->display_options['fields']['body']['element_label_colon'] = FALSE;
+	$handler->display->display_options['path'] = 'newsroom/events/calendar/upcoming.ics';
+	$handler->display->display_options['displays'] = array(
+		'upcoming' => 'upcoming',
+		'default' => 0,
+		'past' => 0,
+	);
+	$handler->display->display_options['sitename_title'] = 0;
 	$translatables['events'] = array(
 		t('Master'),
 		t('Events'),
@@ -211,6 +242,7 @@ function gbif_event_views_default_views() {
 		t('The latest 4 upcoming events in a block.'),
 		t('More'),
 		t('Feed'),
+		t('Feed iCal'),
 	);
 
 	$views[] = $view;

@@ -470,6 +470,8 @@ function addtocal_rfc_3339_date($start, $end) {
  *
  * @param $entity
  * @param $field_name
+ *
+ * @todo This doesn't respect timezone. To use iCalcreator.php
  */
 function addtocal_download_ics($entity, $field_name) {
   drupal_add_http_header('Content-Type', 'application/calendar; charset=utf-8');

@@ -58,6 +58,7 @@ Community {"url":"<front>"}
 --Regional collaboration {"url":"capacityenhancement\/regionalcollaboration"}
 --Training {"url":"capacityenhancement\/training"}
 --Capacity programmes {"url":"capacityenhancement\/capacityprogrammes"}
+--Current projects {"url":"capacityenhancement\/current-projects"}
 --Past projects {"url":"capacityenhancement\/past-projects"}
 -Resources {"url":"resources\/summary", "description": "Tools and information to support the GBIF community (look template.php for changing this particular item.)"}
 --Summary {"url":"resources\/summary"}

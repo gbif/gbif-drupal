@@ -1,7 +1,7 @@
 name = GBIF Event
 description = Handling events from the IMS.
 core = 7.x
-version = 7.x-0.1
+version = 7.x-0.8
 package = GBIFS
 project = GBIF Portal
 

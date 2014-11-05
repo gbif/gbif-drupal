@@ -37,6 +37,13 @@
 					<?php print render($content['ge_location']); ?>
 					<?php print render($content['ge_status']); ?>
 					<?php print render($content['ge_language']); ?>
+
+					<?php if (isset($content['service_links'])): ?>
+					<hr>
+					<h3>Spread the word</h3>
+					<?php print render($content['service_links']); ?>
+					<?php endif; ?>
+
 				</aside>
 			</div>
 		</section>

@@ -796,15 +796,6 @@ div.feed-ical-icon {
 	margin-top: -3px;
 }
 
-.content ul.addtocal_menu {
-  display: inline-block;
-  padding-left: 0;
-  li {
-    list-style: none;
-    display: inline-block;
-  }
-}
-
 .content-sidebar .field-name-ge-date-text .field-items {
   margin-bottom: 2px;
 }
@@ -813,6 +804,42 @@ div.feed-ical-icon {
   padding-left: 12px;
 }
 
+// For participant list.
 table.alt-row-color tr:nth-child(even) {
   background-color: @cGray5;
+}
+
+.service-links {
+  margin-top: 15px;
+  ul.links li {
+    display: block;
+  }
+}
+
+.service-links-facebook-share {
+  margin-bottom: 6px;
+}
+
+.calendar_icon(@imgpath) {
+  background: url(@imgpath) no-repeat;
+  width: 24px;
+  height: 24px;
+}
+
+.content ul.addtocal_menu {
+  display: inline-block;
+  padding-left: 0;
+  li {
+    list-style: none;
+    display: inline-block;
+    height: 24px;
+    a {
+      margin-top: -10px;
+      vertical-align: bottom;
+    }
+    a.ical { .calendar_icon("../images/calendar-icons.png"); background-position: 0px 0px; display: inline-block; width: 24px; }
+    a.outlook { .calendar_icon("../images/calendar-icons.png"); background-position: -25px 0px; display: inline-block; width: 24px; }
+    a.google { .calendar_icon("../images/calendar-icons.png"); background-position: -49px 0px; display: inline-block; width: 24px; }
+    a.yahoo { .calendar_icon("../images/calendar-icons.png"); background-position: -73px 0px; display: inline-block; width: 24px; }
+  }
 }

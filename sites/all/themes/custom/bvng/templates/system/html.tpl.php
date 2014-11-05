@@ -51,7 +51,7 @@
 
   <!-- Disabled responsiveness
 	<meta name="viewport" content="width=1024, user-scalable=yes">
-	 -->
+	-->
 
   <?php print $head; ?>
   <title><?php print $head_title; ?></title>

@@ -1,11 +1,7 @@
 <?php
 /**
  * @file
+ * Code for the GBIF Vocabularies feature.
  */
- 
-/**
- * Implements hook_countries_alter().
- */
-function gbif_vocabularies_countries_alter(&$countries) {
-  
-}
+
+include_once 'gbif_vocabularies.features.inc';

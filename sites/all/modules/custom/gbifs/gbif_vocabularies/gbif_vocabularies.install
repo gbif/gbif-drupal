@@ -7,18 +7,30 @@
  * Implements hook_install().
  */
 function gbif_vocabularies_install() {
-  // Disable the to-be-deprecated gbdict module.
-  $module_list = array(
-    'gbdict',
-  );
-  module_disable($module_list);  
-  drupal_uninstall_modules($module_list, FALSE);
-  
-  // Enable country-related modules
-  module_enable(array(
-    'countries',
-    'better_countries',
-    'countryicons',
-  ));
-  
 }
+
+/**
+ * Insert language terms.
+ */
+/*
+function gbif_vocabularies_update_7101(&$sandbox) {
+	require_once DRUPAL_ROOT . '/includes/iso.inc';
+	// Insert language terms.
+	$languages = _locale_get_predefined_list();
+	$voc = taxonomy_vocabulary_machine_name_load('language');
+	$old_term = taxonomy_term_load(901);
+	foreach($languages as $iso => $lan) {
+		$term = new stdClass();
+		$term->name = $lan[0];
+		$term->vid = $voc->vid;
+		$term->parent = 0;
+		$term->format = 'plain_text';
+		taxonomy_term_save($term);
+
+		$wrapper = entity_metadata_wrapper('taxonomy_term', $term);
+		$wrapper->field_term_iso_639_1->set($iso);
+		if (isset($lan[1])) $wrapper->field_term_native_name->set($lan[1]);
+		$wrapper->save();
+	}
+}
+*/

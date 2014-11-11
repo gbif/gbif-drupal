@@ -299,7 +299,7 @@ function gbif_ims_tables_exist($func) {
  */
 function gbif_ims_format_value($value, $format = NULL) {
 	if (isset($format)) {
-		if (!empty($value)) {
+		if (!empty($value) || (trim(strtolower($value))) == 'n/a') {
 			$result = array(
 				'value' => htmlspecialchars_decode($value),
 				'format' => $format,
@@ -311,7 +311,7 @@ function gbif_ims_format_value($value, $format = NULL) {
 		}
 	}
 	else {
-		$result = (!empty($value)) ? htmlspecialchars_decode($value) : NULL;
+		$result = (!empty($value) || (trim(strtolower($value))) == 'n/a') ? htmlspecialchars_decode($value) : NULL;
 		return $result;
 	}
 }

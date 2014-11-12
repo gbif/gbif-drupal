@@ -1,3 +1,107 @@
 <?php
 
+module_load_include('inc', 'gbif_resource', 'gbif_resource.filemaker');
 
+// @todo Redirection of old Drupal node ID.
+// @todo Force file download. Settings in fields.
+
+/**
+ * @file
+ * Code for the GBIF Resource feature.
+ */
+
+include_once 'gbif_resource.features.inc';
+
+/**
+ * Implements hook_menu().
+ */
+function gbif_resource_menu() {
+	/* @todo Redirection for old style orc URLs.
+	$items['orc'] = array(
+		'title' => t('Redirect'),
+		'description' => 'Redirect GBIF resource from the TYPO3 site.',
+		'page callback' => 'gbif_resource_redirect',
+		'access callback' => TRUE,
+		'type' => MENU_CALLBACK,
+	);
+	*/
+	$items['admin/config/gbif/resource'] = array(
+		'title' => 'GBIF resource',
+		'description' => t('Configure GBIF resource related features.'),
+		'page callback' => 'drupal_get_form',
+		'page arguments' => array('gbif_resource_settings_form'),
+		'access arguments' => array('administer site configuration'),
+		'type' => MENU_NORMAL_ITEM,
+		'file' => 'gbif_resource.admin.inc',
+	);
+	return $items;
+}
+
+function gbif_resource_sync_ui($form, $form_state) {
+	if (!empty($form_state['values']['cron_reset'])) {
+		variable_set('gbif_ims_sync_next_execution', 0);
+	}
+
+	if (time() >= variable_get('gbif_ims_sync_next_execution', 0)) {
+		return gbif_resource_sync();
+	}
+	else {
+		$next_time = variable_get('gbif_ims_sync_next_execution');
+		watchdog('gbif_resource', "Resource update didn't run because current interval is not expired yet. Next run is at %next.", array('%next' => date_iso8601($next_time)), WATCHDOG_INFO);
+		return t("Resource update didn't run because current interval is not expired yet. Next run is at %next.", array('%next' => date_iso8601($next_time)));
+	}
+
+}
+
+function gbif_resource_sync() {
+	$start_time = new DateTime();
+	$sync_success = _gbif_resource_sync();
+	$end_time = new DateTime();
+	$time = $end_time->diff($start_time);
+	$time_spent = "This task took ";
+	if ($time->y > 0) {$time_spent .= $time->y.' years, ';}
+	if ($time->m > 0) {$time_spent .= $time->m.' months, ';}
+	if ($time->d > 0) {$time_spent .= $time->d.' days, ';}
+	if ($time->h > 0) {$time_spent .= $time->h.' hours, ';}
+	if ($time->i > 0) {$time_spent .= $time->i.' minutes, ';}
+	if ($time->s > 0) {$time_spent .= $time->s.' seconds ';}
+	$time_spent .= "to complete.";
+
+	// Should examine the result before informing via the UI.
+	if ($sync_success == TRUE) {
+		watchdog('gbif_resource', 'Resource update executed at %time', array('%time' => date_iso8601(time(0))), WATCHDOG_INFO);
+		$interval = variable_get('gbif_ims_sync_interval', 3 * 60 * 60);
+		variable_set('gbif_ims_sync_next_execution', time() + $interval);
+		return t('Synchronisation finished.') . ' ' . $time_spent;
+	}
+	else {
+		watchdog('gbif_resource', 'IMS synchronisation failed at %time', array('%time' => date_iso8601(time(0))), WATCHDOG_CRITICAL);
+		return t('Resource updated.') . ' ' . $time_spent;
+	}
+}
+
+function _gr_required_tables() {
+	$tables = array(
+		'gbif_ims_country',
+		'gbif_ims_file',
+		'gbif_ims_file_cluster',
+		'gbif_ims_file_cluster_type',
+		'gbif_ims_file_event_access_category',
+		'gbif_ims_file_file_cluster',
+		'gbif_ims_file_group',
+		'gbif_ims_file_keyword',
+		'gbif_ims_file_path',
+		'gbif_ims_file_resource_tree',
+		'gbif_ims_file_type',
+		'gbif_ims_keyword',
+		'gbif_ims_keyword_keyword_type',
+		'gbif_ims_keyword_language',
+		'gbif_ims_keyword_type',
+		'gbif_ims_language',
+		'gbif_ims_resource_tree',
+		'gbif_ims_resource_tree_language',
+		'gbif_ims_resource_type',
+		'gbif_ims_resource_type_language',
+	);
+	return $tables;
+}

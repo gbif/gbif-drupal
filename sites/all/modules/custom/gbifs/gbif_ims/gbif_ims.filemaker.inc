@@ -21,106 +21,144 @@ function _gbif_ims_sync() {
 
 		$IMS = ims_connection();
 		$IMS_records = $IMS->newFindCommand($table['ims_eqv']);
-		// $IMS_records->setRange(0, 5);
-		$result = $IMS_records->execute(); // Performance critical step.
 
-		// Error handling (if any)
-		if (FileMaker::isError($result)) {
-			$error_message = $result->getMessage();
-			$error_code = $result->code;
-			drupal_set_message(t('FileMaker Error: @error_message. Code: @error_code', array(
-				'@error_message' => $error_message,
-				'@error_code' => $error_code
-			)), 'error');
-			return FALSE;
-		}
-		else {
-			$records = $result->getRecords();
-
-			foreach ($records as $k => $record) {
-				$values = array();
-				$valid_record = TRUE;
-
-				foreach ($table['fields'] as $field_name => $field) {
-					// Special case for event image record ID.
-					if ($field['ims_eqv'] == 'recordID') {
-						$value = $record->getRecordId();
-					}
-					else {
-						$value = $record->getField($field['ims_eqv']);
-					}
-
-					$is_empty = empty($value);
-					if ($is_empty == TRUE && $field['not null'] == TRUE) {
-						drupal_set_message(t('Null value conflict on record @id of table @table', array(
-							'@id' => $k + 1,
-							'@table' => $table_name
-						)), 'warning');
-						watchdog('GBIF', 'Null value conflict on record @id of table @table', array(
-							'@id' => $k + 1,
-							'@table' => $table_name
-						), WATCHDOG_WARNING);
-						$valid_record = FALSE;
-						break;
-					}
-
-					if (isset($field['type'])) {
-						switch ($field['type']) {
-							case 'int':
-								$value = (int) $value;
-								if ($field_name == 'sort_weight') {
-									$values[$field_name] = (empty($value)) ? 0 : $value;
-								}
-								else {
-									$values[$field_name] = (empty($value)) ? NULL : $value;
-								}
-								break;
-							default:
-								$values[$field_name] = $value;
-						}
-					}
-					elseif (isset($field['mysql_type'])) {
-						switch ($field['mysql_type']) {
-							case 'DATETIME':
-								if (!empty($value)) {
-
-									switch ($field['ims_eqv']) {
-										case 'Member_AsOf':
-											// original field is returned as "April 2001"
-											$value = '01 ' . $value . ' 00:00';
-											$format = 'd F Y H:i';
-											break;
-										case 'MOU2012_Date':
-											// format is (so far...) 'mm/dd/yyyy' so we only patch the time
-											$value .= ' 00:00';
-											$format = 'm/d/Y H:i';
-											break;
-										default:
-											// IMS timestamp format 06/12/2008 14:07:37
-											// @todo Store datetime as timestamp after importing to MySQL.
-											return t('Unexpected DATETIME field.');
-									}
-
-									$date = DateTime::createFromFormat($format, $value);
-									$values[$field_name] = $date->format('Y-m-d h:i');
-
-								}
-								else {
-									$values[$field_name] = NULL;
-								}
-								break;
-						}
-					}
-				}
-				if ($valid_record == TRUE) {
-					db_insert($table_name)->fields($values)->execute();
+		/*
+		 * Some tables have large amount of records that it'll drain memory to get
+		 * all at once. Here we insert 3000 records per attempt until no more
+		 * records found.
+		 */
+		$offset = 0;
+		$interval = 3000;
+		do {
+			$IMS_records->setRange($offset, $offset + $interval);
+			$result = $IMS_records->execute(); // Performance critical step.
+			// Error handling (if any)
+			if (FileMaker::isError($result)) {
+				$error_message = $result->getMessage();
+				$error_code = $result->code;
+				watchdog('gbif_ims', 'FileMaker Error: @error_message. Code: @error_code', array(
+					'@error_message' => $error_message,
+					'@error_code' => $error_code
+				), WATCHDOG_ERROR);
+				drupal_set_message(t('FileMaker Error: @error_message. Code: @error_code', array(
+					'@error_message' => $error_message,
+					'@error_code' => $error_code
+				)), 'error');
+				return FALSE;
+			}
+			else {
+				try {
+					_gi_insert_records($result, $table_name, $table);
+				} catch (Exception $e) {
+					watchdog('gbif_ims', $e->getMessage(), array(), WATCHDOG_ERROR);
+					return FALSE;
 				}
 			}
-			unset($IMS);
-		}
+			$offset = $offset + $interval;
+			$count_total = $result->getTableRecordCount();
+		} while ($count_total - $offset > 0);
+
+		unset($IMS);
 	}
+
 	// @todo Test the real success.
 	return TRUE;
+}
+
+/**
+ * Helper function to insert individual records to the targeted table.
+ * @param $result
+ * @param $table_name
+ * @param $table
+ * @throws Exception
+ */
+function _gi_insert_records($result, $table_name, $table) {
+	$records = $result->getRecords();
+
+	foreach ($records as $k => $record) {
+		$values = array();
+		$valid_record = TRUE;
+
+		foreach ($table['fields'] as $field_name => $field) {
+			// Special case for event image record ID.
+			if ($field['ims_eqv'] == 'recordID') {
+				$value = $record->getRecordId();
+			}
+			else {
+				$value = $record->getField($field['ims_eqv']);
+			}
+
+			$is_empty = empty($value);
+			if ($is_empty == TRUE && $field['not null'] == TRUE) {
+				drupal_set_message(t('Null value conflict on record @id of table @table', array(
+					'@id' => $k + 1,
+					'@table' => $table_name
+				)), 'warning');
+				watchdog('GBIF', 'Null value conflict on record @id of table @table', array(
+					'@id' => $k + 1,
+					'@table' => $table_name
+				), WATCHDOG_WARNING);
+				$valid_record = FALSE;
+				break;
+			}
+
+			if (isset($field['type'])) {
+				switch ($field['type']) {
+					case 'int':
+						$value = (int) $value;
+						if ($field_name == 'sort_weight') {
+							$values[$field_name] = (empty($value)) ? 0 : $value;
+						}
+						else {
+							$values[$field_name] = (empty($value)) ? NULL : $value;
+						}
+						break;
+					default:
+						$values[$field_name] = $value;
+				}
+			}
+			elseif (isset($field['mysql_type'])) {
+				switch ($field['mysql_type']) {
+					case 'DATETIME':
+						if (!empty($value)) {
+
+							switch ($field['ims_eqv']) {
+								case 'Member_AsOf':
+									// original field is returned as "April 2001".
+									$value = '01 ' . $value . ' 00:00';
+									$format = 'd F Y H:i';
+									break;
+								case 'MOU2012_Date':
+									// format is (so far...) 'mm/dd/yyyy' so we only patch the time.
+									$value .= ' 00:00';
+									$format = 'm/d/Y H:i';
+									break;
+								default:
+									// IMS timestamp format 06/12/2008 14:07:37.
+									$format = 'm/d/Y H:i:s';
+									break;
+							}
+
+							$date = DateTime::createFromFormat($format, $value);
+							// Catch unexpected date format.
+							if (!is_object($date)) {
+								drupal_set_message(t('Unexpected date format of IMS field !ims_field.', array('!ims_field' => $field['ims_eqv'])), 'error');
+								watchdog('gbif_ims', 'Unexpected date format of IMS field !ims_field.', array('!ims_field' => $field['ims_eqv']), WATCHDOG_ERROR);
+							}
+							$values[$field_name] = $date->format('Y-m-d H:i:s');
+
+						}
+						else {
+							$values[$field_name] = NULL;
+						}
+						break;
+				}
+			}
+		}
+		if ($valid_record == TRUE) {
+			db_insert($table_name)->fields($values)->execute();
+		}
+	}
 }
 
 /**

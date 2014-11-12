@@ -1253,7 +1253,28 @@ $Image_URL = "http://fms.gbif.org:8020/SuperContainer/RawData/THMB/".substr($res
 
 $VersionSelector = getVersionSelector($ResourceDetails_row->getField('__kp_ID'), $IMS_RO);
 		
-	$array_resource_details = array ("__kp_ID" => $ResourceDetails_row->getField('__kp_ID'), "Name" => htmlspecialchars_decode($ResourceDetails_row->getField('Title_Text')), "Description" => htmlspecialchars_decode($ResourceDetails_row->getField('Description')), "Author" => htmlspecialchars_decode($ResourceDetails_row->getField('Author')), "AlternativeTitle" => htmlspecialchars_decode($ResourceDetails_row->getField('AlternativeTitle')), "Publisher" => htmlspecialchars_decode($ResourceDetails_row->getField('Publisher')), "Audience" => htmlspecialchars_decode($ResourceDetails_row->getField('Audience')), "Abstract" => htmlspecialchars_decode($ResourceDetails_row->getField('Abstract')),  "BibliographicCitation" => htmlspecialchars_decode($ResourceDetails_row->getField('BibliographicCitation')),  "Contributor" => htmlspecialchars_decode($ResourceDetails_row->getField('Contributor')),  "Rights" => htmlspecialchars_decode($ResourceDetails_row->getField('Rights')),  "RightsHolder" => htmlspecialchars_decode($ResourceDetails_row->getField('RightsHolder')), "NumDownloads" => $ResourceDetails_row->getField('NumDownloads'), "Featured" => $ResourceDetails_row->getField('Featured'), "ShortListed" => $ResourceDetails_row->getField('ShortListed'), "image_url" => $Image_URL, "Size_Text" => htmlspecialchars_decode($ResourceDetails_row->getField('Size_Text')), "ResourceType" => htmlspecialchars_decode($ResourceDetails_row->getField('_kf_TypeID')), "Language" => htmlspecialchars_decode($ResourceDetails_row->getField('WDOCS_File_Language::Language')), "VersionSelector" => getVersionSelector($ResourceDetails_row->getField('__kp_ID'), $IMS_RO), );
+	$array_resource_details = array (
+		//"__kp_ID" => $ResourceDetails_row->getField('__kp_ID'),
+		//"Name" => htmlspecialchars_decode($ResourceDetails_row->getField('Title_Text')),
+		//"Description" => htmlspecialchars_decode($ResourceDetails_row->getField('Description')),
+		//"Author" => htmlspecialchars_decode($ResourceDetails_row->getField('Author')),
+		//"AlternativeTitle" => htmlspecialchars_decode($ResourceDetails_row->getField('AlternativeTitle')),
+		//"Publisher" => htmlspecialchars_decode($ResourceDetails_row->getField('Publisher')),
+		//"Audience" => htmlspecialchars_decode($ResourceDetails_row->getField('Audience')),
+		//"Abstract" => htmlspecialchars_decode($ResourceDetails_row->getField('Abstract')),
+		//"BibliographicCitation" => htmlspecialchars_decode($ResourceDetails_row->getField('BibliographicCitation')),
+		//"Contributor" => htmlspecialchars_decode($ResourceDetails_row->getField('Contributor')),
+		//"Rights" => htmlspecialchars_decode($ResourceDetails_row->getField('Rights')),
+		//"RightsHolder" => htmlspecialchars_decode($ResourceDetails_row->getField('RightsHolder')),
+		//"NumDownloads" => $ResourceDetails_row->getField('NumDownloads'),
+		//"Featured" => $ResourceDetails_row->getField('Featured'),
+		//"ShortListed" => $ResourceDetails_row->getField('ShortListed'),
+		//"image_url" => $Image_URL,
+		"Size_Text" => htmlspecialchars_decode($ResourceDetails_row->getField('Size_Text')),
+		//"ResourceType" => htmlspecialchars_decode($ResourceDetails_row->getField('_kf_TypeID')),
+		//"Language" => htmlspecialchars_decode($ResourceDetails_row->getField('WDOCS_File_Language::Language')),
+		"VersionSelector" => getVersionSelector($ResourceDetails_row->getField('__kp_ID'), $IMS_RO)
+	);
 
 	$DateOfPublication = strtotime ($ResourceDetails_row->getField('DateOfPublication')) ;
 	$DummyDateOfPublication = strtotime ('01/01/2001');

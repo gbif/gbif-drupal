@@ -42,7 +42,7 @@ function gbif_ims_config_form() {
 			'#prefix' => '<div id="sync-div">',
 			'#suffix' => '<div id="status-wrapper-sync"></div></div>',
 			'#ajax' => array(
-				'callback' => 'gbif_ims_sync',
+				'callback' => 'gbif_ims_sync_ui',
 				'wrapper' => 'status-wrapper-sync',
 				'effect' => 'fade',
 			),

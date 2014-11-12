@@ -234,7 +234,7 @@ function gbif_event_preprocess_views_view(&$variables) {
  * @param $hook
  */
 function gbif_event_preprocess_views_view_field(&$variables, $hook) {
-	if ($variables['view']->name == 'events' && $variables['view']->current_display == 'latest4_fp') {
+	if ($variables['view']->name == 'events') {
 		if ($variables['field']->field == 'ims_date') {
 			// allow extra divs and classes at a later time in template
 			// any lang where the short name of the month has blanks?
@@ -244,7 +244,7 @@ function gbif_event_preprocess_views_view_field(&$variables, $hook) {
 
 			$q = preg_replace($pattern, $replacement, $target);
 			$d = explode(' ', $q);
-			$variables['month_year'] = array ('month' => $d[0] , 'year' => $d[1]);
+			$variables['month_year'] = array ('month' => $d[0] , 'day' => $d[1]);
 		}
 	}
 }

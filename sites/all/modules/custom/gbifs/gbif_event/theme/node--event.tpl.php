@@ -35,7 +35,6 @@
 					<?php print render($content['ge_date_ical']); ?>
 					<?php print render($content['ge_venue']); ?>
 					<?php print render($content['ge_location']); ?>
-					<?php print render($content['ge_status']); ?>
 					<?php print render($content['ge_language']); ?>
 
 					<?php if (isset($content['service_links'])): ?>

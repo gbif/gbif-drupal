@@ -28,11 +28,7 @@
  * @todo Fix the $template_file sites/all//modules/custom/gbifs/gbif_event/theme/views-view-field--events--latest4-fp--ims_date.tpl.php, which has two slashes in the path.
  */
 ?>
-<div class="calendar-fp">
-	<div class="month">
-		<?php echo $variables['month_year']['month'];?>
-	</div>
-	<div class="year">
-		<?php echo $variables['month_year']['year'];?>
-	</div>
+<div class="calendar-thumbnail">
+	<div class="month"><?php echo $variables['month_year']['month'];?></div>
+	<div class="day"><?php echo $variables['month_year']['day'];?></div>
 </div>

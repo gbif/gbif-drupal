@@ -26,10 +26,10 @@ function gbif_event_views_default_views() {
 	$handler->display->display_options['exposed_form']['type'] = 'basic';
 	$handler->display->display_options['pager']['type'] = 'full';
 	$handler->display->display_options['pager']['options']['items_per_page'] = '10';
-	$handler->display->display_options['style_plugin'] = 'default';
-	$handler->display->display_options['style_options']['default_row_class'] = FALSE;
-	$handler->display->display_options['style_options']['row_class_special'] = FALSE;
-	$handler->display->display_options['row_plugin'] = 'node';
+	$handler->display->display_options['style_plugin'] = 'list';
+	$handler->display->display_options['style_options']['class'] = 'event-list';
+	$handler->display->display_options['style_options']['wrapper_class'] = 'event-lists';
+	$handler->display->display_options['row_plugin'] = 'fields';
 	/* Field: Content: Title */
 	$handler->display->display_options['fields']['title']['id'] = 'title';
 	$handler->display->display_options['fields']['title']['table'] = 'node';
@@ -37,6 +37,44 @@ function gbif_event_views_default_views() {
 	$handler->display->display_options['fields']['title']['label'] = '';
 	$handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
 	$handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
+	/* Field: Content: Event date */
+	$handler->display->display_options['fields']['ims_date']['id'] = 'ims_date';
+	$handler->display->display_options['fields']['ims_date']['table'] = 'field_data_ims_date';
+	$handler->display->display_options['fields']['ims_date']['field'] = 'ims_date';
+	$handler->display->display_options['fields']['ims_date']['label'] = '';
+	$handler->display->display_options['fields']['ims_date']['element_label_colon'] = FALSE;
+	$handler->display->display_options['fields']['ims_date']['settings'] = array(
+		'format_type' => 'mmm_dd',
+		'fromto' => 'value',
+		'multiple_number' => '',
+		'multiple_from' => '',
+		'multiple_to' => '',
+		'show_repeat_rule' => 'show',
+	);
+	/* Field: Content: Body */
+	$handler->display->display_options['fields']['body']['id'] = 'body';
+	$handler->display->display_options['fields']['body']['table'] = 'field_data_body';
+	$handler->display->display_options['fields']['body']['field'] = 'body';
+	$handler->display->display_options['fields']['body']['label'] = '';
+	$handler->display->display_options['fields']['body']['element_label_colon'] = FALSE;
+	$handler->display->display_options['fields']['body']['type'] = 'smart_trim_format';
+	$handler->display->display_options['fields']['body']['settings'] = array(
+		'trim_length' => '580',
+		'trim_type' => 'chars',
+		'trim_suffix' => '...',
+		'more_link' => '0',
+		'more_text' => 'Read more',
+		'summary_handler' => 'full',
+		'trim_options' => array(
+			'text' => 0,
+		),
+	);
+	/* Field: Content: Location */
+	$handler->display->display_options['fields']['ge_location']['id'] = 'ge_location';
+	$handler->display->display_options['fields']['ge_location']['table'] = 'field_data_ge_location';
+	$handler->display->display_options['fields']['ge_location']['field'] = 'ge_location';
+	$handler->display->display_options['fields']['ge_location']['label'] = '';
+	$handler->display->display_options['fields']['ge_location']['element_label_colon'] = FALSE;
 	/* Sort criterion: Content: Event date -  start date (ims_date) */
 	$handler->display->display_options['sorts']['ims_date_value']['id'] = 'ims_date_value';
 	$handler->display->display_options['sorts']['ims_date_value']['table'] = 'field_data_ims_date';

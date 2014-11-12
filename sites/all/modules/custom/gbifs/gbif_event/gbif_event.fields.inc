@@ -1083,7 +1083,7 @@ function _ge_installed_instances() {
 			),
 		),
 		'ge_language' => array(
-			'label' => $t('Language'),
+			'label' => $t('Language of event'),
 			'default_value' => NULL,
 			'deleted' => '0',
 			'description' => $t('The language used during the event.'),

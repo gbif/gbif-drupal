@@ -223,53 +223,58 @@ function gbif_ims_queue_report($worker, $item) {
 	);
 }
 
-/**
- * gbif_ims_sync()
- * Synchronise contact, country, GBIF area, group, group role, node and participant information from the IMS on FileMaker.
- */
-function gbif_ims_sync($form, $form_state) {
+function gbif_ims_sync_ui($form, $form_state) {
 	if (!empty($form_state['values']['cron_reset'])) {
 		variable_set('gbif_ims_sync_next_execution', 0);
 	}
-	$interval = variable_get('gbif_ims_sync_interval', 3 * 60 * 60);
-	// Cron could be set to run every minute, which is too heavy for IMS synchronisation.
-	// So we keep a time for the next run in a variable.
+
 	if (time() >= variable_get('gbif_ims_sync_next_execution', 0)) {
-		$start_time = new DateTime();
-		$sync_success = _gbif_ims_sync();
-		$end_time = new DateTime();
-		$time = $end_time->diff($start_time);
-		$time_spent = 'This task took ';
-		if ($time->y > 0) {$time_spent .= $time->y.' years, ';}
-		if ($time->m > 0) {$time_spent .= $time->m.' months, ';}
-		if ($time->d > 0) {$time_spent .= $time->d.' days, ';}
-		if ($time->h > 0) {$time_spent .= $time->h.' hours, ';}
-		if ($time->i > 0) {$time_spent .= $time->i.' minutes, ';}
-		if ($time->s > 0) {$time_spent .= $time->s.' seconds ';}
-		$time_spent .= "to complete.";
-
-		if ($sync_success == TRUE) {
-			watchdog('gbif_ims', 'IMS synchronisation executed at %time', array('%time' => date_iso8601(time(0))), WATCHDOG_INFO);
-			variable_set('gbif_ims_sync_next_execution', time() + $interval);
-
-			// Now the gbif_ims_* base tables are updated, it then makes sense to add content update to the queue.
-			$items = array('event_update');
-			$queue = DrupalQueue::get('gbif_ims_queue');
-			foreach ($items as $item) {
-				$queue->createItem($item);
-			}
-
-			return t('Synchronisation finished.') . ' ' . $time_spent;
-		}
-		else {
-			watchdog('gbif_ims', 'IMS synchronisation failed at %time', array('%time' => date_iso8601(time(0))), WATCHDOG_CRITICAL);
-			return t('Synchronisation failed.') . ' ' . $time_spent;
-		}
+		return gbif_ims_sync();
 	}
 	else {
 		$next_time = variable_get('gbif_ims_sync_next_execution');
 		watchdog('gbif_ims', "Synchronisation didn't run because current interval is not expired yet. Next run is at %next.", array('%next' => date_iso8601($next_time)), WATCHDOG_INFO);
 		return t("Synchronisation didn't run because current interval is not expired yet. Next run is at %next.", array('%next' => date_iso8601($next_time)));
+	}
+}
+
+/**
+ * gbif_ims_sync()
+ * Synchronise contact, country, GBIF area, group, group role, node and participant information from the IMS on FileMaker.
+ */
+function gbif_ims_sync() {
+	$start_time = new DateTime();
+	$sync_success = _gbif_ims_sync();
+	$end_time = new DateTime();
+	$time = $end_time->diff($start_time);
+	$time_spent = 'This task took ';
+	if ($time->y > 0) {$time_spent .= $time->y.' years, ';}
+	if ($time->m > 0) {$time_spent .= $time->m.' months, ';}
+	if ($time->d > 0) {$time_spent .= $time->d.' days, ';}
+	if ($time->h > 0) {$time_spent .= $time->h.' hours, ';}
+	if ($time->i > 0) {$time_spent .= $time->i.' minutes, ';}
+	if ($time->s > 0) {$time_spent .= $time->s.' seconds ';}
+	$time_spent .= "to complete.";
+
+	if ($sync_success == TRUE) {
+		watchdog('gbif_ims', 'IMS synchronisation executed at %time', array('%time' => date_iso8601(time(0))), WATCHDOG_INFO);
+		$interval = variable_get('gbif_ims_sync_interval', 3 * 60 * 60);
+		// Cron could be set to run every minute, which is too heavy for IMS synchronisation.
+		// So we keep a time for the next run in a variable.
+		variable_set('gbif_ims_sync_next_execution', time() + $interval);
+
+		// Now the gbif_ims_* base tables are updated, it then makes sense to add content update to the queue.
+		$items = array('event_update');
+		$queue = DrupalQueue::get('gbif_ims_queue');
+		foreach ($items as $item) {
+			$queue->createItem($item);
+		}
+
+		return t('Synchronisation finished.') . ' ' . $time_spent;
+	}
+	else {
+		watchdog('gbif_ims', 'IMS synchronisation failed at %time', array('%time' => date_iso8601(time(0))), WATCHDOG_CRITICAL);
+		return t('Synchronisation failed.') . ' ' . $time_spent;
 	}
 }
 
@@ -299,12 +304,15 @@ function gbif_ims_tables_exist($func) {
  */
 function gbif_ims_format_value($value, $format = NULL) {
 	if (isset($format)) {
-		if (!empty($value) || (trim(strtolower($value))) == 'n/a') {
+		if (!empty($value)) {
 			$result = array(
 				'value' => htmlspecialchars_decode($value),
 				'format' => $format,
 			);
 			return $result;
+		}
+		elseif ((trim(strtolower($value))) == 'n/a') {
+			return NULL;
 		}
 		else {
 			return NULL;

@@ -8,7 +8,7 @@ project = GBIF Portal
 configure = admin/config/gbif/event
 
 ;; This module relies on the gbif_ims module for calling FileMaker API and some core fields.
-dependencies[] = gbif_ims
+;dependencies[] = gbif_ims
 dependencies[] = smart_trim
 dependencies[] = redirect
 dependencies[] = addtocal

@@ -5,7 +5,7 @@
 	<div class="row">
 		<section id="event" class="col-xs-12 well well-lg well-margin-top clearfix"<?php print $attributes; ?>>
 			<div class="row">
-				<header class="content-header col-xs-8">
+				<header class="content-header col-xs-12">
 					<h3>Event</h3>
 					<h2><?php print $title; ?></h2>
 				</header>
@@ -30,19 +30,15 @@
 					<?php // print render($content['field_geo_location']); ?>
 				</div>
 				<aside class="content content-sidebar col-xs-4">
-					<?php print $event_image; ?>
+					<?php if (isset($content['service_links'])): ?>
+						<?php print render($content['service_links']); ?>
+					<?php endif; ?>
 					<?php print render($content['ge_date_text']); ?>
 					<?php print render($content['ge_date_ical']); ?>
 					<?php print render($content['ge_venue']); ?>
 					<?php print render($content['ge_location']); ?>
 					<?php print render($content['ge_language']); ?>
-
-					<?php if (isset($content['service_links'])): ?>
-					<hr>
-					<h3>Spread the word</h3>
-					<?php print render($content['service_links']); ?>
-					<?php endif; ?>
-
+					<?php print $event_image; ?>
 				</aside>
 			</div>
 		</section>

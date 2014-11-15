@@ -248,7 +248,7 @@ function gbif_social_media_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'service_links_lsb_countmode';
-  $strongarm->value = 'right';
+  $strongarm->value = '';
   $export['service_links_lsb_countmode'] = $strongarm;
 
   $strongarm = new stdClass();

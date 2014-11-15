@@ -503,7 +503,7 @@ function _ge_installed_instances() {
 					'label' => 'above',
 					'module' => 'text',
 					'settings' => array(),
-					'type' => 'text_default',
+					'type' => 'text_summary_or_trimmed',
 					'weight' => '3',
 				),
 				'search_index' => array(

@@ -106,6 +106,11 @@ function addtocal_field_formatter_view($entity_type, $entity, $field, $instance,
             $ics_url
           );
         }
+				elseif ($display['settings']['past_events'] == 0 && strtotime($start_date) < time()) {
+					$element[0] += array(
+						'past_events' => TRUE,
+					);
+				}
 
         return $element;
       }
@@ -392,7 +397,7 @@ function addtocal_render($entity_type, $entity_id, $label, $description, $locati
 			'attributes' => array(),
 		));
 
-		// We use CSS sprites to decorate links, hence $img_html is not used but coded here for reference.
+		// BKO: We use CSS sprites to decorate links, hence $img_html is not used but coded here for reference.
 		if (in_array($key, array('google', 'yahoo'))) {
 			$item['data'] = l('', $cal['url'], array('html' => TRUE, 'attributes' => array('target' => '_blank', 'class' => array($key), 'title' => $title)));
 		}

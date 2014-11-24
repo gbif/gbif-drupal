@@ -34,7 +34,9 @@
 						<?php print render($content['service_links']); ?>
 					<?php endif; ?>
 					<?php print render($content['ge_date_text']); ?>
-					<?php print render($content['ge_date_ical']); ?>
+					<?php if ($content['ge_date_ical'][0]['past_events'] != TRUE): ?>
+						<?php print render($content['ge_date_ical']); ?>
+					<?php endif; ?>
 					<?php print render($content['ge_venue']); ?>
 					<?php print render($content['ge_location']); ?>
 					<?php print render($content['ge_language']); ?>

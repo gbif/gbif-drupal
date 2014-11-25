@@ -288,7 +288,7 @@ function gbif_event_field_default_field_instances() {
     'bundle' => 'event',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => '',
+    'description' => 'Textual information that actually shows on the event detail and teaser, as a cheaper way instead of computing from real date fields.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -792,7 +792,7 @@ function gbif_event_field_default_field_instances() {
     'bundle' => 'event',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => '',
+    'description' => 'Textual information of resources. HTML allowed.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -857,7 +857,7 @@ function gbif_event_field_default_field_instances() {
     'bundle' => 'event',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => '',
+    'description' => 'Textual information that actually shows in Location field. Please remember to provide country when possible.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -923,7 +923,7 @@ function gbif_event_field_default_field_instances() {
     'bundle' => 'event',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => '',
+    'description' => 'Currently link to "countries" vocabulary.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -1369,6 +1369,7 @@ function gbif_event_field_default_field_instances() {
   t('Add to calendar');
   t('Audience');
   t('Contact information');
+  t('Currently link to "countries" vocabulary.');
   t('Date');
   t('Description');
   t('Event Date');
@@ -1382,6 +1383,9 @@ function gbif_event_field_default_field_instances() {
   t('Resources');
   t('Status');
   t('Summary');
+  t('Textual information of resources. HTML allowed.');
+  t('Textual information that actually shows in Location field. Please remember to provide country when possible.');
+  t('Textual information that actually shows on the event detail and teaser, as a cheaper way instead of computing from real date fields.');
   t('Venue');
   t('Venue country');
 

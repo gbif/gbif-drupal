@@ -1051,9 +1051,9 @@ function gbif_event_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'file',
+        'module' => 'file_force',
         'settings' => array(),
-        'type' => 'file_default',
+        'type' => 'file_force_file_default',
         'weight' => 13,
       ),
       'ical' => array(

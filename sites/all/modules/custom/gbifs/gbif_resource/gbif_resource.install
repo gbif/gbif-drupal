@@ -4,22 +4,10 @@
  * Implements hook_install().
  */
 function gbif_resource_install() {
-	gbif_tweaks_redirects_handling('gbif_resource', 'create');
 }
 
 /**
  * Implements hook_uninstall().
  */
 function gbif_resource_uninstall() {
-	gbif_tweaks_redirects_handling('gbif_resource', 'remove');
-}
-
-function gbif_resource_redirection_list() {
-	$redirections = array(
-		array(
-			'old' => 'orc',
-			'new' => 'resources/archive',
-		),
-	);
-	return $redirections;
 }

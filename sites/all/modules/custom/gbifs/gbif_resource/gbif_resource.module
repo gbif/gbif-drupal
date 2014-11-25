@@ -1,3 +1,77 @@
 <?php
+/**
+ * @file
+ * This module creates allows to create URLs like www.gbif.org/orc/?doc_id=1300, used in the GBIF website since 2011.
+ */
 
+/**
+ * Implements hook_permission().
+ */
+function gbif_resource_permission() {
+	return array(
+		'access resource content' => array(
+			'title' => t('Access resource.'),
+		)
+	);
+}
 
+/**
+ * Implements hook_menu().
+ */
+function gbif_resource_menu() {
+	$items = array();
+	$items['orc'] = array(
+		'title' => t('Online resource centre'),
+		'page callback' => 'gbif_resource_orc_redirect',
+		'access callback' => TRUE,
+		'type' => MENU_CALLBACK,
+	);
+	return $items;
+}
+
+/**
+ * Handling the redirection of the old style URLs of ORC.
+ */
+function gbif_resource_orc_redirect() {
+	if ((isset($_GET['doc_id'])) && ($_GET['doc_id'] != '')) {
+		// Find if a resource_ims exists with the __kp_ID registered.
+		$query = new EntityFieldQuery();
+		$entities = $query->entityCondition('entity_type', 'node')
+			->propertyCondition('type', 'resource_ims')
+			->propertyCondition('status', 1)
+			->fieldCondition('field_orc_original_ims_id', 'value', $_GET['doc_id'], '=')
+			->execute();
+		if (!empty($entities['node'])) {
+			$node = node_load(array_shift(array_keys($entities['node'])));
+			$url = 'resources/' . $node->nid;
+			drupal_goto($url);
+		}
+		else {
+			// Not a valid node.
+			drupal_not_found();
+		}
+	}
+	else {
+		// No orc_id(__kp_ID) provided.
+		drupal_goto('resources/archive');
+	}
+}
+
+/**
+ * Implements hook_help.
+ *
+ * Displays help and module information.
+ *
+ * @param path
+ *   Which path of the site we're using to display help
+ * @param arg
+ *   Array that holds the current path as returned from arg() function
+ */
+
+function gbif_resource_help($path, $arg) {
+	switch ($path) {
+		case "admin/help#gbif_resource":
+			return '<p>' . t("This module redirects old style URLs(www.gbif.org/orc/?doc_id=1300)."). '</p>';
+			break;
+	}
+}

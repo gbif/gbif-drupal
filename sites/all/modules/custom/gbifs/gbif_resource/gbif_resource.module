@@ -53,7 +53,7 @@ function gbif_resource_orc_redirect() {
 	}
 	else {
 		// No orc_id(__kp_ID) provided.
-		drupal_goto('resources/archive');
+		drupal_goto('resources/summary');
 	}
 }
 

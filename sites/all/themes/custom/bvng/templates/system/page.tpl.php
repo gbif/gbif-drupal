@@ -149,14 +149,14 @@
 <section id="main">
   <a id="main-content"></a>
   <?php if (!empty($messages)): ?>
-        <?php print $messages; ?>
+		<?php print $messages; ?>
   <?php endif; ?>    
     
   <?php if (!empty($page['help'])): ?>
     <div class="container well well-lg">
-        <div class="row">
-          <?php print render($page['help']); ?>
-        </div>
+      <div class="row">
+        <?php print render($page['help']); ?>
+      </div>
     </div>
   <?php endif; ?>
 

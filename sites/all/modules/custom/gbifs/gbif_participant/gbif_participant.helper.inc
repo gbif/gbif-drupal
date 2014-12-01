@@ -150,6 +150,7 @@ function _gp_format_role($role) {
 		'NODE_MANAGER' => t('Node Manager'),
 		'NODE_STAFF' => t('Node Team'),
 		'NODES_STAFF' => t('Node Team'),
+		'NODE_TEAM' => t('Node Team'),
 	);
 	return $roles[$role];
 }

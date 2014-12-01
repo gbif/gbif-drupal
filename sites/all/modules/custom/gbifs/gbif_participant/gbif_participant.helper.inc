@@ -85,7 +85,7 @@ function _gbif_participant_print_contacts($position, $contacts, $iso2) {
 			break;
 		case 'contacts':
 			// Sort the contacts 1) by role; 2) by last name.
-			$roles = array('Head of Delegation', 'Temporary Head of Delegation', 'Additional Delegate', 'Node Manager', 'Node Staff');
+			$roles = array('Head of Delegation', 'Temporary Head of Delegation', 'Additional Delegate', 'Node Manager', 'Node Team');
 			//uasort($contacts, function($a, $b) { return $a->last_name - $b->last_name; });
 			usort($contacts, function($a, $b) use ($roles) {
 				if ($a->type == $b->type) {

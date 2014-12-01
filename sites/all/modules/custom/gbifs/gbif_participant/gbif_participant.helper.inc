@@ -148,8 +148,8 @@ function _gp_format_role($role) {
 		'TEMPORARY_HEAD_OF_DELEGATION' => t('Temporary Head of Delegation'),
 		'ADDITIONAL_DELEGATE' => t('Additional Delegate'),
 		'NODE_MANAGER' => t('Node Manager'),
-		'NODE_STAFF' => t('Node Staff'),
-		'NODES_STAFF' => t('Node Staff'),
+		'NODE_STAFF' => t('Node Team'),
+		'NODES_STAFF' => t('Node Team'),
 	);
 	return $roles[$role];
 }

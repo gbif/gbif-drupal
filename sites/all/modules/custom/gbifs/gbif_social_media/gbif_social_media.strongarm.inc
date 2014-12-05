@@ -238,7 +238,6 @@ function gbif_social_media_strongarm() {
     'search_index' => 0,
     'search_result' => 0,
     'ical' => 0,
-    'teaser_nt' => 0,
     'token' => 0,
     'revision' => 0,
   );
@@ -266,12 +265,12 @@ function gbif_social_media_strongarm() {
     'event' => 'event',
     'usesofdata' => 'usesofdata',
     'newsarticle' => 'newsarticle',
+		'resource' => 'resource',
     'baremetal' => 0,
     'page' => 0,
     'featureddataset' => 0,
     'gbif_participant' => 0,
     'generictemplate' => 0,
-    'resource_ims' => 0,
   );
   $export['service_links_node_types'] = $strongarm;
 
@@ -286,7 +285,6 @@ function gbif_social_media_strongarm() {
     'search_index' => 0,
     'search_result' => 0,
     'ical' => 0,
-    'teaser_nt' => 0,
     'token' => 0,
     'revision' => 0,
   );

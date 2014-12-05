@@ -63,6 +63,7 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => '012a22bd-18a1-4eb4-aed3-43e4d993ed3d',
     'vocabulary_machine_name' => 'tags',
+    'field_ims_keyword_id' => array(),
     'field_term_attributes' => array(),
     'metatags' => array(),
   );
@@ -239,6 +240,13 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => '0c8efbb3-94f3-404e-84d6-7f7ea76404e7',
     'vocabulary_machine_name' => 'data_type',
+    'field_ims_keyword_id' => array(
+      'und' => array(
+        0 => array(
+          'value' => 19,
+        ),
+      ),
+    ),
     'metatags' => array(),
   );
   $terms[] = array(
@@ -350,6 +358,15 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => '127bffe9-9153-420f-8d97-8f6cbedf0d3b',
     'vocabulary_machine_name' => 'term_attribute',
+    'field_term_acronym' => array(
+      'und' => array(
+        0 => array(
+          'value' => 'OS',
+          'format' => NULL,
+          'safe_value' => 'OS',
+        ),
+      ),
+    ),
     'metatags' => array(),
   );
   $terms[] = array(
@@ -359,6 +376,13 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => '157bdf80-3a28-4900-8174-cf01a1a61bb3',
     'vocabulary_machine_name' => 'data_type',
+    'field_ims_keyword_id' => array(
+      'und' => array(
+        0 => array(
+          'value' => 193,
+        ),
+      ),
+    ),
     'metatags' => array(),
   );
   $terms[] = array(
@@ -368,6 +392,13 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => '17c53639-a8b6-42f6-a102-80c952a9d599',
     'vocabulary_machine_name' => 'data_type',
+    'field_ims_keyword_id' => array(
+      'und' => array(
+        0 => array(
+          'value' => 191,
+        ),
+      ),
+    ),
     'metatags' => array(),
   );
   $terms[] = array(
@@ -599,6 +630,13 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => '292de05d-47fc-4513-b653-f9c80f95276a',
     'vocabulary_machine_name' => 'tags',
+    'field_ims_keyword_id' => array(
+      'und' => array(
+        0 => array(
+          'value' => 159,
+        ),
+      ),
+    ),
     'field_term_attributes' => array(),
     'metatags' => array(),
   );
@@ -647,6 +685,13 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => '2c03ba35-c90b-4db0-b419-3c578cbd7a8d',
     'vocabulary_machine_name' => 'tags',
+    'field_ims_keyword_id' => array(
+      'und' => array(
+        0 => array(
+          'value' => 228,
+        ),
+      ),
+    ),
     'field_term_attributes' => array(),
     'metatags' => array(),
   );
@@ -657,6 +702,13 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => '2f5fe815-e96d-4812-841c-4895813f92d4',
     'vocabulary_machine_name' => 'data_type',
+    'field_ims_keyword_id' => array(
+      'und' => array(
+        0 => array(
+          'value' => 258,
+        ),
+      ),
+    ),
     'metatags' => array(),
   );
   $terms[] = array(
@@ -756,6 +808,7 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => '344d207e-4580-431d-a65c-c987c55cdb73',
     'vocabulary_machine_name' => 'tags',
+    'field_ims_keyword_id' => array(),
     'field_term_attributes' => array(),
     'metatags' => array(),
   );
@@ -886,6 +939,13 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => '3b95501d-9807-4a3e-9500-f99ded3c91b3',
     'vocabulary_machine_name' => 'tags',
+    'field_ims_keyword_id' => array(
+      'und' => array(
+        0 => array(
+          'value' => 108,
+        ),
+      ),
+    ),
     'field_term_attributes' => array(),
     'metatags' => array(),
   );
@@ -978,6 +1038,13 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => '3da67a85-9022-43bb-9835-1fcdc0e26991',
     'vocabulary_machine_name' => 'tags',
+    'field_ims_keyword_id' => array(
+      'und' => array(
+        0 => array(
+          'value' => 115,
+        ),
+      ),
+    ),
     'field_term_attributes' => array(),
     'metatags' => array(),
   );
@@ -1026,6 +1093,13 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => '41613091-13b0-492c-b6c5-bb23b7c77396',
     'vocabulary_machine_name' => 'purpose',
+    'field_ims_keyword_id' => array(
+      'und' => array(
+        0 => array(
+          'value' => 21,
+        ),
+      ),
+    ),
     'metatags' => array(),
   );
   $terms[] = array(
@@ -1062,6 +1136,13 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => '41cd5a49-7a36-4c3c-8d8a-6119c5846d5d',
     'vocabulary_machine_name' => 'tags',
+    'field_ims_keyword_id' => array(
+      'und' => array(
+        0 => array(
+          'value' => 102,
+        ),
+      ),
+    ),
     'field_term_attributes' => array(
       'und' => array(
         0 => array(
@@ -1097,6 +1178,13 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => '435a4156-b749-42e0-b9c4-a1babacb30ce',
     'vocabulary_machine_name' => 'tags',
+    'field_ims_keyword_id' => array(
+      'und' => array(
+        0 => array(
+          'value' => 226,
+        ),
+      ),
+    ),
     'field_term_attributes' => array(),
     'metatags' => array(),
   );
@@ -1117,6 +1205,24 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
+    'metatags' => array(),
+  );
+  $terms[] = array(
+    'name' => 'Biodiversity informatics standard',
+    'description' => '',
+    'format' => 'full_html',
+    'weight' => 0,
+    'uuid' => '456100c5-b75e-4dad-b681-74046c7a0c8f',
+    'vocabulary_machine_name' => 'term_attribute',
+    'field_term_acronym' => array(
+      'und' => array(
+        0 => array(
+          'value' => 'Standard',
+          'format' => NULL,
+          'safe_value' => 'Standard',
+        ),
+      ),
+    ),
     'metatags' => array(),
   );
   $terms[] = array(
@@ -1440,6 +1546,7 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => '53d6f09f-413f-41cd-bf68-02d66741080b',
     'vocabulary_machine_name' => 'data_use',
+    'field_ims_keyword_id' => array(),
     'metatags' => array(),
   );
   $terms[] = array(
@@ -1496,6 +1603,7 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => '54ee46b6-95e4-4c9f-bba4-3d1abec226a6',
     'vocabulary_machine_name' => 'data_use',
+    'field_ims_keyword_id' => array(),
     'metatags' => array(),
   );
   $terms[] = array(
@@ -1627,6 +1735,13 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => '5e6ba8a3-ec40-44d3-b605-e334023f7be6',
     'vocabulary_machine_name' => 'tags',
+    'field_ims_keyword_id' => array(
+      'und' => array(
+        0 => array(
+          'value' => 104,
+        ),
+      ),
+    ),
     'field_term_attributes' => array(),
     'metatags' => array(),
   );
@@ -1751,6 +1866,13 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 4,
     'uuid' => '62a89fae-5e7b-4ac3-8988-06b5136774d6',
     'vocabulary_machine_name' => 'purpose',
+    'field_ims_keyword_id' => array(
+      'und' => array(
+        0 => array(
+          'value' => 26,
+        ),
+      ),
+    ),
     'metatags' => array(),
   );
   $terms[] = array(
@@ -1852,6 +1974,13 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => '6666be28-a907-4d69-9308-eb1fe7300f7a',
     'vocabulary_machine_name' => 'tags',
+    'field_ims_keyword_id' => array(
+      'und' => array(
+        0 => array(
+          'value' => 100,
+        ),
+      ),
+    ),
     'field_term_attributes' => array(
       'und' => array(
         0 => array(
@@ -1868,6 +1997,13 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => '6737bd20-499e-4394-a3d8-856be5eba0e8',
     'vocabulary_machine_name' => 'data_type',
+    'field_ims_keyword_id' => array(
+      'und' => array(
+        0 => array(
+          'value' => 194,
+        ),
+      ),
+    ),
     'metatags' => array(),
   );
   $terms[] = array(
@@ -2274,6 +2410,16 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 1,
     'uuid' => '74367725-c5b2-4e00-bb53-c75636be9b1d',
     'vocabulary_machine_name' => 'purpose',
+    'field_ims_keyword_id' => array(
+      'und' => array(
+        0 => array(
+          'value' => 127,
+        ),
+        1 => array(
+          'value' => 13,
+        ),
+      ),
+    ),
     'metatags' => array(),
   );
   $terms[] = array(
@@ -2584,6 +2730,13 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => '8342eb51-472a-48d7-933f-36780b1189fd',
     'vocabulary_machine_name' => 'data_type',
+    'field_ims_keyword_id' => array(
+      'und' => array(
+        0 => array(
+          'value' => 192,
+        ),
+      ),
+    ),
     'metatags' => array(),
   );
   $terms[] = array(
@@ -2639,6 +2792,13 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 2,
     'uuid' => '854eb407-fac0-4b5c-9473-b6ddc7dbf9ff',
     'vocabulary_machine_name' => 'purpose',
+    'field_ims_keyword_id' => array(
+      'und' => array(
+        0 => array(
+          'value' => 6,
+        ),
+      ),
+    ),
     'metatags' => array(),
   );
   $terms[] = array(
@@ -2648,6 +2808,13 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => '858c6273-e6b6-485e-8bb2-3e6d1ede09cc',
     'vocabulary_machine_name' => 'tags',
+    'field_ims_keyword_id' => array(
+      'und' => array(
+        0 => array(
+          'value' => 93,
+        ),
+      ),
+    ),
     'field_term_attributes' => array(),
     'metatags' => array(),
   );
@@ -2740,6 +2907,7 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => '8a6f0542-925a-4adc-9ca9-36335e82abe2',
     'vocabulary_machine_name' => 'tags',
+    'field_ims_keyword_id' => array(),
     'field_term_attributes' => array(),
     'metatags' => array(),
   );
@@ -2860,6 +3028,24 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => '9321fe73-3bc0-453e-aea0-9ca1b56828d0',
     'vocabulary_machine_name' => 'topic',
+    'metatags' => array(),
+  );
+  $terms[] = array(
+    'name' => 'Tool type',
+    'description' => '',
+    'format' => 'full_html',
+    'weight' => 0,
+    'uuid' => '935db795-c191-4146-91e8-14189b5935ea',
+    'vocabulary_machine_name' => 'term_attribute',
+    'field_term_acronym' => array(
+      'und' => array(
+        0 => array(
+          'value' => 'Tool type',
+          'format' => NULL,
+          'safe_value' => 'Tool type',
+        ),
+      ),
+    ),
     'metatags' => array(),
   );
   $terms[] = array(
@@ -3123,6 +3309,13 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => 'a361e3d0-6903-4e62-b4d7-2652dcea646f',
     'vocabulary_machine_name' => 'data_type',
+    'field_ims_keyword_id' => array(
+      'und' => array(
+        0 => array(
+          'value' => 24,
+        ),
+      ),
+    ),
     'metatags' => array(),
   );
   $terms[] = array(
@@ -3252,6 +3445,13 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 3,
     'uuid' => 'ab6cb471-9159-44e7-8833-43b8b901855f',
     'vocabulary_machine_name' => 'purpose',
+    'field_ims_keyword_id' => array(
+      'und' => array(
+        0 => array(
+          'value' => 128,
+        ),
+      ),
+    ),
     'metatags' => array(),
   );
   $terms[] = array(
@@ -3401,6 +3601,13 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => 'b7a0693b-5be1-4c4f-b3ca-4a4076439903',
     'vocabulary_machine_name' => 'tags',
+    'field_ims_keyword_id' => array(
+      'und' => array(
+        0 => array(
+          'value' => 4,
+        ),
+      ),
+    ),
     'field_term_attributes' => array(),
     'metatags' => array(),
   );
@@ -3430,6 +3637,13 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => 'bb2e30bc-72c5-4c2c-90fb-b5bd15f81f2f',
     'vocabulary_machine_name' => 'data_type',
+    'field_ims_keyword_id' => array(
+      'und' => array(
+        0 => array(
+          'value' => 22,
+        ),
+      ),
+    ),
     'metatags' => array(),
   );
   $terms[] = array(
@@ -3458,6 +3672,7 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => 'bd34be41-9192-4840-a714-790ed0b3e100',
     'vocabulary_machine_name' => 'data_use',
+    'field_ims_keyword_id' => array(),
     'metatags' => array(),
   );
   $terms[] = array(
@@ -3524,6 +3739,13 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => 'c39ca38a-74c6-46e9-9b68-4cf315f70e8e',
     'vocabulary_machine_name' => 'tags',
+    'field_ims_keyword_id' => array(
+      'und' => array(
+        0 => array(
+          'value' => 161,
+        ),
+      ),
+    ),
     'field_term_attributes' => array(),
     'metatags' => array(),
   );
@@ -3827,6 +4049,13 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => 'd207e0dd-da4e-419e-a9e3-7e4ae7e3be86',
     'vocabulary_machine_name' => 'tags',
+    'field_ims_keyword_id' => array(
+      'und' => array(
+        0 => array(
+          'value' => 118,
+        ),
+      ),
+    ),
     'field_term_attributes' => array(
       'und' => array(
         0 => array(
@@ -3981,6 +4210,13 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => 'd4e1c6ec-a24a-4a41-ad56-2395d9b45430',
     'vocabulary_machine_name' => 'tags',
+    'field_ims_keyword_id' => array(
+      'und' => array(
+        0 => array(
+          'value' => 1,
+        ),
+      ),
+    ),
     'field_term_attributes' => array(),
     'metatags' => array(),
   );
@@ -4040,6 +4276,24 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'metatags' => array(),
   );
   $terms[] = array(
+    'name' => 'Development status',
+    'description' => '',
+    'format' => 'full_html',
+    'weight' => 0,
+    'uuid' => 'd5df68f6-8f16-41e2-9efc-c58fbe68d5cc',
+    'vocabulary_machine_name' => 'term_attribute',
+    'field_term_acronym' => array(
+      'und' => array(
+        0 => array(
+          'value' => 'Status',
+          'format' => NULL,
+          'safe_value' => 'Status',
+        ),
+      ),
+    ),
+    'metatags' => array(),
+  );
+  $terms[] = array(
     'name' => 'Uyghur',
     'description' => NULL,
     'format' => 'plain_text',
@@ -4084,6 +4338,7 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => 'd65b547b-6241-4edc-996f-e2dd9a6e3b6a',
     'vocabulary_machine_name' => 'data_use',
+    'field_ims_keyword_id' => array(),
     'metatags' => array(),
   );
   $terms[] = array(
@@ -4241,6 +4496,13 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => 'deddfd8f-6462-4e58-a3a1-eb5141d2d710',
     'vocabulary_machine_name' => 'tags',
+    'field_ims_keyword_id' => array(
+      'und' => array(
+        0 => array(
+          'value' => 89,
+        ),
+      ),
+    ),
     'field_term_attributes' => array(),
     'metatags' => array(),
   );
@@ -4596,6 +4858,25 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => 'ee225a07-2f39-4801-9c2a-2a8ff1fdfeb4',
     'vocabulary_machine_name' => 'data_use',
+    'field_ims_keyword_id' => array(),
+    'metatags' => array(),
+  );
+  $terms[] = array(
+    'name' => 'Group',
+    'description' => '',
+    'format' => 'full_html',
+    'weight' => 0,
+    'uuid' => 'ee7dd1a0-8e1e-4965-be96-97047f14cf2e',
+    'vocabulary_machine_name' => 'term_attribute',
+    'field_term_acronym' => array(
+      'und' => array(
+        0 => array(
+          'value' => 'Group',
+          'format' => NULL,
+          'safe_value' => 'Group',
+        ),
+      ),
+    ),
     'metatags' => array(),
   );
   $terms[] = array(
@@ -4778,6 +5059,13 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => 'f691704d-b1c8-4d4a-aec9-6a50f09c01d4',
     'vocabulary_machine_name' => 'tags',
+    'field_ims_keyword_id' => array(
+      'und' => array(
+        0 => array(
+          'value' => 88,
+        ),
+      ),
+    ),
     'field_term_attributes' => array(),
     'metatags' => array(),
   );

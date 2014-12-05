@@ -505,16 +505,19 @@ function bvng_preprocess_node(&$variables) {
    */
 	if (is_array($variables['tabs']['#primary'])) {
 		foreach ($variables['tabs']['#primary'] as $key => $item) {
-			// We don't need the view tab because we're already viewing it.
-
 			switch ($item['#link']['title']) {
 				case 'View':
+					// We don't need the view tab because we're already viewing it.
 					unset($variables['tabs']['#primary'][$key]);
 					break;
 				case 'Edit':
 					// Alter the 'edit' link to point to the node/%/edit
 					$variables['tabs']['#primary'][$key]['#link']['href'] = 'node/' . $variables['node']->nid . '/edit';
 					if (!in_array('Editors', $user->roles)) unset($variables['tabs']['#primary'][$key]);
+					break;
+				case 'Manage display':
+					// "Manage display" tab is not for editors so we also disable it.
+					unset($variables['tabs']['#primary'][$key]);
 					break;
 				case 'Devel':
 					// Alter the 'edit' link to point to the node/%/devel

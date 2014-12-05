@@ -1,38 +1,33 @@
 <?php
 
-module_load_include('inc', 'gbif_event', 'gbif_event.fields');
-
 /**
  * Implements hook_install().
  */
 function gbif_event_install() {
 	// Create a directory for storing relevant files for IMS events.
-	$uri = 'public://gbif_event/images';
-	$dir_exists = file_prepare_directory($uri);
-	if (!$dir_exists) {
-		$dir_created = drupal_mkdir($uri, NULL, TRUE);
-		if ($dir_created == TRUE) {
-			watchdog('gbif_event', '!directory created.', array('!directory' => $uri), WATCHDOG_NOTICE);
+	$uris = array(
+		'public://gbif_event/images',
+		'public://gbif_event/files'
+	);
+	foreach ($uris as $uri) {
+		$dir_exists = file_prepare_directory($uri);
+		if (!$dir_exists) {
+			$dir_created = drupal_mkdir($uri, NULL, TRUE);
+			if ($dir_created == TRUE) {
+				watchdog('gbif_event', '!directory created.', array('!directory' => $uri), WATCHDOG_NOTICE);
+			}
+			else {
+				watchdog('gbif_event', '!directory creation failed.', array('!directory' => $uri), WATCHDOG_ERROR);
+			}
 		}
 		else {
-			watchdog('gbif_event', '!directory creation failed.', array('!directory' => $uri), WATCHDOG_ERROR);
+			watchdog('gbif_event', '!directory already exists.', array('!directory' => $uri), WATCHDOG_WARNING);
 		}
 	}
-	else {
-		watchdog('gbif_event', '!directory already exists.', array('!directory' => $uri), WATCHDOG_WARNING);
-	}
-
-	node_types_rebuild();
-	_ge_create_custom_fields();
-
-	// Pathauto pattern for individual event nodes.
-	variable_set('pathauto_node_event_pattern', 'event/[node:nid]');
 
 	// Add redirection to connect to previous event_ims paths.
 	gbif_tweaks_redirects_handling('gbif_event', 'create');
 
-	// Load the default contexts.
-	gbif_event_contexts_install();
 }
 
 /**
@@ -45,21 +40,15 @@ function gbif_event_uninstall() {
 	if ($dir_exists) {
 		$deleted = file_unmanaged_delete_recursive($uri);
 		if ($deleted == TRUE) {
-			drupal_set_message('The events are successfully deleted.');
+			drupal_set_message('Event files are successfully deleted.');
 		}
 	}
 	gbif_tweaks_delete_all(array('event'));
-	_ge_delete_custom_fields();
 	node_type_delete('event');
 	field_purge_batch(500);
 
-	variable_del('pathauto_node_event_pattern');
-
 	// Remove redirection.
 	gbif_tweaks_redirects_handling('gbif_event', 'remove');
-
-	// Remove contexts.
-	gbif_event_contexts_uninstall();
 }
 
 /**

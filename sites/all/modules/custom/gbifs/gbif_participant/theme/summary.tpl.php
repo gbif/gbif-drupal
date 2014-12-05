@@ -10,7 +10,8 @@
 	// GBIF region
 	$participant_ims->gbif_region = _gbif_participant_print_region($registry_json->gbifRegion);
 	// Contacts
-	$participant_ims->contact_participation = _gbif_participant_print_contacts('participation', $registry_json->contacts, $iso2);
+	$contacts = _gp_get_participant_contacts($participantID);
+	$participant_ims->contact_participation = _gbif_participant_print_contacts('participation', $contacts, $iso2);
 	// Node established
 	$timestamp = strtotime($node->gp_node_established['und'][0]['value']);
 	if ($timestamp != FALSE) {

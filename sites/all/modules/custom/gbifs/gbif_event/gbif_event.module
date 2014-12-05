@@ -1,6 +1,10 @@
 <?php
-// @todo To get the context installed programmatically via ctools API.
-// include_once 'gbif_event.features.inc';
+/**
+ * @file
+ * Code for the GBIF Event feature.
+ */
+
+include_once 'gbif_event.features.inc';
 
 /**
  * Implements hook_menu().
@@ -50,40 +54,6 @@ function gbif_event_theme($existing, $type, $theme, $path) {
 			'variables' => array('results' => NULL),
 		),
 	);
-}
-
-/**
- * Implements hook_node_info().
- */
-function gbif_event_node_info() {
-	$items = array(
-		'event' => array(
-			'name' => t('Event'),
-			'base' => 'event',
-			'description' => t('The information about events relevant to GBIF is maintained by the Secretariat in a FileMaker database. We import a view of those data to Drupal for its display in the GBIF main website. The management of the information itself is still done in the original system. Contents of this type should not be added or edited directly in Drupal, as they will be overwritten by the automatic import process.'),
-			'has_title' => TRUE,
-			'title_label' => t('Event Title'),
-			'locked' => TRUE, // Unchangeable from UI.
-			'node-preview' => 1,
-			'node-options' => array(),
-			'node-submitted' => 1,
-			'language_content_type' => '1',
-			'comment' => array(
-				'status' => 0,
-				'default-mode' => 0,
-				'anonymous' => 2,
-				'default-per-page' => 30,
-				'form-location' => 0,
-				'preview' => 2,
-				'subject-field' => 0,
-			),
-			'menu' => array(
-				'options' => array('gbif-menu'),
-				'parent' => 'gbif-menu:0',
-			),
-		),
-	);
-	return $items;
 }
 
 /**
@@ -234,8 +204,8 @@ function gbif_event_preprocess_views_view(&$variables) {
  * @param $hook
  */
 function gbif_event_preprocess_views_view_field(&$variables, $hook) {
-	if ($variables['view']->name == 'events' && $variables['view']->current_display == 'latest4_fp') {
-		if ($variables['field']->field == 'ims_date') {
+	if ($variables['view']->name == 'events') {
+		if ($variables['field']->field == 'ge_ims_date') {
 			// allow extra divs and classes at a later time in template
 			// any lang where the short name of the month has blanks?
 			$pattern = '/(<span\s.+?>)(\w+\s\d\d)(<\/span>)/';
@@ -244,7 +214,7 @@ function gbif_event_preprocess_views_view_field(&$variables, $hook) {
 
 			$q = preg_replace($pattern, $replacement, $target);
 			$d = explode(' ', $q);
-			$variables['month_year'] = array ('month' => $d[0] , 'year' => $d[1]);
+			$variables['month_year'] = array ('month' => $d[0] , 'day' => $d[1]);
 		}
 	}
 }
@@ -342,7 +312,7 @@ function gbif_event_redirect() {
 		$query = new EntityFieldQuery();
 		$entities = $query->entityCondition('entity_type', 'node')
 			->entityCondition('bundle', 'event')
-			->fieldCondition('ims_kp_id', 'value', $param['eventid'], '=')
+			->fieldCondition('ge_ims_kp_id', 'value', $param['eventid'], '=')
 			->execute();
 		if (isset($entities['node'])) {
 			$nid = key($entities['node']);

@@ -2,18 +2,17 @@ name = GBIF Social Media
 description = Handling configuration of social media
 core = 7.x
 package = GBIFS
+php = 5.2.4
 version = 7.x-0.1
-project = GBIF Portal
-
+project = gbif_social_media
 dependencies[] = ctools
 dependencies[] = features
-dependencies[] = strongarm
-dependencies[] = service_links
 dependencies[] = general_services
+dependencies[] = service_links
 dependencies[] = service_links_displays
 dependencies[] = service_links_sprites
+dependencies[] = strongarm
 dependencies[] = widget_services
-
 features[ctools][] = strongarm:strongarm:1
 features[features_api][] = api:1
 features[user_permission][] = access service links

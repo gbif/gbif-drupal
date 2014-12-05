@@ -865,12 +865,13 @@ function _gbif_participant_membership_query($gbif_membership) {
 
 /**
  * Temporary helper function. Mainly for formatting.
- * @todo Once the new IMS is ready, values should come from Drupal fields
- * by render().
+ * @todo Once the new IMS is ready, values should come from Drupal fields by render().
  */
 function _gbif_participant_print_address_fields($value) {
 	if (!empty($value)) {
 		$value = $value . '<br>';
+		$value = str_replace("\n", '<br>', $value);
+		$value = str_replace('<br><br>', '<br>', $value);
 	}
 	return $value;
 }

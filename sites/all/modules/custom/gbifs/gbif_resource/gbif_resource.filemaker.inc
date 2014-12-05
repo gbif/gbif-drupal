@@ -4,6 +4,7 @@
  * @file Functions here don't talk to FileMaker directly but gbif_ims_* tables.
  * They are organised this way to be consistent across our Drupal modules.
  */
+module_load_include('module', 'gbif_tweaks', 'gbif_tweaks');
 
 function _gr_get_all_ims_resources() {
 	$query = db_select('gbif_ims_file', 'f');
@@ -60,15 +61,17 @@ function _gbif_resource_sync() {
 		return t('One or more required table missing. Please run !sync before continuing.', array('!sync' => l('IMS Sync', 'admin/config/gbif/ims_settings')));
 	}
 
-	// Import events from the gbif_ims_* tables to the "event" content type.
+	// Import resource from the gbif_ims_* tables to the "resource" content type.
 	$results = _gr_get_all_ims_resources();
 
 	// Resource counts. For debugging.
-	$entity_query = new EntityFieldQuery();
-	$entity_query->entityCondition('entity_type', 'node')
-		->entityCondition('bundle', 'resource_ims');
-	$exist = $entity_query->execute();
-	$count_resource_ims = count($exist['node']);
+	if (is_object(node_type_load('resource_ims'))) {
+		$entity_query = new EntityFieldQuery();
+		$entity_query->entityCondition('entity_type', 'node')
+			->entityCondition('bundle', 'resource_ims');
+		$exist = $entity_query->execute();
+		$count_resource_ims = count($exist['node']);
+	}
 
 	$entity_query = new EntityFieldQuery();
 	$entity_query->entityCondition('entity_type', 'node')
@@ -166,6 +169,9 @@ function _gbif_resource_sync() {
 			// Number of downloads.
 			$node_wrapper->gr_number_of_downloads->set(gbif_ims_format_value($record->num_downloads));
 
+			// URL.
+			$node_wrapper->gr_url->set(gbif_ims_format_value($record->url));
+
 			// Short listed.
 			if ($record->short_listed == 1) {
 				$node_wrapper->gr_short_listed->set(1);
@@ -219,25 +225,166 @@ function _gbif_resource_sync() {
 			}
 			unset($query, $value, $tid, $entities);
 
-			// @todo Purpose. A term reference field. Loaded from Keywords.
-			// @todo Data type. A term reference field. Loaded from Keywords.
-			// @todo Tags. A term reference field. Loaded from Keywords.
+			// Get all keywords about this file.
+			$keywords = _gr_get_all_keywords($ims_id);
+
+			$voc_iterations = array(
+				// Purpose. A term reference field. Loaded from Keywords.
+				// The following 5 terms will be matched and tagged:
+				// Data digitization(21), Data curation/quality(127), Data publishing(6), Data access/display(128), Data analysis(26).
+				'purpose' => array(
+					'field' => 'gr_purpose',
+					'terms' => array(21, 127, 13, 6, 128, 26),
+				),
+				// Data type. A term reference field. Loaded from Keywords.
+				'data_type' => array(
+					'field' => 'gr_data_type',
+					'terms' => array(191, 24, 22, 19, 194, 193, 192, 258),
+				)
+			);
+			$non_tags = array();
+			foreach ($voc_iterations as $i) {
+				$non_tags = array_merge($non_tags, $i['terms']);
+			}
+			/**
+			 * The keywords are processed in the following order:
+			 * 1) Keywords with "xxxxx" in their code1 field is ignored.
+			 * 2) Iterate though defined vocabularies and assign terms according to the 'terms'.
+			 * 3) The rest goes into Tags.
+			 */
+			foreach ($keywords as $keyword) {
+				if (trim($keyword->code1) != 'xxxxx') { // "xxxxx" in the IMS means we don't process it.
+					// Purpose and data type.
+					if (in_array($keyword->keywordID, $non_tags)) {
+						foreach ($voc_iterations as $voc => $iteration) {
+							if (in_array($keyword->keywordID, $iteration['terms'])) {
+								$query = new EntityFieldQuery();
+								$entities = $query->entityCondition('entity_type', 'taxonomy_term')
+									->entityCondition('bundle', $voc)
+									->fieldCondition('field_ims_keyword_id', 'value', $keyword->keywordID, '=')
+									->execute();
+								$lang_code = gbif_tweaks_get_language_code('node', $iteration['field'], $node->language);
+								if (!empty($entities['taxonomy_term']) && count($entities['taxonomy_term']) == 1) {
+									$tid = key($entities['taxonomy_term']);
+									$tid_exist = FALSE;
+									$node_array = (array) $node;
+									$field_name = $iteration['field'];
+									$field_values = $node_array[$field_name][$lang_code];
+									if (isset($field_values)) {
+										foreach ($field_values as $v) {
+											if ($v['tid'] == $tid) $tid_exist = TRUE;
+										}
+									}
+									if ($tid_exist == FALSE) {
+										$node_wrapper->$iteration['field']->set(array($tid));
+									}
+								}
+								unset($query, $entities, $tid, $lang_code, $tid_exist, $node_array, $field_name, $field_values);
+							}
+						}
+					}
+					// Tags. The rest goes to Tags. A term reference field. Loaded from Keywords.
+					else {
+						try {
+							$query = new EntityFieldQuery();
+							$entities = $query->entityCondition('entity_type', 'taxonomy_term')
+								->entityCondition('bundle', 'tags')
+								->fieldCondition('field_ims_keyword_id', 'value', $keyword->keywordID, '=')
+								->execute();
+							// If the keyword exists in the vocabulary, assign it to field_tags.
+							if (!empty($entities['taxonomy_term']) && count($entities['taxonomy_term']) == 1) {
+								$tid = key($entities['taxonomy_term']);
+								$node_array = (array) $node;
+								$lang_code = gbif_tweaks_get_language_code('node', 'field_tags', $node->language);
+								$field_values = $node_array['field_tags'][$lang_code];
+								$tid_exist = FALSE;
+								if (isset($field_values)) {
+									// Test if it's already assigned.
+									foreach ($field_values as $v) {
+										if ($v['tid'] == $tid) $tid_exist = TRUE;
+									}
+								}
+								if ($tid_exist == FALSE) {
+									$node_wrapper->field_tags[] = $tid;
+								}
+							}
+							// If not, insert into the vocabulary and assign it to field_tags.
+							elseif (empty($entities['taxonomy_term']) && !empty($keyword->keyword_short)) {
+								$target_voc = taxonomy_vocabulary_machine_name_load('tags');
+								$term = new stdClass();
+								$term->name = htmlspecialchars_decode($keyword->keyword_short);
+								$term->vid = $target_voc->vid;
+
+								$description = $keyword->keyword;
+								$description .= (!empty($keyword->explanation)) ? ' ' . $keyword->explanation : '';
+								$term->description = htmlspecialchars_decode($description);
+								$term->format = 'plain_text';
+								$lang_code = gbif_tweaks_get_language_code('taxonomy_term', 'field_ims_keyword_id', $node->language);
+								if (!empty($keyword->keywordID)) $term->field_ims_keyword_id[$lang_code][]['value'] = $keyword->keywordID;
+
+								// Determine term attribute.
+								$term_attributes = array(
+									'CTT01' => '935db795-c191-4146-91e8-14189b5935ea', // Tool type
+									'CTT02' => 'd5df68f6-8f16-41e2-9efc-c58fbe68d5cc', // Development status
+									'CTT04' => '127bffe9-9153-420f-8d97-8f6cbedf0d3b', // Operating system
+									'CTT05' => '456100c5-b75e-4dad-b681-74046c7a0c8f', // BI standard
+									'AUD01' => 'ee7dd1a0-8e1e-4965-be96-97047f14cf2e', // Group
+									'AUD02' => 'ee7dd1a0-8e1e-4965-be96-97047f14cf2e', // Group
+									'AUD03' => 'ee7dd1a0-8e1e-4965-be96-97047f14cf2e', // Group
+									'AUD04' => 'ee7dd1a0-8e1e-4965-be96-97047f14cf2e', // Group
+									'AUD05' => 'ee7dd1a0-8e1e-4965-be96-97047f14cf2e', // Group
+									'AUD06' => 'ee7dd1a0-8e1e-4965-be96-97047f14cf2e', // Group
+									'AUD07' => 'ee7dd1a0-8e1e-4965-be96-97047f14cf2e', // Group
+									'AUD08' => 'ee7dd1a0-8e1e-4965-be96-97047f14cf2e', // Group
+									'AUD09' => 'ee7dd1a0-8e1e-4965-be96-97047f14cf2e', // Group
+									'AUD10' => 'ee7dd1a0-8e1e-4965-be96-97047f14cf2e', // Group
+								);
+								if (isset($term_attributes[$keyword->code1])) {
+									$query = new EntityFieldQuery();
+									$entities = $query->entityCondition('entity_type', 'taxonomy_term')
+										->entityCondition('bundle', 'term_attribute')
+										->propertyCondition('uuid', $term_attributes[$keyword->code1])
+										->execute();
+									if (!empty($entities['taxonomy_term']) && count($entities['taxonomy_term']) == 1) {
+										$tid = key($entities['taxonomy_term']);
+										$lang_code = gbif_tweaks_get_language_code('taxonomy_term', 'field_term_attributes', $node->language);
+										$term->field_term_attributes[$lang_code][]['tid'] = $tid;
+									}
+									unset($query, $entities, $tid);
+								}
+								taxonomy_term_save($term);
+
+								// Assign to node.
+								if ($term->tid) {
+									$node_wrapper->field_tags[] = $term->tid;
+								}
+							}
+						} catch (Exception $e) {
+							watchdog('gbif_resource', $e->getMessage(), array(), WATCHDOG_ERROR);
+							continue;
+						}
+						unset($query, $entities, $tid, $lang_code, $tid_exist, $node_array, $field_values);
+					}
+				}
+			}
 
 			// Old resource nid. If there are duplicates, use all of them.
 			// The old resource nid(s) are used for URL redirection.
 			// @link http://drupal.stackexchange.com/questions/50358/save-a-new-value-with-entity-metadata-wrapper-to-an-entity-field-which-is-an-arr
-			$query = new EntityFieldQuery();
-			$query->entityCondition('entity_type', 'node')
-				->entityCondition('bundle', 'resource_ims')
-				->fieldCondition('field_orc_original_ims_id', 'value', $ims_id, '=');
-			$exist = $query->execute();
-			if (isset($exist['node'])) {
-				foreach ($exist['node'] as $nid => $obj) {
-					$node_wrapper->gr_old_resource_nid[] = $nid;
+			if (is_object(node_type_load('resource_ims'))) {
+				$query = new EntityFieldQuery();
+				$query->entityCondition('entity_type', 'node')
+					->entityCondition('bundle', 'resource_ims')
+					->fieldCondition('field_orc_original_ims_id', 'value', $ims_id, '=');
+				$exist = $query->execute();
+				if (isset($exist['node'])) {
+					foreach ($exist['node'] as $nid => $obj) {
+						$node_wrapper->gr_old_resource_nid[] = $nid;
+					}
+					$count_duplicate += count($exist['node']) - 1;
 				}
-				$count_duplicate += count($exist['node']) - 1;
+				unset($query, $exist);
 			}
-			unset($query, $exist);
 
 			// Determine "publish status" to "Published" if OnTheWeb == "Yes".
 			$on_the_web = $record->on_the_web;
@@ -267,40 +414,44 @@ function _gbif_resource_sync() {
 				elseif ($id_length == 4) {
 					$image_url = 'http://fms.gbif.org:8020/SuperContainer/RawData/THMB/' . substr($ims_id, 0, 2) . '/' . $ims_id . '?width=150&username=zordesign&password=GBIF2010';
 				}
-				$image = file_get_contents($image_url);
-				$size = getimagesize($image_url);
-				if (!empty($size) && $size[0] != 1 && $size[1] != 1 ) {
-					$image_file_uri = $resource_file_uri . '/' . 'resource-image-' . $node->nid . image_type_to_extension($size[2]);
-					$file = file_save_data($image, $image_file_uri, FILE_EXISTS_REPLACE);
+				$image_stream = file_get_contents($image_url);
+				if ($image_stream != FALSE) {
+					$size = getimagesize($image_url);
+					if (!empty($size) && $size[0] != 1 && $size[1] != 1) {
+						$image_file_uri = $resource_file_uri . '/' . 'resource-image-' . $node->nid . image_type_to_extension($size[2]);
+						$file = file_save_data($image_stream, $image_file_uri, FILE_EXISTS_REPLACE);
+						if (is_object($file)) {
+							watchdog('gbif_resource', '!file uploaded successfully.', array('!file' => $file->uri), WATCHDOG_NOTICE);
+							file_usage_add($file, 'gbif_resource', 'node', $file->uid);
+							$file = (array)$file;
+							$file['alt'] = $node->title;
+							$file['title'] = t('Click to see in full size');
+							$node_wrapper->gr_image->set($file);
+						}
+						elseif ($file == FALSE) {
+							watchdog('gbif_resource', 'Failed saving !file.', array('!file' => $file->uri), WATCHDOG_ERROR);
+						}
+					}
+				}
+				unset($image_url, $image, $image_stream, $image_file_uri, $size, $file);
+
+				// File.
+				$file_url = 'http://fms.gbif.org:8020/SuperContainer/RawData/DOCS/' . substr($record->hexID, 0, 1) . '/' . $record->hexID . '?username=zordesign&password=GBIF2010';
+				$file_stream = file_get_contents($file_url);
+				if ($file_stream != FALSE) {
+					$file_uri = $resource_file_uri . '/' . $record->filename;
+					$file = file_save_data($file_stream, $file_uri, FILE_EXISTS_REPLACE);
 					if (is_object($file)) {
 						watchdog('gbif_resource', '!file uploaded successfully.', array('!file' => $file->uri), WATCHDOG_NOTICE);
 						file_usage_add($file, 'gbif_resource', 'node', $file->uid);
 						$file = (array)$file;
-						$file['alt'] = $node->title;
-						$file['title'] = t('Click to see in full size');
-						$node_wrapper->gr_image->set($file);
+						$file['description'] = $record->title_text;
+						$file['display'] = 1;
+						$node_wrapper->gr_file->set(array($file)); // Wrapping the $file in an array is inconsistent with image file for image field. To learn why.
 					}
 					elseif ($file == FALSE) {
 						watchdog('gbif_resource', 'Failed saving !file.', array('!file' => $file->uri), WATCHDOG_ERROR);
 					}
-				}
-				unset($image_url, $image, $image_file_uri, $size, $file);
-
-				// File.
-				$file_url = 'http://fms.gbif.org:8020/SuperContainer/RawData/DOCS/' . substr($record->hexID, 0, 1) . '/' . $record->hexID . '?username=zordesign&password=GBIF2010';
-				$file = file_get_contents($file_url);
-				$file_uri = $resource_file_uri . '/' . $record->filename;
-				$file = file_save_data($file, $file_uri, FILE_EXISTS_REPLACE);
-				if (is_object($file)) {
-					watchdog('gbif_resource', '!file uploaded successfully.', array('!file' => $file->uri), WATCHDOG_NOTICE);
-					file_usage_add($file, 'gbif_resource', 'node', $file->uid);
-					$file = (array)$file;
-					$file['description'] = $record->description;
-					$file['display'] = 1;
-					$node_wrapper->gr_file->set(array($file)); // Wrapping the $file in an array is inconsistent with image file for image field. To learn why.
-				}
-				elseif ($file == FALSE) {
-					watchdog('gbif_resource', 'Failed saving !file.', array('!file' => $file->uri), WATCHDOG_ERROR);
 				}
 				unset($file_url, $file, $file_uri);
 
@@ -318,4 +469,19 @@ function _gbif_resource_sync() {
 		}
 	}
 	return TRUE;
+}
+
+function _gr_get_all_keywords($ims_id) {
+	$query = db_select('gbif_ims_file_keyword', 'fk');
+	$query->leftjoin('gbif_ims_keyword', 'k', 'fk._kf_keywordID = k.keywordID');
+	$query->addField('k', 'keywordID');
+	$query->addField('k', '_kf_drupal_tid');
+	$query->addField('k', 'code1');
+	$query->addField('k', 'code2');
+	$query->addField('k', 'keyword');
+	$query->addField('k', 'keyword_short');
+	$query->addField('k', 'explanation');
+	$query->condition('fk._kf_fileID', $ims_id);
+	$results = $query->execute()->fetchAll();
+	return $results;
 }

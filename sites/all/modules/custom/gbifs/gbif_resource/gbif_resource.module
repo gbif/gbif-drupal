@@ -27,6 +27,13 @@ function gbif_resource_menu() {
 		'access callback' => TRUE,
 		'type' => MENU_CALLBACK,
 	);
+	$items['resources/%'] = array(
+		'title' => t('Old Drupal resource redirect'),
+		'description' => 'Redirect old Drupal resource to the current one.',
+		'page callback' => 'gbif_resource_redirect',
+		'access callback' => TRUE,
+		'type' => MENU_CALLBACK,
+	);
 	$items['admin/config/gbif/resource'] = array(
 		'title' => 'GBIF resource',
 		'description' => t('Configure GBIF resource related features.'),
@@ -37,6 +44,49 @@ function gbif_resource_menu() {
 		'file' => 'gbif_resource.admin.inc',
 	);
 	return $items;
+}
+
+/**
+ * Implementation of hook_views_api().
+ */
+function gbif_resource_views_api() {
+	return array(
+		'api' => 3.0,
+		'path' => drupal_get_path('module', 'gbif_event') . '/views',
+		'template path' => drupal_get_path('module', 'gbif_event' . '/theme'),
+	);
+}
+
+/**
+ * Implements hook_theme().
+ */
+function gbif_resource_theme($existing, $type, $theme, $path) {
+	$path = drupal_get_path('module', 'gbif_resource');
+	return array(
+		'node__resource' => array(
+			'template' => 'node--resource',
+			'path' => $path . '/theme',
+		),
+		'node__view__resources' => array(
+			'template' => 'node--view--resources',
+			'path' => $path . '/theme',
+		),
+	);
+}
+
+/**
+ *
+ */
+function gbif_resource_redirect() {
+
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function gbif_resource_form_resource_node_form_alter(&$form, &$form_state) {
+	$form['gr_kp_id']['#disabled'] = TRUE;
+	$form['gr_number_of_downloads']['#disabled'] = TRUE;
 }
 
 function gbif_resource_sync_ui($form, $form_state) {

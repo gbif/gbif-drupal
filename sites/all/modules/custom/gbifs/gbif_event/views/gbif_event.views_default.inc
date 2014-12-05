@@ -26,10 +26,10 @@ function gbif_event_views_default_views() {
 	$handler->display->display_options['exposed_form']['type'] = 'basic';
 	$handler->display->display_options['pager']['type'] = 'full';
 	$handler->display->display_options['pager']['options']['items_per_page'] = '10';
-	$handler->display->display_options['style_plugin'] = 'default';
-	$handler->display->display_options['style_options']['default_row_class'] = FALSE;
-	$handler->display->display_options['style_options']['row_class_special'] = FALSE;
-	$handler->display->display_options['row_plugin'] = 'node';
+	$handler->display->display_options['style_plugin'] = 'list';
+	$handler->display->display_options['style_options']['class'] = 'event-list';
+	$handler->display->display_options['style_options']['wrapper_class'] = 'event-lists';
+	$handler->display->display_options['row_plugin'] = 'fields';
 	/* Field: Content: Title */
 	$handler->display->display_options['fields']['title']['id'] = 'title';
 	$handler->display->display_options['fields']['title']['table'] = 'node';
@@ -37,10 +37,48 @@ function gbif_event_views_default_views() {
 	$handler->display->display_options['fields']['title']['label'] = '';
 	$handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
 	$handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-	/* Sort criterion: Content: Event date -  start date (ims_date) */
-	$handler->display->display_options['sorts']['ims_date_value']['id'] = 'ims_date_value';
-	$handler->display->display_options['sorts']['ims_date_value']['table'] = 'field_data_ims_date';
-	$handler->display->display_options['sorts']['ims_date_value']['field'] = 'ims_date_value';
+	/* Field: Content: Event Date */
+	$handler->display->display_options['fields']['ge_ims_date']['id'] = 'ge_ims_date';
+	$handler->display->display_options['fields']['ge_ims_date']['table'] = 'field_data_ge_ims_date';
+	$handler->display->display_options['fields']['ge_ims_date']['field'] = 'ge_ims_date';
+	$handler->display->display_options['fields']['ge_ims_date']['label'] = '';
+	$handler->display->display_options['fields']['ge_ims_date']['element_label_colon'] = FALSE;
+	$handler->display->display_options['fields']['ge_ims_date']['settings'] = array(
+		'format_type' => 'mmm_dd',
+		'fromto' => 'value',
+		'multiple_number' => '',
+		'multiple_from' => '',
+		'multiple_to' => '',
+		'show_repeat_rule' => 'show',
+	);
+	/* Field: Content: Body */
+	$handler->display->display_options['fields']['body']['id'] = 'body';
+	$handler->display->display_options['fields']['body']['table'] = 'field_data_body';
+	$handler->display->display_options['fields']['body']['field'] = 'body';
+	$handler->display->display_options['fields']['body']['label'] = '';
+	$handler->display->display_options['fields']['body']['element_label_colon'] = FALSE;
+	$handler->display->display_options['fields']['body']['type'] = 'smart_trim_format';
+	$handler->display->display_options['fields']['body']['settings'] = array(
+		'trim_length' => '350',
+		'trim_type' => 'chars',
+		'trim_suffix' => '...',
+		'more_link' => '0',
+		'more_text' => 'Read more',
+		'summary_handler' => 'trim',
+		'trim_options' => array(
+			'text' => 0,
+		),
+	);
+	/* Field: Content: Location */
+	$handler->display->display_options['fields']['ge_location']['id'] = 'ge_location';
+	$handler->display->display_options['fields']['ge_location']['table'] = 'field_data_ge_location';
+	$handler->display->display_options['fields']['ge_location']['field'] = 'ge_location';
+	$handler->display->display_options['fields']['ge_location']['label'] = '';
+	$handler->display->display_options['fields']['ge_location']['element_label_colon'] = FALSE;
+	/* Sort criterion: Content: Event Date -  start date (ge_ims_date) */
+	$handler->display->display_options['sorts']['ge_ims_date_value']['id'] = 'ge_ims_date_value';
+	$handler->display->display_options['sorts']['ge_ims_date_value']['table'] = 'field_data_ge_ims_date';
+	$handler->display->display_options['sorts']['ge_ims_date_value']['field'] = 'ge_ims_date_value';
 	/* Filter criterion: Content: Type */
 	$handler->display->display_options['filters']['type']['id'] = 'type';
 	$handler->display->display_options['filters']['type']['table'] = 'node';
@@ -56,15 +94,15 @@ function gbif_event_views_default_views() {
 	$handler->display->display_options['filters']['status']['value'] = 1;
 	$handler->display->display_options['filters']['status']['group'] = 1;
 	$handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
-	/* Filter criterion: Content: Event date -  start date (ims_date) */
-	$handler->display->display_options['filters']['ims_date_value']['id'] = 'ims_date_value';
-	$handler->display->display_options['filters']['ims_date_value']['table'] = 'field_data_ims_date';
-	$handler->display->display_options['filters']['ims_date_value']['field'] = 'ims_date_value';
-	$handler->display->display_options['filters']['ims_date_value']['operator'] = '>=';
-	$handler->display->display_options['filters']['ims_date_value']['group'] = 1;
-	$handler->display->display_options['filters']['ims_date_value']['granularity'] = 'hour';
-	$handler->display->display_options['filters']['ims_date_value']['default_date'] = '1AM today';
-	$handler->display->display_options['filters']['ims_date_value']['year_range'] = '-0:+5';
+	/* Filter criterion: Content: Event Date -  start date (ge_ims_date) */
+	$handler->display->display_options['filters']['ge_ims_date_value']['id'] = 'ge_ims_date_value';
+	$handler->display->display_options['filters']['ge_ims_date_value']['table'] = 'field_data_ge_ims_date';
+	$handler->display->display_options['filters']['ge_ims_date_value']['field'] = 'ge_ims_date_value';
+	$handler->display->display_options['filters']['ge_ims_date_value']['operator'] = '>=';
+	$handler->display->display_options['filters']['ge_ims_date_value']['group'] = 1;
+	$handler->display->display_options['filters']['ge_ims_date_value']['granularity'] = 'hour';
+	$handler->display->display_options['filters']['ge_ims_date_value']['default_date'] = '1AM today';
+	$handler->display->display_options['filters']['ge_ims_date_value']['year_range'] = '-0:+5';
 
 	/* Display: upcoming */
 	$handler = $view->new_display('page', 'upcoming', 'upcoming');
@@ -82,11 +120,11 @@ function gbif_event_views_default_views() {
 	$handler->display->display_options['defaults']['title'] = FALSE;
 	$handler->display->display_options['title'] = 'Past events';
 	$handler->display->display_options['defaults']['sorts'] = FALSE;
-	/* Sort criterion: Content: Event date -  start date (ims_date) */
-	$handler->display->display_options['sorts']['ims_date_value']['id'] = 'ims_date_value';
-	$handler->display->display_options['sorts']['ims_date_value']['table'] = 'field_data_ims_date';
-	$handler->display->display_options['sorts']['ims_date_value']['field'] = 'ims_date_value';
-	$handler->display->display_options['sorts']['ims_date_value']['order'] = 'DESC';
+	/* Sort criterion: Content: Event Date -  start date (ge_ims_date) */
+	$handler->display->display_options['sorts']['ge_ims_date_value']['id'] = 'ge_ims_date_value';
+	$handler->display->display_options['sorts']['ge_ims_date_value']['table'] = 'field_data_ge_ims_date';
+	$handler->display->display_options['sorts']['ge_ims_date_value']['field'] = 'ge_ims_date_value';
+	$handler->display->display_options['sorts']['ge_ims_date_value']['order'] = 'DESC';
 	$handler->display->display_options['defaults']['filter_groups'] = FALSE;
 	$handler->display->display_options['defaults']['filters'] = FALSE;
 	/* Filter criterion: Content: Type */
@@ -104,15 +142,15 @@ function gbif_event_views_default_views() {
 	$handler->display->display_options['filters']['status']['value'] = 1;
 	$handler->display->display_options['filters']['status']['group'] = 1;
 	$handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
-	/* Filter criterion: Content: Event date -  start date (ims_date) */
-	$handler->display->display_options['filters']['ims_date_value']['id'] = 'ims_date_value';
-	$handler->display->display_options['filters']['ims_date_value']['table'] = 'field_data_ims_date';
-	$handler->display->display_options['filters']['ims_date_value']['field'] = 'ims_date_value';
-	$handler->display->display_options['filters']['ims_date_value']['operator'] = '<';
-	$handler->display->display_options['filters']['ims_date_value']['group'] = 1;
-	$handler->display->display_options['filters']['ims_date_value']['granularity'] = 'hour';
-	$handler->display->display_options['filters']['ims_date_value']['default_date'] = '1AM today';
-	$handler->display->display_options['filters']['ims_date_value']['year_range'] = '-0:+5';
+	/* Filter criterion: Content: Event Date -  start date (ge_ims_date) */
+	$handler->display->display_options['filters']['ge_ims_date_value']['id'] = 'ge_ims_date_value';
+	$handler->display->display_options['filters']['ge_ims_date_value']['table'] = 'field_data_ge_ims_date';
+	$handler->display->display_options['filters']['ge_ims_date_value']['field'] = 'ge_ims_date_value';
+	$handler->display->display_options['filters']['ge_ims_date_value']['operator'] = '<';
+	$handler->display->display_options['filters']['ge_ims_date_value']['group'] = 1;
+	$handler->display->display_options['filters']['ge_ims_date_value']['granularity'] = 'hour';
+	$handler->display->display_options['filters']['ge_ims_date_value']['default_date'] = '1AM today';
+	$handler->display->display_options['filters']['ge_ims_date_value']['year_range'] = '-0:+5';
 	$handler->display->display_options['path'] = 'newsroom/events/past';
 
 	/* Display: Block of latest 4 */
@@ -144,13 +182,13 @@ function gbif_event_views_default_views() {
 	);
 	$handler->display->display_options['defaults']['row_options'] = FALSE;
 	$handler->display->display_options['defaults']['fields'] = FALSE;
-	/* Field: Content: Event date */
-	$handler->display->display_options['fields']['ims_date']['id'] = 'ims_date';
-	$handler->display->display_options['fields']['ims_date']['table'] = 'field_data_ims_date';
-	$handler->display->display_options['fields']['ims_date']['field'] = 'ims_date';
-	$handler->display->display_options['fields']['ims_date']['label'] = '';
-	$handler->display->display_options['fields']['ims_date']['element_label_colon'] = FALSE;
-	$handler->display->display_options['fields']['ims_date']['settings'] = array(
+	/* Field: Content: Event Date */
+	$handler->display->display_options['fields']['ge_ims_date']['id'] = 'ge_ims_date';
+	$handler->display->display_options['fields']['ge_ims_date']['table'] = 'field_data_ge_ims_date';
+	$handler->display->display_options['fields']['ge_ims_date']['field'] = 'ge_ims_date';
+	$handler->display->display_options['fields']['ge_ims_date']['label'] = '';
+	$handler->display->display_options['fields']['ge_ims_date']['element_label_colon'] = FALSE;
+	$handler->display->display_options['fields']['ge_ims_date']['settings'] = array(
 		'format_type' => 'mmm_dd',
 		'fromto' => 'value',
 		'multiple_number' => '',

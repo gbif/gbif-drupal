@@ -168,7 +168,9 @@ $env = variable_get('environment_settings');
 		</div>
 	</div>
 </section>
-
+<?php if (!empty($messages)): ?>
+	<?php print $messages; ?>
+<?php endif; ?>
 <section id="news-events-fp">
 	<div class="region region-news-events-fp">
 		<div class="container well well-lg well-news-events-fp">
@@ -186,8 +188,6 @@ $env = variable_get('environment_settings');
 		</div>
 	</div>
 </section>
-
-
 
 <section id="featured-datause-fp">
 	<div class="region featured-datause-fp">

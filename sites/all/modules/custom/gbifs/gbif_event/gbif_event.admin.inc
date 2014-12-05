@@ -74,11 +74,12 @@ function _gbif_event_sync() {
 	foreach ($results as $record) {
 
 		$ims_id = $record->eventID;
+
 		// Find if it's already a node in Drupal.
 		$entity_query = new EntityFieldQuery();
 		$entity_query->entityCondition('entity_type', 'node')
 			->entityCondition('bundle', 'event')
-			->fieldCondition('ims_kp_id', 'value', $ims_id, '=');
+			->fieldCondition('ge_ims_kp_id', 'value', $ims_id, '=');
 		$exist = $entity_query->execute();
 
 		// Initialise the node object for creation or update.
@@ -121,22 +122,22 @@ function _gbif_event_sync() {
 		);
 
 		// Long description.
-		$node_wrapper->ge_desc_long = gbif_ims_format_value($record->desc_long, 'filtered_html');
+		$node_wrapper->ge_desc_long = gbif_ims_format_value($record->desc_long, 'full_html');
 
 		// IMS ID.
-		$node_wrapper->ims_kp_id->set($ims_id);
+		$node_wrapper->ge_ims_kp_id->set($ims_id);
 
 		// Participant.
-		$node_wrapper->ge_participants = gbif_ims_format_value(_ge_get_people($ims_id), 'filtered_html');
+		$node_wrapper->ge_participants = gbif_ims_format_value(_ge_get_people($ims_id), 'full_html');
 
 		// Resource.
-		$node_wrapper->ge_resources = gbif_ims_format_value(_ge_get_resources($ims_id), 'filtered_html');
+		$node_wrapper->ge_lib_resources = gbif_ims_format_value(_ge_get_resources($ims_id), 'full_html');
 
 		// Audience.
-		$node_wrapper->ge_audience = gbif_ims_format_value(_ge_get_audience($record), 'filtered_html');
+		$node_wrapper->ge_audience = gbif_ims_format_value(_ge_get_audience($record), 'full_html');
 
 		// How to contact.
-		$node_wrapper->ge_contact_info = gbif_ims_format_value($record->how_to_contact, 'filtered_html');
+		$node_wrapper->ge_contact_info = gbif_ims_format_value($record->how_to_contact, 'full_html');
 
 		// Venue.
 		$node_wrapper->ge_venue->set(gbif_ims_format_value($record->venue));
@@ -183,7 +184,7 @@ function _gbif_event_sync() {
 			$end_date = DateTime::createFromFormat('m/d/Y G:i:s', $record->date_end);
 			$end_date = ($end_date != FALSE) ? $end_date->getTimestamp() : NULL;
 		}
-		$node_wrapper->ims_date->set(array(
+		$node_wrapper->ge_ims_date->set(array(
 			'value' => (isset($start_date)) ? $start_date : NULL,
 			'value2' => (isset($end_date)) ? $end_date : NULL,
 		));
@@ -199,7 +200,7 @@ function _gbif_event_sync() {
 		$image_url = 'http://imsgbif.gbif.org/CMS/W_TR_EventDetail.php?image=Thumbnail&recid=' . $record->recordID;
 		$image = file_get_contents($image_url);
 		$size = getimagesize($image_url);
-		if (!empty($size) && $size[0] != 1 && $size[1] != 1 ) {
+		if (!empty($size) && $size[0] != 1 && $size[1] != 1) {
 			$extension = image_type_to_extension($size[2]);
 			$image_file_name = 'event-image-' . $ims_id . '-' . $record->recordID . $extension;
 			$uri = 'public://gbif_event/images';
@@ -210,7 +211,7 @@ function _gbif_event_sync() {
 				if (is_object($file)) {
 					watchdog('gbif_event', '!file uploaded successfully.', array('!file' => $file->uri), WATCHDOG_NOTICE);
 					file_usage_add($file, 'gbif_event', 'node', $file->uid);
-					$file = (array)$file;
+					$file = (array) $file;
 					$file['alt'] = $node->title;
 					$file['title'] = t('Click to see in full size');
 					$node_wrapper->ge_image->set($file);
@@ -234,35 +235,10 @@ function _gbif_event_sync() {
 		$node_wrapper->save();
 
 		unset($ims_id, $entities, $entity_query, $audience, $country, $location, $start_date, $end_date, $node_wrapper);
+
 	}
 
 	return TRUE;
-}
-
-/**
- * Remove existing contents, fields and instances of event_ims.
- */
-function _ge_rm_old_events() {
-	$type_to_delete = 'event_ims';
-	$sql = 'SELECT nid FROM {node} n WHERE n.type = :type';
-	$result = db_query($sql, array(':type' => $type_to_delete));
-	$node_ids = array();
-	foreach ($result as $row) {
-		$node_ids[] = $row->nid;
-	}
-	node_delete_multiple($node_ids);
-	$fields = field_info_field_map();
-	foreach ($fields as $field => $info) {
-		if (isset($info['bundles']['node']) && count($info['bundles']['node']) == 1 && $info['bundles']['node'][0] == $type_to_delete) {
-			field_delete_field($field);
-		}
-	}
-	$instances = field_info_instances('node', $type_to_delete);
-	foreach ($instances as $instance_name => $field_instance) {
-		field_delete_instance($field_instance);
-	}
-	node_type_delete($type_to_delete);
-	field_purge_batch(500);
 }
 
 function _ge_get_audience($record) {

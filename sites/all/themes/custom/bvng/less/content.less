@@ -49,7 +49,7 @@
 .node-sidebar {
   width: 240px;
   margin-left: 30px;
-  padding-top: 25px;
+  padding-top: 20px;
   padding-left: 0px;
   padding-right: 0px;
   border-top: 1px solid @page-header-border-color;
@@ -728,6 +728,17 @@ image won't shift it's position.
 	}
 }
 
+.node-event {
+  .content-sidebar {
+    .field-items {
+      padding-left: 0px;
+      .field-item {
+        list-style: none;
+      }
+    }
+  }
+}
+
 .form-item-field-country-mono-und {
 	width: 240px;
 }
@@ -796,12 +807,8 @@ div.feed-ical-icon {
 	margin-top: -3px;
 }
 
-.content-sidebar .field-name-ge-date-text .field-items {
-  margin-bottom: 2px;
-}
-
-.field-name-ge-date-ical {
-  padding-left: 12px;
+div.field-name-ge-date-ical {
+  margin-top: -16px;
 }
 
 // For participant list.
@@ -810,20 +817,80 @@ table.alt-row-color tr:nth-child(even) {
 }
 
 .service-links {
-  margin-top: 15px;
-  ul.links li {
-    display: block;
+  margin-bottom: 15px;
+  ul.links {
+    padding-left: 0px;
+    list-style: none;
+    li {
+      display: inline-block;
+    }
+    li.service-links-facebook-share {
+      vertical-align: 5px;
+    } 
   }
 }
 
-.service-links-facebook-share {
-  margin-bottom: 6px;
-}
-
-.calendar_icon(@imgpath) {
+.calendar-icon(@imgpath) {
   background: url(@imgpath) no-repeat;
   width: 24px;
   height: 24px;
+}
+
+.calendar-thumbnail {
+	width: 44px;
+	height: 50px;
+  margin-right: 12px;
+	float: left;
+	position: relative;
+	background: url("../images/calendar.png") no-repeat;
+	.month {
+		top: 4px;
+		text-transform: uppercase;
+		font-size: 10px;
+		color: #fff;
+		position: absolute;
+		width: 44px;
+		text-align: center;
+	}
+	.day {
+		top: 24px;
+		font-size: 16px;
+		font-weight: normal;
+		position: absolute;
+		width: 44px;
+		text-align: center;
+	}
+}
+
+.event-lists {
+  ul {
+    padding-left: 0px;
+    li {
+      list-style: none;
+      border-top: 1px solid #eee;
+      margin-bottom: 20px;
+      color: #555;
+      > .views-field-title {
+        margin-top: 10px;
+        margin-bottom: 7px;
+        padding-bottom: 0px;
+        font-size: 17px;
+        font-weight: bold;
+      }
+      > .views-field-ge-location {
+        font-size: 13px;
+        margin-top: 19px;
+      }
+      > .views-field-ge-ims-date {
+        .month {
+          top: 5px;
+        }
+        .day {
+          top: 22px;
+        }
+      }
+    }
+  }
 }
 
 .content ul.addtocal_menu {
@@ -837,9 +904,9 @@ table.alt-row-color tr:nth-child(even) {
       margin-top: -10px;
       vertical-align: bottom;
     }
-    a.ical { .calendar_icon("../images/calendar-icons.png"); background-position: 0px 0px; display: inline-block; width: 24px; }
-    a.outlook { .calendar_icon("../images/calendar-icons.png"); background-position: -25px 0px; display: inline-block; width: 24px; }
-    a.google { .calendar_icon("../images/calendar-icons.png"); background-position: -49px 0px; display: inline-block; width: 24px; }
-    a.yahoo { .calendar_icon("../images/calendar-icons.png"); background-position: -73px 0px; display: inline-block; width: 24px; }
+    a.ical { .calendar-icon("../images/calendar-icons.png"); background-position: 0px 0px; display: inline-block; width: 24px; }
+    a.outlook { .calendar-icon("../images/calendar-icons.png"); background-position: -25px 0px; display: inline-block; width: 24px; }
+    a.google { .calendar-icon("../images/calendar-icons.png"); background-position: -49px 0px; display: inline-block; width: 24px; }
+    a.yahoo { .calendar-icon("../images/calendar-icons.png"); background-position: -73px 0px; display: inline-block; width: 24px; }
   }
 }

@@ -127,6 +127,9 @@
             <?php print render($content['comments']); ?>
           </div>
           <div class="node-sidebar col-xs-3">
+						<?php if (isset($content['service_links'])): ?>
+							<?php print render($content['service_links']); ?>
+						<?php endif; ?>
             <?php
               print $sidebar;
             ?>

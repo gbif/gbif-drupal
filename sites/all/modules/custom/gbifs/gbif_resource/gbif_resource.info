@@ -1,9 +1,9 @@
 name = GBIF Recource
-description = Implementation of the ORC in Drupal.
+description = Resource management in Drupal. The successor of TYPO3/FileMaker ORC.
 core = 7.x
+version = 7.x-0.2
 package = GBIFS
-version = 7.x-0.1
-project = gbif_resource
+project = GBIF Portal
 dependencies[] = ctools
 dependencies[] = features
 dependencies[] = file

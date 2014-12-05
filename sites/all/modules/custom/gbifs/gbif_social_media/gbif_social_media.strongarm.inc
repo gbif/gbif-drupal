@@ -168,14 +168,14 @@ function gbif_social_media_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'service_links_fs_type';
-  $strongarm->value = 'button_count';
+  $strongarm->value = 'button';
   $export['service_links_fs_type'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'service_links_gpo_annotation';
-  $strongarm->value = '';
+  $strongarm->value = 'none';
   $export['service_links_gpo_annotation'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -196,7 +196,7 @@ function gbif_social_media_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'service_links_gpo_size';
-  $strongarm->value = '';
+  $strongarm->value = 'medium';
   $export['service_links_gpo_size'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -248,7 +248,7 @@ function gbif_social_media_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'service_links_lsb_countmode';
-  $strongarm->value = 'right';
+  $strongarm->value = '';
   $export['service_links_lsb_countmode'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -264,13 +264,13 @@ function gbif_social_media_strongarm() {
   $strongarm->name = 'service_links_node_types';
   $strongarm->value = array(
     'event' => 'event',
+    'usesofdata' => 'usesofdata',
+    'newsarticle' => 'newsarticle',
     'baremetal' => 0,
     'page' => 0,
     'featureddataset' => 0,
-    'usesofdata' => 0,
     'gbif_participant' => 0,
     'generictemplate' => 0,
-    'newsarticle' => 0,
     'resource_ims' => 0,
   );
   $export['service_links_node_types'] = $strongarm;
@@ -417,7 +417,7 @@ function gbif_social_media_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'service_links_tw_data_count';
-  $strongarm->value = 'horizontal';
+  $strongarm->value = 'none';
   $export['service_links_tw_data_count'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -446,37 +446,37 @@ function gbif_social_media_strongarm() {
   $strongarm->api_version = 1;
   $strongarm->name = 'service_links_weight';
   $strongarm->value = array(
-    'delicious' => '0',
-    'digg' => '0',
-    'stumbleupon' => '0',
-    'twitter' => '0',
-    'pingthis' => '0',
-    'reddit' => '0',
-    'slashdot' => '0',
-    'newsvine' => '0',
-    'furl' => '0',
-    'facebook' => '0',
-    'myspace' => '0',
-    'google' => '0',
-    'google_plus' => '0',
-    'yahoo' => '0',
-    'linkedin' => '0',
-    'technorati' => '0',
-    'technorati_favorite' => '0',
-    'icerocket' => '0',
-    'misterwong' => '0',
-    'mixx' => '0',
-    'box' => '0',
-    'blinklist' => '0',
-    'identica' => '0',
-    'newskicks' => '0',
-    'diigo' => '0',
-    'facebook_share' => '0',
-    'twitter_widget' => '0',
-    'facebook_like' => '0',
-    'google_plus_one' => '0',
-    'linkedin_share_button' => '0',
-    'pinterest_button' => '0',
+    'delicious' => '-88',
+    'digg' => '-87',
+    'stumbleupon' => '-73',
+    'twitter' => '-94',
+    'pingthis' => '-77',
+    'reddit' => '-75',
+    'slashdot' => '-74',
+    'newsvine' => '-78',
+    'furl' => '-85',
+    'facebook' => '-97',
+    'myspace' => '-80',
+    'google' => '-91',
+    'google_plus' => '-92',
+    'yahoo' => '-70',
+    'linkedin' => '-100',
+    'technorati' => '-71',
+    'technorati_favorite' => '-72',
+    'icerocket' => '-84',
+    'misterwong' => '-82',
+    'mixx' => '-81',
+    'box' => '-89',
+    'blinklist' => '-90',
+    'identica' => '-83',
+    'newskicks' => '-79',
+    'diigo' => '-86',
+    'facebook_share' => '-96',
+    'twitter_widget' => '-95',
+    'facebook_like' => '-98',
+    'google_plus_one' => '-93',
+    'linkedin_share_button' => '-99',
+    'pinterest_button' => '-76',
   );
   $export['service_links_weight'] = $strongarm;
 

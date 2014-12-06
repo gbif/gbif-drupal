@@ -299,6 +299,22 @@ function gbif_event_preprocess_views_view_field(&$variables, $hook) {
 			$d = explode(' ', $q);
 			$variables['month_year'] = array ('month' => $d[0] , 'day' => $d[1]);
 		}
+
+		// Prepare the location field.
+		if ($variables['field']->field == 'ge_location') {
+			$node = node_load($variables['row']->nid);
+			$lang_code = gbif_tweaks_get_language_code($node->language, 'ge_location');
+			if (empty($node->ge_location) && !empty($node->ge_venue_country)) {
+				$term = taxonomy_term_load($node->ge_venue_country[$lang_code][0]['tid']);
+				$variables['output'] = $term->name;
+			}
+			elseif (!empty($node->ge_location) && !empty($node->ge_venue_country)) {
+				$term = taxonomy_term_load($node->ge_venue_country[$lang_code][0]['tid']);
+				$old_location = explode(',', $variables['row']->field_ge_location[0]['rendered']['#markup']);
+				$location = trim($old_location[0]) . ', ' . $term->name;
+				$variables['output'] = $location;
+			}
+		}
 	}
 }
 

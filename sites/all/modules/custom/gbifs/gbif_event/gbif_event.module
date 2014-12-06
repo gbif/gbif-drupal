@@ -71,6 +71,71 @@ function event_form($node, $form_state) {
 }
 
 /**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function gbif_event_form_event_node_form_alter(&$form, &$form_state) {
+	// ge_ims_kp_id shouldn't be touched as it's the linkage to the IMS.
+	$form['ge_ims_kp_id']['#disabled'] = TRUE;
+	// ge_date_ical should follow whatever is set in the event date. We then insert
+	// the same value from the event date.
+	$form['ge_date_ical']['#printed'] = TRUE;
+	$form['ge_date_text']['#printed'] = TRUE;
+	$form['#validate'][] = 'gbif_event_node_form_value_processing';
+}
+
+/*
+ * We use ge_date_ical separately from ge_ims_date to provide calendar ics
+ * download. The textual field is also redundant though has it's value.
+ * This function saves editors unnecessary entries and potential inconsistency.
+ */
+function gbif_event_node_form_value_processing(&$form, &$form_state) {
+	// Process ge_ims_date field.
+	if ($form['ge_ims_date']) {
+		$lang_code = gbif_tweaks_get_language_code($form['#node']->language,'ge_date_ical');
+		// Use values of ge_ims_date for ge_date_ical.
+		foreach ($form_state['values']['ge_ims_date'][$lang_code][0] as $k => $v) {
+			// Target format: 2015-01-12 10:00:00
+			if (in_array($k, array('value', 'value2'))) {
+				$v = date('Y-m-d H:i:s', $v);
+			}
+			$form_state['values']['ge_date_ical'][$lang_code][0][$k] = $v;
+		}
+	}
+
+	// Process ge_date_text field.
+	if ($form['ge_date_text']) {
+		$lang_code = gbif_tweaks_get_language_code($form['#node']->language, 'ge_date_text');
+		// End date is available.
+		if ($form_state['values']['ge_ims_date'][$lang_code][0]['value2'] != NULL) {
+			$timestamp_start = $form_state['values']['ge_ims_date'][$lang_code][0]['value'];
+			$year_start = date('Y', $timestamp_start);
+			$month_start = date('F', $timestamp_start);
+			$day_start = date('j', $timestamp_start);
+			$timestamp_end = $form_state['values']['ge_ims_date'][$lang_code][0]['value2'];
+			$year_end = date('Y', $timestamp_end);
+			$month_end = date('F', $timestamp_end);
+			$day_end = date('j', $timestamp_end);
+			if ($year_start != $year_end) {
+				$text_string = date('j F Y', $timestamp_start) . ' - ' . date('j F Y', $timestamp_end);
+			}
+			elseif ($year_start == $year_end && $month_start != $month_end) {
+				$text_string = date('j F', $timestamp_start) . ' - ' . date('j F', $timestamp_end) . ' ' . $year_start;
+			}
+			elseif ($year_start == $year_end && $month_start == $month_end && $day_start != $day_end) {
+				$text_string = date('j', $timestamp_start) . ' - ' . date('j', $timestamp_end) . ' ' . $month_start . ' ' . $year_start;
+			}
+			elseif ($year_start == $year_end && $month_start == $month_end && $day_start == $day_end) {
+				$text_string = date('j F Y', $form_state['values']['ge_ims_date'][$lang_code][0]['value']);
+			}
+		}
+		else {
+			$text_string = date('j F Y', $form_state['values']['ge_ims_date'][$lang_code][0]['value']);
+		}
+		$form_state['values']['ge_date_text'][$lang_code][0]['value'] = $text_string;
+	}
+}
+
+/**
  * Implements hook_preprocess_page().
  * @todo We want to properly combine these two menu setting blocks of code.
  */
@@ -116,6 +181,26 @@ function gbif_event_preprocess_page(&$variables) {
 function gbif_event_preprocess_node(&$variables) {
 	if (isset($variables) && $variables['type'] == 'event') {
 
+		// Prepare the location field.
+		$lang_code = gbif_tweaks_get_language_code($variables['node']->language, 'ge_location');
+		if (empty($variables['ge_location']) && !empty($variables['ge_venue_country'])) {
+			$variables['node']->ge_location[$lang_code][] = array(
+				'value' => $variables['ge_venue_country'][0]['taxonomy_term']->name,
+				'format' => 'plain_text',
+				'safe_value' => $variables['ge_venue_country'][0]['taxonomy_term']->name,
+			);
+		}
+		elseif (!empty($variables['ge_location']) && !empty($variables['ge_venue_country'])) {
+			$old_location = explode(',', $variables['node']->ge_location[$lang_code][0]['value']);
+			$location = trim($old_location[0]) . ', ' . $variables['ge_venue_country'][0]['taxonomy_term']->name;
+			$variables['node']->ge_location[$lang_code][0] = array(
+				'value' => $location,
+				'format' => 'plain_text',
+				'safe_value' => $location,
+			);
+		}
+		$variables['content']['ge_location'] = field_view_field('node', $variables['node'], 'ge_location');
+
 		// Prepare the date_text so the HTML is simpler.
 		if (!empty($variables['ge_date_text'])) {
 			$variables['date_text'] = '<p class="date">' . $variables['ge_date_text'][0]['safe_value'] . '</p>';
@@ -137,8 +222,6 @@ function gbif_event_preprocess_node(&$variables) {
 			));
 			$variables['event_image'] = '<p>' . l($img_html, $image_url, array('html' => TRUE, 'attributes' => array('class' => array('colorbox')))) . '</p>';
 		}
-
-		// Prepare menu_local_tasks tabs.
 	}
 }
 

@@ -127,3 +127,16 @@ function gbif_tweaks_delete_all($node_types) {
 		node_delete_multiple($node_ids);
 	}
 }
+
+/**
+ * Get language code in node form processing.
+ */
+function gbif_tweaks_get_language_code($node_language, $field) {
+	$field_info = field_info_field($field);
+	if (field_is_translatable('node', $field_info)) {
+		$lang_code = field_valid_language($node_language);
+	} else {
+		$lang_code = LANGUAGE_NONE;
+	}
+	return $lang_code;
+}

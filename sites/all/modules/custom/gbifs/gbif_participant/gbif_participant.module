@@ -477,7 +477,7 @@ function gbif_participant_page_build(&$page) {
 function gbif_participant_page_router($iso2, $chapter, $sub_chapter) {
 
 	// Make sure ISO code arrives in UPPERCASE.
-	$iso2 = strtoupper($iso2);
+	$iso2 = (isset($iso2)) ? strtoupper($iso2) : NULL;
 
 	// Sanity check for URL
 	$current_path = current_path();

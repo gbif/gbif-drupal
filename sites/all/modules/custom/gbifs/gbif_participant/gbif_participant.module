@@ -476,6 +476,9 @@ function gbif_participant_page_build(&$page) {
  */
 function gbif_participant_page_router($iso2, $chapter, $sub_chapter) {
 
+	// Make sure ISO code arrives in UPPERCASE.
+	$iso2 = strtoupper($iso2);
+
 	// Sanity check for URL
 	$current_path = current_path();
 	$url = drupal_parse_url($current_path);

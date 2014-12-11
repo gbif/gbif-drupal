@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Main view template.
@@ -26,24 +25,13 @@
  *
  * @ingroup views_templates
  */
+  drupal_set_title($view->get_title());
 ?>
-<div class="row">
-  <header class="content-header col-xs-8">
-    <h2>
-			<?php print $view->get_title(); ?>
-			<a href="/resources/archive/rss"><img class="rss-icon" src="/sites/all/themes/custom/bvng/images/rss-feed.gif"/></a>
-		</h2>
-  </header>
-	<div class="content-header sidebar-header col-xs-3">
-		<h2>More GBIF resources</h2>
-	</div>
 
-</div>
 <div class="row">
   <div class="view-column col-xs-8">
     <div class="<?php print $classes; ?>">
-		<p>GBIF maintains an online database of documents, manuals, tools and links useful to GBIF Participants and their biodiversity information facilities. All of these resources are available through this portal, and can be searched using the box at the top of the page. The resources added most recently to the database are shown below. </p>
-		<p>In coming months, we will develop more advanced filtering and searching facilities, building on the functions of the GBIF Online Resource Centre associated with the previous GBIF portal.</p>
+
       <?php print render($title_prefix); ?>
       <?php if ($title): ?>
         <?php print $title; ?>
@@ -54,7 +42,18 @@
           <?php print $header; ?>
         </div>
       <?php endif; ?>
-
+      <?php if ($featured_block): ?>
+        <?php print $featured_block; ?>
+      <?php endif; ?>
+      <?php if ($exp_widgets): ?>
+        <div class="view-widgets">
+          <h2 class="count">
+            <?php print $result_count; ?>
+            <!-- <a href="/resources/archive/rss"><img class="rss-icon" src="/sites/all/themes/custom/bvng/images/rss-feed.gif"/></a>-->
+          </h2>
+          <?php print $exp_widgets; ?>
+        </div>
+      <?php endif; ?>
       <?php if ($exposed): ?>
         <div class="view-filters">
           <?php print $exposed; ?>
@@ -82,11 +81,30 @@
           <?php print $attachment_after; ?>
         </div>
       <?php endif; ?>
+			<?php if ($pager): ?>
+				<hr>
+				<?php print $pager; ?>
+			<?php endif; ?>
     </div>
   </div>
-	<div class="sidebar-filter col-xs-3">
-		<?php print _bvng_get_resource_links(); ?>
+	<div class="sidebar-filter resource-filter col-xs-4">
+    <div class="resource-filter-header">
+      <h2>Filters</h2>
+      <span class="clear-all"><a href="/resources/summary">clear all</a></span>
+    </div>
+
+    <?php if ($exp_widgets): ?>
+      <div class="view-widgets-search">
+        <?php print $exp_widgets; ?>
+      </div>
+    <?php endif; ?>
+		<?php print $facet_resource_type; ?>
+		<?php print $facet_purpose; ?>
+		<?php print $facet_language; ?>
+		<?php print $facet_data_type; ?>
+		<?php print $facet_tags; ?>
 	</div>
+
     <?php if ($footer): ?>
       <div class="view-footer">
         <?php print $footer; ?>

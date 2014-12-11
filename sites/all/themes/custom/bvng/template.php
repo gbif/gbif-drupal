@@ -142,16 +142,6 @@ function bvng_preprocess_page(&$variables) {
 				$altered_path = drupal_get_normal_path('newsroom/uses'); // taxonomy/term/567
 				$variables['node']->type_title = t('Featured Data Use');
 				break;
-			/*
-			case 'event':
-				$altered_path = drupal_get_normal_path('newsroom/events/upcoming');
-				$variables['node']->type_title = t('Events');
-				break;
-			*/
-			case 'resource_ims':
-				$altered_path = drupal_get_normal_path('resources/summary'); // taxonomy/term/569
-				$variables['node']->type_title = t('Resource Details');
-				break;
 			case 'generictemplate':
         if (drupal_match_path($req_path, 'node/241')) $altered_path = 'user';
 			  break;
@@ -854,9 +844,9 @@ function _bvng_get_title_data($node_count = NULL, $user = NULL, $req_path = NULL
 		// The resource/summary and resources/keyinformation are shared by two menu parents
 		// so we force the title here.
 		$resource_paths = array(
-			'taxonomy/term/764',
-			'node/234',
+			'resources/summary',
 			'resources/archive',
+			'node/234',
 			'node/5438',
 			'node/5549',
 			'node/5553',
@@ -888,7 +878,7 @@ function _bvng_get_title_data($node_count = NULL, $user = NULL, $req_path = NULL
 				'description' => t('News and events from around the GBIF community'),
 			);
 		}
-		elseif (in_array($node->type, array('resource_ims'))) {
+		elseif (in_array($node->type, array('resource'))) {
 			$title = array(
 				'name' => t('Resources'),
 				'description' => t('Tools and information to support the GBIF community'),
@@ -983,17 +973,6 @@ function _bvng_get_sidebar_content($nid, $vid) {
           }
         }
         break;
-			case 'resource_ims':
-				$orc_id = _bvng_get_field_value('node', $node, 'field_orc_original_ims_id');
-				$file_size_text = _bvng_get_field_value('node', $node, 'field_size_text');
-				$resource_url = 'http://imsgbif.gbif.org/CMS_ORC/?doc_id=' . $orc_id . '&download=1';
-				$download_text = t('Download');
-				if (!empty($file_size_text)) {
-					$download_text .= ' (' . $file_size_text . ')';
-				}
-				$download_link = l($download_text, $resource_url);
-				$markup .= $download_link;
-				break;
     }
   }
 
@@ -1133,54 +1112,6 @@ function _bvng_get_regional_links() {
   }
   $links .= '</ul>';
   return $links;
-}
-
-/**
- * @todo To be deleted after gbif_event module takes off.
- * @return string
- */
-function _bvng_get_event_links() {
-	$options = array();
-	if (current_path() == 'taxonomy/term/569') {
-		$options[] = array(
-			'label' => t('Past events'),
-			'url_base' => 'newsroom/events/archive',
-		);
-	}
-	elseif (current_path() == 'newsroom/events/archive') {
-		$options[] = array(
-			'label' => t('Upcoming events'),
-			'url_base' => 'newsroom/events',
-		);
-	}
-
-	$links = '';
-	$links = '<ul class="filter-list">';
-	foreach ($options as $option) {
-		$links .= '<li>';
-		$links .= l($option['label'], $option['url_base']);
-		$links .= '</li>';
-	}
-	$links .= '</ul>';
-	return $links;
-}
-
-function _bvng_get_resource_links() {
-	$options = array(
-		'all' => array(
-			'label' => t('All resources'),
-			'url_base' => 'resources/archive',
-		),
-	);
-	$links = '';
-	$links = '<ul class="filter-list">';
-	foreach ($options as $option) {
-		$links .= '<li>';
-		$links .= l($option['label'], $option['url_base']);
-		$links .= '</li>';
-	}
-	$links .= '</ul>';
-	return $links;
 }
 
 function _bvng_get_subject_links() {
@@ -1385,4 +1316,76 @@ function _bvng_get_destination($req_path) {
 		$destination = array('destination' => $path);
 	}
 	return $destination;
+}
+
+/**
+ * Hide facet counts.
+ * Implements theme_facetapi_link_inactive().
+ * @link https://www.drupal.org/node/1615430#comment-8809877
+ */
+function bvng_facetapi_link_inactive($variables) {
+	// Builds accessible markup.
+	// @see http://drupal.org/node/1316580
+	$accessible_vars = array(
+		'text' => $variables['text'],
+		'active' => FALSE,
+	);
+	$accessible_markup = theme('facetapi_accessible_markup', $accessible_vars);
+
+	// Sanitizes the link text if necessary.
+	$sanitize = empty($variables['options']['html']);
+	$variables['text'] = ($sanitize) ? check_plain($variables['text']) : $variables['text'];
+
+	// Adds count to link if one was passed.
+	// BKO: we comment out this block so we can add the count back outside the <anchor> tag.
+	/*
+	if (isset($variables['count'])) {
+		$variables['text'] .= ' ' . theme('facetapi_count', $variables);
+	}
+	*/
+
+	// Resets link text, sets to options to HTML since we already sanitized the
+	// link text and are providing additional markup for accessibility.
+	$variables['text'] .= $accessible_markup;
+	$variables['options']['html'] = TRUE;
+	return gbif_resource_theme_link($variables);
+}
+
+/**
+ * Implements theme_file_force_file_link().
+ * @param $variables
+ */
+function bvng_file_force_file_link($variables) {
+	$file = $variables['file'];
+	$icon_directory = $variables['icon_directory'];
+
+	$url = file_force_create_url($file->uri, FALSE);
+	$icon = theme('file_icon', array('file' => $file, 'icon_directory' => $icon_directory));
+
+	// Set options as per anchor format described at
+	// http://microformats.org/wiki/file-format-examples
+	$options = array(
+		'attributes' => array(
+			'type' => $file->filemime . '; length=' . $file->filesize,
+		),
+	);
+
+	// Use the description as the link text if available.
+	if (empty($file->description)) {
+		$link_text = $file->filename;
+	}
+	else {
+		$link_text = $file->description;
+		$options['attributes']['title'] = check_plain($file->filename);
+	}
+
+	$options['query']['download'] = '1';
+
+	// Use path to control the output style of file_force.
+	if (current_path() == 'resources/summary') {
+		$options['html'] = TRUE;
+		return '<span class="file">' . l($icon, $url, $options) . '</span>';
+	}
+	else {
+		return '<span class="file">' . $icon . ' ' . l($link_text, $url, $options) . '</span>';	}
 }

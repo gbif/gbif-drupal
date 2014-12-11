@@ -11,27 +11,23 @@ function gbif_resource_uuid_features_default_terms() {
   $terms = array();
 
   $terms[] = array(
-    'name' => 'Latin',
-    'description' => NULL,
+    'name' => 'Data users',
+    'description' => 'Data users Including potential data users',
     'format' => 'plain_text',
     'weight' => 0,
-    'uuid' => 'e84d8c4b-b534-4170-aa9a-fe2914d25154',
-    'vocabulary_machine_name' => 'language',
-    'field_term_iso_639_1' => array(
+    'uuid' => 'fb30fc1b-aca2-4833-b96d-92da18e605b2',
+    'vocabulary_machine_name' => 'tags',
+    'field_ims_keyword_id' => array(
       'und' => array(
         0 => array(
-          'value' => 'la',
-          'format' => NULL,
-          'safe_value' => 'la',
+          'value' => 197,
         ),
       ),
     ),
-    'field_term_native_name' => array(
+    'field_term_attributes' => array(
       'und' => array(
         0 => array(
-          'value' => 'Latina',
-          'format' => NULL,
-          'safe_value' => 'Latina',
+          'tid' => 'ee7dd1a0-8e1e-4965-be96-97047f14cf2e',
         ),
       ),
     ),

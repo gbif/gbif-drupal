@@ -79,34 +79,33 @@
  * @ingroup themeable
  */
 ?>
+<article class="node-list">
+	<?php if (!empty($fields['gr_image'])): ?>
+		<?php print $fields['gr_image']->content; ?>
+	<?php endif; ?>
 
-<article id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?> clearfix"<?php print $attributes; ?>>
-  <div class="node-list">
-    <?php if (!empty($title)): ?>
-      <h2<?php print $title_attributes; ?>><a href="<?php print $node_url; ?>"><?php print $title; ?></a></h2>
-    <?php endif; ?>
+	<div class="node-view-resource-thumbnail">
+		<?php if (!empty($fields['gr_file'])): ?>
+			<?php print $fields['gr_file']->content; ?>
+		<?php endif; ?>
+		<?php if (!empty($fields['gr_resource_type'])): ?>
+			<?php print $fields['gr_resource_type']->content; ?>
+		<?php endif; ?>
 
-    <?php if ($display_submitted && user_is_logged_in()): ?>
-    <div class="submitted">
-      <?php print $submitted; ?>
-  		<?php if (!empty($tabs)): ?>
-  			<?php print render($tabs); ?>
-  		<?php endif; ?>
-    </div>
-    <?php endif; ?>
+		<?php if (!empty($fields['title'])): ?>
+			<h2><?php print $fields['title']->content; ?></h2>
+		<?php endif; ?>
 
-    <?php
-      // Hide comments, tags, and links now so that we can render them later.
-      hide($content['comments']);
-      hide($content['links']);
-      hide($content['field_tags']);
-      print render($content['body']);
-    ?>
-    <?php if (!empty($content['field_tags']) || !empty($content['links']) || !empty($field_dates)): ?>
-    <footer>
-      <p class="date"><?php print( format_date($field_publishing_date[0]['value'], 'custom', 'F jS, Y ')) ; ?></p>
-    </footer>
-    <?php endif; ?>
-    <?php print render($content['comments']); ?>
-  </div>
+
+		<?php if (!empty($fields['body_value'])): ?>
+			<?php print $fields['body_value']->content; ?>
+		<?php endif; ?>
+
+		<?php if (!empty($fields['gr_author'])): ?>
+			<footer>
+				<?php print $fields['gr_author']->label_html; ?>
+				<?php print $fields['gr_author']->content; ?>
+			</footer>
+		<?php endif; ?>
+	</div>
 </article>

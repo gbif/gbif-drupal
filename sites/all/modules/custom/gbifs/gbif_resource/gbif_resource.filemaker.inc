@@ -28,6 +28,7 @@ function _gr_get_all_ims_resources() {
 	$query->addField('f', 'rights_holder');
 	$query->addField('f', 'num_downloads');
 	$query->addField('f', 'short_listed');
+	$query->addField('f', 'featured');
 	$query->addField('f', 'on_the_web');
 	$query->addField('f', 'date_of_publication');
 	$query->addField('f', 'coverage');
@@ -171,11 +172,6 @@ function _gbif_resource_sync() {
 
 			// URL.
 			$node_wrapper->gr_url->set(gbif_ims_format_value($record->url));
-
-			// Short listed.
-			if ($record->short_listed == 1) {
-				$node_wrapper->gr_short_listed->set(1);
-			}
 
 			// Resource type. A term reference field.
 			$mapping = array(
@@ -387,11 +383,20 @@ function _gbif_resource_sync() {
 			}
 
 			// Determine "publish status" to "Published" if OnTheWeb == "Yes".
-			$on_the_web = $record->on_the_web;
-			if ($on_the_web == 'Yes' || $on_the_web == '1') {
+			if ($record->on_the_web == 'Yes' || $record->on_the_web == '1') {
 				$node_wrapper->status->set(1);
 			}
 			unset($on_the_web);
+
+			// Short listed. We map this field to Drupal "sticky at the top."
+			if ($record->short_listed == 1) {
+				$node_wrapper->sticky->set(1);
+			}
+
+			// Featured. We map this field to Drupal "promote to the front."
+			if ($record->featured == 1) {
+				$node_wrapper->promote->set(1);
+			}
 
 			$node_wrapper->save();
 

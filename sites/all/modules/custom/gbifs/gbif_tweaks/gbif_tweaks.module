@@ -131,10 +131,10 @@ function gbif_tweaks_delete_all($node_types) {
 /**
  * Get language code in node form processing.
  */
-function gbif_tweaks_get_language_code($entity_type, $field, $node_language) {
+function gbif_tweaks_get_language_code($entity_type, $field, $entity_language) {
 	$field_info = field_info_field($field);
 	if (field_is_translatable($entity_type, $field_info)) {
-		$lang_code = field_valid_language($node_language);
+		$lang_code = field_valid_language($entity_language);
 	} else {
 		$lang_code = LANGUAGE_NONE;
 	}

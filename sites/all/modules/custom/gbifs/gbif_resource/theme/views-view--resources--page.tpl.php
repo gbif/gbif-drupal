@@ -30,17 +30,14 @@
 <div class="row">
   <header class="content-header col-xs-8">
     <h2>
-    <?php
-      $view_title = $view->get_title();
-      print $view_title;
-      drupal_set_title($view_title);
-    ?>
+			<?php print $view->get_title(); ?>
 			<a href="/resources/archive/rss"><img class="rss-icon" src="/sites/all/themes/custom/bvng/images/rss-feed.gif"/></a>
-    </h2>
+		</h2>
   </header>
 	<div class="content-header sidebar-header col-xs-3">
-		<h2>More GBIF resources</h2>
+		<h2>Filters</h2>
 	</div>
+
 </div>
 <div class="row">
   <div class="view-column col-xs-8">
@@ -85,15 +82,12 @@
       <?php endif; ?>
 			<?php if ($pager): ?>
 				<hr>
-        <?php print $pager; ?>
-      <?php endif; ?>
+				<?php print $pager; ?>
+			<?php endif; ?>
     </div>
   </div>
-  <div class="sidebar-filter col-xs-3">
-		<ul class="filter-list">
-			<li>Filters coming soon...</li>
-		</ul>
-  </div>
+	<div class="sidebar-filter col-xs-3">
+	</div>
     <?php if ($footer): ?>
       <div class="view-footer">
         <?php print $footer; ?>

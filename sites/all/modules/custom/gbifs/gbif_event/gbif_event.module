@@ -172,7 +172,6 @@ function gbif_event_preprocess_page(&$variables) {
 			}
 		}
 	}
-
 }
 
 /**

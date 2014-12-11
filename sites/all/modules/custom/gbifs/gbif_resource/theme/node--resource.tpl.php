@@ -31,20 +31,21 @@
 					<?php print render($content['gr_right']); ?>
 					<?php print render($content['gr_right_holder']); ?>
 
-				</div>
-				<aside class="content content-sidebar col-xs-4">
 					<?php if (isset($content['service_links'])): ?>
 						<?php print render($content['service_links']); ?>
 					<?php endif; ?>
+				</div>
+				<aside class="content content-sidebar col-xs-4">
+					<?php print render($content['gr_image']); ?>
+					<?php print render($content['gr_file']); ?>
+					<?php print render($content['gr_url']); ?>
+
 					<?php print render($content['gr_resource_type']); ?>
 					<?php print render($content['gr_language']); ?>
 					<?php print render($content['gr_purpose']); ?>
 					<?php print render($content['gr_data_type']); ?>
 					<?php print render($content['field_tags']); ?>
 
-					<?php print render($content['gr_image']); ?>
-					<?php print render($content['gr_file']); ?>
-					<?php print render($content['gr_url']); ?>
 				</aside>
 			</div>
 		</section>

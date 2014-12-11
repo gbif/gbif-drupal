@@ -90,75 +90,6 @@ function gbif_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-gr_url'
-  $field_instances['node-resource-gr_url'] = array(
-    'bundle' => 'resource',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'text',
-        'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 24,
-      ),
-      'rss' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-      'search_index' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-      'search_result' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'gr_url',
-    'label' => 'Resource URL',
-    'required' => 0,
-    'settings' => array(
-      'linkit' => array(
-        'enable' => 0,
-        'insert_plugin' => '',
-      ),
-      'mediafront' => array(
-        'custom' => '',
-        'field_type' => 0,
-        'media_type' => 'media',
-        'preview' => 0,
-        'thumbnail' => 0,
-      ),
-      'text_processing' => 0,
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'text',
-      'settings' => array(
-        'size' => 60,
-      ),
-      'type' => 'text_textfield',
-      'weight' => 23,
-    ),
-  );
-
   // Exported field_instance: 'node-resource-field_tags'
   $field_instances['node-resource-field_tags'] = array(
     'bundle' => 'resource',
@@ -522,7 +453,7 @@ function gbif_resource_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'gr_author',
-    'label' => 'Author',
+    'label' => 'Author(s)',
     'required' => 0,
     'settings' => array(
       'linkit' => array(
@@ -1823,63 +1754,54 @@ function gbif_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-gr_short_listed'
-  $field_instances['node-resource-gr_short_listed'] = array(
+  // Exported field_instance: 'node-resource-gr_url'
+  $field_instances['node-resource-gr_url'] = array(
     'bundle' => 'resource',
-    'default_value' => array(
-      0 => array(
-        'value' => 0,
-      ),
-    ),
+    'default_value' => NULL,
     'deleted' => 0,
     'description' => '',
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'list',
+        'module' => 'text',
         'settings' => array(),
-        'type' => 'list_default',
-        'weight' => 11,
-      ),
-      'full' => array(
-        'label' => 'above',
-        'module' => 'list',
-        'settings' => array(),
-        'type' => 'list_default',
-        'weight' => 11,
+        'type' => 'text_default',
+        'weight' => 24,
       ),
       'rss' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 16,
+        'weight' => 0,
       ),
       'search_index' => array(
         'label' => 'above',
-        'module' => 'list',
         'settings' => array(),
-        'type' => 'list_default',
-        'weight' => 11,
+        'type' => 'hidden',
+        'weight' => 0,
       ),
       'search_result' => array(
         'label' => 'above',
-        'module' => 'list',
         'settings' => array(),
-        'type' => 'list_default',
-        'weight' => 11,
+        'type' => 'hidden',
+        'weight' => 0,
       ),
       'teaser' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 9,
+        'weight' => 0,
       ),
     ),
     'entity_type' => 'node',
-    'field_name' => 'gr_short_listed',
-    'label' => 'Short-listed',
+    'field_name' => 'gr_url',
+    'label' => 'Resource URL',
     'required' => 0,
     'settings' => array(
+      'linkit' => array(
+        'enable' => 0,
+        'insert_plugin' => '',
+      ),
       'mediafront' => array(
         'custom' => '',
         'field_type' => 0,
@@ -1887,16 +1809,17 @@ function gbif_resource_field_default_field_instances() {
         'preview' => 0,
         'thumbnail' => 0,
       ),
+      'text_processing' => 0,
       'user_register_form' => FALSE,
     ),
     'widget' => array(
       'active' => 1,
-      'module' => 'options',
+      'module' => 'text',
       'settings' => array(
-        'display_label' => 0,
+        'size' => 60,
       ),
-      'type' => 'options_onoff',
-      'weight' => 13,
+      'type' => 'text_textfield',
+      'weight' => 23,
     ),
   );
 
@@ -1905,7 +1828,7 @@ function gbif_resource_field_default_field_instances() {
   t('Abstract');
   t('Alternative Title');
   t('Audience');
-  t('Author');
+  t('Author(s)');
   t('Citation');
   t('Contributor');
   t('Data type');
@@ -1922,7 +1845,6 @@ function gbif_resource_field_default_field_instances() {
   t('Resource type');
   t('Right');
   t('Right holder');
-  t('Short-listed');
   t('Tags');
 
   return $field_instances;

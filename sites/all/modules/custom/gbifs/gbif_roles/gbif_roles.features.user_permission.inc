@@ -1,0 +1,1881 @@
+<?php
+/**
+ * @file
+ * gbif_roles.features.user_permission.inc
+ */
+
+/**
+ * Implements hook_user_default_permissions().
+ */
+function gbif_roles_user_default_permissions() {
+  $permissions = array();
+
+  // Exported permission: 'access administration menu'.
+  $permissions['access administration menu'] = array(
+    'name' => 'access administration menu',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'admin_menu',
+  );
+
+  // Exported permission: 'access administration pages'.
+  $permissions['access administration pages'] = array(
+    'name' => 'access administration pages',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'system',
+  );
+
+  // Exported permission: 'access all views'.
+  $permissions['access all views'] = array(
+    'name' => 'access all views',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'views',
+  );
+
+  // Exported permission: 'access comments'.
+  $permissions['access comments'] = array(
+    'name' => 'access comments',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'comment',
+  );
+
+  // Exported permission: 'access content'.
+  $permissions['access content'] = array(
+    'name' => 'access content',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+      'anonymous user' => 'anonymous user',
+      'authenticated user' => 'authenticated user',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'access content overview'.
+  $permissions['access content overview'] = array(
+    'name' => 'access content overview',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'access contextual links'.
+  $permissions['access contextual links'] = array(
+    'name' => 'access contextual links',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'contextual',
+  );
+
+  // Exported permission: 'access dashboard'.
+  $permissions['access dashboard'] = array(
+    'name' => 'access dashboard',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'dashboard',
+  );
+
+  // Exported permission: 'access devel information'.
+  $permissions['access devel information'] = array(
+    'name' => 'access devel information',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'devel',
+  );
+
+  // Exported permission: 'access rules debug'.
+  $permissions['access rules debug'] = array(
+    'name' => 'access rules debug',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'rules',
+  );
+
+  // Exported permission: 'access site in maintenance mode'.
+  $permissions['access site in maintenance mode'] = array(
+    'name' => 'access site in maintenance mode',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'REGISTRY_ADMIN' => 'REGISTRY_ADMIN',
+      'REGISTRY_EDITOR' => 'REGISTRY_EDITOR',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'system',
+  );
+
+  // Exported permission: 'access site reports'.
+  $permissions['access site reports'] = array(
+    'name' => 'access site reports',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'system',
+  );
+
+  // Exported permission: 'access site-wide contact form'.
+  $permissions['access site-wide contact form'] = array(
+    'name' => 'access site-wide contact form',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'contact',
+  );
+
+  // Exported permission: 'access user contact forms'.
+  $permissions['access user contact forms'] = array(
+    'name' => 'access user contact forms',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'contact',
+  );
+
+  // Exported permission: 'access user profiles'.
+  $permissions['access user profiles'] = array(
+    'name' => 'access user profiles',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'user',
+  );
+
+  // Exported permission: 'add media from remote sources'.
+  $permissions['add media from remote sources'] = array(
+    'name' => 'add media from remote sources',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'media_internet',
+  );
+
+  // Exported permission: 'admin_display_suite'.
+  $permissions['admin_display_suite'] = array(
+    'name' => 'admin_display_suite',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'ds',
+  );
+
+  // Exported permission: 'administer CAPTCHA settings'.
+  $permissions['administer CAPTCHA settings'] = array(
+    'name' => 'administer CAPTCHA settings',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'captcha',
+  );
+
+  // Exported permission: 'administer actions'.
+  $permissions['administer actions'] = array(
+    'name' => 'administer actions',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'system',
+  );
+
+  // Exported permission: 'administer advanced pane settings'.
+  $permissions['administer advanced pane settings'] = array(
+    'name' => 'administer advanced pane settings',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'panels',
+  );
+
+  // Exported permission: 'administer better countries'.
+  $permissions['administer better countries'] = array(
+    'name' => 'administer better countries',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'better_countries',
+  );
+
+  // Exported permission: 'administer blocks'.
+  $permissions['administer blocks'] = array(
+    'name' => 'administer blocks',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'block',
+  );
+
+  // Exported permission: 'administer ckeditor'.
+  $permissions['administer ckeditor'] = array(
+    'name' => 'administer ckeditor',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'ckeditor',
+  );
+
+  // Exported permission: 'administer comments'.
+  $permissions['administer comments'] = array(
+    'name' => 'administer comments',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'comment',
+  );
+
+  // Exported permission: 'administer contact forms'.
+  $permissions['administer contact forms'] = array(
+    'name' => 'administer contact forms',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'contact',
+  );
+
+  // Exported permission: 'administer content types'.
+  $permissions['administer content types'] = array(
+    'name' => 'administer content types',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'administer contexts'.
+  $permissions['administer contexts'] = array(
+    'name' => 'administer contexts',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'context_ui',
+  );
+
+  // Exported permission: 'administer countries'.
+  $permissions['administer countries'] = array(
+    'name' => 'administer countries',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'better_countries',
+  );
+
+  // Exported permission: 'administer custom username validation'.
+  $permissions['administer custom username validation'] = array(
+    'name' => 'administer custom username validation',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'custom_username_validation',
+  );
+
+  // Exported permission: 'administer date tools'.
+  $permissions['administer date tools'] = array(
+    'name' => 'administer date tools',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'date_tools',
+  );
+
+  // Exported permission: 'administer facets'.
+  $permissions['administer facets'] = array(
+    'name' => 'administer facets',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'facetapi',
+  );
+
+  // Exported permission: 'administer features'.
+  $permissions['administer features'] = array(
+    'name' => 'administer features',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'features',
+  );
+
+  // Exported permission: 'administer field collections'.
+  $permissions['administer field collections'] = array(
+    'name' => 'administer field collections',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'field_collection',
+  );
+
+  // Exported permission: 'administer filters'.
+  $permissions['administer filters'] = array(
+    'name' => 'administer filters',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'filter',
+  );
+
+  // Exported permission: 'administer image styles'.
+  $permissions['administer image styles'] = array(
+    'name' => 'administer image styles',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'image',
+  );
+
+  // Exported permission: 'administer imce'.
+  $permissions['administer imce'] = array(
+    'name' => 'administer imce',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'imce',
+  );
+
+  // Exported permission: 'administer languages'.
+  $permissions['administer languages'] = array(
+    'name' => 'administer languages',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'locale',
+  );
+
+  // Exported permission: 'administer linkit'.
+  $permissions['administer linkit'] = array(
+    'name' => 'administer linkit',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'linkit',
+  );
+
+  // Exported permission: 'administer media'.
+  $permissions['administer media'] = array(
+    'name' => 'administer media',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'media',
+  );
+
+  // Exported permission: 'administer mediafront'.
+  $permissions['administer mediafront'] = array(
+    'name' => 'administer mediafront',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'mediafront',
+  );
+
+  // Exported permission: 'administer mediafront presets'.
+  $permissions['administer mediafront presets'] = array(
+    'name' => 'administer mediafront presets',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'mediafront',
+  );
+
+  // Exported permission: 'administer menu'.
+  $permissions['administer menu'] = array(
+    'name' => 'administer menu',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'menu',
+  );
+
+  // Exported permission: 'administer meta tags'.
+  $permissions['administer meta tags'] = array(
+    'name' => 'administer meta tags',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'metatag',
+  );
+
+  // Exported permission: 'administer modules'.
+  $permissions['administer modules'] = array(
+    'name' => 'administer modules',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'system',
+  );
+
+  // Exported permission: 'administer nicemessages'.
+  $permissions['administer nicemessages'] = array(
+    'name' => 'administer nicemessages',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'nicemessages',
+  );
+
+  // Exported permission: 'administer nodes'.
+  $permissions['administer nodes'] = array(
+    'name' => 'administer nodes',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'administer pane access'.
+  $permissions['administer pane access'] = array(
+    'name' => 'administer pane access',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'panels',
+  );
+
+  // Exported permission: 'administer panels layouts'.
+  $permissions['administer panels layouts'] = array(
+    'name' => 'administer panels layouts',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'panels',
+  );
+
+  // Exported permission: 'administer panels styles'.
+  $permissions['administer panels styles'] = array(
+    'name' => 'administer panels styles',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'panels',
+  );
+
+  // Exported permission: 'administer pathauto'.
+  $permissions['administer pathauto'] = array(
+    'name' => 'administer pathauto',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'pathauto',
+  );
+
+  // Exported permission: 'administer permissions'.
+  $permissions['administer permissions'] = array(
+    'name' => 'administer permissions',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'user',
+  );
+
+  // Exported permission: 'administer recaptcha'.
+  $permissions['administer recaptcha'] = array(
+    'name' => 'administer recaptcha',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'recaptcha',
+  );
+
+  // Exported permission: 'administer redirects'.
+  $permissions['administer redirects'] = array(
+    'name' => 'administer redirects',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'redirect',
+  );
+
+  // Exported permission: 'administer rules'.
+  $permissions['administer rules'] = array(
+    'name' => 'administer rules',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'rules',
+  );
+
+  // Exported permission: 'administer search'.
+  $permissions['administer search'] = array(
+    'name' => 'administer search',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'search',
+  );
+
+  // Exported permission: 'administer search_api'.
+  $permissions['administer search_api'] = array(
+    'name' => 'administer search_api',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'search_api',
+  );
+
+  // Exported permission: 'administer shortcuts'.
+  $permissions['administer shortcuts'] = array(
+    'name' => 'administer shortcuts',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'shortcut',
+  );
+
+  // Exported permission: 'administer site configuration'.
+  $permissions['administer site configuration'] = array(
+    'name' => 'administer site configuration',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'system',
+  );
+
+  // Exported permission: 'administer site verify'.
+  $permissions['administer site verify'] = array(
+    'name' => 'administer site verify',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'site_verify',
+  );
+
+  // Exported permission: 'administer software updates'.
+  $permissions['administer software updates'] = array(
+    'name' => 'administer software updates',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'system',
+  );
+
+  // Exported permission: 'administer taxonomy'.
+  $permissions['administer taxonomy'] = array(
+    'name' => 'administer taxonomy',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'administer theme assignments'.
+  $permissions['administer theme assignments'] = array(
+    'name' => 'administer theme assignments',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'themekey',
+  );
+
+  // Exported permission: 'administer themekey settings'.
+  $permissions['administer themekey settings'] = array(
+    'name' => 'administer themekey settings',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'themekey',
+  );
+
+  // Exported permission: 'administer themes'.
+  $permissions['administer themes'] = array(
+    'name' => 'administer themes',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'system',
+  );
+
+  // Exported permission: 'administer token insert settings'.
+  $permissions['administer token insert settings'] = array(
+    'name' => 'administer token insert settings',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'token_insert',
+  );
+
+  // Exported permission: 'administer url aliases'.
+  $permissions['administer url aliases'] = array(
+    'name' => 'administer url aliases',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'path',
+  );
+
+  // Exported permission: 'administer users'.
+  $permissions['administer users'] = array(
+    'name' => 'administer users',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'user',
+  );
+
+  // Exported permission: 'administer uuid'.
+  $permissions['administer uuid'] = array(
+    'name' => 'administer uuid',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'uuid',
+  );
+
+  // Exported permission: 'administer views'.
+  $permissions['administer views'] = array(
+    'name' => 'administer views',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'views',
+  );
+
+  // Exported permission: 'block IP addresses'.
+  $permissions['block IP addresses'] = array(
+    'name' => 'block IP addresses',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'system',
+  );
+
+  // Exported permission: 'bypass node access'.
+  $permissions['bypass node access'] = array(
+    'name' => 'bypass node access',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'bypass rules access'.
+  $permissions['bypass rules access'] = array(
+    'name' => 'bypass rules access',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'rules',
+  );
+
+  // Exported permission: 'cancel account'.
+  $permissions['cancel account'] = array(
+    'name' => 'cancel account',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'user',
+  );
+
+  // Exported permission: 'change layouts in place editing'.
+  $permissions['change layouts in place editing'] = array(
+    'name' => 'change layouts in place editing',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'panels',
+  );
+
+  // Exported permission: 'change own username'.
+  $permissions['change own username'] = array(
+    'name' => 'change own username',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'user',
+  );
+
+  // Exported permission: 'context ajax block access'.
+  $permissions['context ajax block access'] = array(
+    'name' => 'context ajax block access',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'context_ui',
+  );
+
+  // Exported permission: 'create event content'.
+  $permissions['create event content'] = array(
+    'name' => 'create event content',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'create featureddataset content'.
+  $permissions['create featureddataset content'] = array(
+    'name' => 'create featureddataset content',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'create gbif_participant content'.
+  $permissions['create gbif_participant content'] = array(
+    'name' => 'create gbif_participant content',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'create generictemplate content'.
+  $permissions['create generictemplate content'] = array(
+    'name' => 'create generictemplate content',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'create newsarticle content'.
+  $permissions['create newsarticle content'] = array(
+    'name' => 'create newsarticle content',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'create page content'.
+  $permissions['create page content'] = array(
+    'name' => 'create page content',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'create resource content'.
+  $permissions['create resource content'] = array(
+    'name' => 'create resource content',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'create url aliases'.
+  $permissions['create url aliases'] = array(
+    'name' => 'create url aliases',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'path',
+  );
+
+  // Exported permission: 'create usesofdata content'.
+  $permissions['create usesofdata content'] = array(
+    'name' => 'create usesofdata content',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'customize ckeditor'.
+  $permissions['customize ckeditor'] = array(
+    'name' => 'customize ckeditor',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'ckeditor',
+  );
+
+  // Exported permission: 'customize shortcut links'.
+  $permissions['customize shortcut links'] = array(
+    'name' => 'customize shortcut links',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'shortcut',
+  );
+
+  // Exported permission: 'delete any event content'.
+  $permissions['delete any event content'] = array(
+    'name' => 'delete any event content',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'delete any featureddataset content'.
+  $permissions['delete any featureddataset content'] = array(
+    'name' => 'delete any featureddataset content',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'delete any gbif_participant content'.
+  $permissions['delete any gbif_participant content'] = array(
+    'name' => 'delete any gbif_participant content',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'delete any generictemplate content'.
+  $permissions['delete any generictemplate content'] = array(
+    'name' => 'delete any generictemplate content',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'delete any newsarticle content'.
+  $permissions['delete any newsarticle content'] = array(
+    'name' => 'delete any newsarticle content',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'delete any page content'.
+  $permissions['delete any page content'] = array(
+    'name' => 'delete any page content',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'delete any resource content'.
+  $permissions['delete any resource content'] = array(
+    'name' => 'delete any resource content',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'delete any usesofdata content'.
+  $permissions['delete any usesofdata content'] = array(
+    'name' => 'delete any usesofdata content',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'delete own event content'.
+  $permissions['delete own event content'] = array(
+    'name' => 'delete own event content',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'delete own featureddataset content'.
+  $permissions['delete own featureddataset content'] = array(
+    'name' => 'delete own featureddataset content',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'delete own gbif_participant content'.
+  $permissions['delete own gbif_participant content'] = array(
+    'name' => 'delete own gbif_participant content',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'delete own generictemplate content'.
+  $permissions['delete own generictemplate content'] = array(
+    'name' => 'delete own generictemplate content',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'delete own newsarticle content'.
+  $permissions['delete own newsarticle content'] = array(
+    'name' => 'delete own newsarticle content',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'delete own page content'.
+  $permissions['delete own page content'] = array(
+    'name' => 'delete own page content',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'delete own resource content'.
+  $permissions['delete own resource content'] = array(
+    'name' => 'delete own resource content',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'delete own usesofdata content'.
+  $permissions['delete own usesofdata content'] = array(
+    'name' => 'delete own usesofdata content',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'delete revisions'.
+  $permissions['delete revisions'] = array(
+    'name' => 'delete revisions',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'delete terms in about_gbif'.
+  $permissions['delete terms in about_gbif'] = array(
+    'name' => 'delete terms in about_gbif',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'delete terms in audience'.
+  $permissions['delete terms in audience'] = array(
+    'name' => 'delete terms in audience',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'delete terms in capacity_enhancement'.
+  $permissions['delete terms in capacity_enhancement'] = array(
+    'name' => 'delete terms in capacity_enhancement',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'delete terms in corenews'.
+  $permissions['delete terms in corenews'] = array(
+    'name' => 'delete terms in corenews',
+    'roles' => array(),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'delete terms in countries'.
+  $permissions['delete terms in countries'] = array(
+    'name' => 'delete terms in countries',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'delete terms in data_analysis_and_use'.
+  $permissions['delete terms in data_analysis_and_use'] = array(
+    'name' => 'delete terms in data_analysis_and_use',
+    'roles' => array(),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'delete terms in data_type'.
+  $permissions['delete terms in data_type'] = array(
+    'name' => 'delete terms in data_type',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'delete terms in data_use'.
+  $permissions['delete terms in data_use'] = array(
+    'name' => 'delete terms in data_use',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'delete terms in informatics'.
+  $permissions['delete terms in informatics'] = array(
+    'name' => 'delete terms in informatics',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'delete terms in language'.
+  $permissions['delete terms in language'] = array(
+    'name' => 'delete terms in language',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'delete terms in opportunities'.
+  $permissions['delete terms in opportunities'] = array(
+    'name' => 'delete terms in opportunities',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'delete terms in organizations'.
+  $permissions['delete terms in organizations'] = array(
+    'name' => 'delete terms in organizations',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'delete terms in purpose'.
+  $permissions['delete terms in purpose'] = array(
+    'name' => 'delete terms in purpose',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'delete terms in regions'.
+  $permissions['delete terms in regions'] = array(
+    'name' => 'delete terms in regions',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'delete terms in resource_type'.
+  $permissions['delete terms in resource_type'] = array(
+    'name' => 'delete terms in resource_type',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'delete terms in tags'.
+  $permissions['delete terms in tags'] = array(
+    'name' => 'delete terms in tags',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'delete terms in taxanavigation'.
+  $permissions['delete terms in taxanavigation'] = array(
+    'name' => 'delete terms in taxanavigation',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'delete terms in term_attribute'.
+  $permissions['delete terms in term_attribute'] = array(
+    'name' => 'delete terms in term_attribute',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'delete terms in thematic_tags'.
+  $permissions['delete terms in thematic_tags'] = array(
+    'name' => 'delete terms in thematic_tags',
+    'roles' => array(),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'delete terms in topic'.
+  $permissions['delete terms in topic'] = array(
+    'name' => 'delete terms in topic',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'display drupal links'.
+  $permissions['display drupal links'] = array(
+    'name' => 'display drupal links',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'admin_menu',
+  );
+
+  // Exported permission: 'edit any event content'.
+  $permissions['edit any event content'] = array(
+    'name' => 'edit any event content',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'edit any featureddataset content'.
+  $permissions['edit any featureddataset content'] = array(
+    'name' => 'edit any featureddataset content',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'edit any gbif_participant content'.
+  $permissions['edit any gbif_participant content'] = array(
+    'name' => 'edit any gbif_participant content',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'edit any generictemplate content'.
+  $permissions['edit any generictemplate content'] = array(
+    'name' => 'edit any generictemplate content',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'edit any newsarticle content'.
+  $permissions['edit any newsarticle content'] = array(
+    'name' => 'edit any newsarticle content',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'edit any page content'.
+  $permissions['edit any page content'] = array(
+    'name' => 'edit any page content',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'edit any resource content'.
+  $permissions['edit any resource content'] = array(
+    'name' => 'edit any resource content',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'edit any usesofdata content'.
+  $permissions['edit any usesofdata content'] = array(
+    'name' => 'edit any usesofdata content',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'edit media'.
+  $permissions['edit media'] = array(
+    'name' => 'edit media',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'media',
+  );
+
+  // Exported permission: 'edit meta tags'.
+  $permissions['edit meta tags'] = array(
+    'name' => 'edit meta tags',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'metatag',
+  );
+
+  // Exported permission: 'edit own comments'.
+  $permissions['edit own comments'] = array(
+    'name' => 'edit own comments',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'comment',
+  );
+
+  // Exported permission: 'edit own event content'.
+  $permissions['edit own event content'] = array(
+    'name' => 'edit own event content',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'edit own featureddataset content'.
+  $permissions['edit own featureddataset content'] = array(
+    'name' => 'edit own featureddataset content',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'edit own gbif_participant content'.
+  $permissions['edit own gbif_participant content'] = array(
+    'name' => 'edit own gbif_participant content',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'edit own generictemplate content'.
+  $permissions['edit own generictemplate content'] = array(
+    'name' => 'edit own generictemplate content',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'edit own newsarticle content'.
+  $permissions['edit own newsarticle content'] = array(
+    'name' => 'edit own newsarticle content',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'edit own page content'.
+  $permissions['edit own page content'] = array(
+    'name' => 'edit own page content',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'edit own resource content'.
+  $permissions['edit own resource content'] = array(
+    'name' => 'edit own resource content',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'edit own usesofdata content'.
+  $permissions['edit own usesofdata content'] = array(
+    'name' => 'edit own usesofdata content',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'edit terms in about_gbif'.
+  $permissions['edit terms in about_gbif'] = array(
+    'name' => 'edit terms in about_gbif',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'edit terms in audience'.
+  $permissions['edit terms in audience'] = array(
+    'name' => 'edit terms in audience',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'edit terms in capacity_enhancement'.
+  $permissions['edit terms in capacity_enhancement'] = array(
+    'name' => 'edit terms in capacity_enhancement',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'edit terms in corenews'.
+  $permissions['edit terms in corenews'] = array(
+    'name' => 'edit terms in corenews',
+    'roles' => array(),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'edit terms in countries'.
+  $permissions['edit terms in countries'] = array(
+    'name' => 'edit terms in countries',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'edit terms in data_analysis_and_use'.
+  $permissions['edit terms in data_analysis_and_use'] = array(
+    'name' => 'edit terms in data_analysis_and_use',
+    'roles' => array(),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'edit terms in data_type'.
+  $permissions['edit terms in data_type'] = array(
+    'name' => 'edit terms in data_type',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'edit terms in data_use'.
+  $permissions['edit terms in data_use'] = array(
+    'name' => 'edit terms in data_use',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'edit terms in informatics'.
+  $permissions['edit terms in informatics'] = array(
+    'name' => 'edit terms in informatics',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'edit terms in language'.
+  $permissions['edit terms in language'] = array(
+    'name' => 'edit terms in language',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'edit terms in opportunities'.
+  $permissions['edit terms in opportunities'] = array(
+    'name' => 'edit terms in opportunities',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'edit terms in organizations'.
+  $permissions['edit terms in organizations'] = array(
+    'name' => 'edit terms in organizations',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'edit terms in purpose'.
+  $permissions['edit terms in purpose'] = array(
+    'name' => 'edit terms in purpose',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'edit terms in regions'.
+  $permissions['edit terms in regions'] = array(
+    'name' => 'edit terms in regions',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'edit terms in resource_type'.
+  $permissions['edit terms in resource_type'] = array(
+    'name' => 'edit terms in resource_type',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'edit terms in tags'.
+  $permissions['edit terms in tags'] = array(
+    'name' => 'edit terms in tags',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'edit terms in taxanavigation'.
+  $permissions['edit terms in taxanavigation'] = array(
+    'name' => 'edit terms in taxanavigation',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'edit terms in term_attribute'.
+  $permissions['edit terms in term_attribute'] = array(
+    'name' => 'edit terms in term_attribute',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'edit terms in thematic_tags'.
+  $permissions['edit terms in thematic_tags'] = array(
+    'name' => 'edit terms in thematic_tags',
+    'roles' => array(),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'edit terms in topic'.
+  $permissions['edit terms in topic'] = array(
+    'name' => 'edit terms in topic',
+    'roles' => array(
+      'Editors' => 'Editors',
+    ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'execute php code'.
+  $permissions['execute php code'] = array(
+    'name' => 'execute php code',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'devel',
+  );
+
+  // Exported permission: 'flush caches'.
+  $permissions['flush caches'] = array(
+    'name' => 'flush caches',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'admin_menu',
+  );
+
+  // Exported permission: 'generate features'.
+  $permissions['generate features'] = array(
+    'name' => 'generate features',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'features',
+  );
+
+  // Exported permission: 'import media'.
+  $permissions['import media'] = array(
+    'name' => 'import media',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'media',
+  );
+
+  // Exported permission: 'import or export menu'.
+  $permissions['import or export menu'] = array(
+    'name' => 'import or export menu',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'menu_import',
+  );
+
+  // Exported permission: 'manage features'.
+  $permissions['manage features'] = array(
+    'name' => 'manage features',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'features',
+  );
+
+  // Exported permission: 'notify of path changes'.
+  $permissions['notify of path changes'] = array(
+    'name' => 'notify of path changes',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'pathauto',
+  );
+
+  // Exported permission: 'override custom username validation'.
+  $permissions['override custom username validation'] = array(
+    'name' => 'override custom username validation',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'custom_username_validation',
+  );
+
+  // Exported permission: 'post comments'.
+  $permissions['post comments'] = array(
+    'name' => 'post comments',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'comment',
+  );
+
+  // Exported permission: 'rename features'.
+  $permissions['rename features'] = array(
+    'name' => 'rename features',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'features',
+  );
+
+  // Exported permission: 'revert revisions'.
+  $permissions['revert revisions'] = array(
+    'name' => 'revert revisions',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'search content'.
+  $permissions['search content'] = array(
+    'name' => 'search content',
+    'roles' => array(
+      'administrator' => 'administrator',
+      'anonymous user' => 'anonymous user',
+      'authenticated user' => 'authenticated user',
+    ),
+    'module' => 'search',
+  );
+
+  // Exported permission: 'select account cancellation method'.
+  $permissions['select account cancellation method'] = array(
+    'name' => 'select account cancellation method',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'user',
+  );
+
+  // Exported permission: 'skip CAPTCHA'.
+  $permissions['skip CAPTCHA'] = array(
+    'name' => 'skip CAPTCHA',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'captcha',
+  );
+
+  // Exported permission: 'skip comment approval'.
+  $permissions['skip comment approval'] = array(
+    'name' => 'skip comment approval',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'comment',
+  );
+
+  // Exported permission: 'switch shortcut sets'.
+  $permissions['switch shortcut sets'] = array(
+    'name' => 'switch shortcut sets',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'shortcut',
+  );
+
+  // Exported permission: 'switch users'.
+  $permissions['switch users'] = array(
+    'name' => 'switch users',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'devel',
+  );
+
+  // Exported permission: 'toggle nicemessages'.
+  $permissions['toggle nicemessages'] = array(
+    'name' => 'toggle nicemessages',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'nicemessages',
+  );
+
+  // Exported permission: 'translate interface'.
+  $permissions['translate interface'] = array(
+    'name' => 'translate interface',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'locale',
+  );
+
+  // Exported permission: 'use PHP for settings'.
+  $permissions['use PHP for settings'] = array(
+    'name' => 'use PHP for settings',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'php',
+  );
+
+  // Exported permission: 'use advanced search'.
+  $permissions['use advanced search'] = array(
+    'name' => 'use advanced search',
+    'roles' => array(
+      'administrator' => 'administrator',
+      'anonymous user' => 'anonymous user',
+      'authenticated user' => 'authenticated user',
+    ),
+    'module' => 'search',
+  );
+
+  // Exported permission: 'use ipe with page manager'.
+  $permissions['use ipe with page manager'] = array(
+    'name' => 'use ipe with page manager',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'panels',
+  );
+
+  // Exported permission: 'use panels caching features'.
+  $permissions['use panels caching features'] = array(
+    'name' => 'use panels caching features',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'panels',
+  );
+
+  // Exported permission: 'use panels dashboard'.
+  $permissions['use panels dashboard'] = array(
+    'name' => 'use panels dashboard',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'panels',
+  );
+
+  // Exported permission: 'use panels in place editing'.
+  $permissions['use panels in place editing'] = array(
+    'name' => 'use panels in place editing',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'panels',
+  );
+
+  // Exported permission: 'use panels locks'.
+  $permissions['use panels locks'] = array(
+    'name' => 'use panels locks',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'panels',
+  );
+
+  // Exported permission: 'use text format filtered_html'.
+  $permissions['use text format filtered_html'] = array(
+    'name' => 'use text format filtered_html',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'filter',
+  );
+
+  // Exported permission: 'use text format full_html'.
+  $permissions['use text format full_html'] = array(
+    'name' => 'use text format full_html',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'filter',
+  );
+
+  // Exported permission: 'use text format php_code'.
+  $permissions['use text format php_code'] = array(
+    'name' => 'use text format php_code',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'filter',
+  );
+
+  // Exported permission: 'use text format raw_html'.
+  $permissions['use text format raw_html'] = array(
+    'name' => 'use text format raw_html',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'filter',
+  );
+
+  // Exported permission: 'use token insert'.
+  $permissions['use token insert'] = array(
+    'name' => 'use token insert',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'token_insert',
+  );
+
+  // Exported permission: 'view date repeats'.
+  $permissions['view date repeats'] = array(
+    'name' => 'view date repeats',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'date_repeat_field',
+  );
+
+  // Exported permission: 'view media'.
+  $permissions['view media'] = array(
+    'name' => 'view media',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+      'anonymous user' => 'anonymous user',
+      'authenticated user' => 'authenticated user',
+    ),
+    'module' => 'media',
+  );
+
+  // Exported permission: 'view own unpublished content'.
+  $permissions['view own unpublished content'] = array(
+    'name' => 'view own unpublished content',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'view pane admin links'.
+  $permissions['view pane admin links'] = array(
+    'name' => 'view pane admin links',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'panels',
+  );
+
+  // Exported permission: 'view revisions'.
+  $permissions['view revisions'] = array(
+    'name' => 'view revisions',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'view the administration theme'.
+  $permissions['view the administration theme'] = array(
+    'name' => 'view the administration theme',
+    'roles' => array(
+      'Editors' => 'Editors',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'system',
+  );
+
+  return $permissions;
+}

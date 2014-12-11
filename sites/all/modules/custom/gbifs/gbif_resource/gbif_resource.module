@@ -47,34 +47,6 @@ function gbif_resource_menu() {
 }
 
 /**
- * Implementation of hook_views_api().
- */
-function gbif_resource_views_api() {
-	return array(
-		'api' => 3.0,
-		'path' => drupal_get_path('module', 'gbif_event') . '/views',
-		'template path' => drupal_get_path('module', 'gbif_event' . '/theme'),
-	);
-}
-
-/**
- * Implements hook_theme().
- */
-function gbif_resource_theme($existing, $type, $theme, $path) {
-	$path = drupal_get_path('module', 'gbif_resource');
-	return array(
-		'node__resource' => array(
-			'template' => 'node--resource',
-			'path' => $path . '/theme',
-		),
-		'node__view__resources' => array(
-			'template' => 'node--view--resources',
-			'path' => $path . '/theme',
-		),
-	);
-}
-
-/**
  *
  */
 function gbif_resource_redirect() {
@@ -200,6 +172,109 @@ function gbif_resource_help($path, $arg) {
 	switch ($path) {
 		case "admin/help#gbif_resource":
 			return '<p>' . t("This module redirects old style URLs(www.gbif.org/orc/?doc_id=1300)."). '</p>';
+	}
+}
+
+
+/**
+ * Implements hook_theme().
+ */
+function gbif_resource_theme($existing, $type, $theme, $path) {
+	$path = drupal_get_path('module', 'gbif_resource');
+	return array(
+		'node__resource' => array(
+			'template' => 'node--resource',
+			'path' => $path . '/theme',
+		),
+		'node__view__resources' => array(
+			'template' => 'node--view--resources',
+			'path' => $path . '/theme',
+		),
+	);
+}
+
+/**
+ *  Implements hook_theme_registry_alter().
+ */
+function gbif_resource_theme_registry_alter(&$theme_registry) {
+	$theme_registry['views_view__resources__page']['template'] = 'views-view--resources--page';
+	$theme_registry['views_view__resources__page']['path'] = drupal_get_path('module', 'gbif_resource') . '/theme';
+	$theme_registry['views_view__resources_search__page']['template'] = 'views-view--resources-search--page';
+	$theme_registry['views_view__resources_search__page']['path'] = drupal_get_path('module', 'gbif_resource') . '/theme';
+	$theme_registry['views_view_fields__resources_search__page']['path'] = drupal_get_path('module', 'gbif_resource') . '/theme';
+	$theme_registry['views_view_field__resources_search__page']['path'] = drupal_get_path('module', 'gbif_resource') . '/theme';
+}
+
+
+/**
+ * Implements hook_preprocess_page().
+ */
+function gbif_resource_preprocess_page(&$variables) {
+	// Detect individual node page and node type is "resource"
+	if (isset($variables['node']) && $variables['node']->type == 'resource' && isset($variables['page']['menu']['menu_block_gbif_navigation_menu_tabs'])) {
+		// Currently we set active on the menu item that has the path as "resources/summary"
+		// Find the registered menu item and add the "active" CSS class to the attributes
+		$highlighted_path = 'resources/summary';
+		foreach ($variables['page']['menu']['menu_block_gbif_navigation_menu_tabs']['#content'] as $k => $tab) {
+			if (gettype($k) == 'integer') {
+				if ($tab['#href'] == $highlighted_path) {
+					// Make it active
+					array_push($variables['page']['menu']['menu_block_gbif_navigation_menu_tabs']['#content'][$k]['#attributes']['class'], 'active');
+					// We change the title to "Resource"(singular) for individual resource pages.
+					$variables['page']['menu']['menu_block_gbif_navigation_menu_tabs']['#content'][$k]['#title'] = t('Resource');
+					watchdog('gbif_event', 'Active menu item set for node.', array(), WATCHDOG_DEBUG);
+				}
+			}
+		}
+	}
+}
+
+/**
+ * Implements hook_preprocess_views_view().
+ *
+ */
+function gbif_resource_preprocess_views_view(&$variables) {
+	if (isset($variables) && $variables['view']->name == 'resources_search') {
+		// Define our own template.
+		$variables['theme_hook_suggestions'][] = 'views_view__resources_search__page';
+
+		// Result count.
+		$variables['result_count'] = format_plural(
+			$variables['view']->total_rows,
+			'1 result',
+			'@count results',
+			array()
+		);
+
+		// Render blocks.
+		$variables['facet_resource_type'] = render(_block_get_renderable_array(_block_render_blocks(array(block_load('facetapi', 'xvKA0HJVTNwngnlCE9lJP4T0CXA1Gn27')))));
+		$variables['facet_purpose'] = render(_block_get_renderable_array(_block_render_blocks(array(block_load('facetapi', '731qYYP4XLCpEqbjDPEBHvO3Ms6QiFhq')))));
+		$variables['facet_language'] = render(_block_get_renderable_array(_block_render_blocks(array(block_load('facetapi', '91UEW2NE4L9KDBz5SLgpe0fiDQZM19OU')))));
+		$variables['facet_data_type'] = render(_block_get_renderable_array(_block_render_blocks(array(block_load('facetapi', 'HeCqQSNM4pCh581hH4Aq8jlEIwdyvby7')))));
+		$variables['facet_tags'] = render(_block_get_renderable_array(_block_render_blocks(array(block_load('facetapi', 'oGePWok3wXOoVeiAT30QHDay08xaMG5a')))));
+		$variables['exp_widgets'] = render(module_invoke('views', 'block_view','-exp-resources_search-page'));
+		$variables['featured_block'] = render(module_invoke('views', 'block_view','resources-featured_block'));
+	}
+}
+
+/**
+ * Theme facet inactive links in our way.
+ */
+function gbif_resource_theme_link($variables) {
+	$link_html = '<a href="' . check_plain(url($variables['path'], $variables['options'])) . '"' . drupal_attributes($variables['options']['attributes']) . '>' . ($variables['options']['html'] ? $variables['text'] : check_plain($variables['text'])) . '</a>';
+	if (isset($variables['count'])) {
+		$link_html .= '<span class="facet-count">' . theme('facetapi_count', $variables) . '</span>';
+	}
+	return $link_html;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function gbif_resource_form_alter(&$form, &$form_state, $form_id) {
+	switch ($form_id) {
+		case 'views_exposed_form':
+			$form['search_api_views_fulltext']['#suffix'] = '<span class="glyphicon glyphicon-search resource-magnifier"></span>';
 			break;
 	}
 }

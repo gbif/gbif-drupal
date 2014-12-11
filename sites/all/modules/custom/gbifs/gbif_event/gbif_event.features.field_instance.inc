@@ -288,7 +288,7 @@ function gbif_event_field_default_field_instances() {
     'bundle' => 'event',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'Textual information that actually shows on the event detail and teaser, as a cheaper way instead of computing from real date fields.',
+    'description' => 'Textual information that actually shows on the event detail and teaser. Leave this field blank if you want it to be calculated.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -857,7 +857,7 @@ function gbif_event_field_default_field_instances() {
     'bundle' => 'event',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'Textual information that actually shows in Location field. Please remember to provide country when possible.',
+    'description' => 'Please only enter the city.',
     'display' => array(
       'default' => array(
         'label' => 'above',

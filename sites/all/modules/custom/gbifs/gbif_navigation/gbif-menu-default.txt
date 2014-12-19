@@ -78,6 +78,8 @@ About {"url":"<front>"}
 --For users {"url":"resources\/for-users"}
 --For GBIF delegations {"url":"resources\/for-delegations"}
 --For nodes {"url":"resources\/for-nodes"}
+-Awards {"url":"about\/awards", "description": "Bringing biodiversity information to life"}
+--Awards {"url":"about\/awards"}
 -Governance {"url":"governance\/governingboard", "description": "How decisions, advice, management and funding are organized in GBIF"}
 --Governing Board {"url":"governance\/governingboard"}
 --Standing committees {"url":"governance\/standingcommittees"}

@@ -35,75 +35,6 @@
 	}
 }
 
-.view-column {
-  margin-left: 15px;
-  padding-left: 0px;
-  padding-right: 0px;
-  div#edit-search-api-views-fulltext-wrapper {
-    display: none !important;
-  }
-  h2.count {
-    display: inline-block;
-    margin-top: 30px;
-    margin-bottom: 0px;
-    font-size: 23px;
-    font-weight: normal;
-    text-shadow: 0 1px #fff;
-  }
-}
-
-#views_slideshow_cycle_main_resources-featured_block {
-  padding: 20px 0 20px 0;
-  border-top: 1px solid @page-header-border-color; 
-  border-bottom: 1px solid @page-header-border-color;
-  h4 {
-    margin: 0px 0px 3px 165px;
-    font-weight: normal;
-  }
-}
-
-#views_slideshow_cycle_teaser_section_resources-featured_block {
-  width: 610px;
-}
-
-.views-slideshow-controls-bottom {
-  float: right;
-  margin-top: -25px;
-}
-
-.view-widgets {
-  position: relative;
-  height: 80px;
-}
-
-.view-widgets-search {
-  height: 40px;
-}
-
-.views-exposed-widgets {
-  label {
-    font-weight: normal;
-  }
-  .views-reset-button {
-    padding-right: 0px;
-  }
-  .views-submit-button {
-    padding-right: 0px;
-  }
-}
-
-
-#views-exposed-form-resources-search-page {
-  position: absolute;
-  display: inline-block;
-  right: 0px;
-}
-
-.view-display-id-latest5 {
-  border-top: 1px solid @page-header-border-color;
-	padding-top: 20px;
-}
-
 .node-sidebar {
   width: 240px;
   margin-left: 30px;
@@ -184,53 +115,7 @@
     padding-left: 10px;
     margin-bottom: 20px;
   }
-  .views-widget-sort-by,
-  .views-widget-sort-order,
-  .views-widget-per-page,
-  .views-submit-button,
-  .views-reset-button {
-    display: none;
-  }
-  label {
-    display: none;
-  }
-  input#edit-search-api-views-fulltext {
-    height: 26px;
-    width: 220px;
-    padding-left: 26px;
-    padding-top: 5px;
-    margin-left: 10px;
-    font-weight: 300;
-    border-radius: 13px;
-    color: @cGray3;
-  }
 }
-
-.sidebar-filter.resource-filter {
-  border-top: none;
-  padding-top: 0px;
-}
-
-.resource-filter-header {
-  margin-left: 10px;
-  margin-bottom: 10px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid @page-header-border-color;
-  .clear-all {
-    float: right;
-    margin-top: -27px;
-  }
-}
-
-#facetapi-facet-search-apiresource-index-block-gr-resource-type,
-#facetapi-facet-search-apiresource-index-block-gr-purpose,
-#facetapi-facet-search-apiresource-index-block-gr-language,
-#facetapi-facet-search-apiresource-index-block-gr-data-type,
-#facetapi-facet-search-apiresource-index-block-field-tags {
-  margin-top: 0px !important;
-  margin-bottom: 3px !important;
-}
-
 
 .sidebar-signup {
   width: 269px;
@@ -557,42 +442,6 @@
   }
 }
 
-.views-slideshow-pager-field-item {
-  background: url('../images/slideshow-bullet.png') no-repeat;
-  &.active {
-    background: url('../images/slideshow-bullet-active.png') no-repeat;
-  }
-}
-
-.slideshow-image {
-  position: relative;
-  overflow: hidden;
-  width: 616px;
-  left: -10px;
-  top: -51px;
-  right: 24px;
-  border-top-right-radius: 3px;
-  border-bottom-right-radius: 3px;
-}
-
-.slideshow-intro {
-  padding-right: 30px;
-  h3 {
-    font-size: 23px;
-    //font-weight: normal;
-    line-height: 28px;
-    text-shadow: 0 1px @cWhite;
-    color: #333;
-  }
-  p {
-    font-size: 15px;
-    color: @cGray75;
-    .readmore {
-      font-size: 0.9em;
-    }
-  }
-}
-
 .field-content {
 	hr {
 		margin-top: 15px;
@@ -681,40 +530,6 @@
   p {
     font-size: @font-size-large;
     color: @cGray70;
-  }
-}
-
-#views_slideshow_cycle_div_resources-featured_block_0 {
-  width: 610px;
-}
-
-/*
-After jquery.cycle is loaded, the width of the row container is rendered
-differently on Firefox. This style explicitly set the style so the slideshow
-image won't shift it's position.
-*/
-.views-slideshow-cycle-main-frame-row {
-  width: 930px;
-  .slideshow-featured-block {
-    width: 610px;
-    margin-right: 0px;
-    .views-field-gr-image {
-      width: 165px;
-      float: left;
-    }
-    .views-field-title {
-      font-size: 23px;
-      font-weight: bold;
-      margin-left: 165px;
-    }
-    .views-field-gr-resource-type {
-      margin-top: 5px;
-      margin-left: 165px;
-    }
-    .views-field-body {
-      margin-top: 10px;
-      margin-left: 165px;
-    }
   }
 }
 
@@ -914,36 +729,6 @@ image won't shift it's position.
 
 .form-item-field-country-mono-und {
 	width: 240px;
-}
-
-.field-name-field-authors,
-.field-name-field-publisher,
-.field-name-field-publishing-date,
-.field-name-field-target-audience,
-.field-name-field-contributors,
-.field-name-field-abstract,
-.field-name-field-bibliographic-citation,
-.field-name-field-rights,
-.field-name-field-rights-holder,
-.field-name-field-audience,
-.field-name-field-contact,
-.field-name-field-participants, 
-.field-name-field-dates,
-.field-name-field-venuecountry,
-.field-name-field-status,
-.field-name-field-language,
-.field-name-field-resources, 
-.field-name-field-publisher-w-date {
-	.field-label {
-		text-transform: uppercase;
-		font-weight: normal;
-		font-size: 13px;
-	}
-	margin-bottom: 18px;
-}
-
-.field-name-field-image-url {
-	margin-bottom: 20px;
 }
 
 .kinfo_width {

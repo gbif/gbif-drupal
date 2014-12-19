@@ -172,5 +172,69 @@ function gbif_resource_default_fe_block_settings() {
     'visibility' => 0,
   );
 
+  $export['views--exp-resources_search-page'] = array(
+    'cache' => -1,
+    'custom' => 0,
+    'delta' => '-exp-resources_search-page',
+    'module' => 'views',
+    'node_types' => array(),
+    'pages' => '',
+    'roles' => array(),
+    'themes' => array(
+      'bartik' => array(
+        'region' => '',
+        'status' => 0,
+        'theme' => 'bartik',
+        'weight' => 0,
+      ),
+      'bvng' => array(
+        'region' => '',
+        'status' => 0,
+        'theme' => 'bvng',
+        'weight' => 0,
+      ),
+      'seven' => array(
+        'region' => '',
+        'status' => 0,
+        'theme' => 'seven',
+        'weight' => 0,
+      ),
+    ),
+    'title' => '',
+    'visibility' => 0,
+  );
+
+  $export['views-resources-featured_block'] = array(
+    'cache' => -1,
+    'custom' => 0,
+    'delta' => 'resources-featured_block',
+    'module' => 'views',
+    'node_types' => array(),
+    'pages' => '',
+    'roles' => array(),
+    'themes' => array(
+      'bartik' => array(
+        'region' => '',
+        'status' => 0,
+        'theme' => 'bartik',
+        'weight' => 0,
+      ),
+      'bvng' => array(
+        'region' => '',
+        'status' => 0,
+        'theme' => 'bvng',
+        'weight' => 0,
+      ),
+      'seven' => array(
+        'region' => '',
+        'status' => 0,
+        'theme' => 'seven',
+        'weight' => 0,
+      ),
+    ),
+    'title' => '',
+    'visibility' => 0,
+  );
+
   return $export;
 }

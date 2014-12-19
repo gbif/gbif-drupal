@@ -26,34 +26,45 @@
  * @ingroup views_templates
  */
   drupal_set_title($view->get_title());
+  $param = drupal_get_query_parameters();
 ?>
 
 <div class="row">
   <div class="view-column col-xs-8">
-    <div class="<?php print $classes; ?>">
 
+    <?php if ($exp_widgets): ?>
+      <div class="view-widgets-search">
+        <?php print $exp_widgets; ?>
+        <a href="/resources/archive/rss"><img class="rss-icon" src="/sites/all/themes/custom/bvng/images/rss-feed.gif"/></a>
+      </div>
+    <?php endif; ?>
+
+    <?php if ($featured_block): ?>
+      <div class="block-featured-resources">
+        <?php print $featured_block; ?>
+      </div>
+    <?php endif; ?>
+
+    <div class="<?php print $classes; ?>">
       <?php print render($title_prefix); ?>
       <?php if ($title): ?>
         <?php print $title; ?>
       <?php endif; ?>
       <?php print render($title_suffix); ?>
+
       <?php if ($header): ?>
         <div class="view-header">
           <?php print $header; ?>
         </div>
       <?php endif; ?>
-      <?php if ($featured_block): ?>
-        <?php print $featured_block; ?>
-      <?php endif; ?>
+
       <?php if ($exp_widgets): ?>
         <div class="view-widgets">
-          <h2 class="count">
-            <?php print $result_count; ?>
-            <!-- <a href="/resources/archive/rss"><img class="rss-icon" src="/sites/all/themes/custom/bvng/images/rss-feed.gif"/></a>-->
-          </h2>
-          <?php print $exp_widgets; ?>
+          <h2 class="count"><?php print $result_count; ?></h2>
+          <div class="views-widgets-sorts"><?php print $exp_widgets; ?></div>
         </div>
       <?php endif; ?>
+
       <?php if ($exposed): ?>
         <div class="view-filters">
           <?php print $exposed; ?>
@@ -93,11 +104,6 @@
       <span class="clear-all"><a href="/resources/summary">clear all</a></span>
     </div>
 
-    <?php if ($exp_widgets): ?>
-      <div class="view-widgets-search">
-        <?php print $exp_widgets; ?>
-      </div>
-    <?php endif; ?>
 		<?php print $facet_resource_type; ?>
 		<?php print $facet_purpose; ?>
 		<?php print $facet_language; ?>

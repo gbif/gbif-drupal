@@ -29,10 +29,6 @@
     <?php print $field->separator; ?>
   <?php endif; ?>
 
-  <?php if ($id == 'title'): ?>
-    <h4>Featured resource</h4>
-  <?php endif; ?>
-
   <?php print $field->wrapper_prefix; ?>
     <?php print $field->label_html; ?>
     <?php print $field->content; ?>

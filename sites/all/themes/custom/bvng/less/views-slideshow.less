@@ -1,0 +1,197 @@
+.view-column {
+  margin-left: 15px;
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.views-widgets-sorts {
+  div#edit-search-api-views-fulltext-wrapper {
+    display: none !important;
+  }
+  .views-exposed-widgets {
+    float: right;
+    margin-top: -60px;
+    label {
+      font-weight: normal;
+      font-size: 11px;
+      margin-bottom: 0px;
+    }
+    .views-reset-button {
+      padding-right: 0px;
+    }
+    .views-submit-button {
+      padding-right: 0px;
+    }
+    select {
+      height: 20px;
+      font-size: 11px;
+    }
+    .views-exposed-widget {
+      button {
+        margin-top: 11px;
+        font-size: 12px;
+        padding: 5px 11px 5px 10px;
+      }
+    }
+  }
+}
+
+.view-widgets-search {
+  height: 45px;
+  .views-widget-sort-by,
+  .views-widget-sort-order,
+  .views-widget-per-page,
+  .views-submit-button,
+  .views-reset-button {
+    display: none;
+  }
+  label {
+    display: none;
+  }
+  .views-widget-filter-search_api_views_fulltext {
+    padding-top: 0px;
+    padding-right: 60px;
+    width: 100%;
+  }
+  input#edit-search-api-views-fulltext {
+    height: 26px;
+    padding-left: 25px;
+    border-radius: 13px;
+    color: @cGray3;
+  }
+  .rss-icon {
+    margin: -42px 0 0 0;
+  }
+  .resource-magnifier {
+    float: left;
+    position: relative;
+    z-index: 100;
+    top: -20px;
+    left: 8px;
+    color: @cGray4;
+    height: 0px;
+  }
+}
+
+.view-widgets {
+  h2.count {
+    margin-top: 10px;
+    margin-bottom: 15px;
+    font-size: 23px;
+    font-weight: normal;
+    text-shadow: 0 1px #fff;
+  }
+}
+
+.view-display-id-latest5 {
+  border-top: 1px solid @page-header-border-color;
+	padding-top: 20px;
+}
+
+.sidebar-filter.resource-filter {
+  border-top: none;
+  padding-top: 0px;
+}
+
+.resource-filter-header {
+  margin-left: 10px;
+  margin-bottom: 10px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid @page-header-border-color;
+  .clear-all {
+    float: right;
+    margin-top: -27px;
+  }
+}
+
+#facetapi-facet-search-apiresource-index-block-gr-resource-type,
+#facetapi-facet-search-apiresource-index-block-gr-purpose,
+#facetapi-facet-search-apiresource-index-block-gr-language,
+#facetapi-facet-search-apiresource-index-block-gr-data-type,
+#facetapi-facet-search-apiresource-index-block-field-tags {
+  margin-top: 0px !important;
+  margin-bottom: 3px !important;
+}
+
+.views-slideshow-pager-field-item {
+  background: url('../images/slideshow-bullet.png') no-repeat;
+  &.active {
+    background: url('../images/slideshow-bullet-active.png') no-repeat;
+  }
+}
+
+.slideshow-image {
+  position: relative;
+  overflow: hidden;
+  width: 616px;
+  left: -10px;
+  top: -51px;
+  right: 24px;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+
+.slideshow-intro {
+  padding-right: 30px;
+  h3 {
+    font-size: 23px;
+    //font-weight: normal;
+    line-height: 28px;
+    text-shadow: 0 1px @cWhite;
+    color: #333;
+  }
+  p {
+    font-size: 15px;
+    color: @cGray75;
+    .readmore {
+      font-size: 0.9em;
+    }
+  }
+}
+
+#views_slideshow_cycle_div_resources-featured_block_0 {
+  width: 610px;
+}
+
+/*
+After jquery.cycle is loaded, the width of the row container is rendered
+differently on Firefox. This style explicitly set the style so the slideshow
+image won't shift it's position.
+*/
+.views-slideshow-cycle-main-frame-row {
+  width: 930px;
+}
+
+.block-featured-resources {
+  .views-row {
+    display: inline-block;
+    border: 1px solid @page-header-border-color;
+    border-radius: 5px;
+    margin: 0px 5px 10px 0px;
+    padding: 15px;
+    height: 170px;
+    width: 290px;
+    overflow: hidden;
+    
+    .views-field-gr-image {
+      float: left;
+      img {
+        margin-right: 10px;
+      }
+    }
+    
+    .views-field-title {
+      h3 {
+        font-size: 16px;
+        margin-top: 0px;
+      }
+    }
+    
+    .views-field-body {
+      p {
+        font-size: 13px;
+        line-height: 1.5em;
+      }
+    }
+  }
+}

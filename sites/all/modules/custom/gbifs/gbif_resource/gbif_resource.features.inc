@@ -71,6 +71,7 @@ function gbif_resource_default_search_api_index() {
         "language" : { "type" : "string" },
         "promote" : { "type" : "boolean" },
         "search_api_language" : { "type" : "string" },
+        "search_api_viewed" : { "type" : "text" },
         "status" : { "type" : "integer" },
         "sticky" : { "type" : "boolean" },
         "title" : { "type" : "text" },
@@ -83,9 +84,9 @@ function gbif_resource_default_search_api_index() {
           "settings" : { "default" : "0", "bundles" : { "resource" : "resource" } }
         },
         "search_api_alter_node_access" : { "status" : 0, "weight" : "0", "settings" : [] },
-        "search_api_alter_node_status" : { "status" : 0, "weight" : "0", "settings" : [] },
+        "search_api_alter_node_status" : { "status" : 1, "weight" : "0", "settings" : [] },
         "search_api_alter_add_hierarchy" : { "status" : 0, "weight" : "0", "settings" : { "fields" : [] } },
-        "search_api_alter_add_viewed_entity" : { "status" : 0, "weight" : "0", "settings" : { "mode" : "full" } },
+        "search_api_alter_add_viewed_entity" : { "status" : 1, "weight" : "0", "settings" : { "mode" : "teaser" } },
         "search_api_alter_add_url" : { "status" : 0, "weight" : "0", "settings" : [] },
         "search_api_alter_add_aggregation" : { "status" : 0, "weight" : "0", "settings" : [] }
       },
@@ -251,6 +252,11 @@ function gbif_resource_default_search_api_server() {
             "table" : "search_api_db_resource_index",
             "column" : "gr_resource_type",
             "type" : "integer",
+            "boost" : "1.0"
+          },
+          "search_api_viewed" : {
+            "table" : "search_api_db_resource_index_text",
+            "type" : "text",
             "boost" : "1.0"
           }
         }

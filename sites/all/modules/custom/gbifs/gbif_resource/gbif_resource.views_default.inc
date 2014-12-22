@@ -168,7 +168,6 @@ function gbif_resource_views_default_views() {
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['exposed_form']['options']['reset_button'] = TRUE;
-  $handler->display->display_options['exposed_form']['options']['autosubmit'] = TRUE;
   $handler->display->display_options['pager']['type'] = 'full';
   $handler->display->display_options['pager']['options']['items_per_page'] = '10';
   $handler->display->display_options['pager']['options']['offset'] = '0';
@@ -178,6 +177,10 @@ function gbif_resource_views_default_views() {
   $handler->display->display_options['pager']['options']['expose']['items_per_page_options_all'] = TRUE;
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'fields';
+  /* No results behavior: Global: Messages */
+  $handler->display->display_options['empty']['messages']['id'] = 'messages';
+  $handler->display->display_options['empty']['messages']['table'] = 'views';
+  $handler->display->display_options['empty']['messages']['field'] = 'messages';
   /* Field: Indexed Node: Image */
   $handler->display->display_options['fields']['gr_image']['id'] = 'gr_image';
   $handler->display->display_options['fields']['gr_image']['table'] = 'search_api_index_resource_index';
@@ -249,6 +252,11 @@ function gbif_resource_views_default_views() {
     'file_view_mode' => 'default',
   );
   $handler->display->display_options['fields']['gr_file']['delta_offset'] = '0';
+  /* Sort criterion: Indexed Node: Sticky in lists */
+  $handler->display->display_options['sorts']['sticky_1']['id'] = 'sticky_1';
+  $handler->display->display_options['sorts']['sticky_1']['table'] = 'search_api_index_resource_index';
+  $handler->display->display_options['sorts']['sticky_1']['field'] = 'sticky';
+  $handler->display->display_options['sorts']['sticky_1']['order'] = 'DESC';
   /* Sort criterion: Indexed Node: Date created */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
   $handler->display->display_options['sorts']['created']['table'] = 'search_api_index_resource_index';
@@ -263,11 +271,6 @@ function gbif_resource_views_default_views() {
   $handler->display->display_options['sorts']['search_api_relevance']['order'] = 'DESC';
   $handler->display->display_options['sorts']['search_api_relevance']['exposed'] = TRUE;
   $handler->display->display_options['sorts']['search_api_relevance']['expose']['label'] = 'Relevance';
-  /* Sort criterion: Indexed Node: Sticky in lists */
-  $handler->display->display_options['sorts']['sticky_1']['id'] = 'sticky_1';
-  $handler->display->display_options['sorts']['sticky_1']['table'] = 'search_api_index_resource_index';
-  $handler->display->display_options['sorts']['sticky_1']['field'] = 'sticky';
-  $handler->display->display_options['sorts']['sticky_1']['order'] = 'DESC';
   /* Filter criterion: Indexed Node: Status */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'search_api_index_resource_index';
@@ -291,6 +294,25 @@ function gbif_resource_views_default_views() {
     4 => 0,
     5 => 0,
     6 => 0,
+  );
+  $handler->display->display_options['filters']['search_api_views_fulltext']['group_info']['label'] = 'Fulltext search';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['group_info']['identifier'] = 'search_api_views_fulltext';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['group_info']['group_items'] = array(
+    1 => array(
+      'title' => '',
+      'operator' => 'AND',
+      'value' => '',
+    ),
+    2 => array(
+      'title' => '',
+      'operator' => 'AND',
+      'value' => '',
+    ),
+    3 => array(
+      'title' => '',
+      'operator' => 'AND',
+      'value' => '',
+    ),
   );
 
   /* Display: Page */

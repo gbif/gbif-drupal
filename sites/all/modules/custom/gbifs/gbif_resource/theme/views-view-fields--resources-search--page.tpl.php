@@ -93,7 +93,7 @@
 		<?php endif; ?>
 
 		<?php if (!empty($fields['title'])): ?>
-			<h2><?php print $fields['title']->content; ?></h2>
+			<h3><?php print $fields['title']->content; ?></h3>
 		<?php endif; ?>
 
 

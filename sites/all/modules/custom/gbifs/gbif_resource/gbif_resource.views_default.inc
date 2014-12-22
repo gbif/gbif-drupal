@@ -12,7 +12,7 @@ function gbif_resource_views_default_views() {
 
   $view = new view();
   $view->name = 'resources';
-  $view->description = '';
+  $view->description = 'Normal content view for resources.';
   $view->tag = 'default';
   $view->base_table = 'node';
   $view->human_name = 'Resources';
@@ -69,13 +69,13 @@ function gbif_resource_views_default_views() {
   $handler = $view->new_display('page', 'Page', 'page');
   $handler->display->display_options['path'] = 'resources/view';
 
-  /* Display: Block */
-  $handler = $view->new_display('block', 'Block', 'featured_block');
+  /* Display: Featured resources */
+  $handler = $view->new_display('block', 'Featured resources', 'featured_block');
   $handler->display->display_options['defaults']['title'] = FALSE;
-  $handler->display->display_options['title'] = 'Featured Resource';
+  $handler->display->display_options['title'] = 'Featured resources';
   $handler->display->display_options['defaults']['pager'] = FALSE;
   $handler->display->display_options['pager']['type'] = 'some';
-  $handler->display->display_options['pager']['options']['items_per_page'] = '6';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '10';
   $handler->display->display_options['pager']['options']['offset'] = '0';
   $handler->display->display_options['defaults']['style_plugin'] = FALSE;
   $handler->display->display_options['style_plugin'] = 'default';
@@ -123,7 +123,7 @@ function gbif_resource_views_default_views() {
   $handler->display->display_options['fields']['body']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['body']['type'] = 'smart_trim_format';
   $handler->display->display_options['fields']['body']['settings'] = array(
-    'trim_length' => '40',
+    'trim_length' => '15',
     'trim_type' => 'words',
     'trim_suffix' => '...',
     'more_link' => '0',
@@ -133,6 +133,7 @@ function gbif_resource_views_default_views() {
       'text' => 0,
     ),
   );
+  $handler->display->display_options['block_description'] = 'View: Resources - featured resources';
   $translatables['resources'] = array(
     t('Master'),
     t('Resources'),
@@ -143,8 +144,8 @@ function gbif_resource_views_default_views() {
     t('Asc'),
     t('Desc'),
     t('Page'),
-    t('Block'),
-    t('Featured Resource'),
+    t('Featured resources'),
+    t('View: Resources - featured resources'),
   );
   $export['resources'] = $view;
 
@@ -196,6 +197,7 @@ function gbif_resource_views_default_views() {
   $handler->display->display_options['fields']['title']['table'] = 'search_api_index_resource_index';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['label'] = '';
+  $handler->display->display_options['fields']['title']['element_type'] = '0';
   $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['title']['element_default_classes'] = FALSE;
   $handler->display->display_options['fields']['title']['link_to_entity'] = 1;
@@ -204,6 +206,8 @@ function gbif_resource_views_default_views() {
   $handler->display->display_options['fields']['body_value']['table'] = 'search_api_index_resource_index';
   $handler->display->display_options['fields']['body_value']['field'] = 'body_value';
   $handler->display->display_options['fields']['body_value']['label'] = '';
+  $handler->display->display_options['fields']['body_value']['alter']['max_length'] = '140';
+  $handler->display->display_options['fields']['body_value']['alter']['trim'] = TRUE;
   $handler->display->display_options['fields']['body_value']['alter']['preserve_tags'] = '<p>';
   $handler->display->display_options['fields']['body_value']['element_type'] = '0';
   $handler->display->display_options['fields']['body_value']['element_label_colon'] = FALSE;

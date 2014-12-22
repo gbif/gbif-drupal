@@ -203,6 +203,7 @@ function gbif_resource_theme_registry_alter(&$theme_registry) {
 	$theme_registry['views_view__resources_search__page']['path'] = drupal_get_path('module', 'gbif_resource') . '/theme';
 	$theme_registry['views_view_fields__resources_search__page']['path'] = drupal_get_path('module', 'gbif_resource') . '/theme';
 	$theme_registry['views_view_field__resources_search__page']['path'] = drupal_get_path('module', 'gbif_resource') . '/theme';
+	$theme_registry['views_view_unformatted__resources__featured_block']['path'] = drupal_get_path('module', 'gbif_resource') . '/theme';
 }
 
 
@@ -276,5 +277,19 @@ function gbif_resource_form_alter(&$form, &$form_state, $form_id) {
 		case 'views_exposed_form':
 			$form['search_api_views_fulltext']['#suffix'] = '<span class="glyphicon glyphicon-search resource-magnifier"></span>';
 			break;
+	}
+}
+
+/**
+ * Determine whether to show the "featured resources" block according to the
+ * existence of query params.
+ */
+function gbif_resource_show_featured_resources() {
+	$query = drupal_get_query_parameters();
+	if (count($query) > 0 && !isset($query['XDEBUG_SESSION_START'])) {
+		return FALSE;
+	}
+	else {
+		return TRUE;
 	}
 }

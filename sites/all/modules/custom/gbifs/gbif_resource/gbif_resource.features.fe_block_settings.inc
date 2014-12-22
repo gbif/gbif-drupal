@@ -232,7 +232,7 @@ function gbif_resource_default_fe_block_settings() {
         'weight' => 0,
       ),
     ),
-    'title' => '',
+    'title' => 'Featured resources',
     'visibility' => 0,
   );
 

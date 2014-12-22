@@ -90,6 +90,71 @@ function gbif_resource_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-resource-field_internal_tags'
+  $field_instances['node-resource-field_internal_tags'] = array(
+    'bundle' => 'resource',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 25,
+      ),
+      'rss' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'search_index' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'search_result' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_internal_tags',
+    'label' => 'Internal Tags',
+    'required' => 0,
+    'settings' => array(
+      'mediafront' => array(
+        'custom' => '',
+        'field_type' => 0,
+        'media_type' => 'media',
+        'preview' => 0,
+        'thumbnail' => 0,
+      ),
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'taxonomy',
+      'settings' => array(
+        'autocomplete_path' => 'taxonomy/autocomplete',
+        'size' => 60,
+      ),
+      'type' => 'taxonomy_autocomplete',
+      'weight' => 19,
+    ),
+  );
+
   // Exported field_instance: 'node-resource-field_tags'
   $field_instances['node-resource-field_tags'] = array(
     'bundle' => 'resource',
@@ -161,7 +226,7 @@ function gbif_resource_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'taxonomy_autocomplete',
-      'weight' => 20,
+      'weight' => 18,
     ),
   );
 
@@ -709,7 +774,7 @@ function gbif_resource_field_default_field_instances() {
         'apply_chosen' => '',
       ),
       'type' => 'options_buttons',
-      'weight' => 19,
+      'weight' => 17,
     ),
   );
 
@@ -848,7 +913,7 @@ function gbif_resource_field_default_field_instances() {
         'progress_indicator' => 'throbber',
       ),
       'type' => 'file_generic',
-      'weight' => 22,
+      'weight' => 21,
     ),
   );
 
@@ -1017,7 +1082,7 @@ function gbif_resource_field_default_field_instances() {
         'progress_indicator' => 'throbber',
       ),
       'type' => 'image_image',
-      'weight' => 14,
+      'weight' => 13,
     ),
   );
 
@@ -1186,7 +1251,7 @@ function gbif_resource_field_default_field_instances() {
         'apply_chosen' => '',
       ),
       'type' => 'options_select',
-      'weight' => 17,
+      'weight' => 15,
     ),
   );
 
@@ -1356,7 +1421,7 @@ function gbif_resource_field_default_field_instances() {
       'module' => 'number',
       'settings' => array(),
       'type' => 'number',
-      'weight' => 21,
+      'weight' => 20,
     ),
   );
 
@@ -1518,7 +1583,7 @@ function gbif_resource_field_default_field_instances() {
         'apply_chosen' => '',
       ),
       'type' => 'options_buttons',
-      'weight' => 18,
+      'weight' => 16,
     ),
   );
 
@@ -1592,7 +1657,7 @@ function gbif_resource_field_default_field_instances() {
         'apply_chosen' => '',
       ),
       'type' => 'options_select',
-      'weight' => 16,
+      'weight' => 14,
     ),
   );
 
@@ -1819,7 +1884,7 @@ function gbif_resource_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 23,
+      'weight' => 22,
     ),
   );
 
@@ -1836,6 +1901,7 @@ function gbif_resource_field_default_field_instances() {
   t('File');
   t('IMS ID');
   t('Image');
+  t('Internal Tags');
   t('Language');
   t('Number of downloads');
   t('Old resource nid');

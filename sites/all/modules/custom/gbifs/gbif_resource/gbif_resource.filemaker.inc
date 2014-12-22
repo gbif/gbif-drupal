@@ -287,7 +287,7 @@ function _gbif_resource_sync() {
 								->entityCondition('bundle', 'tags')
 								->fieldCondition('field_ims_keyword_id', 'value', $keyword->keywordID, '=')
 								->execute();
-							// If the keyword exists in the vocabulary, assign it to field_tags.
+							// If the keyword exists in the "field_tags" vocabulary, assign it to field_tags.
 							if (!empty($entities['taxonomy_term']) && count($entities['taxonomy_term']) == 1) {
 								$tid = key($entities['taxonomy_term']);
 								$node_array = (array) $node;
@@ -304,9 +304,9 @@ function _gbif_resource_sync() {
 									$node_wrapper->field_tags[] = $tid;
 								}
 							}
-							// If not, insert into the vocabulary and assign it to field_tags.
+							// If not, insert into the field_internal_tags vocabulary.
 							elseif (empty($entities['taxonomy_term']) && !empty($keyword->keyword_short)) {
-								$target_voc = taxonomy_vocabulary_machine_name_load('tags');
+								$target_voc = taxonomy_vocabulary_machine_name_load('internal_tags');
 								$term = new stdClass();
 								$term->name = htmlspecialchars_decode($keyword->keyword_short);
 								$term->vid = $target_voc->vid;
@@ -352,7 +352,7 @@ function _gbif_resource_sync() {
 
 								// Assign to node.
 								if ($term->tid) {
-									$node_wrapper->field_tags[] = $term->tid;
+									$node_wrapper->field_internal_tags[] = $term->tid;
 								}
 							}
 						} catch (Exception $e) {
@@ -382,8 +382,13 @@ function _gbif_resource_sync() {
 				unset($query, $exist);
 			}
 
+			// For all data resources, we set the status to unpublished until they are
+			// reviewed.
+			if ($record->resource_type == 'Data resource') {
+				$node_wrapper->status->set(0);
+			}
 			// Determine "publish status" to "Published" if OnTheWeb == "Yes".
-			if ($record->on_the_web == 'Yes' || $record->on_the_web == '1') {
+			elseif ($record->on_the_web == 'Yes' || $record->on_the_web == '1') {
 				$node_wrapper->status->set(1);
 			}
 			unset($on_the_web);

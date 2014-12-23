@@ -305,6 +305,7 @@ function _gbif_resource_sync() {
 								}
 							}
 							// If not, insert into the field_internal_tags vocabulary.
+							// @todo to only insert when none exists.
 							elseif (empty($entities['taxonomy_term']) && !empty($keyword->keyword_short)) {
 								$target_voc = taxonomy_vocabulary_machine_name_load('internal_tags');
 								$term = new stdClass();

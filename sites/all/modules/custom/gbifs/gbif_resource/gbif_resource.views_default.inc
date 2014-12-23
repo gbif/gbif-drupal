@@ -96,6 +96,14 @@ function gbif_resource_views_default_views() {
     'image_style' => 'thumbnail',
     'image_link' => '',
   );
+  /* Field: Content: Resource type */
+  $handler->display->display_options['fields']['gr_resource_type']['id'] = 'gr_resource_type';
+  $handler->display->display_options['fields']['gr_resource_type']['table'] = 'field_data_gr_resource_type';
+  $handler->display->display_options['fields']['gr_resource_type']['field'] = 'gr_resource_type';
+  $handler->display->display_options['fields']['gr_resource_type']['label'] = '';
+  $handler->display->display_options['fields']['gr_resource_type']['element_type'] = 'span';
+  $handler->display->display_options['fields']['gr_resource_type']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['gr_resource_type']['type'] = 'taxonomy_term_reference_plain';
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
@@ -105,14 +113,6 @@ function gbif_resource_views_default_views() {
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
   $handler->display->display_options['fields']['title']['element_type'] = 'h3';
   $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
-  /* Field: Content: Resource type */
-  $handler->display->display_options['fields']['gr_resource_type']['id'] = 'gr_resource_type';
-  $handler->display->display_options['fields']['gr_resource_type']['table'] = 'field_data_gr_resource_type';
-  $handler->display->display_options['fields']['gr_resource_type']['field'] = 'gr_resource_type';
-  $handler->display->display_options['fields']['gr_resource_type']['label'] = '';
-  $handler->display->display_options['fields']['gr_resource_type']['element_type'] = 'span';
-  $handler->display->display_options['fields']['gr_resource_type']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['gr_resource_type']['type'] = 'taxonomy_term_reference_plain';
   /* Field: Content: Body */
   $handler->display->display_options['fields']['body']['id'] = 'body';
   $handler->display->display_options['fields']['body']['table'] = 'field_data_body';
@@ -204,7 +204,7 @@ function gbif_resource_views_default_views() {
   $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['title']['element_default_classes'] = FALSE;
   $handler->display->display_options['fields']['title']['link_to_entity'] = 1;
-  /* Field: Indexed Node: The main body text » Text */
+  /* Field: The main body text: Text (indexed) */
   $handler->display->display_options['fields']['body_value']['id'] = 'body_value';
   $handler->display->display_options['fields']['body_value']['table'] = 'search_api_index_resource_index';
   $handler->display->display_options['fields']['body_value']['field'] = 'body_value';

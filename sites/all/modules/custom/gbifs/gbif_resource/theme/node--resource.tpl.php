@@ -38,7 +38,10 @@
 				<aside class="content content-sidebar col-xs-4">
 					<?php print render($content['gr_image']); ?>
 					<?php print render($content['gr_file']); ?>
-					<?php print render($content['gr_url']); ?>
+
+					<?php if ($show_gr_url == TRUE): ?>
+						<?php print render($content['gr_url']); ?>
+					<?php endif; ?>
 
 					<?php print render($content['gr_resource_type']); ?>
 					<?php print render($content['gr_language']); ?>

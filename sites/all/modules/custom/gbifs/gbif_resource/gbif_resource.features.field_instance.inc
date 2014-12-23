@@ -785,10 +785,10 @@ function gbif_resource_field_default_field_instances() {
     'description' => '',
     'display' => array(
       'default' => array(
-        'label' => 'above',
-        'module' => 'file',
+        'label' => 'hidden',
+        'module' => 'file_force',
         'settings' => array(),
-        'type' => 'file_default',
+        'type' => 'file_force_file_default',
         'weight' => 23,
       ),
       'rss' => array(

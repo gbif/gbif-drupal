@@ -147,7 +147,7 @@ function gbif_tweaks_get_language_code($entity_type, $field, $entity_language) {
  * @return string
  * @see http://stackoverflow.com/questions/2510434/format-bytes-to-kilobytes-megabytes-gigabytes
  */
-function formatBytes($bytes, $precision = 2) {
+function format_bytes($bytes, $precision = 2) {
 	$units = array('B', 'KB', 'MB', 'GB', 'TB');
 
 	$bytes = max($bytes, 0);

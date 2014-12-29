@@ -244,6 +244,14 @@ function gbif_resource_preprocess_node(&$variables) {
 			case 'Link':
 			case 'Tool':
 				// For these two types, we alter the gr_url field to say "Go to website" and make the image the external link.
+				$lang_code = gbif_tweaks_get_language_code('node', 'gr_url', $variables['node']->language);
+				$url = $variables['node']->gr_url[$lang_code][0]['value'];
+				$url_html = t('<a href="@url">Go to website</a>', array('@url' => url($url)));
+				//$variables['node']->gr_url[$lang_code][0]['format'] = 'full_html';
+				//$variables['gr_url'][0]['format'] = 'full_html';
+				//$variables['node']->gr_url[$lang_code][0]['safe_value'] = $url_html;
+				//$variables['gr_url'][0]['safe_value'] = $url_html;
+				$variables['content']['gr_url'][0]['#markup'] = $url_html;
 				break;
 		}
 		// Show gr_url field only for "Link" and "Tool".
@@ -254,20 +262,16 @@ function gbif_resource_preprocess_node(&$variables) {
 /**
  * Implements hook_preprocess_field().
  */
-/**
- * Implements hook_preprocess_HOOK().
- */
 function gbif_resource_preprocess_field(&$variables) {
 	if ($variables['element']['#field_name'] == 'gr_file') {
 		$download_string = t('Download');
-		$download_string .= (!empty($variables['items'][0]['#file']->filesize)) ? ' (' . formatBytes($variables['items'][0]['#file']->filesize) . ')' : NULL;
+		$download_string .= (!empty($variables['items'][0]['#file']->filesize)) ? ' (' . format_bytes($variables['items'][0]['#file']->filesize) . ')' : NULL;
 		$variables['items'][0]['#file']->description = $download_string;
 	}
 }
 
 /**
  * Implements hook_preprocess_views_view().
- *
  */
 function gbif_resource_preprocess_views_view(&$variables) {
 	if (isset($variables) && $variables['view']->name == 'resources_search') {

@@ -246,7 +246,8 @@ function _gbif_resource_sync() {
 			 * The keywords are processed in the following order:
 			 * 1) Keywords with "xxxxx" in their code1 field is ignored.
 			 * 2) Iterate though defined vocabularies and assign terms according to the 'terms'.
-			 * 3) The rest goes into Tags.
+			 * 3) Keywords that have a matched term in Tags go to "Tags".
+			 * 4) The rest goes to "Internal Tags".
 			 */
 			foreach ($keywords as $keyword) {
 				if (trim($keyword->code1) != 'xxxxx') { // "xxxxx" in the IMS means we don't process it.
@@ -279,7 +280,7 @@ function _gbif_resource_sync() {
 							}
 						}
 					}
-					// Tags. The rest goes to Tags. A term reference field. Loaded from Keywords.
+					// Tags and Internal Tags. Term reference fields. Loaded from Keywords.
 					else {
 						try {
 							$query = new EntityFieldQuery();
@@ -304,56 +305,80 @@ function _gbif_resource_sync() {
 									$node_wrapper->field_tags[] = $tid;
 								}
 							}
-							// If not, insert into the field_internal_tags vocabulary.
-							// @todo to only insert when none exists.
+							// If not, evaluate against the field_internal_tags vocabulary.
 							elseif (empty($entities['taxonomy_term']) && !empty($keyword->keyword_short)) {
-								$target_voc = taxonomy_vocabulary_machine_name_load('internal_tags');
-								$term = new stdClass();
-								$term->name = htmlspecialchars_decode($keyword->keyword_short);
-								$term->vid = $target_voc->vid;
-
-								$description = $keyword->keyword;
-								$description .= (!empty($keyword->explanation)) ? ' ' . $keyword->explanation : '';
-								$term->description = htmlspecialchars_decode($description);
-								$term->format = 'plain_text';
-								$lang_code = gbif_tweaks_get_language_code('taxonomy_term', 'field_ims_keyword_id', $node->language);
-								if (!empty($keyword->keywordID)) $term->field_ims_keyword_id[$lang_code][]['value'] = $keyword->keywordID;
-
-								// Determine term attribute.
-								$term_attributes = array(
-									'CTT01' => '935db795-c191-4146-91e8-14189b5935ea', // Tool type
-									'CTT02' => 'd5df68f6-8f16-41e2-9efc-c58fbe68d5cc', // Development status
-									'CTT04' => '127bffe9-9153-420f-8d97-8f6cbedf0d3b', // Operating system
-									'CTT05' => '456100c5-b75e-4dad-b681-74046c7a0c8f', // BI standard
-									'AUD01' => 'ee7dd1a0-8e1e-4965-be96-97047f14cf2e', // Group
-									'AUD02' => 'ee7dd1a0-8e1e-4965-be96-97047f14cf2e', // Group
-									'AUD03' => 'ee7dd1a0-8e1e-4965-be96-97047f14cf2e', // Group
-									'AUD04' => 'ee7dd1a0-8e1e-4965-be96-97047f14cf2e', // Group
-									'AUD05' => 'ee7dd1a0-8e1e-4965-be96-97047f14cf2e', // Group
-									'AUD06' => 'ee7dd1a0-8e1e-4965-be96-97047f14cf2e', // Group
-									'AUD07' => 'ee7dd1a0-8e1e-4965-be96-97047f14cf2e', // Group
-									'AUD08' => 'ee7dd1a0-8e1e-4965-be96-97047f14cf2e', // Group
-									'AUD09' => 'ee7dd1a0-8e1e-4965-be96-97047f14cf2e', // Group
-									'AUD10' => 'ee7dd1a0-8e1e-4965-be96-97047f14cf2e', // Group
-								);
-								if (isset($term_attributes[$keyword->code1])) {
-									$query = new EntityFieldQuery();
-									$entities = $query->entityCondition('entity_type', 'taxonomy_term')
-										->entityCondition('bundle', 'term_attribute')
-										->propertyCondition('uuid', $term_attributes[$keyword->code1])
-										->execute();
-									if (!empty($entities['taxonomy_term']) && count($entities['taxonomy_term']) == 1) {
-										$tid = key($entities['taxonomy_term']);
-										$lang_code = gbif_tweaks_get_language_code('taxonomy_term', 'field_term_attributes', $node->language);
-										$term->field_term_attributes[$lang_code][]['tid'] = $tid;
+								$q_field_internal_tags = new EntityFieldQuery();
+								$e_field_internal_tags = $q_field_internal_tags->entityCondition('entity_type', 'taxonomy_term')
+									->entityCondition('bundle', 'internal_tags')
+									->fieldCondition('field_ims_keyword_id', 'value', $keyword->keywordID, '=')
+									->execute();
+								// If the keyword exists in the "field_internal_tags" vocabulary, assign it to field_internal_tags.
+								if (!empty($e_field_internal_tags['taxonomy_term']) && count($e_field_internal_tags['taxonomy_term']) == 1) {
+									$tid = key($e_field_internal_tags['taxonomy_term']);
+									$node_array = (array) $node;
+									$lang_code = gbif_tweaks_get_language_code('node', 'field_internal_tags', $node->language);
+									$field_values = $node_array['field_internal_tags'][$lang_code];
+									$tid_exist = FALSE;
+									if (isset($field_values)) {
+										// Test if it's already assigned.
+										foreach ($field_values as $v) {
+											if ($v['tid'] == $tid) $tid_exist = TRUE;
+										}
 									}
-									unset($query, $entities, $tid);
+									if ($tid_exist == FALSE) {
+										$node_wrapper->field_internal_tags[] = $tid;
+									}
 								}
-								taxonomy_term_save($term);
+								// If not, create a new term in field_internal_tags and assign to the node.
+								else {
+									$target_voc = taxonomy_vocabulary_machine_name_load('internal_tags');
+									$term = new stdClass();
+									$term->name = htmlspecialchars_decode($keyword->keyword_short);
+									$term->vid = $target_voc->vid;
 
-								// Assign to node.
-								if ($term->tid) {
-									$node_wrapper->field_internal_tags[] = $term->tid;
+									$description = $keyword->keyword;
+									$description .= (!empty($keyword->explanation)) ? ' ' . $keyword->explanation : '';
+									$term->description = htmlspecialchars_decode($description);
+									$term->format = 'plain_text';
+									$lang_code = gbif_tweaks_get_language_code('taxonomy_term', 'field_ims_keyword_id', $node->language);
+									if (!empty($keyword->keywordID)) $term->field_ims_keyword_id[$lang_code][]['value'] = $keyword->keywordID;
+
+									// Determine term attribute.
+									$term_attributes = array(
+										'CTT01' => '935db795-c191-4146-91e8-14189b5935ea', // Tool type
+										'CTT02' => 'd5df68f6-8f16-41e2-9efc-c58fbe68d5cc', // Development status
+										'CTT04' => '127bffe9-9153-420f-8d97-8f6cbedf0d3b', // Operating system
+										'CTT05' => '456100c5-b75e-4dad-b681-74046c7a0c8f', // BI standard
+										'AUD01' => 'ee7dd1a0-8e1e-4965-be96-97047f14cf2e', // Group
+										'AUD02' => 'ee7dd1a0-8e1e-4965-be96-97047f14cf2e', // Group
+										'AUD03' => 'ee7dd1a0-8e1e-4965-be96-97047f14cf2e', // Group
+										'AUD04' => 'ee7dd1a0-8e1e-4965-be96-97047f14cf2e', // Group
+										'AUD05' => 'ee7dd1a0-8e1e-4965-be96-97047f14cf2e', // Group
+										'AUD06' => 'ee7dd1a0-8e1e-4965-be96-97047f14cf2e', // Group
+										'AUD07' => 'ee7dd1a0-8e1e-4965-be96-97047f14cf2e', // Group
+										'AUD08' => 'ee7dd1a0-8e1e-4965-be96-97047f14cf2e', // Group
+										'AUD09' => 'ee7dd1a0-8e1e-4965-be96-97047f14cf2e', // Group
+										'AUD10' => 'ee7dd1a0-8e1e-4965-be96-97047f14cf2e', // Group
+									);
+									if (isset($term_attributes[$keyword->code1])) {
+										$query = new EntityFieldQuery();
+										$entities = $query->entityCondition('entity_type', 'taxonomy_term')
+											->entityCondition('bundle', 'term_attribute')
+											->propertyCondition('uuid', $term_attributes[$keyword->code1])
+											->execute();
+										if (!empty($entities['taxonomy_term']) && count($entities['taxonomy_term']) == 1) {
+											$tid = key($entities['taxonomy_term']);
+											$lang_code = gbif_tweaks_get_language_code('taxonomy_term', 'field_term_attributes', $node->language);
+											$term->field_term_attributes[$lang_code][]['tid'] = $tid;
+										}
+										unset($query, $entities, $tid);
+									}
+									taxonomy_term_save($term);
+
+									// Assign to node.
+									if ($term->tid) {
+										$node_wrapper->field_internal_tags[] = $term->tid;
+									}
 								}
 							}
 						} catch (Exception $e) {

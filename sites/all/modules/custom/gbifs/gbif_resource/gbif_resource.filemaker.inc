@@ -385,7 +385,7 @@ function _gbif_resource_sync() {
 							watchdog('gbif_resource', $e->getMessage(), array(), WATCHDOG_ERROR);
 							continue;
 						}
-						unset($query, $entities, $tid, $lang_code, $tid_exist, $node_array, $field_values);
+						unset($query, $entities, $tid, $lang_code, $tid_exist, $node_array, $field_values, $v);
 					}
 				}
 			}
@@ -400,12 +400,23 @@ function _gbif_resource_sync() {
 					->fieldCondition('field_orc_original_ims_id', 'value', $ims_id, '=');
 				$exist = $query->execute();
 				if (isset($exist['node'])) {
-					foreach ($exist['node'] as $nid => $obj) {
-						$node_wrapper->gr_old_resource_nid[] = $nid;
+					foreach ($exist['node'] as $old_nid => $obj) {
+						// Check if $old_nid is already assigned to the current node.
+						$lang_code = gbif_tweaks_get_language_code('node', 'gr_old_resource_nid', $node->language);
+						if (!empty($node->gr_old_resource_nid)) {
+							$old_nid_exist = FALSE;
+							foreach ($node->gr_old_resource_nid[$lang_code] as $v) {
+								if ($v['value'] == $old_nid) $old_nid_exist = TRUE;
+							}
+						}
+						// Assign only if the same old nid doesn't exist or non has been assigned yet.
+						if (empty($node->gr_old_resource_nid) || $old_nid_exist == FALSE) {
+							$node_wrapper->gr_old_resource_nid[] = $old_nid;
+							$count_duplicate += count($exist['node']) - 1;
+						}
 					}
-					$count_duplicate += count($exist['node']) - 1;
 				}
-				unset($query, $exist);
+				unset($query, $exist, $lang_code, $v, $old_nid_exist);
 			}
 
 			// For all data resources, we set the status to unpublished until they are

@@ -1827,7 +1827,7 @@ function gbif_resource_field_default_field_instances() {
     'description' => '',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'hidden',
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
@@ -1874,7 +1874,7 @@ function gbif_resource_field_default_field_instances() {
         'preview' => 0,
         'thumbnail' => 0,
       ),
-      'text_processing' => 0,
+      'text_processing' => 1,
       'user_register_form' => FALSE,
     ),
     'widget' => array(

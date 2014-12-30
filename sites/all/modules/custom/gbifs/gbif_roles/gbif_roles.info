@@ -17,7 +17,6 @@ dependencies[] = custom_username_validation
 dependencies[] = dashboard
 dependencies[] = date_repeat_field
 dependencies[] = date_tools
-dependencies[] = devel
 dependencies[] = ds
 dependencies[] = facetapi
 dependencies[] = features

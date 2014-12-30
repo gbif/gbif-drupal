@@ -1874,7 +1874,7 @@ function gbif_resource_field_default_field_instances() {
         'preview' => 0,
         'thumbnail' => 0,
       ),
-      'text_processing' => 1,
+      'text_processing' => 0,
       'user_register_form' => FALSE,
     ),
     'widget' => array(

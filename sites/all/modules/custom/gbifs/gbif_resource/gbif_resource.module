@@ -332,3 +332,24 @@ function gbif_resource_show_featured_resources() {
 		return TRUE;
 	}
 }
+
+/**
+ * Implements hook_facet_items_alter().
+ * We use this hook to show the attribute of a tag.
+ * This requires "Rewrite facet items via callback function" be active and is
+ * dependent on facetapi_bonus module.
+ */
+function gbif_resource_facet_items_alter(&$build, &$settings) {
+	if ($settings->facet == 'field_tags') {
+		foreach($build as $key => $item) {
+			$term = taxonomy_term_load($key);
+			if (count($term->field_term_attributes) > 0) {
+				$lang_code = 'und'; // @todo To find a proper way to load language code.
+				$attribute_term = taxonomy_term_load($term->field_term_attributes[$lang_code][0]['tid']);
+				$acronym = $attribute_term->field_term_acronym[$lang_code][0]['value'];
+				$build[$key]["#markup"] = $acronym . ': ' . $item["#markup"];
+			}
+			unset($term, $attribute_term);
+		}
+	}
+}

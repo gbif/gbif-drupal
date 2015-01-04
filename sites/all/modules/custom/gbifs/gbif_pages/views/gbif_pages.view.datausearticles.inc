@@ -117,11 +117,11 @@ function gbif_pages_view_datausearticles() {
   $handler = $view->new_display('page', 'Page', 'page');
   $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
   $handler->display->display_options['path'] = 'newsroom/archive/alldatausearticles';
-  $handler->display->display_options['menu']['type'] = 'normal';
   $handler->display->display_options['menu']['title'] = 'A view of all data use articles';
   $handler->display->display_options['menu']['weight'] = '0';
   $handler->display->display_options['menu']['name'] = 'main-menu';
   $handler->display->display_options['menu']['context'] = 0;
+  $handler->display->display_options['menu']['context_only_inline'] = 0;
 
   /* Display: Feed */
   $handler = $view->new_display('feed', 'Feed', 'feed');
@@ -152,6 +152,6 @@ function gbif_pages_view_datausearticles() {
     t('Page'),
     t('Feed'),
   );
-  
+
   return $view;
 }

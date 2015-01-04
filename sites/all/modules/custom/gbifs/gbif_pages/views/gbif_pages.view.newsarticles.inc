@@ -123,11 +123,11 @@ function gbif_pages_view_newsarticles() {
 	$handler->display->display_options['arguments']['field_regions_tid']['validate_options']['type'] = 'convert';
 	$handler->display->display_options['arguments']['field_regions_tid']['validate']['fail'] = 'ignore';
 	$handler->display->display_options['path'] = 'newsroom/archive/allnewsarticles';
-	$handler->display->display_options['menu']['type'] = 'normal';
 	$handler->display->display_options['menu']['title'] = 'A view of all GBIF news articles';
 	$handler->display->display_options['menu']['weight'] = '0';
 	$handler->display->display_options['menu']['name'] = 'main-menu';
 	$handler->display->display_options['menu']['context'] = 0;
+	$handler->display->display_options['menu']['context_only_inline'] = 0;
 
 	/* Display: Feed */
 	$handler = $view->new_display('feed', 'Feed', 'feed');

@@ -17,14 +17,6 @@ function gbif_resource_taxonomy_default_vocabularies() {
       'module' => 'taxonomy',
       'weight' => -7,
     ),
-    'internal_tags' => array(
-      'name' => 'Internal Tags',
-      'machine_name' => 'internal_tags',
-      'description' => 'Tags derived from keywords of the FileMaker IMS.',
-      'hierarchy' => 0,
-      'module' => 'taxonomy',
-      'weight' => 0,
-    ),
     'language' => array(
       'name' => 'Language',
       'machine_name' => 'language',

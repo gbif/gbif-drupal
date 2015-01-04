@@ -63,6 +63,7 @@ Community {"url":"<front>"}
 -Resources {"url":"resources\/summary", "description": "Tools and information to support the GBIF community (look template.php for changing this particular item.)"}
 --Summary {"url":"resources\/summary"}
 ---Archive of all Resources {"url":"resources\/archive"}
+--Literature {"url":"mendeley"}
 --Key information {"url":"resources\/keyinformation"}
 --For publishers {"url":"resources\/for-publishers"}
 --For users {"url":"resources\/for-users"}
@@ -73,6 +74,7 @@ About {"url":"<front>"}
 --What is GBIF? {"url":"whatisgbif"}
 -Key information {"url":"resources\/keyinformation"}
 --Summary {"url":"resources\/summary"}
+--Literature {"url":"mendeley"}
 --Key information {"url":"resources\/keyinformation"}
 --For publishers {"url":"resources\/for-publishers"}
 --For users {"url":"resources\/for-users"}
@@ -93,8 +95,6 @@ Search {"url":"<nolink>", "description":"This is the placeholder for the search 
 Home {"url":"<front>","hidden":true}
 -Frequently Asked Questions {"url":"<front>","hidden":true, "description": "Contact us on <a href=\"mailto:helpdesk@gbif.org\">helpdesk@gbif.org<\/a> for more assistance"}
 --Data use {"url":"faq\/datause"}
--Peer-reviewed publications {"url":"<front>","hidden":true, "description":"(via <a href=\"http:\/\/www.mendeley.com\/groups\/1068301\/gbif-public-library\/\">Mendeley<\/a>)"}
---Publications {"url":"mendeley"}
 -Disclaimers and agreements {"url":"<front>","hidden":true, "description": "Terms relating to information and data accessed, used and shared through GBIF"}
 --Data sharing {"url":"disclaimer\/datasharing"}
 --Data use {"url":"disclaimer\/datause"}

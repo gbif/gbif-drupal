@@ -862,6 +862,12 @@ function _bvng_get_title_data($node_count = NULL, $user = NULL, $req_path = NULL
 		    'description' => t('Tools and information to support the GBIF community'),
 		  );
 		}
+		elseif ($matched == FALSE && strpos($req_path, 'mendeley') !== FALSE) {
+			$title = array(
+				'name' => t('Peer-reviewed publications'),
+				'description' => t('(via <a href="@url">Mendeley</a>)', array('@url' => 'http://www.mendeley.com/groups/1068301/gbif-public-library/')),
+			);
+		}
 		else {
 		  $parent = menu_link_load($active_menu_item['plid']);
 		  $title = array(

@@ -40,7 +40,7 @@ function gbif_resource_default_fe_block_settings() {
         'weight' => 0,
       ),
     ),
-    'title' => t('Purpose'),
+    'title' => 'Purpose',
     'visibility' => 0,
   );
 
@@ -72,7 +72,7 @@ function gbif_resource_default_fe_block_settings() {
         'weight' => 0,
       ),
     ),
-    'title' => t('Language'),
+    'title' => 'Language',
     'visibility' => 0,
   );
 
@@ -104,7 +104,7 @@ function gbif_resource_default_fe_block_settings() {
         'weight' => 0,
       ),
     ),
-    'title' => t('Data type'),
+    'title' => 'Data type',
     'visibility' => 0,
   );
 
@@ -136,7 +136,7 @@ function gbif_resource_default_fe_block_settings() {
         'weight' => 0,
       ),
     ),
-    'title' => t('Tags'),
+    'title' => 'Tags',
     'visibility' => 0,
   );
 
@@ -168,7 +168,7 @@ function gbif_resource_default_fe_block_settings() {
         'weight' => 0,
       ),
     ),
-    'title' => t('Resource type'),
+    'title' => 'Resource type',
     'visibility' => 0,
   );
 
@@ -232,7 +232,7 @@ function gbif_resource_default_fe_block_settings() {
         'weight' => 0,
       ),
     ),
-    'title' => t('Featured resources'),
+    'title' => 'Featured resources',
     'visibility' => 0,
   );
 

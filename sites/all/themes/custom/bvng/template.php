@@ -154,7 +154,7 @@ function bvng_preprocess_page(&$variables) {
 		$altered_path = drupal_get_normal_path('newsroom/uses'); // taxonomy/term/567
 	}
 	elseif (strpos($req_path, 'resources') !== FALSE) {
-		$altered_path = drupal_get_normal_path('resources/summary'); // taxonomy/term/764
+		$altered_path = drupal_get_normal_path('resources'); // taxonomy/term/764
 	}
 	elseif (drupal_match_path($req_path, 'user') || drupal_match_path($req_path, 'user/*')) {
 		$altered_path = 'user';
@@ -701,7 +701,7 @@ function _bvng_well_types($req_path, $system_main) {
     'events',
 		'search',
 		'mendeley',
-		'resource',
+		'resources',
   );
 
 	// Determine to give filter sidebar or not.
@@ -841,10 +841,10 @@ function _bvng_get_title_data($node_count = NULL, $user = NULL, $req_path = NULL
 		);
 	}
 	elseif ($active_menu_item) {
-		// The resource/summary and resources/keyinformation are shared by two menu parents
+		// The resources and resources/keyinformation are shared by two menu parents
 		// so we force the title here.
 		$resource_paths = array(
-			'resources/summary',
+			'resources',
 			'resources/archive',
 			'node/234',
 			'node/5438',
@@ -1388,7 +1388,7 @@ function bvng_file_force_file_link($variables) {
 	$options['query']['download'] = '1';
 
 	// Use path to control the output style of file_force.
-	if (current_path() == 'resources/summary') {
+	if (current_path() == 'resources') {
 		$options['html'] = TRUE;
 		return '<span class="file">' . l($icon, $url, $options) . '</span>';
 	}

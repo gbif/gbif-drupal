@@ -318,7 +318,7 @@ function gbif_resource_views_default_views() {
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page');
   $handler->display->display_options['exposed_block'] = TRUE;
-  $handler->display->display_options['path'] = 'resources/summary';
+  $handler->display->display_options['path'] = 'resources';
   $translatables['resources_search'] = array(
     t('Master'),
     t('Resources search'),

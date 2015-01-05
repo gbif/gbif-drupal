@@ -28,7 +28,7 @@ function gbif_resource_context_default_contexts() {
   );
   $context->reactions = array(
     'menu' => array(
-      0 => 'gbif-menu:resources/summary',
+      0 => 'gbif-menu:resources',
     ),
   );
   $context->condition_mode = 0;

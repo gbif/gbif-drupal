@@ -1,6 +1,13 @@
 <?php
 	drupal_set_title($title);
 ?>
+<div class="back-to-previous">
+	<div class="container">
+		<div class="row">
+			<p>&lt; <u><a href="<?php print $referer_url; ?>">Back to resource library</a></u></p>
+		</div>
+	</div>
+</div>
 <article id="node-<?php print $node->nid; ?>" class="container <?php print $classes; ?>">
 	<div class="row">
 		<section id="event" class="col-xs-12 well well-lg well-margin-top clearfix"<?php print $attributes; ?>>

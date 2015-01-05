@@ -60,8 +60,8 @@ Community {"url":"<front>"}
 --Capacity programmes {"url":"capacityenhancement\/capacityprogrammes"}
 --Current projects {"url":"capacityenhancement\/current-projects"}
 --Past projects {"url":"capacityenhancement\/past-projects"}
--Resources {"url":"resources\/summary", "description": "Tools and information to support the GBIF community (look template.php for changing this particular item.)"}
---Summary {"url":"resources\/summary"}
+-Resources {"url":"resources", "description": "Tools and information to support the GBIF community (look template.php for changing this particular item.)"}
+--Resources {"url":"resources"}
 ---Archive of all Resources {"url":"resources\/archive"}
 --Literature {"url":"mendeley"}
 --Key information {"url":"resources\/keyinformation"}
@@ -73,7 +73,7 @@ About {"url":"<front>"}
 -What is GBIF {"url":"whatisgbif", "description": "A short description of the Global Biodiversity Information Facility"}
 --What is GBIF? {"url":"whatisgbif"}
 -Key information {"url":"resources\/keyinformation"}
---Summary {"url":"resources\/summary"}
+--Resources {"url":"resources"}
 --Literature {"url":"mendeley"}
 --Key information {"url":"resources\/keyinformation"}
 --For publishers {"url":"resources\/for-publishers"}

@@ -1661,8 +1661,8 @@ function gbif_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-gr_right'
-  $field_instances['node-resource-gr_right'] = array(
+  // Exported field_instance: 'node-resource-gr_rights'
+  $field_instances['node-resource-gr_rights'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
     'deleted' => 0,
@@ -1711,8 +1711,8 @@ function gbif_resource_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'node',
-    'field_name' => 'gr_right',
-    'label' => 'Right',
+    'field_name' => 'gr_rights',
+    'label' => 'Rights',
     'required' => 0,
     'settings' => array(
       'linkit' => array(

@@ -515,13 +515,13 @@ function gbif_resource_field_default_field_bases() {
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'gr_right'
-  $field_bases['gr_right'] = array(
+  // Exported field_base: 'gr_rights'
+  $field_bases['gr_rights'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
-    'field_name' => 'gr_right',
+    'field_name' => 'gr_rights',
     'foreign keys' => array(
       'format' => array(
         'columns' => array(

@@ -162,10 +162,10 @@ function _gbif_resource_sync() {
 			$node_wrapper->gr_contributor = gbif_ims_format_value($record->contributor, 'filtered_html');
 
 			// Rights.
-			$node_wrapper->gr_right = gbif_ims_format_value($record->rights, 'filtered_html');
+			$node_wrapper->gr_rights = gbif_ims_format_value($record->rights, 'filtered_html');
 
 			// Rights holder.
-			$node_wrapper->gr_right_holder = gbif_ims_format_value($record->rights_holder, 'filtered_html');
+			$node_wrapper->gr_rights_holder = gbif_ims_format_value($record->rights_holder, 'filtered_html');
 
 			// Number of downloads.
 			$node_wrapper->gr_number_of_downloads->set(gbif_ims_format_value($record->num_downloads));

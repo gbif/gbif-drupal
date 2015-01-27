@@ -35,8 +35,8 @@
 					<?php print render($content['gr_author']); ?>
 					<?php print render($content['gr_contributor']); ?>
 					<?php print render($content['gr_publisher']); ?>
-					<?php print render($content['gr_right']); ?>
-					<?php print render($content['gr_right_holder']); ?>
+					<?php print render($content['gr_rights']); ?>
+					<?php print render($content['gr_rights_holder']); ?>
 
 					<?php if (isset($content['service_links'])): ?>
 						<?php print render($content['service_links']); ?>

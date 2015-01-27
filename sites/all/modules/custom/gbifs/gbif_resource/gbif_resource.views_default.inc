@@ -96,14 +96,6 @@ function gbif_resource_views_default_views() {
     'image_style' => 'thumbnail',
     'image_link' => '',
   );
-  /* Field: Content: Resource type */
-  $handler->display->display_options['fields']['gr_resource_type']['id'] = 'gr_resource_type';
-  $handler->display->display_options['fields']['gr_resource_type']['table'] = 'field_data_gr_resource_type';
-  $handler->display->display_options['fields']['gr_resource_type']['field'] = 'gr_resource_type';
-  $handler->display->display_options['fields']['gr_resource_type']['label'] = '';
-  $handler->display->display_options['fields']['gr_resource_type']['element_type'] = 'span';
-  $handler->display->display_options['fields']['gr_resource_type']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['gr_resource_type']['type'] = 'taxonomy_term_reference_plain';
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';

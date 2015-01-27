@@ -542,13 +542,13 @@ function gbif_resource_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'gr_right_holder'
-  $field_bases['gr_right_holder'] = array(
+  // Exported field_base: 'gr_rights_holder'
+  $field_bases['gr_rights_holder'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
-    'field_name' => 'gr_right_holder',
+    'field_name' => 'gr_rights_holder',
     'foreign keys' => array(
       'format' => array(
         'columns' => array(

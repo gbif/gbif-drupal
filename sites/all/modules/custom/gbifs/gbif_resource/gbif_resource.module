@@ -211,18 +211,17 @@ function gbif_resource_theme_registry_alter(&$theme_registry) {
 function gbif_resource_preprocess_page(&$variables) {
 	// Detect individual node page and node type is "resource"
 	if (isset($variables['node']) && $variables['node']->type == 'resource' && isset($variables['page']['menu']['menu_block_gbif_navigation_menu_tabs'])) {
-		// Currently we set active on the menu item that has the path as "resources/summary"
-		// Find the registered menu item and add the "active" CSS class to the attributes
-		// Note that the path of the landing page has been changed to "resources".
-		$highlighted_path = 'resources/summary';
+		// We set a special class on the menu item to be consistent with http://www.gbif.org/occurrence/142316978/verbatim.
+		// Find the registered menu item and add the "back-menu" CSS class to the attributes
+		$highlighted_path = 'resources';
 		foreach ($variables['page']['menu']['menu_block_gbif_navigation_menu_tabs']['#content'] as $k => $tab) {
 			if (gettype($k) == 'integer') {
 				if ($tab['#href'] == $highlighted_path) {
 					// Make it active
-					array_push($variables['page']['menu']['menu_block_gbif_navigation_menu_tabs']['#content'][$k]['#attributes']['class'], 'active');
-					// We change the title to "Resource"(singular) for individual resource pages.
-					$variables['page']['menu']['menu_block_gbif_navigation_menu_tabs']['#content'][$k]['#title'] = t('Resource');
-					watchdog('gbif_resource', 'Active menu item set for node.', array(), WATCHDOG_DEBUG);
+					array_push($variables['page']['menu']['menu_block_gbif_navigation_menu_tabs']['#content'][$k]['#attributes']['class'], 'back-menu');
+					// To change the title to "Resource"(singular) for individual resource pages.
+					// $variables['page']['menu']['menu_block_gbif_navigation_menu_tabs']['#content'][$k]['#title'] = t('Resource');
+					watchdog('gbif_resource', 'Active detail menu item set for node.', array(), WATCHDOG_DEBUG);
 				}
 			}
 		}

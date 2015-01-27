@@ -103,7 +103,7 @@
 	<div class="sidebar-filter resource-filter col-xs-4">
     <div class="resource-filter-header">
       <h2>Filters</h2>
-      <span class="clear-all"><a href="/resources/summary">clear all</a></span>
+      <span class="clear-all"><a href="/resources">clear all</a></span>
     </div>
 
 		<?php print $facet_resource_type; ?>

@@ -4,7 +4,7 @@
 <div class="back-to-previous">
 	<div class="container">
 		<div class="row">
-			<p>&lt; <u><a href="<?php print $referer_url; ?>">Back to resource library</a></u></p>
+			<p>&lt; <u><a href="<?php print $referer_url; ?>"><?php print $referer_link_text; ?></a></u></p>
 		</div>
 	</div>
 </div>

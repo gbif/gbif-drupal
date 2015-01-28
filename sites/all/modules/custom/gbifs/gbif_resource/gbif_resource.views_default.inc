@@ -276,6 +276,34 @@ function gbif_resource_views_default_views() {
     'file_view_mode' => 'default',
   );
   $handler->display->display_options['fields']['gr_file']['delta_offset'] = '0';
+  /* Field: Indexed Node: Date of publication */
+  $handler->display->display_options['fields']['gr_date_of_publication']['id'] = 'gr_date_of_publication';
+  $handler->display->display_options['fields']['gr_date_of_publication']['table'] = 'search_api_index_resource_index';
+  $handler->display->display_options['fields']['gr_date_of_publication']['field'] = 'gr_date_of_publication';
+  $handler->display->display_options['fields']['gr_date_of_publication']['label'] = '';
+  $handler->display->display_options['fields']['gr_date_of_publication']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['gr_date_of_publication']['settings'] = array(
+    'format_type' => 'mmm_dd',
+    'fromto' => 'both',
+    'multiple_number' => '',
+    'multiple_from' => '',
+    'multiple_to' => '',
+    'show_repeat_rule' => 'show',
+  );
+  /* Field: Indexed Node: URL */
+  $handler->display->display_options['fields']['url']['id'] = 'url';
+  $handler->display->display_options['fields']['url']['table'] = 'search_api_index_resource_index';
+  $handler->display->display_options['fields']['url']['field'] = 'url';
+  $handler->display->display_options['fields']['url']['label'] = '';
+  $handler->display->display_options['fields']['url']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['url']['link_to_entity'] = 0;
+  /* Field: Indexed Node: UUID */
+  $handler->display->display_options['fields']['uuid']['id'] = 'uuid';
+  $handler->display->display_options['fields']['uuid']['table'] = 'search_api_index_resource_index';
+  $handler->display->display_options['fields']['uuid']['field'] = 'uuid';
+  $handler->display->display_options['fields']['uuid']['label'] = '';
+  $handler->display->display_options['fields']['uuid']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['uuid']['link_to_entity'] = 0;
   /* Sort criterion: Indexed Node: Sticky in lists */
   $handler->display->display_options['sorts']['sticky_1']['id'] = 'sticky_1';
   $handler->display->display_options['sorts']['sticky_1']['table'] = 'search_api_index_resource_index';
@@ -350,6 +378,25 @@ function gbif_resource_views_default_views() {
   $handler = $view->new_display('page', 'Page', 'page');
   $handler->display->display_options['exposed_block'] = TRUE;
   $handler->display->display_options['path'] = 'resources';
+
+  /* Display: Feed */
+  $handler = $view->new_display('feed', 'Feed', 'filtered_feed');
+  $handler->display->display_options['defaults']['title'] = FALSE;
+  $handler->display->display_options['title'] = 'GBIF latest filtered resources';
+  $handler->display->display_options['pager']['type'] = 'some';
+  $handler->display->display_options['style_plugin'] = 'rss';
+  $handler->display->display_options['row_plugin'] = 'rss_fields';
+  $handler->display->display_options['row_options']['title_field'] = 'title';
+  $handler->display->display_options['row_options']['link_field'] = 'url';
+  $handler->display->display_options['row_options']['description_field'] = 'body_value';
+  $handler->display->display_options['row_options']['creator_field'] = 'gr_author';
+  $handler->display->display_options['row_options']['date_field'] = 'gr_date_of_publication';
+  $handler->display->display_options['row_options']['guid_field_options'] = array(
+    'guid_field' => 'uuid',
+    'guid_field_is_permalink' => 0,
+  );
+  $handler->display->display_options['path'] = 'resources/feed/filtered';
+  $handler->display->display_options['sitename_title'] = 0;
   $translatables['resources_search'] = array(
     t('Master'),
     t('Resources search'),
@@ -372,6 +419,8 @@ function gbif_resource_views_default_views() {
     t('Relevance'),
     t('Fulltext search'),
     t('Page'),
+    t('Feed'),
+    t('GBIF latest filtered resources'),
   );
   $export['resources_search'] = $view;
 

@@ -35,7 +35,7 @@
     <?php if ($exp_widgets): ?>
       <div class="view-widgets-search">
         <?php print $exp_widgets; ?>
-        <a href="/resources/archive/rss"><img class="rss-icon" src="/sites/all/themes/custom/bvng/images/rss-feed.gif"/></a>
+        <a href="/resources/feed/filtered"><img class="rss-icon" src="/sites/all/themes/custom/bvng/images/rss-feed.gif"/></a>
       </div>
     <?php endif; ?>
 

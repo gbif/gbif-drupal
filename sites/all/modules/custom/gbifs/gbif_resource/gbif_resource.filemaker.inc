@@ -167,6 +167,13 @@ function _gbif_resource_sync() {
 			// Rights holder.
 			$node_wrapper->gr_rights_holder = gbif_ims_format_value($record->rights_holder, 'filtered_html');
 
+			// Date of publication.
+			if (!empty($record->date_of_publication)) {
+				$date_of_publication = DateTime::createFromFormat('m/d/Y', $record->date_of_publication);
+				$date_of_publication = ($date_of_publication != FALSE) ? $date_of_publication->getTimestamp() : NULL;
+				$node_wrapper->gr_date_of_publication->set($date_of_publication);
+			}
+
 			// Number of downloads.
 			$node_wrapper->gr_number_of_downloads->set(gbif_ims_format_value($record->num_downloads));
 

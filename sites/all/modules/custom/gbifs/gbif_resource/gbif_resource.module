@@ -277,7 +277,19 @@ function gbif_resource_preprocess_node(&$variables) {
 		}
 		// Show gr_url field only for "Link" and "Tool".
 		$variables['show_gr_url'] = ( $resource_type == 'Link' || $resource_type == 'Tool') ? TRUE : FALSE;
-		$variables['referer_url'] = $_SERVER['HTTP_REFERER'];
+		// Set referer URL and text for guiding user back to the previous page.
+		if (empty($_SERVER['HTTP_REFERER'])) {
+			$variables['referer_url'] = '/resources';
+			$variables['referer_link_text'] = t('Go to resource library');
+		}
+		elseif (strpos($_SERVER['HTTP_REFERER'], 'resources') !== FALSE) {
+			$variables['referer_url'] = $_SERVER['HTTP_REFERER'];
+			$variables['referer_link_text'] = t('Back to resource library');
+		}
+		else {
+			$variables['referer_url'] = $_SERVER['HTTP_REFERER'];
+			$variables['referer_link_text'] = t('Back to previous page');
+		}
 	}
 }
 

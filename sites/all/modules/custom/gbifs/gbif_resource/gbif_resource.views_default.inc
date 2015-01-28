@@ -49,7 +49,6 @@ function gbif_resource_views_default_views() {
   $handler->display->display_options['sorts']['promote']['id'] = 'promote';
   $handler->display->display_options['sorts']['promote']['table'] = 'node';
   $handler->display->display_options['sorts']['promote']['field'] = 'promote';
-  $handler->display->display_options['sorts']['promote']['order'] = 'DESC';
   /* Filter criterion: Content: Published */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
@@ -125,6 +124,38 @@ function gbif_resource_views_default_views() {
       'text' => 0,
     ),
   );
+  $handler->display->display_options['defaults']['sorts'] = FALSE;
+  /* Sort criterion: Content: Date of publication (gr_date_of_publication) */
+  $handler->display->display_options['sorts']['gr_date_of_publication_value']['id'] = 'gr_date_of_publication_value';
+  $handler->display->display_options['sorts']['gr_date_of_publication_value']['table'] = 'field_data_gr_date_of_publication';
+  $handler->display->display_options['sorts']['gr_date_of_publication_value']['field'] = 'gr_date_of_publication_value';
+  $handler->display->display_options['sorts']['gr_date_of_publication_value']['order'] = 'DESC';
+  /* Sort criterion: Content: Post date */
+  $handler->display->display_options['sorts']['created']['id'] = 'created';
+  $handler->display->display_options['sorts']['created']['table'] = 'node';
+  $handler->display->display_options['sorts']['created']['field'] = 'created';
+  $handler->display->display_options['sorts']['created']['order'] = 'DESC';
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Filter criterion: Content: Published */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'node';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['value'] = 1;
+  $handler->display->display_options['filters']['status']['group'] = 1;
+  $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
+  /* Filter criterion: Content: Type */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'node';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'resource' => 'resource',
+  );
+  /* Filter criterion: Content: Promoted to front page */
+  $handler->display->display_options['filters']['promote']['id'] = 'promote';
+  $handler->display->display_options['filters']['promote']['table'] = 'node';
+  $handler->display->display_options['filters']['promote']['field'] = 'promote';
+  $handler->display->display_options['filters']['promote']['value'] = '1';
   $handler->display->display_options['block_description'] = 'View: Resources - featured resources';
   $translatables['resources'] = array(
     t('Master'),
@@ -250,6 +281,13 @@ function gbif_resource_views_default_views() {
   $handler->display->display_options['sorts']['sticky_1']['table'] = 'search_api_index_resource_index';
   $handler->display->display_options['sorts']['sticky_1']['field'] = 'sticky';
   $handler->display->display_options['sorts']['sticky_1']['order'] = 'DESC';
+  /* Sort criterion: Indexed Node: Date of publication */
+  $handler->display->display_options['sorts']['gr_date_of_publication']['id'] = 'gr_date_of_publication';
+  $handler->display->display_options['sorts']['gr_date_of_publication']['table'] = 'search_api_index_resource_index';
+  $handler->display->display_options['sorts']['gr_date_of_publication']['field'] = 'gr_date_of_publication';
+  $handler->display->display_options['sorts']['gr_date_of_publication']['order'] = 'DESC';
+  $handler->display->display_options['sorts']['gr_date_of_publication']['exposed'] = TRUE;
+  $handler->display->display_options['sorts']['gr_date_of_publication']['expose']['label'] = 'Date of publication';
   /* Sort criterion: Indexed Node: Date created */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
   $handler->display->display_options['sorts']['created']['table'] = 'search_api_index_resource_index';
@@ -329,6 +367,7 @@ function gbif_resource_views_default_views() {
     t('next ›'),
     t('last »'),
     t('Author(s)'),
+    t('Date of publication'),
     t('Date created'),
     t('Relevance'),
     t('Fulltext search'),

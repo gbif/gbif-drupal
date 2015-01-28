@@ -66,6 +66,7 @@ function gbif_resource_default_search_api_index() {
         "created" : { "type" : "date" },
         "field_tags" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
         "gr_data_type" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
+        "gr_date_of_publication" : { "type" : "date" },
         "gr_language" : { "type" : "integer", "entity_type" : "taxonomy_term" },
         "gr_purpose" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
         "gr_resource_type" : { "type" : "integer", "entity_type" : "taxonomy_term" },
@@ -263,6 +264,12 @@ function gbif_resource_default_search_api_server() {
             "table" : "search_api_db_resource_index",
             "column" : "gr_resource_type",
             "type" : "integer",
+            "boost" : "1.0"
+          },
+          "gr_date_of_publication" : {
+            "table" : "search_api_db_resource_index",
+            "column" : "gr_date_of_publication",
+            "type" : "date",
             "boost" : "1.0"
           }
         }

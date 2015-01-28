@@ -38,6 +38,8 @@ function _gr_get_all_ims_resources() {
 	$query->addField('f', 'filename');
 	$query->addField('f', 'restricted__lcn');
 	$query->addField('f', 'hexID');
+	$query->addField('f', 'zz__modified_account__lxt');
+	$query->addField('f', 'zz__modified_timestamp__lxm');
 	$query->addField('l', 'iso_639_1');
 	$query->addField('l', 'language');
 	$query->addField('ft', 'mime_type');
@@ -170,9 +172,21 @@ function _gbif_resource_sync() {
 			// Date of publication.
 			if (!empty($record->date_of_publication)) {
 				$date_of_publication = DateTime::createFromFormat('m/d/Y', $record->date_of_publication);
-				$date_of_publication = ($date_of_publication != FALSE) ? $date_of_publication->getTimestamp() : NULL;
+				$date_of_publication = ($date_of_publication !== FALSE) ? $date_of_publication->getTimestamp() : NULL;
 				$node_wrapper->gr_date_of_publication->set($date_of_publication);
 			}
+
+			// Changed date and user. Doesn't support writing.
+			/*
+			if (!empty($record->zz__modified_timestamp__lxm)) {
+				$date_changed = DateTime::createFromFormat('Y-m-d G:i:s', $record->zz__modified_timestamp__lxm);
+				$date_changed = ($date_changed !== FALSE) ? $date_changed->getTimestamp() : NULL;
+				$node_wrapper->changed->set($date_changed);
+
+				// Look up user if account with the same name exists in Drupal.
+				$user = user_load_by_name($record->zz__modified_account__lxt);
+			}
+			*/
 
 			// Number of downloads.
 			$node_wrapper->gr_number_of_downloads->set(gbif_ims_format_value($record->num_downloads));

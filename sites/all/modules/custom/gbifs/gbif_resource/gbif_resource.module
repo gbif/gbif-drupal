@@ -46,10 +46,59 @@ function gbif_resource_menu() {
 }
 
 /**
- *
+ * Handling URL redirection for individual resources and the old landing URL resources/summary.
  */
 function gbif_resource_redirect() {
+	$arg = arg();
+	// Test if the path starts from the old style resource section.
+	if ($arg[0] == 'resources' && $arg[1] !== 'summary') {
+		$arg[1] = intval($arg[1]);
+		if ($arg[1] != 0) { // This means the 2nd part of the path is a nid.
+			// Look up which node carries this old resource_ims nid.
+			$query = new EntityFieldQuery();
+			$entities = $query->entityCondition('entity_type', 'node')
+				->propertyCondition('type', 'resource')
+				->propertyCondition('status', 1)
+				->fieldCondition('gr_old_resource_nid', 'value', $arg[1], '=')
+				->execute();
+			if (!empty($entities['node'])) {
+				$node = node_load(array_shift(array_keys($entities['node'])));
+				$url = 'resource/' . $node->nid;
+				drupal_goto($url);
+			}
+		}
+	}
+	elseif ($arg[1] == 'summary') {
+		drupal_goto('resources');
+	}
+}
 
+/**
+ * Handling the redirection of the old style URLs of ORC.
+ */
+function gbif_resource_orc_redirect() {
+	if ((isset($_GET['doc_id'])) && ($_GET['doc_id'] != '')) {
+		// Find if a resource_ims exists with the __kp_ID registered.
+		$query = new EntityFieldQuery();
+		$entities = $query->entityCondition('entity_type', 'node')
+			->propertyCondition('type', 'resource')
+			->propertyCondition('status', 1)
+			->fieldCondition('gr_kp_id', 'value', $_GET['doc_id'], '=')
+			->execute();
+		if (!empty($entities['node'])) {
+			$node = node_load(array_shift(array_keys($entities['node'])));
+			$url = 'resource/' . $node->nid;
+			drupal_goto($url);
+		}
+		else {
+			// Not a valid node.
+			drupal_not_found();
+		}
+	}
+	else {
+		// No orc_id(__kp_ID) provided.
+		drupal_goto('resources');
+	}
 }
 
 /**
@@ -127,34 +176,6 @@ function _gr_required_tables() {
 		'gbif_ims_resource_type_language',
 	);
 	return $tables;
-}
-
-/**
- * Handling the redirection of the old style URLs of ORC.
- */
-function gbif_resource_orc_redirect() {
-	if ((isset($_GET['doc_id'])) && ($_GET['doc_id'] != '')) {
-		// Find if a resource_ims exists with the __kp_ID registered.
-		$query = new EntityFieldQuery();
-		$entities = $query->entityCondition('entity_type', 'node')
-			->propertyCondition('type', 'resource_ims')
-			->propertyCondition('status', 1)
-			->fieldCondition('field_orc_original_ims_id', 'value', $_GET['doc_id'], '=')
-			->execute();
-		if (!empty($entities['node'])) {
-			$node = node_load(array_shift(array_keys($entities['node'])));
-			$url = 'resources/' . $node->nid;
-			drupal_goto($url);
-		}
-		else {
-			// Not a valid node.
-			drupal_not_found();
-		}
-	}
-	else {
-		// No orc_id(__kp_ID) provided.
-		drupal_goto('resources/summary');
-	}
 }
 
 /**

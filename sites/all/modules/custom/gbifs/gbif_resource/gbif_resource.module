@@ -362,6 +362,9 @@ function gbif_resource_show_featured_resources() {
 	if (count($query) > 0 && !isset($query['XDEBUG_SESSION_START'])) {
 		return FALSE;
 	}
+	elseif (!empty($_SERVER['HTTP_REFERER'])) {
+		return FALSE;
+	}
 	else {
 		return TRUE;
 	}

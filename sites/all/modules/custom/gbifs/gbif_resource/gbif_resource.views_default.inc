@@ -316,13 +316,13 @@ function gbif_resource_views_default_views() {
   $handler->display->display_options['sorts']['gr_date_of_publication']['order'] = 'DESC';
   $handler->display->display_options['sorts']['gr_date_of_publication']['exposed'] = TRUE;
   $handler->display->display_options['sorts']['gr_date_of_publication']['expose']['label'] = 'Date of publication';
-  /* Sort criterion: Indexed Node: Date created */
-  $handler->display->display_options['sorts']['created']['id'] = 'created';
-  $handler->display->display_options['sorts']['created']['table'] = 'search_api_index_resource_index';
-  $handler->display->display_options['sorts']['created']['field'] = 'created';
-  $handler->display->display_options['sorts']['created']['order'] = 'DESC';
-  $handler->display->display_options['sorts']['created']['exposed'] = TRUE;
-  $handler->display->display_options['sorts']['created']['expose']['label'] = 'Date created';
+  /* Sort criterion: Indexed Node: Number of downloads */
+  $handler->display->display_options['sorts']['gr_number_of_downloads']['id'] = 'gr_number_of_downloads';
+  $handler->display->display_options['sorts']['gr_number_of_downloads']['table'] = 'search_api_index_resource_index';
+  $handler->display->display_options['sorts']['gr_number_of_downloads']['field'] = 'gr_number_of_downloads';
+  $handler->display->display_options['sorts']['gr_number_of_downloads']['order'] = 'DESC';
+  $handler->display->display_options['sorts']['gr_number_of_downloads']['exposed'] = TRUE;
+  $handler->display->display_options['sorts']['gr_number_of_downloads']['expose']['label'] = 'Number of downloads';
   /* Sort criterion: Search: Relevance */
   $handler->display->display_options['sorts']['search_api_relevance']['id'] = 'search_api_relevance';
   $handler->display->display_options['sorts']['search_api_relevance']['table'] = 'search_api_index_resource_index';
@@ -415,7 +415,7 @@ function gbif_resource_views_default_views() {
     t('last »'),
     t('Author(s)'),
     t('Date of publication'),
-    t('Date created'),
+    t('Number of downloads'),
     t('Relevance'),
     t('Fulltext search'),
     t('Page'),

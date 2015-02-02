@@ -101,7 +101,7 @@
 			<?php print $fields['body_value']->content; ?>
 		<?php endif; ?>
 
-		<?php if (!empty($fields['gr_author'])): ?>
+		<?php if (!empty($fields['gr_author']->content)): ?>
 			<footer>
 				<?php print $fields['gr_author']->label_html; ?>
 				<?php print $fields['gr_author']->content; ?>

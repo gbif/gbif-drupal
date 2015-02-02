@@ -8,9 +8,9 @@ dependencies[] = countries
 dependencies[] = libraries
 dependencies[] = entity
 
-; Information added by Drupal.org packaging script on 2014-02-28
-version = "7.x-1.1"
+; Information added by Drupal.org packaging script on 2014-09-16
+version = "7.x-1.2"
 core = "7.x"
 project = "better_countries"
-datestamp = "1393585710"
+datestamp = "1410866608"
 

@@ -7,9 +7,9 @@ Who's participating {"url":"<nolink>"}
 -Organizations {"url":"participation/list#other", "non_drupal_url":true}
 -Data publishers {"url":"publisher\/search", "non_drupal_url":true}
 Key documents {"url":"<nolink>"}
--Disclaimer {"url":"disclaimer"}
--Data use agreement {"url":"disclaimer\/datause"}
--Data sharing agreement  {"url":"disclaimer\/datasharing"}
+-Disclaimer {"url":"terms\/disclaimer"}
+-Data use agreement {"url":"terms/licences\/data-use"}
+-Data sharing agreement  {"url":"terms\/licences\/data-sharing"}
 -Memorandum of Understanding  {"url":"resources\/2605"}
 -Annual Report  {"url":"resources\/9221"}
 -GBIF Strategic Plan  {"url":"resources\/2569"}

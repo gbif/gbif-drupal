@@ -60,7 +60,7 @@ Community {"url":"<front>"}
 --Capacity programmes {"url":"capacityenhancement\/capacityprogrammes"}
 --Current projects {"url":"capacityenhancement\/current-projects"}
 --Past projects {"url":"capacityenhancement\/past-projects"}
--Resources {"url":"resources", "description": "Tools and information to support the GBIF community (look template.php for changing this particular item.)"}
+-Resources {"url":"resources", "description": "Library of documents, tools and and other information to support the GBIF community (look template.php for changing this particular item.)"}
 --Resources {"url":"resources"}
 ---Archive of all Resources {"url":"resources\/archive"}
 --Literature {"url":"mendeley"}

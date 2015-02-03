@@ -859,7 +859,7 @@ function _bvng_get_title_data($node_count = NULL, $user = NULL, $req_path = NULL
 		if (isset($matched) && $matched == TRUE) {
 		  $title = array(
 		    'name' => t('Resources'),
-		    'description' => t('Tools and information to support the GBIF community'),
+		    'description' => t('Library of documents, tools and and other information to support the GBIF community'),
 		  );
 		}
 		elseif ($matched == FALSE && strpos($req_path, 'mendeley') !== FALSE) {
@@ -887,7 +887,7 @@ function _bvng_get_title_data($node_count = NULL, $user = NULL, $req_path = NULL
 		elseif (in_array($node->type, array('resource'))) {
 			$title = array(
 				'name' => t('Resources'),
-				'description' => t('Tools and information to support the GBIF community'),
+				'description' => t('Library of documents, tools and and other information to support the GBIF community'),
 			);
 		}
 	}
@@ -1393,5 +1393,6 @@ function bvng_file_force_file_link($variables) {
 		return '<span class="file">' . l($icon, $url, $options) . '</span>';
 	}
 	else {
-		return '<span class="file">' . $icon . ' ' . l($link_text, $url, $options) . '</span>';	}
+		return '<span class="file">' . $icon . ' ' . l($link_text, $url, $options) . '</span>';
+	}
 }

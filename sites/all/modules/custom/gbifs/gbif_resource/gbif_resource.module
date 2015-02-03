@@ -307,6 +307,10 @@ function gbif_resource_preprocess_field(&$variables) {
  * Implements hook_preprocess_views_view().
  */
 function gbif_resource_preprocess_views_view(&$variables) {
+	if (isset($variables) && $variables['view']->name == 'resources') {
+		drupal_add_js(drupal_get_path('module', 'gbif_resource') . '/js/resources-widgets.js', array('type' => 'file', 'scope' => 'footer'));
+	}
+
 	if (isset($variables) && $variables['view']->name == 'resources_search') {
 		// Define our own template.
 		$variables['theme_hook_suggestions'][] = 'views_view__resources_search__page';

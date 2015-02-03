@@ -95,6 +95,17 @@ function gbif_resource_views_default_views() {
     'image_style' => 'thumbnail',
     'image_link' => '',
   );
+  /* Field: Content: File */
+  $handler->display->display_options['fields']['gr_file']['id'] = 'gr_file';
+  $handler->display->display_options['fields']['gr_file']['table'] = 'field_data_gr_file';
+  $handler->display->display_options['fields']['gr_file']['field'] = 'gr_file';
+  $handler->display->display_options['fields']['gr_file']['label'] = '';
+  $handler->display->display_options['fields']['gr_file']['element_type'] = '0';
+  $handler->display->display_options['fields']['gr_file']['element_label_type'] = '0';
+  $handler->display->display_options['fields']['gr_file']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['gr_file']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['gr_file']['type'] = 'file_force_file_default';
+  $handler->display->display_options['fields']['gr_file']['delta_offset'] = '0';
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';

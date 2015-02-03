@@ -170,6 +170,7 @@ image won't shift it's position.
 .block-featured-resources {
   .views-row {
     display: inline-table;
+    position: relative;
     border: 1px solid @page-header-border-color;
     border-radius: 5px;
     background-color: #fefefe;
@@ -210,6 +211,14 @@ image won't shift it's position.
       p {
         font-size: 13px;
         line-height: 1.3em;
+      }
+    }
+    
+    .views-field-gr-file {
+      a {
+        position: absolute;
+        bottom: 15px;
+        left: 15px;
       }
     }
   }

@@ -213,7 +213,7 @@ function _gbif_resource_sync() {
 			else {
 				$node_wrapper->gr_resource_type->set(NULL);
 			}
-			unset($query, $tid, $mapping, $entities);
+			unset($query, $tid, $entities);
 
 			// Resource language. A term reference field.
 			$value = gbif_ims_format_value(strtolower($record->iso_639_1));
@@ -502,22 +502,24 @@ function _gbif_resource_sync() {
 				}
 				unset($image_url, $image, $image_stream, $image_file_uri, $size, $file);
 
-				// File.
-				$file_url = 'http://fms.gbif.org:8020/SuperContainer/RawData/DOCS/' . substr($record->hexID, 0, 1) . '/' . $record->hexID . '?username=zordesign&password=GBIF2010';
-				$file_stream = file_get_contents($file_url);
-				if ($file_stream != FALSE) {
-					$file_uri = $resource_file_uri . '/' . $record->filename;
-					$file = file_save_data($file_stream, $file_uri, FILE_EXISTS_REPLACE);
-					if (is_object($file)) {
-						watchdog('gbif_resource', '!file uploaded successfully.', array('!file' => $file->uri), WATCHDOG_NOTICE);
-						file_usage_add($file, 'gbif_resource', 'node', $file->uid);
-						$file = (array)$file;
-						$file['description'] = $record->title_text;
-						$file['display'] = 1;
-						$node_wrapper->gr_file->set(array($file)); // Wrapping the $file in an array is inconsistent with image file for image field. To learn why.
-					}
-					elseif ($file == FALSE) {
-						watchdog('gbif_resource', 'Failed saving !file.', array('!file' => $file->uri), WATCHDOG_ERROR);
+				// File. Only retrieve file if it's of type "document" and "presentation".
+				if (in_array($mapping[$record->resource_type], array('Document', 'Presentation'))) {
+					$file_url = 'http://fms.gbif.org:8020/SuperContainer/RawData/DOCS/' . substr($record->hexID, 0, 1) . '/' . $record->hexID . '?username=zordesign&password=GBIF2010';
+					$file_stream = file_get_contents($file_url);
+					if ($file_stream != FALSE) {
+						$file_uri = $resource_file_uri . '/' . $record->filename;
+						$file = file_save_data($file_stream, $file_uri, FILE_EXISTS_REPLACE);
+						if (is_object($file)) {
+							watchdog('gbif_resource', '!file uploaded successfully.', array('!file' => $file->uri), WATCHDOG_NOTICE);
+							file_usage_add($file, 'gbif_resource', 'node', $file->uid);
+							$file = (array)$file;
+							$file['description'] = $record->title_text;
+							$file['display'] = 1;
+							$node_wrapper->gr_file->set(array($file)); // Wrapping the $file in an array is inconsistent with image file for image field. To learn why.
+						}
+						elseif ($file == FALSE) {
+							watchdog('gbif_resource', 'Failed saving !file.', array('!file' => $file->uri), WATCHDOG_ERROR);
+						}
 					}
 				}
 				unset($file_url, $file, $file_uri);

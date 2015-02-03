@@ -80,6 +80,8 @@ About {"url":"<front>"}
 --For users {"url":"resources\/for-users"}
 --For GBIF delegations {"url":"resources\/for-delegations"}
 --For nodes {"url":"resources\/for-nodes"}
+-Awards {"url":"about\/awards", "description": "Bringing biodiversity information to life"}
+--Awards {"url":"about\/awards"}
 -Governance {"url":"governance\/governingboard", "description": "How decisions, advice, management and funding are organized in GBIF"}
 --Governing Board {"url":"governance\/governingboard"}
 --Standing committees {"url":"governance\/standingcommittees"}
@@ -95,10 +97,13 @@ Search {"url":"<nolink>", "description":"This is the placeholder for the search 
 Home {"url":"<front>","hidden":true}
 -Frequently Asked Questions {"url":"<front>","hidden":true, "description": "Contact us on <a href=\"mailto:helpdesk@gbif.org\">helpdesk@gbif.org<\/a> for more assistance"}
 --Data use {"url":"faq\/datause"}
--Disclaimers and agreements {"url":"<front>","hidden":true, "description": "Terms relating to information and data accessed, used and shared through GBIF"}
---Data sharing {"url":"disclaimer\/datasharing"}
---Data use {"url":"disclaimer\/datause"}
---Disclaimer {"url":"disclaimer"}
+-Peer-reviewed publications {"url":"<front>","hidden":true, "description":"(via <a href=\"http:\/\/www.mendeley.com\/groups\/1068301\/gbif-public-library\/\">Mendeley<\/a>)"}
+--Publications {"url":"mendeley"}
+-Terms of use {"url":"<front>","hidden":true, "description": "Licensing agreements and disclaimers relating to access and use of GBIF-mediated data"}
+--Licences {"url":"terms\/licences"}
+--Data sharing {"url":"terms\/licences\/data-sharing"}
+--Data use {"url":"terms\/licences\/data-use"}
+--Disclaimer {"url":"terms\/disclaimer"}
 -Login to GBIF {"url":"<front>"}
 --Account {"url":"user\/login"}
 -Register new GBIF account {"url":"<front>", "description": "Please, register to the GBIF data portal for downloading data, or login if you already have an account"}

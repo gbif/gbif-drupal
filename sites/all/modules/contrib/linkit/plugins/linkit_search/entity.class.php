@@ -1,13 +1,18 @@
 <?php
 /**
  * @file
- * Define Linkit entity plugin.
+ * Define Linkit entity search plugin class.
  */
-class LinkitPluginEntity extends LinkitPlugin {
+
+/**
+ * Reprecents a Linkit entity search plugin.
+ */
+class LinkitSearchPluginEntity extends LinkitSearchPlugin {
+
   /**
    * Entity field query instance.
    *
-   * @var Resource
+   * @var EntityFieldQuery Resource
    */
   var $query;
 
@@ -16,7 +21,7 @@ class LinkitPluginEntity extends LinkitPlugin {
    *
    * @var array
    */
-  var $entity_info;
+  var $entity_info = array();
 
   /**
    * The name of the property that contains the entity label.
@@ -36,23 +41,26 @@ class LinkitPluginEntity extends LinkitPlugin {
   /**
    * Plugin specific settings.
    *
-   * @var arrayu
+   * @var array
    */
-  var $conf;
+  var $conf = array();
 
   /**
+   * Overrides LinkitSearchPlugin::__construct().
+   *
    * Initialize this plugin with the plugin, profile, and entity specific
    * variables.
    *
-   * @param object $profile
-   *   The Linkit profile to use.
    * @param array $plugin
    *   The plugin array.
+   *
+   * @param LinkitProfile object $profile
+   *   The Linkit profile to use.
    */
-  function __construct($plugin, $profile) {
+  function __construct($plugin, LinkitProfile $profile) {
     parent::__construct($plugin, $profile);
 
-    // Load the corresponding entity.
+    // Load the corresponding entity info.
     $this->entity_info = entity_get_info($this->plugin['entity_type']);
 
     // Set bundle key name.
@@ -63,7 +71,15 @@ class LinkitPluginEntity extends LinkitPlugin {
 
     // Set the label field name.
     if (!isset($this->entity_field_label)) {
-      $this->entity_field_label = $this->entity_info['entity keys']['label'];
+      // Check that the entity has a label in entity keys.
+      // If not, Linkit don't know what to search for.
+      if (!isset($this->entity_info['entity keys']['label'])) {
+        // This is only used when building the plugin list.
+        $this->unusable = TRUE;
+      }
+      else {
+        $this->entity_field_label = $this->entity_info['entity keys']['label'];
+      }
     }
 
     // Make a shortcut for the profile data settings for this plugin.
@@ -72,97 +88,79 @@ class LinkitPluginEntity extends LinkitPlugin {
   }
 
   /**
-   * Build the label that will be used in the search result for each row.
+   * Create a label of an entity.
+   *
+   * @param $entity
+   *   The entity to get the label from.
+   *
+   * @return
+   *   The entity label, or FALSE if not found.
    */
-  function buildLabel($entity) {
-    return entity_label($this->plugin['entity_type'], $entity);
+  function createLabel($entity) {
+    return check_plain(entity_label($this->plugin['entity_type'], $entity));
   }
 
-  /**
-   * Build an URL based in the path and the options.
-   */
-  function buildPath($entity, $options = array()) {
-    // Create the URI for the entity.
-    $uri = entity_uri($this->plugin['entity_type'], $entity);
-
-    // We have to set alias to TRUE as we don't want an alias back.
-    $options += array('alias' => TRUE);
-
-    return parent::buildPath($uri['path'], $options);
-  }
-
-  /**
-   * Build the search row description.
+   /**
+   * Create a search row description.
    *
    * If there is a "result_description", run it thro token_replace.
    *
    * @param object $data
    *   An entity object that will be used in the token_place function.
    *
+   * @return
+   *   A string containing the row description.
+   *
    * @see token_replace()
    */
-  function buildDescription($data) {
+  function createDescription($data) {
     $description = token_replace(check_plain($this->conf['result_description']), array(
       $this->plugin['entity_type'] => $data,
     ), array('clear' => TRUE));
-
-    if (isset($this->conf['reverse_menu_trail']) && $this->conf['reverse_menu_trail']) {
-      $description .= $this->buildReverseMenuTrail($data);
-    }
-
     return $description;
   }
 
   /**
-   * Builds a reverse menu trail for the entity.
+   * Create an uri for an entity.
    *
-   * @param object $data
-   *   An entity object.
+   * @param $entity
+   *   The entity to get the path from.
+   *
+   * @return
+   *   A string containing the path of the entity, NULL if the entity has no
+   *   uri of its own.
    */
-  function buildReverseMenuTrail($data) {
-    $vars = array();
-    $output = '';
+  function createPath($entity) {
+    // Create the URI for the entity.
+    $uri = entity_uri($this->plugin['entity_type'], $entity);
 
-    $uri = entity_uri($this->plugin['entity_type'], $data);
+    $options = array();
+    // Handle multilingual sites.
+    if (isset($entity->language) && $entity->language != LANGUAGE_NONE && drupal_multilingual() && language_negotiation_get_any(LOCALE_LANGUAGE_NEGOTIATION_URL)) {
+      $languages = language_list('enabled');
+      // Only use enabled languages.
+      $languages = $languages[1];
 
-    if (isset($uri['path'])) {
-
-      $menu_link_fields = array('link_title', 'link_path', 'plid', 'menu_name');
-
-      $menu_items = db_select('menu_links', 'ml')
-        ->fields('ml', $menu_link_fields)
-        ->condition('link_path', $uri['path'])
-        ->execute()->fetchAll(PDO::FETCH_ASSOC);
-
-      foreach ($menu_items as $menu_item) {
-        $vars['reverse_menu_trail'] = array();
-
-        while ($menu_item['plid']) {
-          $menu_item = db_select('menu_links', 'ml')
-            ->fields('ml', $menu_link_fields)
-            ->condition('mlid', $menu_item['plid'])
-            ->execute()
-            ->fetchAssoc();
-
-          if (isset($menu_item['link_title'])) {
-            $vars['reverse_menu_trail'][] = $menu_item['link_title'];
-          }
-        }
-        $output .= !empty($vars['reverse_menu_trail']) ? theme('linkit_reverse_menu_trail', $vars) : '';
+      if ($languages && isset($languages[$entity->language])) {
+        $options['language'] = $languages[$entity->language];
       }
-
     }
-
-    return $output;
+    // Process the uri with the insert pluing.
+    $path = linkit_get_insert_plugin_processed_path($this->profile, $uri['path'], $options);
+    return $path;
   }
 
   /**
-   * When "group_by_bundle" is active, we need to add the bundle name to the
-   * group, else just return the entity label.
+   * Create a group text.
    *
-   * @return a string with the group name.
+   * @param $entity
+   *   The entity object.
+   *
+   * @return
+   *   When "group_by_bundle" is active, we need to add the bundle name to the
+   *   group, else just return the entity label.
    */
-  function buildGroup($entity) {
+  function createGroup($entity) {
     // Get the entity label.
     $group = $this->entity_info['label'];
 
@@ -171,9 +169,22 @@ class LinkitPluginEntity extends LinkitPlugin {
     if (isset($this->conf['group_by_bundle']) && $this->conf['group_by_bundle']) {
       $bundles = $this->entity_info['bundles'];
       $bundle_name = $bundles[$entity->{$this->entity_key_bundle}]['label'];
-      $group .= ' · ' . check_plain($bundle_name);
+      $group .= ' - ' . check_plain($bundle_name);
     }
     return $group;
+  }
+
+  /**
+   * Create a row class to appaned to the search result row.
+   *
+   * @param $entity
+   *   The entity object.
+   *
+   * @return
+   *   A string to with classes.
+   */
+  function createRowClass($entity) {
+    return '';
   }
 
   /**
@@ -188,27 +199,19 @@ class LinkitPluginEntity extends LinkitPlugin {
   }
 
   /**
-   * The autocomplete callback function for the Linkit Entity plugin.
-   *
-   * @return
-   *   An associative array whose values are an
-   *   associative array containing:
-   *   - title: A string to use as the search result label.
-   *   - description: (optional) A string with additional information about the
-   *     result item.
-   *   - path: The URL to the item.
-   *   - group: (optional) A string with the group name for the result item.
-   *     Best practice is to use the plugin name as group name.
-   *   - addClass: (optional) A string with classes to add to the result row.
+   * Implements LinkitSearchPluginInterface::fetchResults().
    */
-  function autocomplete_callback() {
+  public function fetchResults($search_string) {
+    // If the $search_string is not a string, something is wrong and an empty
+    // array is returned.
     $matches = array();
+
     // Get the EntityFieldQuery instance.
     $this->getQueryInstance();
 
     // Add the search condition to the query object.
     $this->query->propertyCondition($this->entity_field_label,
-            '%' . db_like($this->search_string) . '%', 'LIKE')
+            '%' . db_like($search_string) . '%', 'LIKE')
         ->addTag('linkit_entity_autocomplete')
         ->addTag('linkit_' . $this->plugin['entity_type'] . '_autocomplete');
 
@@ -218,7 +221,8 @@ class LinkitPluginEntity extends LinkitPlugin {
 
     // Bundle check.
     if (isset($this->entity_key_bundle) && isset($this->conf['bundles']) ) {
-      if ($bundles = array_filter($this->conf['bundles'])) {
+      $bundles = array_filter($this->conf['bundles']);
+      if ($bundles) {
         $this->query->propertyCondition($this->entity_key_bundle, $bundles, 'IN');
       }
     }
@@ -242,11 +246,11 @@ class LinkitPluginEntity extends LinkitPlugin {
       }
 
       $matches[] = array(
-        'title' => $this->buildLabel($entity),
-        'description' => $this->buildDescription($entity),
-        'path' => $this->buildPath($entity),
-        'group' => $this->buildGroup($entity),
-        'addClass' => $this->buildRowClass($entity),
+        'title' => $this->createLabel($entity),
+        'description' => $this->createDescription($entity),
+        'path' => $this->createPath($entity),
+        'group' => $this->createGroup($entity),
+        'addClass' => $this->createRowClass($entity),
       );
 
     }
@@ -254,13 +258,7 @@ class LinkitPluginEntity extends LinkitPlugin {
   }
 
   /**
-   * Generate a settings form for this handler.
-   * Uses the standard Drupal FAPI.
-   * The element will be attached to the "data" key.
-   *
-   * @return
-   *   An array containing any custom form elements to be displayed in the
-   *   profile editing form
+   * Overrides LinkitSearchPlugin::buildSettingsForm().
    */
   function buildSettingsForm() {
     $form[$this->plugin['name']] = array(
@@ -271,17 +269,16 @@ class LinkitPluginEntity extends LinkitPlugin {
       '#tree' => TRUE,
       '#states' => array(
         'invisible' => array(
-          'input[name="data[plugins][' . $this->plugin['name'] . '][enabled]"]' => array('checked' => FALSE),
+          'input[name="data[search_plugins][' . $this->plugin['name'] . '][enabled]"]' => array('checked' => FALSE),
         ),
       ),
     );
-
     // Get supported tokens for the entity type.
     $tokens = linkit_extract_tokens($this->plugin['entity_type']);
 
     // A short description in within the search result for each row.
     $form[$this->plugin['name']]['result_description'] = array(
-      '#title' => t('Result format'),
+      '#title' => t('Result description'),
       '#type' => 'textfield',
       '#default_value' => isset($this->conf['result_description']) ? $this->conf['result_description'] : '',
       '#size' => 120,
@@ -332,15 +329,6 @@ class LinkitPluginEntity extends LinkitPlugin {
         '#default_value' => isset($this->conf['group_by_bundle']) ? $this->conf['group_by_bundle'] : 0,
       );
     }
-
-    // Reverse menu trail.
-    $form[$this->plugin['name']]['reverse_menu_trail'] = array(
-      '#title' => t('Add reverse menu trail to description'),
-      '#type' => 'checkbox',
-      '#default_value' => isset($this->conf['reverse_menu_trail']) ? $this->conf['reverse_menu_trail'] : 0,
-      '#description' => t('If the result has a menu item its menu trail will be added in reverse in the description.'),
-    );
-
     return $form;
   }
 }

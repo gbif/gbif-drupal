@@ -168,6 +168,27 @@ function gbif_resource_views_default_views() {
   $handler->display->display_options['filters']['promote']['field'] = 'promote';
   $handler->display->display_options['filters']['promote']['value'] = '1';
   $handler->display->display_options['block_description'] = 'View: Resources - featured resources';
+
+  /* Display: Feed */
+  $handler = $view->new_display('feed', 'Feed', 'feed_latest');
+  $handler->display->display_options['defaults']['title'] = FALSE;
+  $handler->display->display_options['title'] = 'Latest published resources on GBIF.org';
+  $handler->display->display_options['pager']['type'] = 'some';
+  $handler->display->display_options['style_plugin'] = 'rss';
+  $handler->display->display_options['row_plugin'] = 'node_rss';
+  $handler->display->display_options['defaults']['sorts'] = FALSE;
+  /* Sort criterion: Content: Date of publication (gr_date_of_publication) */
+  $handler->display->display_options['sorts']['gr_date_of_publication_value']['id'] = 'gr_date_of_publication_value';
+  $handler->display->display_options['sorts']['gr_date_of_publication_value']['table'] = 'field_data_gr_date_of_publication';
+  $handler->display->display_options['sorts']['gr_date_of_publication_value']['field'] = 'gr_date_of_publication_value';
+  $handler->display->display_options['sorts']['gr_date_of_publication_value']['order'] = 'DESC';
+  /* Sort criterion: Content: Post date */
+  $handler->display->display_options['sorts']['created']['id'] = 'created';
+  $handler->display->display_options['sorts']['created']['table'] = 'node';
+  $handler->display->display_options['sorts']['created']['field'] = 'created';
+  $handler->display->display_options['sorts']['created']['order'] = 'DESC';
+  $handler->display->display_options['path'] = 'resources/feed/latest';
+  $handler->display->display_options['sitename_title'] = 0;
   $translatables['resources'] = array(
     t('Master'),
     t('Resources'),
@@ -180,6 +201,8 @@ function gbif_resource_views_default_views() {
     t('Page'),
     t('Featured resources'),
     t('View: Resources - featured resources'),
+    t('Feed'),
+    t('Latest published resources on GBIF.org'),
   );
   $export['resources'] = $view;
 
@@ -195,7 +218,7 @@ function gbif_resource_views_default_views() {
 
   /* Display: Master */
   $handler = $view->new_display('default', 'Master', 'default');
-  $handler->display->display_options['title'] = 'Resources search';
+  $handler->display->display_options['title'] = 'Resources';
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'perm';
   $handler->display->display_options['cache']['type'] = 'none';
@@ -327,7 +350,7 @@ function gbif_resource_views_default_views() {
   $handler->display->display_options['sorts']['gr_date_of_publication']['order'] = 'DESC';
   $handler->display->display_options['sorts']['gr_date_of_publication']['exposed'] = TRUE;
   $handler->display->display_options['sorts']['gr_date_of_publication']['expose']['label'] = 'Date of publication';
-  /* Sort criterion: Indexed Node: Number of downloads */
+  /* Sort criterion: Broken/missing handler */
   $handler->display->display_options['sorts']['gr_number_of_downloads']['id'] = 'gr_number_of_downloads';
   $handler->display->display_options['sorts']['gr_number_of_downloads']['table'] = 'search_api_index_resource_index';
   $handler->display->display_options['sorts']['gr_number_of_downloads']['field'] = 'gr_number_of_downloads';
@@ -389,28 +412,9 @@ function gbif_resource_views_default_views() {
   $handler = $view->new_display('page', 'Page', 'page');
   $handler->display->display_options['exposed_block'] = TRUE;
   $handler->display->display_options['path'] = 'resources';
-
-  /* Display: Feed */
-  $handler = $view->new_display('feed', 'Feed', 'filtered_feed');
-  $handler->display->display_options['defaults']['title'] = FALSE;
-  $handler->display->display_options['title'] = 'GBIF latest filtered resources';
-  $handler->display->display_options['pager']['type'] = 'some';
-  $handler->display->display_options['style_plugin'] = 'rss';
-  $handler->display->display_options['row_plugin'] = 'rss_fields';
-  $handler->display->display_options['row_options']['title_field'] = 'title';
-  $handler->display->display_options['row_options']['link_field'] = 'url';
-  $handler->display->display_options['row_options']['description_field'] = 'body_value';
-  $handler->display->display_options['row_options']['creator_field'] = 'gr_author';
-  $handler->display->display_options['row_options']['date_field'] = 'gr_date_of_publication';
-  $handler->display->display_options['row_options']['guid_field_options'] = array(
-    'guid_field' => 'uuid',
-    'guid_field_is_permalink' => 0,
-  );
-  $handler->display->display_options['path'] = 'resources/feed/filtered';
-  $handler->display->display_options['sitename_title'] = 0;
   $translatables['resources_search'] = array(
     t('Master'),
-    t('Resources search'),
+    t('Resources'),
     t('more'),
     t('Apply'),
     t('Reset'),
@@ -430,8 +434,6 @@ function gbif_resource_views_default_views() {
     t('Relevance'),
     t('Fulltext search'),
     t('Page'),
-    t('Feed'),
-    t('GBIF latest filtered resources'),
   );
   $export['resources_search'] = $view;
 

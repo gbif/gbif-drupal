@@ -353,9 +353,51 @@ function gbif_resource_form_alter(&$form, &$form_state, $form_id) {
 	switch ($form_id) {
 		case 'views_exposed_form':
 			$form['search_api_views_fulltext']['#suffix'] = '<span class="glyphicon glyphicon-search resource-magnifier"></span>';
+			array_unshift($form['#validate'], 'gbif_resource_views_exposed_form_validate_handler');
 			break;
 	}
 }
+
+/**
+ * Detect checked facets and put it back when sorting is changed.
+ * @see http://drupal.stackexchange.com/questions/93730/is-there-a-way-to-create-a-sort-option-for-search-results-that-works-together-wi
+ * @see https://www.drupal.org/node/1254156#comment-5594274
+ */
+function gbif_resource_views_exposed_form_validate_handler(&$form, &$form_state) {
+	foreach ($form_state['input'] as $input_key => $value) {
+		// If there is an argument in input that is not in the keys of the form
+		// then that argument must be added as a hidden field to the form.
+		if (!isset($form[$input_key])) {
+			gbif_resource_param_from_array($form, $input_key, $input_key, $value);
+		}
+	}
+}
+
+/**
+ * Converts an array that was previously parsed from the url arguments
+ * to an array of hidden values that will be added to the form so these arguments
+ * are not lost in form submission.
+ *
+ * @see https://www.drupal.org/sandbox/pl2/1438442
+ *
+ * Thanks to Pedro Lozano. https://www.drupal.org/project/user/123766.
+ */
+function gbif_resource_param_from_array(&$form, $root_key, $key, $value, $array_key = '') {
+	if (!is_array($value)) {
+		$form[$key] = array(
+			'#type' => 'hidden',
+			'#value' => $value,
+			'#name' => "$root_key$array_key",
+		);
+	}
+	else {
+		$form[$key] = array();
+		foreach ($value as $val_key => $val_value) {
+			gbif_resource_param_from_array($form[$key], $root_key, $val_key, $val_value, $array_key . "[$val_key]");
+		}
+	}
+}
+
 
 /**
  * Determine whether to show the "featured resources" block according to the

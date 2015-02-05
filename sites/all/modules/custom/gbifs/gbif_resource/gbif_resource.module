@@ -398,24 +398,6 @@ function gbif_resource_param_from_array(&$form, $root_key, $key, $value, $array_
 	}
 }
 
-
-/**
- * Determine whether to show the "featured resources" block according to the
- * existence of query params.
- */
-function gbif_resource_show_featured_resources() {
-	$query = drupal_get_query_parameters();
-	if (count($query) > 0 && !isset($query['XDEBUG_SESSION_START'])) {
-		return FALSE;
-	}
-	elseif (!empty($_SERVER['HTTP_REFERER'])) {
-		return FALSE;
-	}
-	else {
-		return TRUE;
-	}
-}
-
 /**
  * Implements hook_facet_items_alter().
  * We use this hook to show the attribute of a tag.

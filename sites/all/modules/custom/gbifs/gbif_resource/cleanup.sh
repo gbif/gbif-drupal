@@ -36,6 +36,9 @@ rm -rf files/u5
 echo -e "\nDeleting old main-menu items...\n"
 drush delete-menu-items
 
+echo -e "\nRefreshing menu...\n"
+drush devel-reinstall -y gbif_navigation
+
 drush cc all
 
 drush dis -y devel

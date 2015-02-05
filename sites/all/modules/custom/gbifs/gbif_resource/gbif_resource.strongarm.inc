@@ -96,16 +96,16 @@ function gbif_resource_strongarm() {
     'extra_fields' => array(
       'form' => array(
         'metatags' => array(
-          'weight' => '27',
+          'weight' => '33',
         ),
         'title' => array(
           'weight' => '0',
         ),
         'path' => array(
-          'weight' => '26',
+          'weight' => '32',
         ),
         'redirect' => array(
-          'weight' => '25',
+          'weight' => '31',
         ),
       ),
       'display' => array(),

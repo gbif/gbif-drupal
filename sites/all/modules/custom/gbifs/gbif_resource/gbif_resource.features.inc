@@ -71,12 +71,14 @@ function gbif_resource_default_search_api_index() {
         "gr_data_type" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
         "gr_date_of_publication" : { "type" : "date" },
         "gr_language" : { "type" : "integer", "entity_type" : "taxonomy_term" },
+        "gr_number_of_downloads" : { "type" : "integer" },
         "gr_purpose" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
         "gr_resource_type" : { "type" : "integer", "entity_type" : "taxonomy_term" },
         "is_new" : { "type" : "boolean" },
         "language" : { "type" : "string" },
         "promote" : { "type" : "boolean" },
         "search_api_language" : { "type" : "string" },
+        "search_api_url" : { "type" : "uri" },
         "status" : { "type" : "integer" },
         "sticky" : { "type" : "boolean" },
         "title" : { "type" : "text" },
@@ -92,7 +94,7 @@ function gbif_resource_default_search_api_index() {
         "search_api_alter_node_status" : { "status" : 1, "weight" : "0", "settings" : [] },
         "search_api_alter_add_hierarchy" : { "status" : 0, "weight" : "0", "settings" : { "fields" : [] } },
         "search_api_alter_add_viewed_entity" : { "status" : 0, "weight" : "0", "settings" : { "mode" : "teaser" } },
-        "search_api_alter_add_url" : { "status" : 0, "weight" : "0", "settings" : [] },
+        "search_api_alter_add_url" : { "status" : 1, "weight" : "0", "settings" : [] },
         "search_api_alter_add_aggregation" : { "status" : 0, "weight" : "0", "settings" : [] }
       },
       "processors" : {
@@ -251,6 +253,12 @@ function gbif_resource_default_search_api_server() {
             "type" : "list\\u003Cinteger\\u003E",
             "boost" : "1.0"
           },
+          "gr_date_of_publication" : {
+            "table" : "search_api_db_resource_index",
+            "column" : "gr_date_of_publication",
+            "type" : "date",
+            "boost" : "1.0"
+          },
           "gr_language" : {
             "table" : "search_api_db_resource_index",
             "column" : "gr_language",
@@ -269,10 +277,16 @@ function gbif_resource_default_search_api_server() {
             "type" : "integer",
             "boost" : "1.0"
           },
-          "gr_date_of_publication" : {
+          "gr_number_of_downloads" : {
             "table" : "search_api_db_resource_index",
-            "column" : "gr_date_of_publication",
-            "type" : "date",
+            "column" : "gr_number_of_downloads",
+            "type" : "integer",
+            "boost" : "1.0"
+          },
+          "search_api_url" : {
+            "table" : "search_api_db_resource_index",
+            "column" : "search_api_url",
+            "type" : "uri",
             "boost" : "1.0"
           }
         }

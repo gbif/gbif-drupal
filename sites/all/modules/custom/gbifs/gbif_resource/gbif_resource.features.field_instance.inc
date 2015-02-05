@@ -285,8 +285,9 @@ function gbif_resource_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'linkit' => array(
+        'button_text' => 'Search',
         'enable' => 0,
-        'insert_plugin' => '',
+        'profile' => '',
       ),
       'mediafront' => array(
         'custom' => '',
@@ -364,8 +365,9 @@ function gbif_resource_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'linkit' => array(
+        'button_text' => 'Search',
         'enable' => 0,
-        'insert_plugin' => '',
+        'profile' => '',
       ),
       'mediafront' => array(
         'custom' => '',
@@ -443,8 +445,9 @@ function gbif_resource_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'linkit' => array(
+        'button_text' => 'Search',
         'enable' => 0,
-        'insert_plugin' => '',
+        'profile' => '',
       ),
       'mediafront' => array(
         'custom' => '',
@@ -522,8 +525,9 @@ function gbif_resource_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'linkit' => array(
+        'button_text' => 'Search',
         'enable' => 0,
-        'insert_plugin' => '',
+        'profile' => '',
       ),
       'mediafront' => array(
         'custom' => '',
@@ -601,8 +605,9 @@ function gbif_resource_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'linkit' => array(
+        'button_text' => 'Search',
         'enable' => 0,
-        'insert_plugin' => '',
+        'profile' => '',
       ),
       'mediafront' => array(
         'custom' => '',
@@ -680,8 +685,9 @@ function gbif_resource_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'linkit' => array(
+        'button_text' => 'Search',
         'enable' => 0,
-        'insert_plugin' => '',
+        'profile' => '',
       ),
       'mediafront' => array(
         'custom' => '',
@@ -1570,8 +1576,9 @@ function gbif_resource_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'linkit' => array(
+        'button_text' => 'Search',
         'enable' => 0,
-        'insert_plugin' => '',
+        'profile' => '',
       ),
       'mediafront' => array(
         'custom' => '',
@@ -1797,8 +1804,9 @@ function gbif_resource_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'linkit' => array(
+        'button_text' => 'Search',
         'enable' => 0,
-        'insert_plugin' => '',
+        'profile' => '',
       ),
       'mediafront' => array(
         'custom' => '',
@@ -1876,8 +1884,9 @@ function gbif_resource_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'linkit' => array(
+        'button_text' => 'Search',
         'enable' => 0,
-        'insert_plugin' => '',
+        'profile' => '',
       ),
       'mediafront' => array(
         'custom' => '',
@@ -1945,8 +1954,9 @@ function gbif_resource_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'linkit' => array(
+        'button_text' => 'Search',
         'enable' => 0,
-        'insert_plugin' => '',
+        'profile' => '',
       ),
       'mediafront' => array(
         'custom' => '',
@@ -2014,8 +2024,9 @@ function gbif_resource_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'linkit' => array(
+        'button_text' => 'Search',
         'enable' => 0,
-        'insert_plugin' => '',
+        'profile' => '',
       ),
       'mediafront' => array(
         'custom' => '',

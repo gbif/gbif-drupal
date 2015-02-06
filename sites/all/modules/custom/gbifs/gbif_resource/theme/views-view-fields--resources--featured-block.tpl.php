@@ -23,14 +23,24 @@
  *
  * @ingroup views_templates
  */
+
+$lang_code = $row->_field_data['nid']['entity']->language;
+$tid = $row->_field_data['nid']['entity']->gr_resource_type[$lang_code][0]['tid'];
+
 ?>
 <?php foreach ($fields as $id => $field): ?>
-  <?php if (!empty($field->separator)): ?>
-    <?php print $field->separator; ?>
-  <?php endif; ?>
+  <?php if ($id == 'gr_url' && _gr_in_type_w_link($tid) == FALSE): ?>
+  <?php else: ?>
 
-  <?php print $field->wrapper_prefix; ?>
-    <?php print $field->label_html; ?>
-    <?php print $field->content; ?>
-  <?php print $field->wrapper_suffix; ?>
+    <?php if (!empty($field->separator)): ?>
+      <?php print $field->separator; ?>
+    <?php endif; ?>
+
+    <?php print $field->wrapper_prefix; ?>
+      <?php print $field->label_html; ?>
+      <?php print $field->content; ?>
+    <?php print $field->wrapper_suffix; ?>
+
+    <?php endif; ?>
+
 <?php endforeach; ?>

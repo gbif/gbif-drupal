@@ -418,3 +418,18 @@ function gbif_resource_facet_items_alter(&$build, &$settings) {
 		}
 	}
 }
+
+/**
+ * Check the resource type so we can decide to show external link or not.
+ * @param $tid
+ * @return bool
+ */
+function _gr_in_type_w_link($tid) {
+	$type_w_link = array('Link', 'Tool');
+	$query = new EntityFieldQuery();
+	$entities = $query->entityCondition('entity_type', 'taxonomy_term')
+		->entityCondition('bundle', 'resource_type')
+		->propertyCondition('name', $type_w_link, 'IN')
+		->execute();
+	return (isset($entities['taxonomy_term'][$tid])) ? TRUE : FALSE;
+}

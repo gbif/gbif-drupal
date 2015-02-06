@@ -106,6 +106,14 @@ function gbif_resource_views_default_views() {
   $handler->display->display_options['fields']['gr_file']['click_sort_column'] = 'fid';
   $handler->display->display_options['fields']['gr_file']['type'] = 'file_force_file_default';
   $handler->display->display_options['fields']['gr_file']['delta_offset'] = '0';
+  /* Field: Content: Resource URL */
+  $handler->display->display_options['fields']['gr_url']['id'] = 'gr_url';
+  $handler->display->display_options['fields']['gr_url']['table'] = 'field_data_gr_url';
+  $handler->display->display_options['fields']['gr_url']['field'] = 'gr_url';
+  $handler->display->display_options['fields']['gr_url']['label'] = '';
+  $handler->display->display_options['fields']['gr_url']['element_type'] = '0';
+  $handler->display->display_options['fields']['gr_url']['element_label_type'] = '0';
+  $handler->display->display_options['fields']['gr_url']['element_label_colon'] = FALSE;
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
@@ -338,6 +346,14 @@ function gbif_resource_views_default_views() {
   $handler->display->display_options['fields']['uuid']['label'] = '';
   $handler->display->display_options['fields']['uuid']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['uuid']['link_to_entity'] = 0;
+  /* Field: Indexed Node: Resource URL */
+  $handler->display->display_options['fields']['gr_url']['id'] = 'gr_url';
+  $handler->display->display_options['fields']['gr_url']['table'] = 'search_api_index_resource_index';
+  $handler->display->display_options['fields']['gr_url']['field'] = 'gr_url';
+  $handler->display->display_options['fields']['gr_url']['label'] = '';
+  $handler->display->display_options['fields']['gr_url']['element_type'] = '0';
+  $handler->display->display_options['fields']['gr_url']['element_label_type'] = '0';
+  $handler->display->display_options['fields']['gr_url']['element_label_colon'] = FALSE;
   /* Sort criterion: Indexed Node: Sticky in lists */
   $handler->display->display_options['sorts']['sticky_1']['id'] = 'sticky_1';
   $handler->display->display_options['sorts']['sticky_1']['table'] = 'search_api_index_resource_index';

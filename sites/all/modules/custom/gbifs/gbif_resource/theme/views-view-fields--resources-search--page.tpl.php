@@ -78,6 +78,11 @@
  *
  * @ingroup themeable
  */
+
+// Check the resource type so we can decide to show external link or not.
+$lang_code = $row->_entity_properties['entity object']->language;
+$resource_type_tid = $row->_entity_properties['entity object']->gr_resource_type[$lang_code][0]['tid'];
+
 ?>
 <article class="node-list">
 	<?php if (!empty($fields['gr_image'])): ?>
@@ -88,10 +93,12 @@
 		<?php if (!empty($fields['gr_file'])): ?>
 			<?php print $fields['gr_file']->content; ?>
 		<?php endif; ?>
+		<?php if (_gr_in_type_w_link($resource_type_tid)): ?>
+			<?php print $fields['gr_url']->content; ?>
+		<?php endif; ?>
 		<?php if (!empty($fields['gr_resource_type'])): ?>
 			<?php print $fields['gr_resource_type']->content; ?>
 		<?php endif; ?>
-
 		<?php if (!empty($fields['title'])): ?>
 			<h3><?php print $fields['title']->content; ?></h3>
 		<?php endif; ?>

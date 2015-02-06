@@ -308,12 +308,12 @@ function _gbif_resource_sync() {
 								->entityCondition('bundle', 'tags')
 								->fieldCondition('field_ims_keyword_id', 'value', $keyword->keywordID, '=')
 								->execute();
-							// If the keyword exists in the "field_tags" vocabulary, assign it to field_tags.
+							// If the keyword exists in the "tx_tags" vocabulary, assign it to tx_tags.
 							if (!empty($entities['taxonomy_term']) && count($entities['taxonomy_term']) == 1) {
 								$tid = key($entities['taxonomy_term']);
 								$node_array = (array) $node;
-								$lang_code = gbif_tweaks_get_language_code('node', 'field_tags', $node->language);
-								$field_values = $node_array['field_tags'][$lang_code];
+								$lang_code = gbif_tweaks_get_language_code('node', 'tx_tags', $node->language);
+								$field_values = $node_array['tx_tags'][$lang_code];
 								$tid_exist = FALSE;
 								if (isset($field_values)) {
 									// Test if it's already assigned.
@@ -322,22 +322,22 @@ function _gbif_resource_sync() {
 									}
 								}
 								if ($tid_exist == FALSE) {
-									$node_wrapper->field_tags[] = $tid;
+									$node_wrapper->tx_tags[] = $tid;
 								}
 							}
-							// If not, evaluate against the field_internal_tags vocabulary.
+							// If not, evaluate against the tx_internal_tags vocabulary.
 							elseif (empty($entities['taxonomy_term']) && !empty($keyword->keyword_short)) {
-								$q_field_internal_tags = new EntityFieldQuery();
-								$e_field_internal_tags = $q_field_internal_tags->entityCondition('entity_type', 'taxonomy_term')
+								$q_tx_internal_tags = new EntityFieldQuery();
+								$e_tx_internal_tags = $q_tx_internal_tags->entityCondition('entity_type', 'taxonomy_term')
 									->entityCondition('bundle', 'internal_tags')
 									->fieldCondition('field_ims_keyword_id', 'value', $keyword->keywordID, '=')
 									->execute();
-								// If the keyword exists in the "field_internal_tags" vocabulary, assign it to field_internal_tags.
-								if (!empty($e_field_internal_tags['taxonomy_term']) && count($e_field_internal_tags['taxonomy_term']) == 1) {
-									$tid = key($e_field_internal_tags['taxonomy_term']);
+								// If the keyword exists in the "tx_internal_tags" vocabulary, assign it to tx_internal_tags.
+								if (!empty($e_tx_internal_tags['taxonomy_term']) && count($e_tx_internal_tags['taxonomy_term']) == 1) {
+									$tid = key($e_tx_internal_tags['taxonomy_term']);
 									$node_array = (array) $node;
-									$lang_code = gbif_tweaks_get_language_code('node', 'field_internal_tags', $node->language);
-									$field_values = $node_array['field_internal_tags'][$lang_code];
+									$lang_code = gbif_tweaks_get_language_code('node', 'tx_internal_tags', $node->language);
+									$field_values = $node_array['tx_internal_tags'][$lang_code];
 									$tid_exist = FALSE;
 									if (isset($field_values)) {
 										// Test if it's already assigned.
@@ -346,10 +346,10 @@ function _gbif_resource_sync() {
 										}
 									}
 									if ($tid_exist == FALSE) {
-										$node_wrapper->field_internal_tags[] = $tid;
+										$node_wrapper->tx_internal_tags[] = $tid;
 									}
 								}
-								// If not, create a new term in field_internal_tags and assign to the node.
+								// If not, create a new term in tx_internal_tags and assign to the node.
 								else {
 									$target_voc = taxonomy_vocabulary_machine_name_load('internal_tags');
 									$term = new stdClass();
@@ -397,7 +397,7 @@ function _gbif_resource_sync() {
 
 									// Assign to node.
 									if ($term->tid) {
-										$node_wrapper->field_internal_tags[] = $term->tid;
+										$node_wrapper->tx_internal_tags[] = $term->tid;
 									}
 								}
 							}

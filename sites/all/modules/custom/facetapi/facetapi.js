@@ -65,9 +65,21 @@ Drupal.facetapi.Redirect = function(href) {
 
 /**
  * Method to redirect to the stored href.
+ * BKO: Hacked because we need GET param to determine the showing of featured block.
  */
 Drupal.facetapi.Redirect.prototype.gotoHref = function() {
-  window.location.href = this.href;
+  if (this.href.indexOf("searched") === -1) {
+    if (this.href.indexOf("?") === -1) {
+      var result = this.href + "?searched=1";
+    }
+    else {
+      var result = this.href + "&searched=1";
+    }
+  }
+  else {
+    var result = this.href;
+  }
+  window.location.href = result;
 }
 
 /**

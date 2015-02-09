@@ -324,6 +324,7 @@ function gbif_resource_preprocess_field(&$variables) {
  */
 function gbif_resource_preprocess_views_view(&$variables) {
 	if (isset($variables) && $variables['view']->name == 'resources') {
+		drupal_add_js(drupal_get_path('module', 'gbif_resource') . '/js/query-string/query-string.js', array('type' => 'file', 'scope' => 'footer'));
 		drupal_add_js(drupal_get_path('module', 'gbif_resource') . '/js/resources-widgets.js', array('type' => 'file', 'scope' => 'footer'));
 		drupal_add_library('system', 'jquery.cookie');
 	}
@@ -459,7 +460,7 @@ function gbif_resource_show_featured_resources() {
 	if (count($query) > 0 && !isset($query['XDEBUG_SESSION_START'])) {
 		return FALSE;
 	}
-	elseif ($_COOKIE['searched'] == 'searched' || $_COOKIE['clear-all'] == 'cleared' ) {
+	elseif ($_GET['searched'] == 1 || $_GET['hideFeatured'] == 1) {
 		return FALSE;
 	}
 	else {

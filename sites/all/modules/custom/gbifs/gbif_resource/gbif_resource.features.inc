@@ -67,7 +67,6 @@ function gbif_resource_default_search_api_index() {
         "body:value" : { "type" : "text" },
         "changed" : { "type" : "date" },
         "created" : { "type" : "date" },
-        "field_tags" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
         "gr_data_type" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
         "gr_date_of_publication" : { "type" : "date" },
         "gr_language" : { "type" : "integer", "entity_type" : "taxonomy_term" },
@@ -82,6 +81,14 @@ function gbif_resource_default_search_api_index() {
         "status" : { "type" : "integer" },
         "sticky" : { "type" : "boolean" },
         "title" : { "type" : "text" },
+        "tx_about_gbif" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
+        "tx_audience" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
+        "tx_capacity_enhancement" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
+        "tx_data_use" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
+        "tx_informatics" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
+        "tx_internal_tags" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
+        "tx_tags" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
+        "tx_topic" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
         "type" : { "type" : "string" }
       },
       "data_alter_callbacks" : {
@@ -241,10 +248,10 @@ function gbif_resource_default_search_api_server() {
             "type" : "text",
             "boost" : "1.0"
           },
-          "field_tags" : {
-            "table" : "search_api_db_resource_index_field_tags",
-            "column" : "value",
-            "type" : "list\\u003Cinteger\\u003E",
+          "search_api_url" : {
+            "table" : "search_api_db_resource_index",
+            "column" : "search_api_url",
+            "type" : "uri",
             "boost" : "1.0"
           },
           "gr_data_type" : {
@@ -265,6 +272,12 @@ function gbif_resource_default_search_api_server() {
             "type" : "integer",
             "boost" : "1.0"
           },
+          "gr_number_of_downloads" : {
+            "table" : "search_api_db_resource_index",
+            "column" : "gr_number_of_downloads",
+            "type" : "integer",
+            "boost" : "1.0"
+          },
           "gr_purpose" : {
             "table" : "search_api_db_resource_index_gr_purpose",
             "column" : "value",
@@ -277,16 +290,52 @@ function gbif_resource_default_search_api_server() {
             "type" : "integer",
             "boost" : "1.0"
           },
-          "gr_number_of_downloads" : {
-            "table" : "search_api_db_resource_index",
-            "column" : "gr_number_of_downloads",
-            "type" : "integer",
+          "tx_internal_tags" : {
+            "table" : "search_api_db_resource_index_tx_internal_tags",
+            "column" : "value",
+            "type" : "list\\u003Cinteger\\u003E",
             "boost" : "1.0"
           },
-          "search_api_url" : {
-            "table" : "search_api_db_resource_index",
-            "column" : "search_api_url",
-            "type" : "uri",
+          "tx_tags" : {
+            "table" : "search_api_db_resource_index_tx_tags",
+            "column" : "value",
+            "type" : "list\\u003Cinteger\\u003E",
+            "boost" : "1.0"
+          },
+          "tx_about_gbif" : {
+            "table" : "search_api_db_resource_index_tx_about_gbif",
+            "column" : "value",
+            "type" : "list\\u003Cinteger\\u003E",
+            "boost" : "1.0"
+          },
+          "tx_audience" : {
+            "table" : "search_api_db_resource_index_tx_audience",
+            "column" : "value",
+            "type" : "list\\u003Cinteger\\u003E",
+            "boost" : "1.0"
+          },
+          "tx_capacity_enhancement" : {
+            "table" : "search_api_db_resource_index_tx_capacity_enhancement",
+            "column" : "value",
+            "type" : "list\\u003Cinteger\\u003E",
+            "boost" : "1.0"
+          },
+          "tx_data_use" : {
+            "table" : "search_api_db_resource_index_tx_data_use",
+            "column" : "value",
+            "type" : "list\\u003Cinteger\\u003E",
+            "boost" : "1.0"
+          },
+          "tx_informatics" : {
+            "table" : "search_api_db_resource_index_tx_informatics",
+            "column" : "value",
+            "type" : "list\\u003Cinteger\\u003E",
+            "boost" : "1.0"
+          },
+          "tx_topic" : {
+            "table" : "search_api_db_resource_index_tx_topic",
+            "column" : "value",
+            "type" : "list\\u003Cinteger\\u003E",
             "boost" : "1.0"
           }
         }

@@ -345,7 +345,7 @@ function gbif_resource_preprocess_views_view(&$variables) {
 		$variables['facet_purpose'] = render(_block_get_renderable_array(_block_render_blocks(array(block_load('facetapi', '731qYYP4XLCpEqbjDPEBHvO3Ms6QiFhq')))));
 		$variables['facet_language'] = render(_block_get_renderable_array(_block_render_blocks(array(block_load('facetapi', '91UEW2NE4L9KDBz5SLgpe0fiDQZM19OU')))));
 		$variables['facet_data_type'] = render(_block_get_renderable_array(_block_render_blocks(array(block_load('facetapi', 'HeCqQSNM4pCh581hH4Aq8jlEIwdyvby7')))));
-		$variables['facet_tags'] = render(_block_get_renderable_array(_block_render_blocks(array(block_load('facetapi', 'oGePWok3wXOoVeiAT30QHDay08xaMG5a')))));
+		$variables['facet_tags'] = render(_block_get_renderable_array(_block_render_blocks(array(block_load('facetapi', 'pzzwZNEBzrHCFGRYawMltoa8YO8JmT3n')))));
 		$variables['exp_widgets'] = render(module_invoke('views', 'block_view','-exp-resources_search-page'));
 		$variables['featured_block'] = render(module_invoke('views', 'block_view','resources-featured_block'));
 	}

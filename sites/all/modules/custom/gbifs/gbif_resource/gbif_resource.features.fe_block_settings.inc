@@ -108,10 +108,10 @@ function gbif_resource_default_fe_block_settings() {
     'visibility' => 0,
   );
 
-  $export['facetapi-oGePWok3wXOoVeiAT30QHDay08xaMG5a'] = array(
+  $export['facetapi-pzzwZNEBzrHCFGRYawMltoa8YO8JmT3n'] = array(
     'cache' => -1,
     'custom' => 0,
-    'delta' => 'oGePWok3wXOoVeiAT30QHDay08xaMG5a',
+    'delta' => 'pzzwZNEBzrHCFGRYawMltoa8YO8JmT3n',
     'module' => 'facetapi',
     'node_types' => array(),
     'pages' => '',

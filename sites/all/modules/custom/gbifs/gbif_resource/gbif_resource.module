@@ -289,6 +289,22 @@ function gbif_resource_preprocess_node(&$variables) {
 			$variables['referer_url'] = $_SERVER['HTTP_REFERER'];
 			$variables['referer_link_text'] = t('Back to previous page');
 		}
+		// Prepare the image thumbnail with colorbox link.
+		if (!empty($variables['gr_image']) && !isset($variables['view'])) {
+			$image_url = file_create_url($variables['gr_image'][0]['uri']);
+			$url = parse_url($image_url);
+			$path = $url['path'];
+			$width = (int)$variables['gr_image'][0]['width'];
+			$width = ($width >= 240) ? 240 : $width;
+			$img_html = theme_image(array(
+				'path' => $path,
+				'width' => $width,
+				'alt' => $variables['title'],
+				'title' => $variables['title'],
+				'attributes' => array(),
+			));
+			$variables['resource_image'] = '<p>' . l($img_html, $image_url, array('html' => TRUE, 'attributes' => array('class' => array('colorbox')))) . '</p>';
+		}
 	}
 }
 

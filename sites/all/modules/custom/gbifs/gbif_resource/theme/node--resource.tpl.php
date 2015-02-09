@@ -43,7 +43,7 @@
 					<?php endif; ?>
 				</div>
 				<aside class="content content-sidebar col-xs-4">
-					<?php print render($content['gr_image']); ?>
+					<?php print $resource_image; ?>
 					<?php print render($content['gr_file']); ?>
 
 					<?php if ($show_gr_url == TRUE): ?>

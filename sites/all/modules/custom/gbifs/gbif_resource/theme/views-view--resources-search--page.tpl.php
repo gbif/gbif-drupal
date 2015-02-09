@@ -39,10 +39,13 @@
       </div>
     <?php endif; ?>
 
+    <?php if ($featured_block && gbif_resource_show_featured_resources() == TRUE): ?>
       <div class="block-featured-resources">
         <?php print $featured_block; ?>
       </div>
+    <?php endif; ?>
 
+    <?php if (gbif_resource_show_featured_resources() == FALSE): ?>
     <div class="<?php print $classes; ?>">
       <?php print render($title_prefix); ?>
       <?php if ($title): ?>
@@ -95,11 +98,12 @@
 				<?php print $pager; ?>
 			<?php endif; ?>
     </div>
+    <?php endif; ?>
   </div>
 	<div class="sidebar-filter resource-filter col-xs-4">
     <div class="resource-filter-header">
       <h2>Filters</h2>
-      <span class="clear-all"><a href="/resources">clear all</a></span>
+      <span class="clear-all"><a id="clear-all" href="/resources">clear all</a></span>
     </div>
 
 		<?php print $facet_resource_type; ?>

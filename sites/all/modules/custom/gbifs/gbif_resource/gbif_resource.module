@@ -449,3 +449,20 @@ function _gr_in_type_w_link($tid) {
 		->execute();
 	return (isset($entities['taxonomy_term'][$tid])) ? TRUE : FALSE;
 }
+
+/**
+ * Determine whether to show the "featured resources" block according to the
+ * existence of query params.
+ */
+function gbif_resource_show_featured_resources() {
+	$query = drupal_get_query_parameters();
+	if (count($query) > 0 && !isset($query['XDEBUG_SESSION_START'])) {
+		return FALSE;
+	}
+	elseif ($_COOKIE['searched'] == 'searched' || $_COOKIE['clear-all'] == 'cleared' ) {
+		return FALSE;
+	}
+	else {
+		return TRUE;
+	}
+}

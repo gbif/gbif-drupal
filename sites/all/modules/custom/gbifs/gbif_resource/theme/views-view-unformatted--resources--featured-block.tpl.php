@@ -13,7 +13,6 @@ $title = t('Featured resources');
   <?php if (!empty($title)): ?>
     <h2 class="featured-resources"><?php print $title; ?></h2>
   <?php endif; ?>
-  <a id="featured-resources-toggle" class="btn btn-default btn-switch" href="#" role="button">Hide</a>
 </header>
 <section id="featured-resources-rows">
   <?php foreach ($rows as $id => $row): ?>

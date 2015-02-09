@@ -13,10 +13,10 @@ function gbif_resource_facetapi_default_facet_settings() {
   $facet = new stdClass();
   $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
   $facet->api_version = 1;
-  $facet->name = 'search_api@resource_index::field_tags';
+  $facet->name = 'search_api@resource_index::tx_tags';
   $facet->searcher = 'search_api@resource_index';
   $facet->realm = '';
-  $facet->facet = 'field_tags';
+  $facet->facet = 'tx_tags';
   $facet->enabled = FALSE;
   $facet->settings = array(
     'operator' => 'or',
@@ -39,7 +39,7 @@ function gbif_resource_facetapi_default_facet_settings() {
     'facet_search_ids' => array(),
     'exclude' => 0,
   );
-  $export['search_api@resource_index::field_tags'] = $facet;
+  $export['search_api@resource_index::tx_tags'] = $facet;
 
   $facet = new stdClass();
   $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
@@ -276,10 +276,10 @@ function gbif_resource_facetapi_default_facet_settings() {
   $facet = new stdClass();
   $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
   $facet->api_version = 1;
-  $facet->name = 'search_api@resource_index:block:field_tags';
+  $facet->name = 'search_api@resource_index:block:tx_tags';
   $facet->searcher = 'search_api@resource_index';
   $facet->realm = 'block';
-  $facet->facet = 'field_tags';
+  $facet->facet = 'tx_tags';
   $facet->enabled = TRUE;
   $facet->settings = array(
     'weight' => 0,
@@ -350,7 +350,7 @@ function gbif_resource_facetapi_default_facet_settings() {
     'show_minimum_items' => 2,
     'rewrite_items' => 1,
   );
-  $export['search_api@resource_index:block:field_tags'] = $facet;
+  $export['search_api@resource_index:block:tx_tags'] = $facet;
 
   $facet = new stdClass();
   $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */

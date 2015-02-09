@@ -459,7 +459,7 @@ function gbif_resource_show_featured_resources() {
 	if (count($query) > 0 && !isset($query['XDEBUG_SESSION_START'])) {
 		return FALSE;
 	}
-	elseif (!empty($_SERVER['HTTP_REFERER'])) {
+	elseif ($_COOKIE['searched'] == 'searched' || $_COOKIE['clear-all'] == 'cleared' ) {
 		return FALSE;
 	}
 	else {

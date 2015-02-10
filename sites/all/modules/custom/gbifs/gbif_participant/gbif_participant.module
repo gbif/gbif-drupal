@@ -924,7 +924,7 @@ function _gbif_participant_print_endorsed_publishers($participantID, $iso2, $mod
 			break;
 	}
 
-	$output['list'] = $html;
+	$output['list'] = ($count > 0) ? $html: 0;
 
 	return $output;
 }

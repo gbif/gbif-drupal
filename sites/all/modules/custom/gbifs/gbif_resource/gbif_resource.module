@@ -324,9 +324,10 @@ function gbif_resource_preprocess_field(&$variables) {
  */
 function gbif_resource_preprocess_views_view(&$variables) {
 	if (isset($variables) && $variables['view']->name == 'resources') {
-		drupal_add_js(drupal_get_path('module', 'gbif_resource') . '/js/query-string/query-string.js', array('type' => 'file', 'scope' => 'footer'));
-		drupal_add_js(drupal_get_path('module', 'gbif_resource') . '/js/resources-widgets.js', array('type' => 'file', 'scope' => 'footer'));
-		drupal_add_library('system', 'jquery.cookie');
+		// Experimental code. To be removed if not utilised.
+		//drupal_add_js(drupal_get_path('module', 'gbif_resource') . '/js/query-string/query-string.js', array('type' => 'file', 'scope' => 'footer'));
+		//drupal_add_js(drupal_get_path('module', 'gbif_resource') . '/js/resources-widgets.js', array('type' => 'file', 'scope' => 'footer'));
+		//drupal_add_library('system', 'jquery.cookie');
 	}
 
 	if (isset($variables) && $variables['view']->name == 'resources_search') {

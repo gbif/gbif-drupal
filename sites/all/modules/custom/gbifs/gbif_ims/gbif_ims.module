@@ -190,8 +190,6 @@ function gbif_ims_queue_process($item) {
 				gbif_event_sync();
 			}
 			break;
-		case 'resource_update':
-			break;
 	}
 }
 

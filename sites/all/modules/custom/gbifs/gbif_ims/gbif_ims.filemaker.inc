@@ -1,7 +1,6 @@
 <?php
 /**
- *
- * @defgroup  Cron
+ * * @defgroup  Cron
  * @ingroup GBIF
  *
  * Attempt to keep the FileMaker related 
@@ -17,48 +16,52 @@ function _gbif_ims_sync() {
 	$schema = _gbif_ims_tables();
 
 	foreach ($schema as $table_name => $table) {
-		db_truncate($table_name)->execute();
 
-		$IMS = ims_connection();
-		$IMS_records = $IMS->newFindCommand($table['ims_eqv']);
+		// Switch off resource syncing.
+		if (!in_array($table_name, _gi_ignored_tables())) {
+			db_truncate($table_name)->execute();
 
-		/*
-		 * Some tables have large amount of records that it'll drain memory to get
-		 * all at once. Here we insert 3000 records per attempt until no more
-		 * records found.
-		 */
-		$offset = 0;
-		$interval = 3000;
-		do {
-			$IMS_records->setRange($offset, $offset + $interval);
-			$result = $IMS_records->execute(); // Performance critical step.
-			// Error handling (if any)
-			if (FileMaker::isError($result)) {
-				$error_message = $result->getMessage();
-				$error_code = $result->code;
-				watchdog('gbif_ims', 'FileMaker Error: @error_message. Code: @error_code', array(
-					'@error_message' => $error_message,
-					'@error_code' => $error_code
-				), WATCHDOG_ERROR);
-				drupal_set_message(t('FileMaker Error: @error_message. Code: @error_code', array(
-					'@error_message' => $error_message,
-					'@error_code' => $error_code
-				)), 'error');
-				return FALSE;
-			}
-			else {
-				try {
-					_gi_insert_records($result, $table_name, $table);
-				} catch (Exception $e) {
-					watchdog('gbif_ims', $e->getMessage(), array(), WATCHDOG_ERROR);
+			$IMS = ims_connection();
+			$IMS_records = $IMS->newFindCommand($table['ims_eqv']);
+
+			/*
+			 * Some tables have large amount of records that it'll drain memory to get
+			 * all at once. Here we insert 3000 records per attempt until no more
+			 * records found.
+			 */
+			$offset = 0;
+			$interval = 3000;
+			do {
+				$IMS_records->setRange($offset, $offset + $interval);
+				$result = $IMS_records->execute(); // Performance critical step.
+				// Error handling (if any)
+				if (FileMaker::isError($result)) {
+					$error_message = $result->getMessage();
+					$error_code = $result->code;
+					watchdog('gbif_ims', 'FileMaker Error: @error_message. Code: @error_code', array(
+						'@error_message' => $error_message,
+						'@error_code' => $error_code
+					), WATCHDOG_ERROR);
+					drupal_set_message(t('FileMaker Error: @error_message. Code: @error_code', array(
+						'@error_message' => $error_message,
+						'@error_code' => $error_code
+					)), 'error');
 					return FALSE;
 				}
-			}
-			$offset = $offset + $interval;
-			$count_total = $result->getTableRecordCount();
-		} while ($count_total - $offset > 0);
+				else {
+					try {
+						_gi_insert_records($result, $table_name, $table);
+					} catch (Exception $e) {
+						watchdog('gbif_ims', $e->getMessage(), array(), WATCHDOG_ERROR);
+						return FALSE;
+					}
+				}
+				$offset = $offset + $interval;
+				$count_total = $result->getTableRecordCount();
+			} while ($count_total - $offset > 0);
 
-		unset($IMS);
+			unset($IMS);
+		}
 	}
 
 	// @todo Test the real success.
@@ -402,4 +405,27 @@ function _gi_print_committee_list($group) {
 function _gi_print_participant_list($group) {
 	$results = _gi_get_participant_list($group);
 	return theme('gi_participant_list', array('results' => $results, 'group' => $group));
+}
+
+function _gi_ignored_tables() {
+	return array(
+		'gbif_ims_file',
+		'gbif_ims_file_cluster',
+		'gbif_ims_file_cluster_type',
+		'gbif_ims_file_event_access_category',
+		'gbif_ims_file_file_cluster',
+		'gbif_ims_file_group',
+		'gbif_ims_file_keyword',
+		'gbif_ims_file_path',
+		'gbif_ims_file_resource_tree',
+		'gbif_ims_file_type',
+		'gbif_ims_keyword',
+		'gbif_ims_keyword_keyword_type',
+		'gbif_ims_keyword_language',
+		'gbif_ims_keyword_type',
+		'gbif_ims_resource_tree',
+		'gbif_ims_resource_tree_language',
+		'gbif_ims_resource_type',
+		'gbif_ims_resource_type_language',
+	);
 }

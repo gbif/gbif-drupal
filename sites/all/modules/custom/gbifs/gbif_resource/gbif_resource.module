@@ -428,7 +428,7 @@ function gbif_resource_param_from_array(&$form, $root_key, $key, $value, $array_
  * dependent on facetapi_bonus module.
  */
 function gbif_resource_facet_items_alter(&$build, &$settings) {
-	if ($settings->facet == 'field_tags') {
+	if ($settings->facet == 'tx_tags') {
 		foreach($build as $key => $item) {
 			$term = taxonomy_term_load($key);
 			if (count($term->field_term_attributes) > 0) {

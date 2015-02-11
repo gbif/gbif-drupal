@@ -33,6 +33,7 @@ function gbif_resource_menu() {
 		'access callback' => TRUE,
 		'type' => MENU_CALLBACK,
 	);
+	/* Disabled admin page since we no longer need to sync from the FileMaker.
 	$items['admin/config/gbif/resource'] = array(
 		'title' => 'GBIF resource',
 		'description' => t('Configure GBIF resource related features.'),
@@ -42,6 +43,7 @@ function gbif_resource_menu() {
 		'type' => MENU_NORMAL_ITEM,
 		'file' => 'gbif_resource.admin.inc',
 	);
+	*/
 	return $items;
 }
 
@@ -109,6 +111,7 @@ function gbif_resource_form_resource_node_form_alter(&$form, &$form_state) {
 	$form['gr_number_of_downloads']['#disabled'] = TRUE;
 }
 
+/* Disabled since we no longer need to sync from the FileMaker.
 function gbif_resource_sync_ui($form, $form_state) {
 	if (!empty($form_state['values']['cron_reset'])) {
 		variable_set('gbif_ims_sync_next_execution', 0);
@@ -122,9 +125,10 @@ function gbif_resource_sync_ui($form, $form_state) {
 		watchdog('gbif_resource', "Resource update didn't run because current interval is not expired yet. Next run is at %next.", array('%next' => date_iso8601($next_time)), WATCHDOG_INFO);
 		return t("Resource update didn't run because current interval is not expired yet. Next run is at %next.", array('%next' => date_iso8601($next_time)));
 	}
-
 }
+*/
 
+/* Disabled since we no longer need to sync from the FileMaker.
 function gbif_resource_sync() {
 	$start_time = new DateTime();
 	$sync_success = _gbif_resource_sync();
@@ -151,6 +155,7 @@ function gbif_resource_sync() {
 		return t('Resource updated.') . ' ' . $time_spent;
 	}
 }
+*/
 
 function _gr_required_tables() {
 	$tables = array(

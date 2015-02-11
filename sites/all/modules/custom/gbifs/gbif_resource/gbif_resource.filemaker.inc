@@ -3,6 +3,9 @@
 /*
  * @file Functions here don't talk to FileMaker directly but gbif_ims_* tables.
  * They are organised this way to be consistent across our Drupal modules.
+ *
+ * We no longer sync from the FileMaker IMS, but we keep the code here in case
+ * we need to analyse the keywords and old IMS content again.
  */
 module_load_include('module', 'gbif_tweaks', 'gbif_tweaks');
 

@@ -1118,8 +1118,8 @@ function _gbif_participant_print_news($iso2, $node, $registry_json) {
 		$node_obj = node_load($node->nid);
 		$items[$node->nid]['title'] = $node_obj->title;
 		$node_wrapper = entity_metadata_wrapper('node', $node_obj);
-		$body = $node_wrapper->body->value();
-		$items[$node->nid]['body'] = (!empty($body['summary'])) ? $body['summary'] : $body['value'];
+		$build_body = field_view_field('node', $node_obj, 'body', 'teaser');
+		$items[$node->nid]['body'] = render($build_body);
 		$items[$node->nid]['type'] = _gp_get_type_name($node_obj->type);
 
 		// Determine timestamp for sorting.

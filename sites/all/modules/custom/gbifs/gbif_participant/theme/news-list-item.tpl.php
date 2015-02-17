@@ -1,7 +1,15 @@
 <ul>
 	<?php foreach ($items as $k => $item): ?>
 		<?php
-			$title_link = l($item['title'], 'page/' . $k);
+			switch ($item['type']) {
+				case 'News item':
+				case 'Featured data use':
+					$title_link = l($item['title'], 'page/' . $k);
+					break;
+				case 'Event':
+					$title_link = l($item['title'], 'event/' . $k);
+					break;
+			}
 		?>
 			<li>
 				<h3><?php print $item['type']; ?></h3>

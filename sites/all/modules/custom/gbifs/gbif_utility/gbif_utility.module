@@ -1,0 +1,37 @@
+<?php
+
+/**
+* Implements hook_menu().
+*/
+function gbif_utility_menu() {
+	$items['iso-match'] = array(
+		'title' => t('Countries, territories and islands'),
+		'description' => 'The entrance page for GBIF Participant countries',
+		'page callback' => 'gbif_utility_iso_to_country',
+		'access callback' => TRUE,
+	);
+return $items;
+}
+
+function gbif_utility_iso_to_country() {
+	$file = fopen(drupal_get_path('module', 'gbif_utility') . '/unep/africa.csv', 'r');
+	$iso2 = array();
+	while (($line = fgetcsv($file)) !== false) {
+		if ($line[0] !== 'iso_code') {
+			$iso2[$line[0]] = '';
+		}
+	}
+	fclose($file);
+
+	foreach ($iso2 as $iso_code => $country_name) {
+		$country = country_load($iso_code);
+		$iso2[$iso_code] = $country->name;
+	}
+
+	$output = '<ul>';
+	foreach ($iso2 as $iso_code => $country_name) {
+		$output .= '<li>' . $country_name . ' - ' . $iso_code . '</li>';
+	}
+	$output .= '</ul';
+	return $output;
+}

@@ -1091,28 +1091,61 @@ function _gbif_participant_print_news($iso2, $node, $registry_json) {
 	}
 
 	$output = array();
-	// Prepare an entity query here.
+	// Prepare an entity query for contents related to news here.
 	$entity_query = new EntityFieldQuery();
 	$entity_query->entityCondition('entity_type', 'node')
-		->entityCondition('bundle', array('newsarticle', 'event_ims', 'usesofdata'), 'IN')
+		->entityCondition('bundle', array('newsarticle', 'event', 'usesofdata'), 'IN')
 		->propertyCondition('status', 1)
+		->propertyOrderBy('created', 'DESC')
 		->fieldCondition('field_country', 'tid', $tid, '=');
 	$results = $entity_query->execute();
 
-	$items = array();
-	foreach ($results['node'] as $nid => $node_ids) {
-		$node_obj = node_load($nid);
-		$items[$nid]['title'] = $node_obj->title;
+	$entity_query_event = new EntityFieldQuery();
+	$entity_query_event->entityCondition('entity_type', 'node')
+		->entityCondition('bundle', array('event'), 'IN')
+		->propertyCondition('status', 1)
+		->propertyOrderBy('created', 'DESC')
+		->fieldCondition('ge_venue_country', 'tid', $tid, '=');
+	$results_event = $entity_query_event->execute();
 
-		$node_wrapper = entity_metadata_wrapper('node', $node_obj);
-		$body = $node_wrapper->body->value();
-		$items[$nid]['body'] = (!empty($body['summary'])) ? $body['summary'] : $body['value'];
-		$items[$nid]['type'] = _gp_get_type_name($node_obj->type);
-		$items[$nid]['timing'] = human_timing($node_obj->revision_timestamp) . t(' ago');
-		$items[$nid]['timestamp'] =$node_obj->revision_timestamp;
+	// Merge results in event into other nodes.
+	if (!empty($results) && count($results['node']) !== 0 && !empty($results_event) && count($results_event['node']) !== 0) {
+		$results['node'] = array_merge($results['node'], $results_event['node']);
 	}
 
-	// Sort by time
+	$items = array();
+	foreach ($results['node'] as $node) {
+		$node_obj = node_load($node->nid);
+		$items[$node->nid]['title'] = $node_obj->title;
+		$node_wrapper = entity_metadata_wrapper('node', $node_obj);
+		$body = $node_wrapper->body->value();
+		$items[$node->nid]['body'] = (!empty($body['summary'])) ? $body['summary'] : $body['value'];
+		$items[$node->nid]['type'] = _gp_get_type_name($node_obj->type);
+
+		// Determine timestamp for sorting.
+		if (in_array($node->type, array('usesofdata', 'newsarticle'))) {
+			$items[$node->nid]['timing'] = human_timing($node_obj->created) . t(' ago');
+			$items[$node->nid]['timestamp'] = $node_obj->created;
+		}
+		elseif ($node->type == 'event') {
+			$ims_time = $node_wrapper->ge_ims_date->value();
+			if (!empty($ims_time)) {
+				if (time() - $ims_time['value'] < 0) {
+					$items[$node->nid]['timing'] = t('Scheduled on ') . date('j F Y', $ims_time['value']);
+				}
+				else {
+					$items[$node->nid]['timing'] = human_timing($ims_time['value']) . t(' ago');
+				}
+				$items[$node->nid]['timestamp'] = $ims_time['value'];
+			}
+			else {
+				$items[$node->nid]['timing'] = human_timing($node_obj->created) . t(' ago');
+				$items[$node->nid]['timestamp'] = $node_obj->created;
+			}
+		}
+	}
+
+	// Sort by timestamp.
 	uasort($items, 'cmp_by_timestamp');
 
 	$title_text = t('News items tagged with !country_name', array('!country_name' => $country));

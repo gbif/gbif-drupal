@@ -1148,13 +1148,18 @@ function _gbif_participant_print_news($iso2, $node, $registry_json) {
 	// Sort by timestamp.
 	uasort($items, 'cmp_by_timestamp');
 
-	$title_text = t('News items tagged with !country_name', array('!country_name' => $country));
+	$title_text = t('News and events tagged with !country_name', array('!country_name' => $country));
 	$feed_url = '/taxonomy/term/' . $tid . '/feed';
 	$output['title'] = $title_text;
 	$output['feed_url'] = $feed_url;
 
 	if (count($results['node']) > 0) {
-		$output['list'] = theme('gp_news_list_item', array('items' => $items));
+		$per_page = 10;
+		$current_page = pager_default_initialize(count($items), $per_page);
+		$chunks = array_chunk($items, $per_page, TRUE);
+		$output['list'] = theme('gp_news_list_item', array('items' => $chunks[$current_page]));
+		$output['list'] .= theme('pager', array('page', count($items)));
+
 	}
 	else {
 		$output['list'] = t('There is no news item tagged with !country. However, you can still subscribe to the RSS feed so you can receive updates when they are available.', array('!country' => $country));

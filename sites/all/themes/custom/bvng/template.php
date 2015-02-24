@@ -53,7 +53,7 @@ function bvng_theme() {
  * Implements template_preprocess().
  */
 function bvng_preprocess(&$variables, $hook) {
-	// Make the environmental settings available to the theming layer and javascript.
+	// Make the environmental settings available to the theme layer and javascript.
 	$env = variable_get('environment_settings');
 	$variables['data_portal_base_url'] = $env['data_portal_base_url'];
 	$variables['gbif_api_base_url'] = $env['gbif_api_base_url'];
@@ -62,7 +62,13 @@ function bvng_preprocess(&$variables, $hook) {
 
 	/* The $current_path will change after setting active menu item,
 	 * therefore a requested_path value is inserted to content region
-	 * for regional processing.
+	 * for regional processing, e.g., determining the main well type.
+	 *
+	 * @todo Make compatible with PHP 5.4.
+	 * In PHP 5.4, $req_path will be ruined on line 5893 in	includes/common.inc,
+	 * where the code assume $req_path as $elements is an array. As the result,
+	 * URLs like 'country/CH/*' or 'user/register' become '1ountry/CH/*' or
+	 * '1ser/register'.
 	 */
   $current_path = current_path();
   $variables['current_path'] = $current_path;
@@ -108,7 +114,7 @@ function bvng_preprocess(&$variables, $hook) {
  */
 function bvng_preprocess_html(&$variables) {
 	if (drupal_is_front_page()) {
-		$variables['head_title'] = t('Free and Open Access to Biodiversity Data | GBIF.ORG');
+		$variables['head_title'] = t('Free and Open Access to Biodiversity Data | GBIF.org');
 	}
   drupal_add_js(drupal_get_path('theme', 'bvng') . '/js/contacts.js', array('type' => 'file', 'scope' => 'footer'));
   drupal_add_css(libraries_get_path('leaflet') . '/leaflet.css', array('type' => 'file', 'scope' => 'header'));
@@ -136,14 +142,6 @@ function bvng_preprocess_page(&$variables) {
 				$altered_path = drupal_get_normal_path('newsroom/uses'); // taxonomy/term/567
 				$variables['node']->type_title = t('Featured Data Use');
 				break;
-			case 'event_ims':
-				$altered_path = drupal_get_normal_path('newsroom/events'); // taxonomy/term/569
-				$variables['node']->type_title = t('Event Details');
-				break;
-			case 'resource_ims':
-				$altered_path = drupal_get_normal_path('resources/summary'); // taxonomy/term/569
-				$variables['node']->type_title = t('Resource Details');
-				break;
 			case 'generictemplate':
         if (drupal_match_path($req_path, 'node/241')) $altered_path = 'user';
 			  break;
@@ -156,10 +154,7 @@ function bvng_preprocess_page(&$variables) {
 		$altered_path = drupal_get_normal_path('newsroom/uses'); // taxonomy/term/567
 	}
 	elseif (strpos($req_path, 'resources') !== FALSE) {
-		$altered_path = drupal_get_normal_path('resources/summary'); // taxonomy/term/764
-	}
-	elseif (strpos($req_path, 'events') !== FALSE) {
-		$altered_path = drupal_get_normal_path('newsroom/events'); // taxonomy/term/569
+		$altered_path = drupal_get_normal_path('resources'); // taxonomy/term/764
 	}
 	elseif (drupal_match_path($req_path, 'user') || drupal_match_path($req_path, 'user/*')) {
 		$altered_path = 'user';
@@ -186,7 +181,10 @@ function bvng_preprocess_page(&$variables) {
   else {
   	$node_count = NULL;
   }
-  $variables['page']['highlighted_title'] = _bvng_get_title_data($node_count, $variables['user'], $req_path);
+
+	if (!isset($variables['page']['highlighted_title'])) {
+		$variables['page']['highlighted_title'] = _bvng_get_title_data($node_count, $variables['user'], $req_path, $variables['node']);
+	}
 
   // Manually set page title.
   if ($req_path == 'taxonomy/term/565') {
@@ -212,7 +210,6 @@ function bvng_preprocess_page(&$variables) {
 	if (drupal_is_front_page()) {
 		drupal_add_js(libraries_get_path('leaflet') . '/leaflet.js', array('type' => 'file', 'scope' => 'footer','weight' => 10));
 		drupal_add_js(libraries_get_path('moment') . '/moment.js', array('type' => 'file', 'scope' => 'footer','weight' => 20));
-		drupal_add_js(drupal_get_path('theme', 'bvng') . '/js/cfg', array('type' => 'file', 'scope' => 'footer','weight' => 30));
 		drupal_add_js(drupal_get_path('theme', 'bvng') . '/js/frontPageWidgets.js', array( 'type' => 'file', 'scope' => 'footer','weight' => 50));
 
 		$variables['search_form'] = module_invoke('search', 'block_view', 'search_form');
@@ -365,6 +362,10 @@ function bvng_preprocess_node(&$variables) {
         $next_node = node_load(prev_next_nid($variables['node']->nid, 'prev'));
     }
     $next_node = ($next_node->status == 1) ? $next_node : NULL; // Only refer to published node.
+		// Check whether an URL alias is available.
+		$url_alias = drupal_get_path_alias('node/' . $next_node->nid);
+		$next_node_url = (!empty($url_alias)) ? $url_alias : 'page/' . $next_node->nid;
+		$variables['next_node_link'] = l($next_node->title, $next_node_url);
     $variables['next_node'] = $next_node;
   }
 
@@ -481,12 +482,6 @@ function bvng_preprocess_node(&$variables) {
 		<div class="field-item even">' . $publisher_w_date . '</div></div></div>';
 	}
 
-	/* Process the date of event.
-	 */
-	if ($variables['node']->type == 'event_ims') {
-		$variables['event_date'] = _bvng_get_field_value('node', $variables['node'], 'field_dates');
-	}
-
   /* Process menu_local_tasks()
    */
   global $user;
@@ -500,16 +495,19 @@ function bvng_preprocess_node(&$variables) {
    */
 	if (is_array($variables['tabs']['#primary'])) {
 		foreach ($variables['tabs']['#primary'] as $key => $item) {
-			// We don't need the view tab because we're already viewing it.
-
 			switch ($item['#link']['title']) {
 				case 'View':
+					// We don't need the view tab because we're already viewing it.
 					unset($variables['tabs']['#primary'][$key]);
 					break;
 				case 'Edit':
 					// Alter the 'edit' link to point to the node/%/edit
 					$variables['tabs']['#primary'][$key]['#link']['href'] = 'node/' . $variables['node']->nid . '/edit';
 					if (!in_array('Editors', $user->roles)) unset($variables['tabs']['#primary'][$key]);
+					break;
+				case 'Manage display':
+					// "Manage display" tab is not for editors so we also disable it.
+					unset($variables['tabs']['#primary'][$key]);
 					break;
 				case 'Devel':
 					// Alter the 'edit' link to point to the node/%/devel
@@ -523,34 +521,20 @@ function bvng_preprocess_node(&$variables) {
   /* Get also tagged
    */
   $variables['also_tagged'] = _bvng_get_also_tag_links($variables['node']);
-
-  /* Prepare event location
-   */
-  if (isset($variables['node']->type) && $variables['node']->type == 'event_ims') {
-  	$markup_location = '';
-  	$city = _bvng_get_field_value('node', $variables['node'], 'field_city');
-  	$venuecountry = _bvng_get_field_value('node', $variables['node'], 'field_venuecountry');
-  	$markup_location .= ($city == FALSE) ? '' : $city;
-  	$markup_location .= ($city == FALSE && $venuecountry == FALSE) ? '' : ', ';
-  	$markup_location .= ($venuecountry == FALSE) ? '' : $venuecountry;
-  }
-  if (strlen($markup_location) !== 0) {
-  	$variables['event_location'] = $markup_location;
-  }
-
+	
 }
 
 /**
  * Implements template_preprocess_taxonomy_term().
  */
-function bvng_preprocess_taxonomy_term(&$variables) {
-}
 
 /**
  * Implements hook_preprocess_views_view().
+ * @todo RSS feed icon in the header should be processed here for all views template.
  */
 function bvng_preprocess_views_view(&$variables) {
-  drupal_set_title($variables['view']->get_title());
+  $view_title = $variables['view']->get_title();
+	drupal_set_title($view_title);
   switch ($variables['view']->name) {
     case 'featurednewsarticles':
       // Contruct the JSON for slideshow.
@@ -572,31 +556,27 @@ function bvng_preprocess_views_view(&$variables) {
       drupal_add_js(drupal_get_path('theme', 'bvng') . '/js/featuredNewsSlideshow.js', array('type' => 'file', 'scope' => 'footer', 'weight' => 50));
       */
       break;
+		case 'newsarticles':
+			$region = arg(3);
+			if (!empty($region)) {
+				$feed_url = '/newsroom/archive/rss/' . $region;
+			}
+			else {
+				$feed_url = '/newsroom/archive/rss';
+			}
+			break;
   }
+	$variables['view_title'] = $view_title;
+	if (!empty($feed_url)) {
+		$variables['feed_url'] = $feed_url;
+	}
+
 }
 
-function bvng_preprocess_views_view_field(&$variables, $hook) {                      
-	if ($variables['view']->name == 'featurednewsarticles') {                          
-		$new = '';                                                                       
-	}                                                                                  
-	elseif ($variables['view']->name == 'viewallevents' && $variables['view']->current_display == 'latest4_fp') {
-		if ($variables['field']->field == 'field_start_date') { 
-			// allow extra divs and classes at a later time in template
-			// any lang where the short name of the month has blanks?
-			$pattern = '/(<span\s.+?>)(\w+\s\d\d)(<\/span>)/';
-			$replacement = '$2';
-			$target = $variables['field']->original_value ;
-			
-			$q = preg_replace ( $pattern, $replacement, $target);
-			$d = explode ( ' ', $q );
-			$variables['month_year'] = array ('month'=>$d[0] , 'year'=>$d[1]);
-		}
-	}                                                                                  
-}                                                                                    
-
-function bvng_preprocess_field(&$variables) {                                        
-}                                                                                    
-
+/**
+ * Implements hook_preprocess_views_view_list().
+ * @param $variables
+ */
 function bvng_preprocess_views_view_list(&$variables) {
   switch ($variables['view']->name) {
     case 'usesofdatafeaturedarticles':
@@ -613,11 +593,6 @@ function bvng_preprocess_views_view_list(&$variables) {
 /**
  * Implements template_preprocess_search_results().
  */
-function bvng_preprocess_search_results(&$variables) {
-	if (isset($variables)) {
-
-	}
-}
 
 /**
  * Implements template_preprocess_search_result().
@@ -691,7 +666,29 @@ function bvng_js_alter(&$js) {
 	}
 }
 
+/**
+ * Overrides the presentation of ge_date_ical field.
+ */
+function bvng_field__ge_date_ical($variables) {
+	$output = '';
+
+	// Render only the items.
+	foreach ($variables['items'] as $delta => $item) {
+		unset($item['date']);
+		$output .= '<span>' . t('Add to calendar') . ": " . '</span>';
+		$output .= drupal_render($item);
+	}
+
+	// Render the top-level DIV.
+	$output = '<div class="' . $variables['classes'] . '"' . $variables['attributes'] . '>' . $output . '</div>';
+
+	return $output;
+}
+
 function _bvng_well_types($req_path, $system_main) {
+
+	$status = drupal_get_http_header("status");
+
   // Term pages that has a special layout, hence no filter well.
   $special_layout = array(
     '565',
@@ -704,7 +701,7 @@ function _bvng_well_types($req_path, $system_main) {
     'events',
 		'search',
 		'mendeley',
-		'resource',
+		'resources',
   );
 
 	// Determine to give filter sidebar or not.
@@ -727,6 +724,14 @@ function _bvng_well_types($req_path, $system_main) {
 			return 'none';
 		}
   }
+	elseif (drupal_match_path($req_path, 'country*') || drupal_match_path($req_path, 'analytics*') || drupal_match_path($req_path, 'participation/list')) {
+		if ($status == '404 Not Found') {
+			return 'normal';
+		}
+		else {
+			return 'none';
+		}
+	}
   elseif ($req_path) {
     // Others are views.
     foreach ($filter_paths as $path) {
@@ -738,18 +743,38 @@ function _bvng_well_types($req_path, $system_main) {
 }
 
 /**
+ * Theme our own feed icon.
+ */
+function bvng_feed_icon($variables) {
+	$text = t('Subscribe to !feed-title', array('!feed-title' => $variables['title']));
+	if ($image = theme('image', array('path' => drupal_get_path('theme', 'bvng') . '/images/feed-icon.png', 'width' => 30, 'height' => 30, 'alt' => $text))) {
+		return l($image, $variables['url'], array('html' => TRUE, 'attributes' => array('class' => array('feed-icon'), 'title' => $text)));
+	}
+}
+
+/**
+ * Theme our own ical feed icon.
+ */
+function bvng_feed_ical_icon($variables) {
+	$text = t('Add !feed-title to my calendar', array('!feed-title' => $variables['title']));
+	if ($image = theme('image', array('path' => drupal_get_path('theme', 'bvng') . '/images/ical-icon.png', 'width' => 30, 'height' => 30, 'alt' => $text))) {
+		return l($image, $variables['url'], array('html' => TRUE, 'attributes' => array('class' => array('feed-ical-icon'), 'title' => $text)));
+	}
+}
+
+/**
  * Helper function for showing the title and subtitle of a site section in the
  * highlighted region.
  *
  * The description is retrieved from the description of the menu item.
  */
-function _bvng_get_title_data($node_count = NULL, $user = NULL, $req_path = NULL) {
+function _bvng_get_title_data($node_count = NULL, $user = NULL, $req_path = NULL, $node = NULL) {
   $status = drupal_get_http_header("status");
 
 	// This way disassociates the taxanavigation voc, is more reasonable, but a bit heavy.
 	// Only 'GBIF Newsroom' has a shorter name in the nav.
 	$source_menu = (strpos($req_path, 'user') !== FALSE) ? 'user-menu' : 'gbif-menu';
-	$active_menu_item = menu_link_get_preferred(current_path(), $source_menu);
+	$active_menu_item = menu_link_get_preferred($req_path, $source_menu);
 	if (strpos(current_path(), 'user') !== FALSE) {
 		switch ($req_path) {
 	    case 'user/login':
@@ -816,21 +841,54 @@ function _bvng_get_title_data($node_count = NULL, $user = NULL, $req_path = NULL
 		);
 	}
 	elseif ($active_menu_item) {
-		// The resource/summary and resources/keyinformation are shared by two menu parents
+		// The resources and resources/keyinformation are shared by two menu parents
 		// so we force the title here.
-		if (drupal_match_path($req_path, 'taxonomy/term/764') || drupal_match_path($req_path, 'node/234') || drupal_match_path($req_path, 'resources/archive')) {
+		$resource_paths = array(
+			'resources',
+			'resources/archive',
+			'node/234',
+			'node/5438',
+			'node/5549',
+			'node/5553',
+			'node/5557',
+		);
+		foreach ($resource_paths as $path) {
+			$matched = drupal_match_path($req_path, $path);
+			if ($matched == TRUE) break;
+		}
+		if (isset($matched) && $matched == TRUE) {
 		  $title = array(
 		    'name' => t('Resources'),
-		    'description' => t('Tools and information to support the GBIF community'),
+		    'description' => t('Library of documents, tools and and other information to support the GBIF community'),
 		  );
+		}
+		elseif ($matched == FALSE && strpos($req_path, 'mendeley') !== FALSE) {
+			$title = array(
+				'name' => t('Peer-reviewed publications'),
+				'description' => t('(via <a href="@url">Mendeley</a>)', array('@url' => 'http://www.mendeley.com/groups/1068301/gbif-public-library/')),
+			);
 		}
 		else {
 		  $parent = menu_link_load($active_menu_item['plid']);
 		  $title = array(
-		      'mild' => $parent['mlid'],
-		      'name' => ($parent['link_title'] == 'GBIF News') ? 'GBIF Newsroom' : $parent['link_title'],
-		      'description' => $parent['options']['attributes']['title'],
+		    'mild' => $parent['mlid'],
+		    'name' => ($parent['link_title'] == 'GBIF News') ? 'GBIF Newsroom' : $parent['link_title'],
+		    'description' => $parent['options']['attributes']['title'],
 		  );
+		}
+	}
+	elseif ($active_menu_item == FALSE && isset($node)) {
+		if (in_array($node->type, array('usesofdata', 'newsarticle', 'event'))) {
+			$title = array(
+				'name' => t('GBIF Newsroom'),
+				'description' => t('News and events from around the GBIF community'),
+			);
+		}
+		elseif (in_array($node->type, array('resource'))) {
+			$title = array(
+				'name' => t('Resources'),
+				'description' => t('Library of documents, tools and and other information to support the GBIF community'),
+			);
 		}
 	}
 	elseif (strpos(current_path(), 'taxonomy/term') !== FALSE) {
@@ -921,17 +979,6 @@ function _bvng_get_sidebar_content($nid, $vid) {
           }
         }
         break;
-			case 'resource_ims':
-				$orc_id = _bvng_get_field_value('node', $node, 'field_orc_original_ims_id');
-				$file_size_text = _bvng_get_field_value('node', $node, 'field_size_text');
-				$resource_url = 'http://imsgbif.gbif.org/CMS_ORC/?doc_id=' . $orc_id . '&download=1';
-				$download_text = t('Download');
-				if (!empty($file_size_text)) {
-					$download_text .= ' (' . $file_size_text . ')';
-				}
-				$download_link = l($download_text, $resource_url);
-				$markup .= $download_link;
-				break;
     }
   }
 
@@ -1073,28 +1120,6 @@ function _bvng_get_regional_links() {
   return $links;
 }
 
-function _bvng_get_event_links() {
-	$options = array(
-		'upcoming' => array(
-			'label' => t('Upcoming GBIF events'),
-			'url_base' => 'newsroom/events',
-		),
-		'past' => array(
-			'label' => t('Past GBIF events'),
-			'url_base' => 'newsroom/events/archive',
-		),
-	);
-	$links = '';
-	$links = '<ul class="filter-list">';
-	foreach ($options as $option) {
-		$links .= '<li>';
-		$links .= l($option['label'], $option['url_base']);
-		$links .= '</li>';
-	}
-	$links .= '</ul>';
-	return $links;
-}
-
 function _bvng_get_subject_links() {
   $subjects = variable_get('gbif_subject_definition');
   $links = '';
@@ -1208,11 +1233,11 @@ function _bvng_get_also_tag_links($node) {
 function _bvng_get_container_well() {
   $well = array();
   $well['normal'] = array(
-    'top' => '<div class="container well well-lg well-margin-top well-margin-bottom">' . "\n" . '<div class="row">' . "\n" . '<div class="col-md-12">',
+    'top' => '<div class="container well well-lg well-margin-top well-margin-bottom">' . "\n" . '<div class="row">' . "\n" . '<div class="col-xs-12">',
     'bottom' => '</div>' . "\n" . '</div>' . "\n" . '</div>',
   );
   $well['filter'] = array(
-    'top' => '<div class="container well well-lg well-margin-top well-margin-bottom well-right-bg">' . "\n" . '<div class="row">' . "\n" . '<div class="col-md-12">',
+    'top' => '<div class="container well well-lg well-margin-top well-margin-bottom well-right-bg">' . "\n" . '<div class="row">' . "\n" . '<div class="col-xs-12">',
     'bottom' => '</div>' . "\n" . '</div>' . "\n" . '</div>',
   );
   return $well;
@@ -1297,4 +1322,77 @@ function _bvng_get_destination($req_path) {
 		$destination = array('destination' => $path);
 	}
 	return $destination;
+}
+
+/**
+ * Hide facet counts.
+ * Implements theme_facetapi_link_inactive().
+ * @link https://www.drupal.org/node/1615430#comment-8809877
+ */
+function bvng_facetapi_link_inactive($variables) {
+	// Builds accessible markup.
+	// @see http://drupal.org/node/1316580
+	$accessible_vars = array(
+		'text' => $variables['text'],
+		'active' => FALSE,
+	);
+	$accessible_markup = theme('facetapi_accessible_markup', $accessible_vars);
+
+	// Sanitizes the link text if necessary.
+	$sanitize = empty($variables['options']['html']);
+	$variables['text'] = ($sanitize) ? check_plain($variables['text']) : $variables['text'];
+
+	// Adds count to link if one was passed.
+	// BKO: we comment out this block so we can add the count back outside the <anchor> tag.
+	/*
+	if (isset($variables['count'])) {
+		$variables['text'] .= ' ' . theme('facetapi_count', $variables);
+	}
+	*/
+
+	// Resets link text, sets to options to HTML since we already sanitized the
+	// link text and are providing additional markup for accessibility.
+	$variables['text'] .= $accessible_markup;
+	$variables['options']['html'] = TRUE;
+	return gbif_resource_theme_link($variables);
+}
+
+/**
+ * Implements theme_file_force_file_link().
+ * @param $variables
+ */
+function bvng_file_force_file_link($variables) {
+	$file = $variables['file'];
+	$icon_directory = $variables['icon_directory'];
+
+	$url = file_force_create_url($file->uri, FALSE);
+	$icon = theme('file_icon', array('file' => $file, 'icon_directory' => $icon_directory));
+
+	// Set options as per anchor format described at
+	// http://microformats.org/wiki/file-format-examples
+	$options = array(
+		'attributes' => array(
+			'type' => $file->filemime . '; length=' . $file->filesize,
+		),
+	);
+
+	// Use the description as the link text if available.
+	if (empty($file->description)) {
+		$link_text = $file->filename;
+	}
+	else {
+		$link_text = $file->description;
+		$options['attributes']['title'] = check_plain($file->filename);
+	}
+
+	$options['query']['download'] = '1';
+
+	// Use path to control the output style of file_force.
+	if (current_path() == 'resources') {
+		$options['html'] = TRUE;
+		return '<span class="file">' . l($icon, $url, $options) . '</span>';
+	}
+	else {
+		return '<span class="file">' . $icon . ' ' . l($link_text, $url, $options) . '</span>';
+	}
 }

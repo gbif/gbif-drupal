@@ -48,7 +48,7 @@
  */
 ?>
 <div class="row">
-  <div class="view-column col-md-8"> 
+  <div class="view-column col-xs-8"> 
     <div class="generic-column">
       <?php print $content ?>
     </div>

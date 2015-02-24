@@ -36,7 +36,7 @@
 ?>
 <div class="container">
   <div class="row">
-    <div class="col-md-9 well well-lg well-margin-top">
+    <div class="col-xs-9 well well-lg well-margin-top">
 
       <div class="row">
         <div class="content-header user-header">
@@ -51,7 +51,9 @@
             <?php print $full_name . ' ' . $edit_link; ?>
             <br>
             <?php print render($user_profile['field_country_mono']); ?>
-            <?php print render($user_profile['summary']); ?>
+						<div class="field-label">TIMEZONE</div>
+						<div class="field-items"><?php print $user->timezone; ?></div>
+						<?php print render($user_profile['summary']); ?>
           </div>
         </div>
       </div>

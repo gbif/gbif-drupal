@@ -78,7 +78,21 @@ function gbif_navigation_block_info_alter(&$block, $theme, $code_blocks) {
       $block['menu_block']['gbif_navigation_footer_links']['region'] = 'links';
       $block['menu_block']['gbif_navigation_footer_links']['title'] = '<none>';
 
-      break;
+			$block['menu_block']['gbif_navigation_country_page']['weight'] = 5;
+			$block['menu_block']['gbif_navigation_country_page']['status'] = 1;
+			$block['menu_block']['gbif_navigation_country_page']['region'] = 'menu';
+			$block['menu_block']['gbif_navigation_country_page']['title'] = '<none>';
+			$block['menu_block']['gbif_navigation_country_page']['visibility'] = BLOCK_VISIBILITY_LISTED;
+			$block['menu_block']['gbif_navigation_country_page']['pages'] = "country/*";
+
+			$block['menu_block']['gbif_navigation_analytics']['weight'] = 6;
+			$block['menu_block']['gbif_navigation_analytics']['status'] = 1;
+			$block['menu_block']['gbif_navigation_analytics']['region'] = 'menu';
+			$block['menu_block']['gbif_navigation_analytics']['title'] = '<none>';
+			$block['menu_block']['gbif_navigation_analytics']['visibility'] = BLOCK_VISIBILITY_LISTED;
+			$block['menu_block']['gbif_navigation_analytics']['pages'] = "analytics/*";
+
+			break;
   }
 }
 
@@ -132,7 +146,29 @@ function gbif_navigation_menu_block_blocks() {
       'expanded'    => 1,
       'sort'        => 0,
     ),
-  );
+		'gbif_navigation_country_page' => array(
+			'menu_name'   => 'country-page',
+			'parent_mlid' => 0,
+			'title_link'  => 0,
+			'admin_title' => 'Country page menu tabs',
+			'level'       => 1,
+			'follow'      => 0,
+			'depth'       => 1,
+			'expanded'    => 1,
+			'sort'        => 0,
+		),
+		'gbif_navigation_analytics' => array(
+			'menu_name'   => 'analytics',
+			'parent_mlid' => 0,
+			'title_link'  => 0,
+			'admin_title' => 'Analytics menu tabs',
+			'level'       => 1,
+			'follow'      => 0,
+			'depth'       => 1,
+			'expanded'    => 1,
+			'sort'        => 0,
+		),
+	);
 }
 
 /**
@@ -151,16 +187,10 @@ function gbif_navigation_node_view($node, $view_mode, $langcode) {
 	switch ($node->type) {
 		case 'newsarticle':
 		menu_tree_set_path('gbif-menu', 'taxonomy/term/566'); // newsroom/news
-	break;
+			break;
 		case 'usesofdata':
 		menu_tree_set_path('gbif-menu', 'taxonomy/term/567'); // newsroom/uses
-	break;
-		case 'event_ims':
-		menu_tree_set_path('gbif-menu', 'taxonomy/term/569'); // newsroom/events
-	break;
-		case 'resource_ims':
-		menu_tree_set_path('gbif-menu', 'taxonomy/term/764'); // resources/summary
-	break;
+			break;
 	}
 }
 
@@ -369,6 +399,9 @@ function gbif_navigation_menutab_visibility() {
 	if (drupal_match_path($current_path, 'search/*')) { // Don't show menu tab for search results.
 		return FALSE;
 	}
+	elseif (drupal_match_path($current_path, 'analytics/*')) {
+		return FALSE;
+	}
 	elseif (drupal_match_path($current_path, 'node/*')) { // Do show menu tab for normal pages.
 		return TRUE;
 	}
@@ -382,5 +415,4 @@ function gbif_navigation_menutab_visibility() {
 	else {
 		return TRUE;
 	}
-
 }

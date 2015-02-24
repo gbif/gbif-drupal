@@ -48,7 +48,11 @@
 <html lang="<?php print $language->language; ?>" dir="<?php print $language->dir; ?>"<?php print $rdf_namespaces;?>>
 <head profile="<?php print $grddl_profile; ?>">
   <meta charset="utf-8">
-  <meta name="viewport" content="width=1024, user-scalable=yes">
+
+  <!-- Disabled responsiveness
+	<meta name="viewport" content="width=1024, user-scalable=yes">
+	-->
+
   <?php print $head; ?>
   <title><?php print $head_title; ?></title>
   <?php print $styles; ?>
@@ -59,6 +63,40 @@
   <!-- beginning Drupal scripts -->
   <?php print $scripts; ?>
   <!-- ending Drupal scripts -->
+
+	<!-- beginning favicons -->
+
+	<link rel="apple-touch-icon" type="image/png" sizes="57x57" href="../../images/favicons/apple-touch-icon-57x57.png">
+	<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../../images/favicons/apple-touch-icon-60x60.png">
+	<link rel="apple-touch-icon" type="image/png" sizes="72x72" href="../../images/favicons/apple-touch-icon-72x72.png">
+	<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../../images/favicons/apple-touch-icon-76x76.png">
+	<link rel="apple-touch-icon" type="image/png" sizes="114x114" href="../../images/favicons/apple-touch-icon-114x114.png">
+	<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../../images/favicons/apple-touch-icon-120x120.png">
+	<link rel="apple-touch-icon" type="image/png" sizes="144x144" href="../../images/favicons/apple-touch-icon-144x144.png">
+	<link rel="apple-touch-icon" type="image/png" sizes="152x152" href="../../images/favicons/apple-touch-icon-152x152.png">
+	<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../../images/favicons/apple-touch-icon-180x180.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="../../images/favicons/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="194x194" href="../../images/favicons/favicon-194x194.png">
+	<link rel="icon" type="image/png" sizes="96x96" href="../../images/favicons/favicon-96x96.png">
+	<link rel="icon" type="image/png" sizes="192x192" href="../../images/favicons/android-chrome-192x192.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="../../images/favicons/favicon-16x16.png">
+	<link rel="manifest" href="../../images/favicons/manifest.json">
+	<meta name="msapplication-TileColor" content="#00a300">
+	<meta name="msapplication-TileImage" content="../../images/favicons/mstile-144x144.png">
+	<meta name="theme-color" content="#ffffff">
+
+	<!-- ending favicons -->
+
+	<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+		ga('create', '<?php print variable_get('ga_tracking_id'); ?>', 'auto');
+		ga('send', 'pageview');
+
+	</script>
 </head>
 <body class="<?php print $classes; ?>" <?php print $attributes;?>>
   <div id="skip-link">

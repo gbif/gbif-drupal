@@ -1,0 +1,162 @@
+<?php
+
+function gbif_tweaks_menu() {
+	$items['admin/config/gbif'] = array(
+		'title' => 'GBIF Configuration',
+		'description' => t('Configure settings that determine how this Drupal site presents itself as the GBIF Portal.'),
+		'position' => 'right',
+		'weight' => -10,
+		'page callback' => 'system_admin_menu_block_page',
+		'access arguments' => array('administer site configuration'),
+		'file' => 'system.admin.inc',
+		'file path' => drupal_get_path('module', 'system'),
+	);
+	return $items;
+}
+
+/**
+ * Mainly a wrapper function that adds elapsed time to the result.
+ *
+ * @param $task
+ *   The AJAX callback of the actual task that returns a $result array
+ *   containing the following elements:
+ *     'success': (boolean) whether the task completes or not.
+ *     'message': (string) the message explaining the result.
+ *
+ * @todo To go though all task functions and check whether they give 'success' faithfully.
+ */
+function gbif_tweaks_task_wrapper($task) {
+	$start_time = new DateTime();
+	$result = $task();
+	$end_time = new DateTime();
+	$time = $end_time->diff($start_time);
+	$time_spent = "This task took ";
+	if ($time->y > 0) {$time_spent .= $time->y.' years, ';}
+	if ($time->m > 0) {$time_spent .= $time->m.' months, ';}
+	if ($time->d > 0) {$time_spent .= $time->d.' days, ';}
+	if ($time->h > 0) {$time_spent .= $time->h.' hours, ';}
+	if ($time->i > 0) {$time_spent .= $time->i.' minutes, ';}
+	if ($time->s > 0) {$time_spent .= $time->s.' seconds ';}
+	$time_spent .= "to complete.";
+
+	// Should examine the result before informing via the UI.
+	return $result['message'] . ' ' . $time_spent;
+}
+
+/**
+ * Create or remove redirects.
+ * @param $module
+ *   Which module to look for the list of redirects.
+ * @param $mode
+ *   "Create" or "remove" redirects.
+ */
+function gbif_tweaks_redirects_handling($module, $mode) {
+	$list = $module . '_redirection_list';
+	$redirections = $list();
+	switch ($mode) {
+		case 'create':
+			foreach ($redirections as $redirection) {
+				$redirect = new stdClass();
+				redirect_object_prepare(
+					$redirect,
+					array(
+						'source' => $redirection['old'],
+						'source_options' => array(),
+						'redirect' => $redirection['new'],
+						'redirect_options' => array(),
+						'language' => LANGUAGE_NONE,
+						'status_code' => 0, // Redirect Status, 0 is default
+						'type' => 'redirect',
+					)
+				);
+				redirect_save($redirect);
+			}
+			break;
+		case 'remove':
+			$rids = array();
+			foreach ($redirections as $redirection) {
+				$query = new EntityFieldQuery();
+				$entities = $query->entityCondition('entity_type', 'redirect')
+					->propertyCondition('source', $redirection['old'], '=')
+					->execute();
+				if (!empty($entities['redirect'])) {
+					$rids[] = key($entities['redirect']);
+				}
+			}
+			redirect_delete_multiple($rids);
+			break;
+	}
+}
+
+/**
+ * @param $entity_type
+ * @param $field_name
+ * @param $bundle_name
+ */
+function gbif_tweaks_field_export($entity_type, $field_name, $bundle_name) {
+	$info_config = field_info_field($field_name);
+	$info_instance = field_info_instance($entity_type, $field_name, $bundle_name);
+	unset($info_config['id']);
+	unset($info_instance['id'], $info_instance['field_id']);
+	ksort($info_config);
+	ksort($info_instance);
+	include_once DRUPAL_ROOT . '/includes/utility.inc';
+	$output = "field_create_field(" . drupal_var_export($info_config) . ");\n";
+	$output .= "field_create_instance(" . drupal_var_export($info_instance) . ");";
+	drupal_set_message("<textarea rows=30 style=\"width: 100%;\">" . $output . '</textarea>');
+}
+
+function gbif_tweaks_get_data_portal_base_url() {
+	$env = variable_get('environment_settings');
+	return $env['data_portal_base_url'];
+}
+
+/**
+ * @param (array) $node_types
+ */
+function gbif_tweaks_delete_all($node_types) {
+	foreach ($node_types as $node_type) {
+		$query = db_select('node', 'n');
+		$query->addField('n', 'nid');
+		$query->condition('n.type', $node_type);
+		$results = $query->execute()->fetchAll();
+		$node_ids = array();
+		foreach ($results as $row) {
+			$node_ids[] = $row->nid;
+		}
+		node_delete_multiple($node_ids);
+	}
+}
+
+/**
+ * Get language code in node form processing.
+ */
+function gbif_tweaks_get_language_code($entity_type, $field, $entity_language) {
+	$field_info = field_info_field($field);
+	if (field_is_translatable($entity_type, $field_info)) {
+		$lang_code = field_valid_language($entity_language);
+	} else {
+		$lang_code = LANGUAGE_NONE;
+	}
+	return $lang_code;
+}
+
+/**
+ * @param $bytes
+ * @param int $precision
+ * @return string
+ * @see http://stackoverflow.com/questions/2510434/format-bytes-to-kilobytes-megabytes-gigabytes
+ */
+function format_bytes($bytes, $precision = 2) {
+	$units = array('B', 'KB', 'MB', 'GB', 'TB');
+
+	$bytes = max($bytes, 0);
+	$pow = floor(($bytes ? log($bytes) : 0) / log(1024));
+	$pow = min($pow, count($units) - 1);
+
+	// Uncomment one of the following alternatives
+	$bytes /= pow(1024, $pow);
+	// $bytes /= (1 << (10 * $pow));
+
+	return round($bytes, $precision) . ' ' . $units[$pow];
+}

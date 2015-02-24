@@ -30,7 +30,7 @@
   <?php endif; ?>
 
   <?php if ($id == 'title'): ?>
-  <?php print '<div class="col-md-4 slideshow-intro">'; ?>
+  <?php print '<div class="col-xs-4 slideshow-intro">'; ?>
   <?php elseif($id == 'field_featured'): ?>
   <?php print '<div class="slideshow-image">'; ?>
   <?php endif; ?>

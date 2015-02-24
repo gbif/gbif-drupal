@@ -131,14 +131,6 @@ function gbif_pages_view_featurednewsarticles() {
 	$handler->display->display_options['filters']['field_featured_alt']['table'] = 'field_data_field_featured';
 	$handler->display->display_options['filters']['field_featured_alt']['field'] = 'field_featured_alt';
 	$handler->display->display_options['filters']['field_featured_alt']['operator'] = 'not empty';
-	/* Filter criterion: Content: Has taxonomy term */
-	$handler->display->display_options['filters']['tid']['id'] = 'tid';
-	$handler->display->display_options['filters']['tid']['table'] = 'taxonomy_index';
-	$handler->display->display_options['filters']['tid']['field'] = 'tid';
-	$handler->display->display_options['filters']['tid']['value'] = array(
-		0 => '547',
-	);
-	$handler->display->display_options['filters']['tid']['vocabulary'] = 'corenews';
 	/* Filter criterion: Content: Type */
 	$handler->display->display_options['filters']['type']['id'] = 'type';
 	$handler->display->display_options['filters']['type']['table'] = 'node';

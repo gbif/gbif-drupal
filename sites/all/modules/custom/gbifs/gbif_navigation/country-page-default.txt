@@ -1,0 +1,6 @@
+Summary {"url":"country\/summary"}
+Data About {"url":"country\/about"}
+Data Publishing {"url":"country\/publishing"}
+Participation {"url":"country\/participation"}
+News and Events {"url":"country\/news"}
+Publications {"url":"country\/publications"}

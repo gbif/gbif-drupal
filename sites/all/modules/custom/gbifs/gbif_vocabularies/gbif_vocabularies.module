@@ -1,11 +1,11 @@
 <?php
 /**
- * @file
+ * @todo IMS keyword mapping.
  */
- 
+
 /**
- * Implements hook_countries_alter().
+ * @file
+ * Code for the GBIF Vocabularies feature.
  */
-function gbif_vocabularies_countries_alter(&$countries) {
-  
-}
+
+include_once 'gbif_vocabularies.features.inc';

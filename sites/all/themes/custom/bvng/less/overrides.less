@@ -10,6 +10,16 @@
           box-shadow: @shadow;
 }
 
+// Non-responsive
+.container {
+  width: 924px;
+  max-width: none !important;
+}
+
+.region-menu {
+  width: 930px;
+}
+
 html {
   
   position: relative;
@@ -746,4 +756,17 @@ table {
   button {
     float: right;
   }
+}
+
+// jGrowl styles
+.jGrowl-notification {
+  font-size: 14px;
+  padding-left: 20px !important;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  width: 350px !important;
+}
+.jGrowl-notification.warning {
+  border: none !important;
 }

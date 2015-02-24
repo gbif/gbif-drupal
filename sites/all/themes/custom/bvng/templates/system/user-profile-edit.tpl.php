@@ -3,10 +3,11 @@
 // on country select by taking out the 'form-control' CSS class.
 // @todo Figure out the appropriate preprocss hook and put this line there.
 unset($form['field_country_mono']['und']['#attributes']['class'][0]);
+unset($form['timezone']['timezone']['#attributes']['class'][0]);
 ?>
 <div class="container">
   <div class="row">
-    <div class="col-md-9 well well-lg well-margin-top">
+    <div class="col-xs-9 well well-lg well-margin-top">
       <form action="<?php echo $base_url?>/user/register" method="post" autocomplete="off">
 
         <div class="row user-login-row">
@@ -20,6 +21,7 @@ unset($form['field_country_mono']['und']['#attributes']['class'][0]);
     				<?php print render($form['account']['current_pass']); ?>
     				<?php print render($form['account']['pass']); ?>
     				<?php print render($form['field_country_mono']); ?>
+						<?php print render($form['timezone']['timezone']); ?>
           </div>
         </div>
         <div class="row user-login-action">

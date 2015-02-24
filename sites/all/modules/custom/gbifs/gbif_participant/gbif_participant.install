@@ -1,0 +1,1100 @@
+<?php
+/**
+ * @file
+ * Installation of gbif_participant
+ * The installation will:
+ *   1) Establish the "gbif_participant" content type and its field settings;
+ */
+
+function gbif_participant_requirements() {
+
+}
+
+function gbif_participant_install() {
+	node_types_rebuild();
+	_gbif_participant_create_custom_fields();
+}
+
+function gbif_participant_enable() {
+	// hook_node_info() is run after hook_enable() so at this point node options
+	// is not set. So don't run gbif_participant_populate() here.
+}
+
+function gbif_participant_uninstall() {
+	$type_to_delete = 'gbif_participant';
+	$sql = 'SELECT nid FROM {node} n WHERE n.type = :type';
+	$result = db_query($sql, array(':type' => $type_to_delete));
+	$node_ids = array();
+	foreach ($result as $row) {
+		$node_ids[] = $row->nid;
+	}
+	node_delete_multiple($node_ids);
+	_gbif_participant_delete_custom_fields();
+	node_type_delete($type_to_delete);
+	field_purge_batch(500);
+}
+
+function _gbif_participant_create_custom_fields() {
+	foreach (_gbif_participant_installed_fields() as $field) {
+		field_create_field($field);
+	}
+	foreach (_gbif_participant_installed_instances() as $fieldinstance) {
+		$fieldinstance['entity_type'] = 'node';
+		$fieldinstance['bundle'] = 'gbif_participant';
+		field_create_instance($fieldinstance);
+	}
+}
+
+function _gbif_participant_delete_custom_fields() {
+	foreach (array_keys(_gbif_participant_installed_fields()) as $field) {
+		field_delete_field($field);
+	}
+	$instances = field_info_instances('node', 'gbif_participant');
+	foreach ($instances as $instance_name => $fieldinstance) {
+		field_delete_instance($fieldinstance);
+	}
+}
+
+/**
+ * Helper function to define fields.
+ * 'gp' stands for GBIF Participant. All fields created by this module should be prefixed with it.
+ */
+function _gbif_participant_installed_fields() {
+	$t = get_t();
+	return array(
+		'gp_id' => array(
+			'label' => $t('Participant ID'),
+			'active' => '1',
+			'cardinality' => '1',
+			'deleted' => '0',
+			'entity_types' => array(),
+			'field_name' => 'gp_id',
+			'foreign keys' => array(),
+			'indexes' => array(),
+			'locked' => '1',
+			'module' => 'number',
+			'settings' => array(),
+			'translatable' => '0',
+			'type' => 'number_integer',
+		),
+		'gp_iso2' => array(
+			'label' => $t('Participant ISO 3166-2 code'),
+			'active' => '1',
+			'cardinality' => '1',
+			'deleted' => '0',
+			'entity_types' => array(),
+			'field_name' => 'gp_iso2',
+			'foreign keys' => array(),
+			'indexes' => array(),
+			'locked' => '1',
+			'module' => 'text',
+			'settings' => array(),
+			'translatable' => '0',
+			'type' => 'text',
+		),
+		'gp_node_established' => array(
+			'label' => $t('Node Established'),
+			'active' => '1',
+			'cardinality' => '1',
+			'deleted' => '0',
+			'entity_types' => array(),
+			'field_name' => 'gp_node_established',
+			'foreign keys' => array(),
+			'indexes' => array(),
+			'locked' => '1',
+			'module' => 'date',
+			'settings' => array(
+				'cache_count' => '4',
+				'cache_enabled' => 0,
+				'granularity' => array(
+					'day' => 'day',
+					'hour' => 0,
+					'minute' => 0,
+					'month' => 'month',
+					'second' => 0,
+					'year' => 'year',
+				),
+				'repeat' => '0',
+				'timezone_db' => '',
+				'todate' => '',
+				'tz_handling' => 'none',
+			),
+			'translatable' => '0',
+			'type' => 'datetime',
+		),
+		'gp_has_mandate' => array(
+			'label' => $t('The Node Has Formal Mandate'),
+			'active' => '1',
+			'cardinality' => '1',
+			'deleted' => '0',
+			'entity_types' => array(),
+			'field_name' => 'gp_has_mandate',
+			'foreign keys' => array(),
+			'indexes' => array(
+				'value' => array(
+					0 => 'value',
+				),
+			),
+			'locked' => '1',
+			'module' => 'list',
+			'settings' => array(
+				'allowed_values' => array(
+					0 => '',
+					1 => '',
+				),
+				'allowed_values_function' => '',
+			),
+			'translatable' => '0',
+			'type' => 'list_boolean',
+		),
+		'gp_history' => array(
+			'label' => $t('History'),
+			'active' => '1',
+			'cardinality' => '1',
+			'deleted' => '0',
+			'entity_types' => array(),
+			'field_name' => 'gp_history',
+			'foreign keys' => array(
+				'format' => array(
+					'columns' => array(
+						'format' => 'format',
+					),
+					'table' => 'filter_format',
+				),
+			),
+			'indexes' => array(
+				'format' => array(
+					0 => 'format',
+				),
+			),
+			'locked' => '1',
+			'module' => 'text',
+			'settings' => array(),
+			'translatable' => '1',
+			'type' => 'text_long',
+		),
+		'gp_vision_mission' => array(
+			'label' => $t('Vision and Mission'),
+			'active' => '1',
+			'cardinality' => '1',
+			'deleted' => '0',
+			'entity_types' => array(),
+			'field_name' => 'gp_vision_mission',
+			'foreign keys' => array(
+				'format' => array(
+					'columns' => array(
+						'format' => 'format',
+					),
+					'table' => 'filter_format',
+				),
+			),
+			'indexes' => array(
+				'format' => array(
+					0 => 'format',
+				),
+			),
+			'locked' => '1',
+			'module' => 'text',
+			'settings' => array(),
+			'translatable' => '1',
+			'type' => 'text_long',
+		),
+		'gp_structure' => array(
+			'label' => $t('Structure'),
+			'active' => '1',
+			'cardinality' => '1',
+			'deleted' => '0',
+			'entity_types' => array(),
+			'field_name' => 'gp_structure',
+			'foreign keys' => array(
+				'format' => array(
+					'columns' => array(
+						'format' => 'format',
+					),
+					'table' => 'filter_format',
+				),
+			),
+			'indexes' => array(
+				'format' => array(
+					0 => 'format',
+				),
+			),
+			'locked' => '1',
+			'module' => 'text',
+			'settings' => array(),
+			'translatable' => '1',
+			'type' => 'text_long',
+		),
+		'gp_national_funding' => array(
+			'label' => $t('National Funding'),
+			'active' => '1',
+			'cardinality' => '1',
+			'deleted' => '0',
+			'entity_types' => array(),
+			'field_name' => 'gp_national_funding',
+			'foreign keys' => array(
+				'format' => array(
+					'columns' => array(
+						'format' => 'format',
+					),
+					'table' => 'filter_format',
+				),
+			),
+			'indexes' => array(
+				'format' => array(
+					0 => 'format',
+				),
+			),
+			'locked' => '1',
+			'module' => 'text',
+			'settings' => array(),
+			'translatable' => '1',
+			'type' => 'text_long',
+		),
+		'gp_comm_social' => array(
+			'label' => $t('Social Media'),
+			'active' => '1',
+			'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+			'deleted' => '0',
+			'entity_types' => array(),
+			'field_name' => 'gp_comm_social',
+			'foreign keys' => array(),
+			'indexes' => array(),
+			'locked' => '1',
+			'module' => 'link',
+			'settings' => array(
+				'attributes' => array(
+					'class' => '',
+					'rel' => '',
+					'target' => 'default',
+				),
+				'display' => array(
+					'url_cutoff' => 80,
+				),
+				'enable_tokens' => 1,
+				'title' => 'optional',
+				'title_maxlength' => 128,
+				'title_value' => '',
+				'url' => 0,
+			),
+			'translatable' => '0',
+			'type' => 'link_field',
+		),
+		'gp_comm_rss' => array(
+			'label' => $t('RSS feed'),
+			'active' => '1',
+			'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+			'deleted' => '0',
+			'entity_types' => array(),
+			'field_name' => 'gp_comm_rss',
+			'foreign keys' => array(),
+			'indexes' => array(),
+			'locked' => '1',
+			'module' => 'link',
+			'settings' => array(
+				'attributes' => array(
+					'class' => '',
+					'rel' => '',
+					'target' => 'default',
+				),
+				'display' => array(
+					'url_cutoff' => 80,
+				),
+				'enable_tokens' => 1,
+				'title' => 'optional',
+				'title_maxlength' => 128,
+				'title_value' => '',
+				'url' => 0,
+			),
+			'translatable' => '0',
+			'type' => 'link_field',
+		),
+		'gp_comm_newsletter' => array(
+			'label' => $t('Twitter'),
+			'active' => '1',
+			'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+			'deleted' => '0',
+			'entity_types' => array(),
+			'field_name' => 'gp_comm_newsletter',
+			'foreign keys' => array(),
+			'indexes' => array(),
+			'locked' => '1',
+			'module' => 'link',
+			'settings' => array(
+				'attributes' => array(
+					'class' => '',
+					'rel' => '',
+					'target' => 'default',
+				),
+				'display' => array(
+					'url_cutoff' => 80,
+				),
+				'enable_tokens' => 1,
+				'title' => 'optional',
+				'title_maxlength' => 128,
+				'title_value' => '',
+				'url' => 0,
+			),
+			'translatable' => '0',
+			'type' => 'link_field',
+		),
+		'gp_other_links' => array(
+			'label' => $t('Other Links'),
+			'active' => '1',
+			'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+			'deleted' => '0',
+			'entity_types' => array(),
+			'field_name' => 'gp_other_links',
+			'foreign keys' => array(),
+			'indexes' => array(),
+			'locked' => '1',
+			'module' => 'link',
+			'settings' => array(
+				'attributes' => array(
+					'class' => '',
+					'rel' => '',
+					'target' => 'default',
+				),
+				'display' => array(
+					'url_cutoff' => 80,
+				),
+				'enable_tokens' => 1,
+				'title' => 'optional',
+				'title_maxlength' => 128,
+				'title_value' => '',
+				'url' => 0,
+			),
+			'translatable' => '0',
+			'type' => 'link_field',
+		),
+		'gp_quick_links' => array(
+			'label' => $t('Quick Links'),
+			'active' => '1',
+			'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+			'deleted' => '0',
+			'entity_types' => array(),
+			'field_name' => 'gp_quick_links',
+			'foreign keys' => array(),
+			'indexes' => array(),
+			'locked' => '1',
+			'module' => 'link',
+			'settings' => array(
+				'attributes' => array(
+					'class' => '',
+					'rel' => '',
+					'target' => 'default',
+				),
+				'display' => array(
+					'url_cutoff' => 80,
+				),
+				'enable_tokens' => 1,
+				'title' => 'optional',
+				'title_maxlength' => 128,
+				'title_value' => '',
+				'url' => 0,
+			),
+			'translatable' => '0',
+			'type' => 'link_field',
+		),
+	);
+}
+
+function _gbif_participant_installed_instances() {
+	$t = get_t();
+	return array(
+		'gp_id' => array(
+			'bundle' => 'gbif_participant',
+			'default_value' => NULL,
+			'deleted' => '0',
+			'description' => 'This ID links to the IMS and cannot be changed.',
+			'display' => array(
+				'default' => array(
+					'label' => 'above',
+					'settings' => array(),
+					'type' => 'hidden',
+					'weight' => '1',
+				),
+				'teaser' => array(
+					'label' => 'above',
+					'settings' => array(),
+					'type' => 'hidden',
+					'weight' => 0,
+				),
+			),
+			'entity_type' => 'node',
+			'field_name' => 'gp_id',
+			'label' => $t('Participant ID'),
+			'required' => 1,
+			'settings' => array(
+				'max' => '',
+				'mediafront' => array(
+					'custom' => '',
+					'field_type' => '0',
+					'media_type' => 'media',
+					'preview' => '0',
+					'thumbnail' => '0',
+				),
+				'min' => '',
+				'prefix' => '',
+				'suffix' => '',
+				'user_register_form' => FALSE,
+			),
+			'widget' => array(
+				'active' => 0,
+				'module' => 'number',
+				'settings' => array(),
+				'type' => 'number',
+				'weight' => 1,
+			),
+		),
+		'gp_iso2' => array(
+			'bundle' => 'gbif_participant',
+			'default_value' => NULL,
+			'deleted' => '0',
+			'description' => 'This ISO 2-digit code links to the IMS and cannot be changed.',
+			'display' => array(
+				'default' => array(
+					'label' => 'above',
+					'module' => 'text',
+					'settings' => array(),
+					'type' => 'hidden',
+					'weight' => '1',
+				),
+				'teaser' => array(
+					'label' => 'above',
+					'settings' => array(),
+					'type' => 'hidden',
+					'weight' => 0,
+				),
+			),
+			'entity_type' => 'node',
+			'field_name' => 'gp_iso2',
+			'label' => $t('Participant ISO 3166-2 code'),
+			'required' => 1,
+			'settings' => array(
+				'text_processing' => '0',
+				'user_register_form' => FALSE,
+			),
+			'widget' => array(
+				'active' => 1,
+				'module' => 'text',
+				'settings' => array(
+					'size' => '2',
+				),
+				'type' => 'text_textfield',
+				'weight' => 2,
+			),
+		),
+		'gp_node_established' => array(
+			'bundle' => 'gbif_participant',
+			'deleted' => '0',
+			'description' => $t('The date when the node was established. Note that "node" is different from "participant". Only 4-digit year will show on the web page. For nodes who cannot pin-point the date, 1 Jan or the first day of a known month is used.'),
+			'display' => array(
+				'default' => array(
+					'label' => 'above',
+					'module' => 'date',
+					'settings' => array(
+						'format_type' => 'long',
+						'fromto' => 'both',
+						'multiple_from' => '',
+						'multiple_number' => '',
+						'multiple_to' => '',
+						'show_repeat_rule' => 'show',
+					),
+					'type' => 'date_default',
+					'weight' => '0',
+				),
+				'teaser' => array(
+					'label' => 'above',
+					'settings' => array(),
+					'type' => 'hidden',
+					'weight' => 0,
+				),
+			),
+			'entity_type' => 'node',
+			'field_name' => 'gp_node_established',
+			'label' => $t('Node Established'),
+			'required' => 0,
+			'settings' => array(
+				'default_value' => 'now',
+				'default_value2' => 'same',
+				'default_value_code' => '',
+				'default_value_code2' => '',
+				'mediafront' => array(
+					'custom' => '',
+					'field_type' => '0',
+					'media_type' => 'media',
+					'preview' => '0',
+					'thumbnail' => '0',
+				),
+				'user_register_form' => FALSE,
+			),
+			'widget' => array(
+				'active' => 1,
+				'module' => 'date',
+				'settings' => array(
+					'display_all_day' => 0,
+					'increment' => 15,
+					'input_format' => 'd/m/Y - g:i:sa',
+					'input_format_custom' => '',
+					'label_position' => 'above',
+					'repeat_collapsed' => 0,
+					'text_parts' => array(),
+					'year_range' => '-14:+3',
+				),
+				'type' => 'date_popup',
+				'weight' => 3,
+			),
+		),
+		'gp_has_mandate' => array(
+			'bundle' => 'gbif_participant',
+			'default_value' => array(
+				0 => array(
+					'value' => 0,
+				),
+			),
+			'deleted' => '0',
+			'description' => 'Whether the Node has formal mandate, check for "Yes".',
+			'display' => array(
+				'default' => array(
+					'label' => 'hidden',
+					'module' => 'list',
+					'settings' => array(),
+					'type' => 'list_default',
+					'weight' => '2',
+				),
+				'teaser' => array(
+					'label' => 'hidden',
+					'settings' => array(),
+					'type' => 'hidden',
+					'weight' => 0,
+				),
+			),
+			'entity_type' => 'node',
+			'field_name' => 'gp_has_mandate',
+			'label' => $t('The Node Has Formal Mandate'),
+			'required' => 0,
+			'settings' => array(),
+			'widget' => array(
+				'active' => 1,
+				'module' => 'options',
+				'settings' => array(
+					'display_label' => 1,
+				),
+				'type' => 'options_onoff',
+				'weight' => 4,
+			),
+		),
+		'gp_history' => array(
+			'bundle' => 'gbif_participant',
+			'default_value' => NULL,
+			'deleted' => '0',
+			'description' => '',
+			'display' => array(
+				'default' => array(
+					'label' => 'above',
+					'module' => 'text',
+					'settings' => array(),
+					'type' => 'text_default',
+					'weight' => 4,
+				),
+				'teaser' => array(
+					'label' => 'above',
+					'settings' => array(),
+					'type' => 'hidden',
+					'weight' => 0,
+				),
+			),
+			'entity_type' => 'node',
+			'field_name' => 'gp_history',
+			'label' => $t('History'),
+			'required' => 0,
+			'settings' => array(
+				'linkit' => array(
+					'enable' => 0,
+					'insert_plugin' => '',
+				),
+				'mediafront' => array(
+					'custom' => '',
+					'field_type' => '0',
+					'media_type' => 'media',
+					'preview' => '0',
+					'thumbnail' => '0',
+				),
+				'text_processing' => '1',
+				'user_register_form' => FALSE,
+			),
+			'widget' => array(
+				'active' => 1,
+				'module' => 'text',
+				'settings' => array(
+					'rows' => '4',
+				),
+				'type' => 'text_textarea',
+				'weight' => 5,
+			),
+		),
+		'gp_vision_mission' => array(
+			'bundle' => 'gbif_participant',
+			'default_value' => NULL,
+			'deleted' => '0',
+			'description' => '',
+			'display' => array(
+				'default' => array(
+					'label' => 'above',
+					'module' => 'text',
+					'settings' => array(),
+					'type' => 'text_default',
+					'weight' => '3',
+				),
+				'teaser' => array(
+					'label' => 'above',
+					'settings' => array(),
+					'type' => 'hidden',
+					'weight' => 0,
+				),
+			),
+			'entity_type' => 'node',
+			'field_name' => 'gp_vision_mission',
+			'label' => $t('Vision and Mission'),
+			'required' => 0,
+			'settings' => array(
+				'linkit' => array(
+					'enable' => 0,
+					'insert_plugin' => '',
+				),
+				'mediafront' => array(
+					'custom' => '',
+					'field_type' => '0',
+					'media_type' => 'media',
+					'preview' => '0',
+					'thumbnail' => '0',
+				),
+				'text_processing' => '1',
+				'user_register_form' => FALSE,
+			),
+			'widget' => array(
+				'active' => 1,
+				'module' => 'text',
+				'settings' => array(
+					'rows' => '4',
+				),
+				'type' => 'text_textarea',
+				'weight' => 6,
+			),
+		),
+		'gp_structure' => array(
+			'bundle' => 'gbif_participant',
+			'default_value' => NULL,
+			'deleted' => '0',
+			'description' => '',
+			'display' => array(
+				'default' => array(
+					'label' => 'above',
+					'module' => 'text',
+					'settings' => array(),
+					'type' => 'text_default',
+					'weight' => '3',
+				),
+				'teaser' => array(
+					'label' => 'above',
+					'settings' => array(),
+					'type' => 'hidden',
+					'weight' => 0,
+				),
+			),
+			'entity_type' => 'node',
+			'field_name' => 'gp_structure',
+			'label' => $t('Structure'),
+			'required' => 0,
+			'settings' => array(
+				'linkit' => array(
+					'enable' => 0,
+					'insert_plugin' => '',
+				),
+				'mediafront' => array(
+					'custom' => '',
+					'field_type' => '0',
+					'media_type' => 'media',
+					'preview' => '0',
+					'thumbnail' => '0',
+				),
+				'text_processing' => '1',
+				'user_register_form' => FALSE,
+			),
+			'widget' => array(
+				'active' => 1,
+				'module' => 'text',
+				'settings' => array(
+					'rows' => '4',
+				),
+				'type' => 'text_textarea',
+				'weight' => 7,
+			),
+		),
+		'gp_national_funding' => array(
+			'bundle' => 'gbif_participant',
+			'default_value' => NULL,
+			'deleted' => '0',
+			'description' => '',
+			'display' => array(
+				'default' => array(
+					'label' => 'above',
+					'module' => 'text',
+					'settings' => array(),
+					'type' => 'text_default',
+					'weight' => '3',
+				),
+				'teaser' => array(
+					'label' => 'above',
+					'settings' => array(),
+					'type' => 'hidden',
+					'weight' => 0,
+				),
+			),
+			'entity_type' => 'node',
+			'field_name' => 'gp_national_funding',
+			'label' => $t('National Funding'),
+			'required' => 0,
+			'settings' => array(
+				'linkit' => array(
+					'enable' => 0,
+					'insert_plugin' => '',
+				),
+				'mediafront' => array(
+					'custom' => '',
+					'field_type' => '0',
+					'media_type' => 'media',
+					'preview' => '0',
+					'thumbnail' => '0',
+				),
+				'text_processing' => '1',
+				'user_register_form' => FALSE,
+			),
+			'widget' => array(
+				'active' => 1,
+				'module' => 'text',
+				'settings' => array(
+					'rows' => '4',
+				),
+				'type' => 'text_textarea',
+				'weight' => 8,
+			),
+		),
+		'gp_comm_social' => array(
+			'bundle' => 'gbif_participant',
+			'default_value' => NULL,
+			'deleted' => '0',
+			'description' => $t('Name social media and insert the URLs. Icons will be rendered accordingly. Available titles/types are "Facebook", "Twitter", "LinkedIn", "Vimeo", "YouTube", "Instagram", "Mendeley", "Google Plus", "Pinterest". Title/type is case-insensitive.'),
+			'display' => array(
+				'default' => array(
+					'label' => 'above',
+					'module' => 'link',
+					'settings' => array(),
+					'type' => 'link_default',
+					'weight' => '4',
+				),
+				'teaser' => array(
+					'label' => 'above',
+					'settings' => array(),
+					'type' => 'hidden',
+					'weight' => 0,
+				),
+			),
+			'entity_type' => 'node',
+			'field_name' => 'gp_comm_social',
+			'label' => $t('Social Media'),
+			'required' => 0,
+			'settings' => array(
+				'attributes' => array(
+					'class' => '',
+					'configurable_title' => 0,
+					'rel' => '',
+					'target' => '_blank',
+					'title' => '',
+				),
+				'display' => array(
+					'url_cutoff' => '80',
+				),
+				'enable_tokens' => 0,
+				'linkit' => array(
+					'enable' => 0,
+					'insert_plugin' => '',
+				),
+				'mediafront' => array(
+					'custom' => '',
+					'field_type' => '0',
+					'media_type' => 'media',
+					'preview' => '0',
+					'thumbnail' => '0',
+				),
+				'rel_remove' => 'default',
+				'title' => 'required',
+				'title_maxlength' => '128',
+				'title_value' => '',
+				'url' => 0,
+				'user_register_form' => FALSE,
+				'validate_url' => 1,
+			),
+			'widget' => array(
+				'active' => 0,
+				'module' => 'link',
+				'settings' => array(),
+				'type' => 'link_field',
+				'weight' => 9,
+			),
+		),
+		'gp_comm_rss' => array(
+			'bundle' => 'gbif_participant',
+			'default_value' => NULL,
+			'deleted' => '0',
+			'description' => $t('RSS feed(s) a node wish to provide.'),
+			'display' => array(
+				'default' => array(
+					'label' => 'above',
+					'module' => 'link',
+					'settings' => array(),
+					'type' => 'link_default',
+					'weight' => '5',
+				),
+				'teaser' => array(
+					'label' => 'above',
+					'settings' => array(),
+					'type' => 'hidden',
+					'weight' => 0,
+				),
+			),
+			'entity_type' => 'node',
+			'field_name' => 'gp_comm_rss',
+			'label' => $t('RSS feed'),
+			'required' => 0,
+			'settings' => array(
+				'attributes' => array(
+					'class' => '',
+					'configurable_title' => 0,
+					'rel' => '',
+					'target' => '_blank',
+					'title' => '',
+				),
+				'display' => array(
+					'url_cutoff' => '80',
+				),
+				'enable_tokens' => 0,
+				'linkit' => array(
+					'enable' => 0,
+					'insert_plugin' => '',
+				),
+				'mediafront' => array(
+					'custom' => '',
+					'field_type' => '0',
+					'media_type' => 'media',
+					'preview' => '0',
+					'thumbnail' => '0',
+				),
+				'rel_remove' => 'default',
+				'title' => 'required',
+				'title_maxlength' => '128',
+				'title_value' => '',
+				'url' => 0,
+				'user_register_form' => FALSE,
+				'validate_url' => 1,
+			),
+			'widget' => array(
+				'active' => 0,
+				'module' => 'link',
+				'settings' => array(),
+				'type' => 'link_field',
+				'weight' => 13,
+			),
+		),
+		'gp_comm_newsletter' => array(
+			'bundle' => 'gbif_participant',
+			'default_value' => NULL,
+			'deleted' => '0',
+			'description' => $t('Newsletter(s) a node wish to provide.'),
+			'display' => array(
+				'default' => array(
+					'label' => 'above',
+					'module' => 'link',
+					'settings' => array(),
+					'type' => 'link_default',
+					'weight' => '5',
+				),
+				'teaser' => array(
+					'label' => 'above',
+					'settings' => array(),
+					'type' => 'hidden',
+					'weight' => 0,
+				),
+			),
+			'entity_type' => 'node',
+			'field_name' => 'gp_comm_newsletter',
+			'label' => $t('Newsletter'),
+			'required' => 0,
+			'settings' => array(
+				'attributes' => array(
+					'class' => '',
+					'configurable_title' => 0,
+					'rel' => '',
+					'target' => '_blank',
+					'title' => '',
+				),
+				'display' => array(
+					'url_cutoff' => '80',
+				),
+				'enable_tokens' => 0,
+				'linkit' => array(
+					'enable' => 0,
+					'insert_plugin' => '',
+				),
+				'mediafront' => array(
+					'custom' => '',
+					'field_type' => '0',
+					'media_type' => 'media',
+					'preview' => '0',
+					'thumbnail' => '0',
+				),
+				'rel_remove' => 'default',
+				'title' => 'required',
+				'title_maxlength' => '128',
+				'title_value' => '',
+				'url' => 0,
+				'user_register_form' => FALSE,
+				'validate_url' => 1,
+			),
+			'widget' => array(
+				'active' => 0,
+				'module' => 'link',
+				'settings' => array(),
+				'type' => 'link_field',
+				'weight' => 14,
+			),
+		),
+		'gp_other_links' => array(
+			'bundle' => 'gbif_participant',
+			'default_value' => NULL,
+			'deleted' => '0',
+			'description' => $t('Other communication links a node wish to provide.'),
+			'display' => array(
+				'default' => array(
+					'label' => 'above',
+					'module' => 'link',
+					'settings' => array(),
+					'type' => 'link_default',
+					'weight' => '4',
+				),
+				'teaser' => array(
+					'label' => 'above',
+					'settings' => array(),
+					'type' => 'hidden',
+					'weight' => 0,
+				),
+			),
+			'entity_type' => 'node',
+			'field_name' => 'gp_other_links',
+			'label' => $t('Other Links'),
+			'required' => 0,
+			'settings' => array(
+				'attributes' => array(
+					'class' => '',
+					'configurable_title' => 0,
+					'rel' => '',
+					'target' => '_blank',
+					'title' => '',
+				),
+				'display' => array(
+					'url_cutoff' => '80',
+				),
+				'enable_tokens' => 0,
+				'linkit' => array(
+					'enable' => 0,
+					'insert_plugin' => '',
+				),
+				'mediafront' => array(
+					'custom' => '',
+					'field_type' => '0',
+					'media_type' => 'media',
+					'preview' => '0',
+					'thumbnail' => '0',
+				),
+				'rel_remove' => 'default',
+				'title' => 'required',
+				'title_maxlength' => '128',
+				'title_value' => '',
+				'url' => 0,
+				'user_register_form' => FALSE,
+				'validate_url' => 1,
+			),
+			'widget' => array(
+				'active' => 0,
+				'module' => 'link',
+				'settings' => array(),
+				'type' => 'link_field',
+				'weight' => 15,
+			),
+		),
+		'gp_quick_links' => array(
+			'bundle' => 'gbif_participant',
+			'default_value' => NULL,
+			'deleted' => '0',
+			'description' => $t('Digested links by GBIFS.'),
+			'display' => array(
+				'default' => array(
+					'label' => 'above',
+					'module' => 'link',
+					'settings' => array(),
+					'type' => 'link_default',
+					'weight' => '4',
+				),
+				'teaser' => array(
+					'label' => 'above',
+					'settings' => array(),
+					'type' => 'hidden',
+					'weight' => 0,
+				),
+			),
+			'entity_type' => 'node',
+			'field_name' => 'gp_quick_links',
+			'label' => $t('Quick Links'),
+			'required' => 0,
+			'settings' => array(
+				'attributes' => array(
+					'class' => '',
+					'configurable_title' => 0,
+					'rel' => '',
+					'target' => '_blank',
+					'title' => '',
+				),
+				'display' => array(
+					'url_cutoff' => '80',
+				),
+				'enable_tokens' => 0,
+				'linkit' => array(
+					'enable' => 0,
+					'insert_plugin' => '',
+				),
+				'mediafront' => array(
+					'custom' => '',
+					'field_type' => '0',
+					'media_type' => 'media',
+					'preview' => '0',
+					'thumbnail' => '0',
+				),
+				'rel_remove' => 'default',
+				'title' => 'required',
+				'title_maxlength' => '128',
+				'title_value' => '',
+				'url' => 0,
+				'user_register_form' => FALSE,
+				'validate_url' => 1,
+			),
+			'widget' => array(
+				'active' => 0,
+				'module' => 'link',
+				'settings' => array(),
+				'type' => 'link_field',
+				'weight' => 15,
+			),
+		),
+	);
+}

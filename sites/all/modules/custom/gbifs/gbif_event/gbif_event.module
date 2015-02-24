@@ -1,0 +1,431 @@
+<?php
+/**
+ * @file
+ * Code for the GBIF Event feature.
+ */
+
+include_once 'gbif_event.features.inc';
+
+/**
+ * Implements hook_menu().
+ */
+function gbif_event_menu() {
+	$items['participation/training/events/training-event-details'] = array(
+		'title' => t('Redirect'),
+		'description' => 'Redirect GBIF events from the TYPO3 site.',
+		'page callback' => 'gbif_event_redirect',
+		'access callback' => TRUE,
+		'type' => MENU_CALLBACK,
+	);
+	$items['admin/config/gbif/event'] = array(
+		'title' => 'GBIF event',
+		'description' => t('Configure GBIF event related features.'),
+		'page callback' => 'drupal_get_form',
+		'page arguments' => array('gbif_event_settings_form'),
+		'access arguments' => array('administer site configuration'),
+		'type' => MENU_NORMAL_ITEM,
+		'file' => 'gbif_event.admin.inc',
+	);
+	return $items;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function gbif_event_theme($existing, $type, $theme, $path) {
+	$path = drupal_get_path('module', 'gbif_event');
+	return array(
+		'node__event' => array(
+			'template' => 'node--event',
+			'path' => $path . '/theme',
+		),
+		'node__view__events' => array(
+			'template' => 'node--view--events',
+			'path' => $path . '/theme',
+		),
+		'ge_resource_list' => array(
+			'template' => 'ge-resource-list',
+			'path' => $path . '/theme',
+			'variables' => array('results' => NULL),
+		),
+		'ge_people_list' => array(
+			'template' => 'ge-people-list',
+			'path' => $path . '/theme',
+			'variables' => array('results' => NULL),
+		),
+	);
+}
+
+/**
+ * Provide the title field in the form when editing.
+ */
+function event_form($node, $form_state) {
+	$type = node_type_get_type($node);
+	$form['title'] = array(
+		'#type' => 'textfield',
+		'#title' => check_plain($type->title_label),
+		'#default_value' => !empty($node->title) ? $node->title : '',
+		'#required' => TRUE,
+	);
+	return $form;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function gbif_event_form_event_node_form_alter(&$form, &$form_state) {
+	// ge_ims_kp_id shouldn't be touched as it's the linkage to the IMS.
+	$form['ge_ims_kp_id']['#disabled'] = TRUE;
+	// ge_date_ical should follow whatever is set in the event date. We then insert
+	// the same value from the event date.
+	$form['ge_date_ical']['#printed'] = TRUE;
+	$form['ge_date_text']['#printed'] = TRUE;
+	$form['#validate'][] = 'gbif_event_node_form_value_processing';
+}
+
+/*
+ * We use ge_date_ical separately from ge_ims_date to provide calendar ics
+ * download. The textual field is also redundant though has it's value.
+ * This function saves editors unnecessary entries and potential inconsistency.
+ */
+function gbif_event_node_form_value_processing(&$form, &$form_state) {
+	// Process ge_ims_date field.
+	if ($form['ge_ims_date']) {
+		$lang_code = gbif_tweaks_get_language_code('node', 'ge_date_ical', $form['#node']->language);
+		// Use values of ge_ims_date for ge_date_ical.
+		foreach ($form_state['values']['ge_ims_date'][$lang_code][0] as $k => $v) {
+			// Target format: 2015-01-12 10:00:00
+			if (in_array($k, array('value', 'value2'))) {
+				$v = date('Y-m-d H:i:s', $v);
+			}
+			$form_state['values']['ge_date_ical'][$lang_code][0][$k] = $v;
+		}
+	}
+
+	// Process ge_date_text field.
+	if ($form['ge_date_text']) {
+		$lang_code = gbif_tweaks_get_language_code('node', 'ge_date_text', $form['#node']->language);
+		// End date is available.
+		if ($form_state['values']['ge_ims_date'][$lang_code][0]['value2'] != NULL) {
+			$timestamp_start = $form_state['values']['ge_ims_date'][$lang_code][0]['value'];
+			$year_start = date('Y', $timestamp_start);
+			$month_start = date('F', $timestamp_start);
+			$day_start = date('j', $timestamp_start);
+			$timestamp_end = $form_state['values']['ge_ims_date'][$lang_code][0]['value2'];
+			$year_end = date('Y', $timestamp_end);
+			$month_end = date('F', $timestamp_end);
+			$day_end = date('j', $timestamp_end);
+			if ($year_start != $year_end) {
+				$text_string = date('j F Y', $timestamp_start) . ' - ' . date('j F Y', $timestamp_end);
+			}
+			elseif ($year_start == $year_end && $month_start != $month_end) {
+				$text_string = date('j F', $timestamp_start) . ' - ' . date('j F', $timestamp_end) . ' ' . $year_start;
+			}
+			elseif ($year_start == $year_end && $month_start == $month_end && $day_start != $day_end) {
+				$text_string = date('j', $timestamp_start) . ' - ' . date('j', $timestamp_end) . ' ' . $month_start . ' ' . $year_start;
+			}
+			elseif ($year_start == $year_end && $month_start == $month_end && $day_start == $day_end) {
+				$text_string = date('j F Y', $form_state['values']['ge_ims_date'][$lang_code][0]['value']);
+			}
+		}
+		else {
+			$text_string = date('j F Y', $form_state['values']['ge_ims_date'][$lang_code][0]['value']);
+		}
+		$form_state['values']['ge_date_text'][$lang_code][0]['value'] = $text_string;
+	}
+}
+
+/**
+ * Implements hook_preprocess_page().
+ * @todo We want to properly combine these two menu setting blocks of code.
+ */
+function gbif_event_preprocess_page(&$variables) {
+	// Detect the URLs that needs "Events" highlighted
+	if (isset($variables['page']['menu']['menu_block_gbif_navigation_menu_tabs'])) {
+		$targeting_paths = array('newsroom/events/past');
+		$highlighted_path = 'newsroom/events/upcoming';
+		$current_path = current_path();
+		if (in_array($current_path, $targeting_paths)) {
+			// find the registered menu item and add the "active" CSS class to the attributes
+			foreach ($variables['page']['menu']['menu_block_gbif_navigation_menu_tabs']['#content'] as $k => $tab) {
+				if (gettype($k) == 'integer') {
+					if ($tab['#href'] == $highlighted_path) {
+						// make it active
+						array_push($variables['page']['menu']['menu_block_gbif_navigation_menu_tabs']['#content'][$k]['#attributes']['class'], 'active');
+						watchdog('gbif_event', 'Active menu item set.', array(), WATCHDOG_DEBUG);
+					}
+				}
+			}
+		}
+	}
+	// Detect individual node page and node type is "event"
+	if (isset($variables['node']) && $variables['node']->type == 'event' && isset($variables['page']['menu']['menu_block_gbif_navigation_menu_tabs'])) {
+		// Currently we set active on the menu item that has the path as "newsroom/events/upcoming"
+		// find the registered menu item and add the "active" CSS class to the attributes
+		foreach ($variables['page']['menu']['menu_block_gbif_navigation_menu_tabs']['#content'] as $k => $tab) {
+			if (gettype($k) == 'integer') {
+				if ($tab['#href'] == $highlighted_path) {
+					// make it active
+					array_push($variables['page']['menu']['menu_block_gbif_navigation_menu_tabs']['#content'][$k]['#attributes']['class'], 'active');
+					watchdog('gbif_event', 'Active menu item set for node.', array(), WATCHDOG_DEBUG);
+				}
+			}
+		}
+	}
+}
+
+/**
+ * Implements hook_preprocess_node().
+ */
+function gbif_event_preprocess_node(&$variables) {
+	if (isset($variables) && $variables['type'] == 'event') {
+
+		// Prepare the location field.
+		$lang_code = gbif_tweaks_get_language_code('node', 'ge_location', $variables['node']->language);
+		if (empty($variables['ge_location']) && !empty($variables['ge_venue_country'])) {
+			$variables['node']->ge_location[$lang_code][] = array(
+				'value' => $variables['ge_venue_country'][0]['taxonomy_term']->name,
+				'format' => 'plain_text',
+				'safe_value' => $variables['ge_venue_country'][0]['taxonomy_term']->name,
+			);
+		}
+		elseif (!empty($variables['ge_location']) && !empty($variables['ge_venue_country'])) {
+			$old_location = explode(',', $variables['node']->ge_location[$lang_code][0]['value']);
+			$location = trim($old_location[0]) . ', ' . $variables['ge_venue_country'][0]['taxonomy_term']->name;
+			$variables['node']->ge_location[$lang_code][0] = array(
+				'value' => $location,
+				'format' => 'plain_text',
+				'safe_value' => $location,
+			);
+		}
+		$variables['content']['ge_location'] = field_view_field('node', $variables['node'], 'ge_location');
+
+		// Prepare the date_text so the HTML is simpler.
+		if (!empty($variables['ge_date_text'])) {
+			$variables['date_text'] = '<p class="date">' . $variables['ge_date_text'][0]['safe_value'] . '</p>';
+		}
+
+		// Prepare the image thumbnail with colorbox link.
+		if (!empty($variables['ge_image']) && !isset($variables['view'])) {
+			$image_url = file_create_url($variables['ge_image'][0]['uri']);
+			$url = parse_url($image_url);
+			$path = $url['path'];
+			$width = (int)$variables['ge_image'][0]['width'];
+			$width = ($width >= 240) ? 240 : $width;
+			$img_html = theme_image(array(
+				'path' => $path,
+				'width' => $width,
+				'alt' => $variables['title'],
+				'title' => $variables['title'],
+				'attributes' => array(),
+			));
+			$variables['event_image'] = '<p>' . l($img_html, $image_url, array('html' => TRUE, 'attributes' => array('class' => array('colorbox')))) . '</p>';
+		}
+	}
+}
+
+/**
+ * Implements hook_preprocess_views_view().
+ * @todo The $feed_icons appears at the page level but $feed_icon is missing at the views level. We add an icon here but should ensure this is appropriate.
+ */
+function gbif_event_preprocess_views_view(&$variables) {
+	if (isset($variables) && $variables['view']->name == 'events') {
+		// Invoke bvng theme functions.
+		// module_load_include() doesn't seem to be working for this.
+		include_once(drupal_get_path('theme', 'bvng') . '/template.php');
+
+		// Insert $feed_rss_icon for the 'feed_upcoming' display.
+		if (empty($variables['feed_rss_icon']) && current_path() != 'newsroom/events/past') {
+			$feed_icon_settings = array(
+				'url' => $variables['view']->display['feed_upcoming']->display_options['path'],
+				'title' => t('GBIF upcoming event'),
+			);
+			$variables['feed_rss_icon'] = bvng_feed_icon($feed_icon_settings);
+
+			// iCal icon seems to be successfully attached to "upcoming" page display,
+			// but we want to use our own icon.
+			$url = str_replace(array('http://', 'https://'), 'webcal://', url($variables['view']->display['feed_ical']->display_options['path'], array('absolute' => TRUE)));
+			$ical_icon_settings = array(
+				'url' => $url,
+				'title' => t('GBIF upcoming event'),
+			);
+			$variables['feed_ical_icon'] = bvng_feed_ical_icon($ical_icon_settings);
+		}
+
+		// Insert filter links for the sidebar and to be printed out in views
+		// template.
+		$options = array();
+		switch ($variables['view']->current_display) {
+			case 'upcoming':
+				$options[] = array(
+					'label' => t('Past events'),
+					'url_base' => 'newsroom/events/past',
+				);
+				break;
+			case 'past':
+				$options[] = array(
+					'label' => t('Upcoming events'),
+					'url_base' => 'newsroom/events/upcoming',
+				);
+				break;
+		}
+		$links = '<ul class="filter-list">';
+		foreach ($options as $option) {
+			$links .= '<li>';
+			$links .= l($option['label'], $option['url_base']);
+			$links .= '</li>';
+		}
+		$links .= '</ul>';
+		$variables['filter_links'] = $links;
+	}
+}
+
+/**
+ * Implements hook_preprocess_views_view_field().
+ * @param $variables
+ * @param $hook
+ */
+function gbif_event_preprocess_views_view_field(&$variables, $hook) {
+	if ($variables['view']->name == 'events') {
+		if ($variables['field']->field == 'ge_ims_date') {
+			// allow extra divs and classes at a later time in template
+			// any lang where the short name of the month has blanks?
+			$pattern = '/(<span\s.+?>)(\w+\s\d\d)(<\/span>)/';
+			$replacement = '$2';
+			$target = $variables['field']->original_value ;
+
+			$q = preg_replace($pattern, $replacement, $target);
+			$d = explode(' ', $q);
+			$variables['month_year'] = array ('month' => $d[0] , 'day' => $d[1]);
+		}
+
+		// Prepare the location field.
+		if ($variables['field']->field == 'ge_location') {
+			$node = node_load($variables['row']->nid);
+			$lang_code = gbif_tweaks_get_language_code('node', 'ge_location', $node->language);
+			if (empty($node->ge_location) && !empty($node->ge_venue_country)) {
+				$term = taxonomy_term_load($node->ge_venue_country[$lang_code][0]['tid']);
+				$variables['output'] = $term->name;
+			}
+			elseif (!empty($node->ge_location) && !empty($node->ge_venue_country)) {
+				$term = taxonomy_term_load($node->ge_venue_country[$lang_code][0]['tid']);
+				$old_location = explode(',', $variables['row']->field_ge_location[0]['rendered']['#markup']);
+				$location = trim($old_location[0]) . ', ' . $term->name;
+				$variables['output'] = $location;
+			}
+		}
+	}
+}
+
+/**
+ * Implements hook_node_view().
+ * This is commented out because it'll prevent the menu local tasks from showing.
+ * @see Line 1918 of menu_local_tasks().
+ * @see http://www.dibe.gr/blog/set-path-determining-active-trail-drupal-7-menu
+ */
+/*
+function gbif_event_node_view($node, $view_mode, $langcode) {
+	if ($node->type == 'event' && $view_mode != 'teaser') {
+		$active_path = drupal_get_normal_path('newsroom/events/upcoming');
+		menu_tree_set_path('gbif-menu', $active_path);
+		menu_set_active_item($active_path);
+	}
+}
+*/
+
+/**
+ * Implementation of hook_views_api().
+ */
+function gbif_event_views_api() {
+	return array(
+		'api' => 3.0,
+		'path' => drupal_get_path('module', 'gbif_event') . '/views',
+		'template path' => drupal_get_path('module', 'gbif_event' . '/theme'),
+	);
+}
+
+/**
+ * Manually set the highlighted_title here instead of in the theme. This reduces
+ * dependency on the theme.
+ * @param $page
+ */
+function gbif_event_page_build(&$page) {
+	$status = drupal_get_http_header("status");
+	if ($status == '404 Not Found') {
+		// Do nothing.
+	}
+	elseif (current_path() == 'newsroom/events/past') {
+		$page['highlighted_title'] = array(
+			'name' => t('GBIF Newsroom'),
+			'description' => t('News and events from around the GBIF community'),
+		);
+	}
+}
+
+function gbif_event_sync($form, $form_state) {
+	if (!empty($form_state['values']['cron_reset'])) {
+		variable_set('gbif_ims_sync_next_execution', 0);
+	}
+	$interval = variable_get('gbif_ims_sync_interval', 3 * 60 * 60);
+
+	if (time() >= variable_get('gbif_ims_sync_next_execution', 0)) {
+		$start_time = new DateTime();
+		$sync_success = _gbif_event_sync();
+		$end_time = new DateTime();
+		$time = $end_time->diff($start_time);
+		$time_spent = "This task took ";
+		if ($time->y > 0) {$time_spent .= $time->y.' years, ';}
+		if ($time->m > 0) {$time_spent .= $time->m.' months, ';}
+		if ($time->d > 0) {$time_spent .= $time->d.' days, ';}
+		if ($time->h > 0) {$time_spent .= $time->h.' hours, ';}
+		if ($time->i > 0) {$time_spent .= $time->i.' minutes, ';}
+		if ($time->s > 0) {$time_spent .= $time->s.' seconds ';}
+		$time_spent .= "to complete.";
+
+		// Should examine the result before informing via the UI.
+		if ($sync_success == TRUE) {
+			watchdog('gbif_event', 'Event update executed at %time', array('%time' => date_iso8601(time(0))), WATCHDOG_INFO);
+			variable_set('gbif_ims_sync_next_execution', time() + $interval);
+			return t('Synchronisation finished.') . ' ' . $time_spent;
+		}
+		else {
+			watchdog('gbif_event', 'IMS synchronisation failed at %time', array('%time' => date_iso8601(time(0))), WATCHDOG_CRITICAL);
+			return t('Event updated.') . ' ' . $time_spent;
+		}
+	}
+	else {
+		$next_time = variable_get('gbif_ims_sync_next_execution');
+		watchdog('gbif_event', "Event update didn't run because current interval is not expired yet. Next run is at %next.", array('%next' => date_iso8601($next_time)), WATCHDOG_INFO);
+		return t("Event update didn't run because current interval is not expired yet. Next run is at %next.", array('%next' => date_iso8601($next_time)));
+	}
+}
+
+/**
+ * Redirect GBIF events from the TYPO3 site.
+ * The old style is /participation/training/events/training-event-details/?eventid=271.
+ */
+function gbif_event_redirect() {
+	$param = drupal_get_query_parameters();
+	if (!empty($param['eventid'])) {
+		$query = new EntityFieldQuery();
+		$entities = $query->entityCondition('entity_type', 'node')
+			->entityCondition('bundle', 'event')
+			->fieldCondition('ge_ims_kp_id', 'value', $param['eventid'], '=')
+			->execute();
+		if (isset($entities['node'])) {
+			$nid = key($entities['node']);
+			drupal_goto('event/' . $nid, array(), 301);
+		}
+	}
+}
+
+function _ge_required_tables() {
+	$tables = array(
+		'gbif_ims_event',
+		'gbif_ims_event_status',
+		'gbif_ims_city',
+		'gbif_ims_event_w_list_people',
+		'gbif_ims_event_w_list_resources',
+	);
+	return $tables;
+}

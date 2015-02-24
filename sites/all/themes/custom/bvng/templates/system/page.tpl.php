@@ -80,12 +80,12 @@
 <section id="masthead">
   <div class="container">
     <div class="row">
-      <div class="col-md-3 col-md-push-9"> 
+      <div class="col-xs-3 col-xs-push-9"> 
         <?php print render($page['account']); ?>
 			</div>
     </div>
     <div class="row">
-      <div id="region-navigation" class="col-md-12">
+      <div id="region-navigation" class="col-xs-12">
     		<div class="navbar-header">
     			<div id="branding">
         		<?php if ($logo): ?>
@@ -126,14 +126,14 @@
 <section id="banner">
   <div class="container">
     <div class="row">
-      <div id="region-highlighted" class="col-md-12">
+      <div id="region-highlighted" class="col-xs-12">
         <h1><?php print $page['highlighted_title']['name']; ?></h1>
         <h5><?php print $page['highlighted_title']['description']; ?></h5>
   			<?php if (!empty($page['highlighted'])): ?>
   			<?php print render($page['highlighted']); ?>
   			<?php endif; ?>
       </div>
-      <div id="region-menu" class="col-md-11">
+      <div id="region-menu" class="col-xs-8">
   			<?php if (!empty($page['menu'])): ?>
         <?php print render($page['menu']); ?>
   			<?php endif; ?>
@@ -149,14 +149,14 @@
 <section id="main">
   <a id="main-content"></a>
   <?php if (!empty($messages)): ?>
-        <?php print $messages; ?>
+		<?php print $messages; ?>
   <?php endif; ?>    
     
   <?php if (!empty($page['help'])): ?>
     <div class="container well well-lg">
-        <div class="row">
-          <?php print render($page['help']); ?>
-        </div>
+      <div class="row">
+        <?php print render($page['help']); ?>
+      </div>
     </div>
   <?php endif; ?>
 
@@ -171,7 +171,7 @@
   <div id="footer-links">
     <div class="container">
       <div class="row">
-        <div class="footer col-md-12">
+        <div class="footer col-xs-12">
           <?php print render($page['links']); ?>
         </div>
       </div>
@@ -180,7 +180,7 @@
   <div id="footer-credits">
     <div class="container">
       <div class="row">
-        <div class="footer col-md-12">
+        <div class="footer col-xs-12">
             <?php print render($page['credits']); ?>
             <!-- Print the footer here for compatibility reason. -->
             <?php print render($page['footer']); ?>

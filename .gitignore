@@ -4,8 +4,13 @@ sites/*/*settings*.php
 # Ignore paths that contain generated content.
 cache/
 files/
+sites/default
 sites/*/files
 sites/*/private
+
+# Ignore legacy site folders
+sites/drupaledit.gbif.org
+sites/staging.gbif.org
 
 # Ignore default text files
 robots.txt
@@ -57,3 +62,4 @@ Thumbs.db
 .settings
 .classpath
 .sass-cache/
+sites/all/themes/custom/bvng/less/node_modules

@@ -1,0 +1,260 @@
+.country-map {
+  width: 630px;
+  height: 425px;
+  margin-top: -24px;
+  margin-left: -24px;
+  padding-right: 0px;
+  padding-left: 0px;
+  overflow: hidden;
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+  position: absolute;
+}
+
+.content-sidebar.map-right {
+  margin-left: 25px;
+}
+
+#data-about, #data-from {
+  height: 425px;
+}
+
+.block-map-sidebar {
+  position: absolute;
+  right: 10px;
+}
+
+.sidebar-header-country {
+  margin-left: 25px;
+  padding-left: 20px;
+  width: 260px;
+  color: @cGray70;
+}
+
+.sidebar-header-country-map {
+  margin-left: 25px;
+  padding-left: 0px;
+  width: 260px;
+  color: @cGray70;
+}
+
+.content {
+  margin-left: 15px;
+  padding-top: 20px;
+  padding-left: 0px;
+  border-top: 1px solid @page-header-border-color;
+  
+  h3, .field-label {
+    margin-bottom: 5px;
+    margin-top: 0px;
+    font-size: 14px;
+    font-weight: normal;
+    text-transform: uppercase;
+    text-shadow: 0 1px white;
+  }
+  
+  p, .field-item {
+    margin-bottom: 18px;
+    font-size: 15px;
+  }
+  
+  p.keywords {
+    color: @cGray3;
+  }
+  
+  address {
+    font-size: 13px;
+    margin-bottom: 18px;
+    line-height: 18px;
+  }
+  
+  ul {
+    padding-left: 10px;
+    list-style: square;
+    list-style-position: outside;
+    list-style-image: url("../images/bullet.png");
+    p {
+      margin-bottom: 7px;
+      font-size: 13px;
+    }
+  }
+  
+  .field-item {
+    p {
+      margin-bottom: 5px;
+    }
+  }
+  
+  table {
+    margin-bottom: 0px;
+    address {
+      margin-bottom: 0px;
+    }
+  }
+}
+
+.content-full {
+  margin-right: 15px;
+  padding-right: 0px;
+}
+
+.content-sidebar {
+  width: 240px;
+  margin-left: 30px;
+  padding-top: 20px;
+  padding-left: 0px;
+  padding-right: 0px;
+  border-top: 1px solid @page-header-border-color;
+  
+  .field-items {
+    margin-bottom: 18px;
+    padding-left: 10px;
+    
+    .field-item {
+      margin-bottom: 3px;
+      display: list-item;
+      list-style-position: outside;
+      list-style-image: url("../images/bullet.png");
+    }
+  }
+  
+  .field-name-gr-image {
+    .field-items {
+      padding-left: 0px;
+    }
+    .field-item {
+      display: block;
+    }
+  }
+  
+  .field-name-gr-file {
+    margin-top: -15px;
+    margin-bottom: 35px;
+    .field-items {
+      padding-left: 0px;
+    }
+    .field-item {
+      display: block;
+    }
+  }
+
+  .field-name-gr-url {
+    margin-top: -15px;
+    margin-bottom: 35px;
+    .field-items {
+      padding-left: 0px;
+    }
+    .field-item {
+      display: block;
+    }
+  }
+
+}
+
+.column {
+  padding-right: 0px;
+  padding-left: 0px;
+  ul {
+    padding-left: 10px;
+    list-style: none;
+    list-style-position: outside;
+  }
+}  
+
+.country-list {
+  padding-top: 20px;
+  border-top: 1px solid @page-header-border-color;
+  
+  .participant::after {
+    content: ' *';
+  }
+}
+
+.back-to-previous {
+  background-color: #ffffcc;
+  height: 42px;
+  padding-top: 9px;
+  border-bottom: 1px solid @cGray4;
+  a {
+    color: @cGray2;
+  }
+}
+
+.title-annotating-text {
+  font-size: 13px;
+}
+
+.back-menu {
+  > a {
+    background-color: #ffffcc !important;
+    opacity: 1 !important;
+    color: @cGray2 !important;
+  }
+}
+
+// CSS3 rules to be tested.
+.content-country-list {
+  margin-left: 0px;
+  -webkit-column-count: 4;
+  -moz-column-count: 4;
+  -o-column-count: 4;
+  -ms-column-count: 4;
+  column-count: 4;
+}
+
+.social-media {
+  margin-bottom: 18px;
+  a {
+    margin-right: 5px;
+  }
+  img {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+.flat-list ul {
+  list-style: none;
+  padding-left: 0px;
+}
+
+.no-activity {
+  background-color: #FDFFD8;
+  padding-top: 0px;
+  padding-bottom: 0px;
+
+  p {
+    color: @cGray2;
+    font-size: 13px;
+  }
+  
+  div.content {
+    border-top: none;
+  }
+  
+  div.notice-icon {
+    float: right;
+    margin-top: -4px;
+    margin-right: 6px;
+    background: url("../images/images.png") -81px 0px no-repeat;
+    width: 44px;
+    height: 44px;
+  }
+}
+
+.block-trend {
+  h3 {
+    margin-bottom: 10px;
+    margin-top: 0px;
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: none;
+  }
+}
+
+.desc-trend {
+  height: 150px;
+}
+
+.image-trend, .push {
+}

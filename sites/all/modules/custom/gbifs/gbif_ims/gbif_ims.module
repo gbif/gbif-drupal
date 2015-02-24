@@ -6,23 +6,15 @@
  * Time: 5:45 PM
  */
 
+module_load_include('inc', 'gbif_ims', 'gbif_ims.filemaker');
+
 function gbif_ims_menu() {
 	$items = array();
-	$items['admin/config/gbif'] = array(
-		'title' => 'GBIF Configuration',
-		'description' => t("Configure settings that determine how this Drupal site presents itself as the GBIF Portal."),
-		'position' => 'right',
-		'weight' => -10,
-		'page callback' => 'system_admin_menu_block_page',
-		'access arguments' => array('administer site configuration'),
-		'file' => 'system.admin.inc',
-		'file path' => drupal_get_path('module', 'system'),
-	);
-	$items['admin/config/gbif/ims_settings'] = array(
+	$items['admin/config/gbif/ims'] = array(
 		'title' => 'IMS configuration',
-		'description' => t('Configure GBIF Imformation Management System.'),
+		'description' => t('Configure GBIF Information Management System.'),
 		'page callback' => 'drupal_get_form',
-		'page arguments' => array('gbif_ims_settings_form'),
+		'page arguments' => array('gbif_ims_config_form'),
 		'access arguments' => array('administer site configuration'),
 		'type' => MENU_NORMAL_ITEM,
 		'file' => 'gbif_ims.admin.inc',
@@ -30,71 +22,381 @@ function gbif_ims_menu() {
 	return $items;
 }
 
-function gbif_ims_event_update() {
-	// Load all event_ims entity.
-	$time_start = new DateTime();
+/**
+ * Implements hook_entity_info_alter().
+ *
+ * @todo Remove this when the testbot can properly pick up dependencies for contrib modules.
+ */
+function gbif_ims_entity_info_alter(&$info) {
+	if (isset($info['taxonomy_term'])) {
+		$info['taxonomy_term']['token type'] = 'term';
+	}
+	if (isset($info['taxonomy_vocabulary'])) {
+		$info['taxonomy_vocabulary']['token type'] = 'vocabulary';
+	}
+}
 
-	$query = new EntityFieldQuery();
-	$query->entityCondition('entity_type', 'node')
-		->entityCondition('bundle', 'event_ims');
-		// ->entityCondition('entity_id', 3063); // To debug a particular record
-	$result = $query->execute();
+/**
+ * Implements hook_theme().
+ */
+function gbif_ims_theme($existing, $type, $theme, $path) {
+	$path = drupal_get_path('module', 'gbif_ims');
+	return array(
+		'gi_contact_list' => array(
+			'template' => 'gi-contact-list',
+			'path' => $path . '/theme',
+			'variables' => array('results' => NULL, 'group' => NULL),
+		),
+		'gi_participant_list' => array(
+			'template' => 'gi-participant-list',
+			'path' => $path . '/theme',
+			'variables' => array('results' => NULL, 'group' => NULL),
+		),
+		'ims_queue_items' => array(
+			'variables' => array('items' => NULL),
+		),
+	);
+}
 
-	if ($result['node']) {
-		$nids = array_keys($result['node']);
-		foreach ($nids as $nid) {
-			$raw_node = node_load($nid);
-			$wrapped_node = entity_metadata_wrapper('node', $raw_node);
-			$fields = _gbif_ims_event_field_format();
-			foreach ($fields as $field => $format) {
+/**
+ * Themes the queue display.
+ *
+ * Again, this is not part of the demonstration of the queue API, but is here
+ * just to make the user interface more understandable.
+ *
+ * @param array $variables
+ *   Our variables.
+ */
+function theme_ims_queue_items($variables) {
+	$items = $variables['items'];
+	$rows = array();
+	foreach ($items as &$item) {
+		if ($item['expire'] > 0) {
+			$item['expire'] = t("Claimed: expires %expire", array('%expire' => date('r', $item['expire'])));
+		}
+		else {
+			$item['expire'] = t('Unclaimed');
+		}
+		$item['created'] = date('r', $item['created']);
+		$item['content'] = check_plain(unserialize($item['data']));
+		unset($item['data']);
+		$rows[] = $item;
+	}
+	if (!empty($rows)) {
+		$header = array(
+			t('Item ID'),
+			t('Claimed/Expiration'),
+			t('Created'),
+			t('Content/Data'),
+		);
+		$output = theme('table', array('header' => $header, 'rows' => $rows));
+		return $output;
+	}
+	else {
+		return t('There are no items in the queue.');
+	}
+}
 
-				// @todo Fields that have plain_text as their text format break the value->raw() method. To be investigated.
-				if ($format == 'full_html') {
-					if (!empty($raw_node->$field)) {
-						$value = $wrapped_node->$field->value->raw();
-					}
-					// Clean up the field content if it's empty.
-					// Otherwise assign the text format so it'll be rendered correctly.
-					if (empty($value)) {
-						$wrapped_node->$field = array();
-					}
-					else {
-						$wrapped_node->$field->format = $format;
-					}
-					unset($value);
-					$wrapped_node->save();
-				}
+/**
+ * Implements hook_token_info().
+ */
+function gbif_ims_token_info() {
+	$types['member'] = array(
+		'name' => t('GBIF Members'),
+		'description' => t('Tokens for emitting lists from IMS.'),
+	);
+
+	$groups = _gi_groups(NULL);
+	foreach ($groups as $key => $group) {
+		$gbif_ims[$key]['name'] = $group;
+		$gbif_ims[$key]['description'] = t('List of ') . $group;
+	}
+	return array(
+		'types' => $types,
+		'tokens' => array(
+			'gbif_ims' => $gbif_ims,
+		),
+	);
+}
+
+/**
+ * Implements hook_tokens()
+ * @return null|string
+ */
+function gbif_ims_tokens($type, $tokens, array $data = array(), array $options = array()) {
+	$replacements = array();
+
+	if ($type == 'member') {
+		foreach ($tokens as $name => $original) {
+			switch ($name) {
+				case 'bc':
+				case 'ec':
+				case 'rc':
+				case 'sc':
+				case 'nc':
+				case 'nsg':
+					$replacements[$original] = _gi_print_committee_list(_gi_groups($name));
+					break;
+				case 'gbifs':
+					$replacements[$original] = _gi_print_staff_list(_gi_groups($name));
+					break;
+				case 'vp':
+				case 'acp':
+				case 'oap':
+					$replacements[$original] = _gi_print_participant_list(_gi_groups($name));
+					break;
 			}
 		}
 	}
 
-	$time_end = new DateTime();
-	$time_diff = $time_start->diff($time_end);
-	$time_spent = $time_diff->format('%H:%I:%S');
-	return t('Events updated. @time elapsed.', array('@time' => $time_spent));
+	return $replacements;
 }
 
 /**
- * Temporary helper function to provide the format definition of the fields
- * of event_ims.
+ * Implements hook_cron().
  */
-function _gbif_ims_event_field_format() {
-	$formats = array(
-		'body' => 'full_html',
-		'field_audience' => 'full_html',
-		'field_contact' => 'full_html',
-		'field_resources' => 'full_html',
-		'field_participants' => 'full_html',
-		'field_image_url' => 'plain_text',
-		'field_dates' => 'plain_text',
-		'field_venuecountry' => 'plain_text',
-		'field_status' => 'plain_text',
-		'field_language' => 'plain_text',
-		'field_venue' => 'full_html',
-		'field_city' => 'plain_text',
-		'field_country' => 'plain_text',
-		'field_type_images' => 'plain_text',
-		'field_original_ims_id' => 'plain_text',
+function gbif_ims_cron() {
+	$interval = variable_get('gbif_ims_sync_interval', 60 * 60);
+
+	// Cron could be set to run every minute, which is not possible and too heavy for IMS synchronisation.
+	// So we keep a time for the next run in a variable.
+	if (time() >= variable_get('gbif_ims_sync_next_execution', 0)) {
+		$sync_success = _gbif_ims_sync();
+		if ($sync_success == TRUE) {
+			watchdog('gbif_ims', 'IMS synchronisation executed at %time', array('%time' => date_iso8601(time(0))), WATCHDOG_INFO);
+		}
+		variable_set('gbif_ims_sync_next_execution', time() + $interval);
+	}
+}
+
+/**
+ * Implements hook_cron_queue_info().
+ */
+function gbif_ims_cron_queue_info() {
+	$queues['gbif_ims_queue'] = array(
+		'worker callback' => 'gbif_ims_queue_process',
+		'time' => 180,
 	);
-	return $formats;
+	return $queues;
+}
+
+/**
+ * Worker callback for IMS relevant tasks.
+ */
+function gbif_ims_queue_process($item) {
+	switch ($item) {
+		case 'event_update':
+			if (module_exists('gbif_event')) {
+				gbif_event_sync();
+			}
+			break;
+	}
+}
+
+/**
+ * Reporter for cron queue worker.
+ * @param int $worker
+ *   Worker number.
+ * @param object $item
+ *   The $item which was stored in the cron queue.
+ */
+function gbif_ims_queue_report($worker, $item) {
+	if (!empty($GLOBALS['gbif_ims_cron_show_status_message'])) {
+		drupal_set_message(
+			t('Queue @worker worker processed item with sequence @sequence created at @time',
+				array(
+					'@worker' => $worker,
+					'@sequence' => $item->sequence,
+					'@time' => date_iso8601($item->created),
+				)
+			)
+		);
+	}
+	watchdog('cron_example', 'Queue @worker worker processed item with sequence @sequence created at @time',
+		array(
+			'@worker' => $worker,
+			'@sequence' => $item->sequence,
+			'@time' => date_iso8601($item->created),
+		)
+	);
+}
+
+function gbif_ims_sync_ui($form, $form_state) {
+	if (!empty($form_state['values']['cron_reset'])) {
+		variable_set('gbif_ims_sync_next_execution', 0);
+	}
+
+	if (time() >= variable_get('gbif_ims_sync_next_execution', 0)) {
+		return gbif_ims_sync();
+	}
+	else {
+		$next_time = variable_get('gbif_ims_sync_next_execution');
+		watchdog('gbif_ims', "Synchronisation didn't run because current interval is not expired yet. Next run is at %next.", array('%next' => date_iso8601($next_time)), WATCHDOG_INFO);
+		return t("Synchronisation didn't run because current interval is not expired yet. Next run is at %next.", array('%next' => date_iso8601($next_time)));
+	}
+}
+
+/**
+ * gbif_ims_sync()
+ * Synchronise contact, country, GBIF area, group, group role, node and participant information from the IMS on FileMaker.
+ */
+function gbif_ims_sync() {
+	$start_time = new DateTime();
+	$sync_success = _gbif_ims_sync();
+	$end_time = new DateTime();
+	$time = $end_time->diff($start_time);
+	$time_spent = 'This task took ';
+	if ($time->y > 0) {$time_spent .= $time->y.' years, ';}
+	if ($time->m > 0) {$time_spent .= $time->m.' months, ';}
+	if ($time->d > 0) {$time_spent .= $time->d.' days, ';}
+	if ($time->h > 0) {$time_spent .= $time->h.' hours, ';}
+	if ($time->i > 0) {$time_spent .= $time->i.' minutes, ';}
+	if ($time->s > 0) {$time_spent .= $time->s.' seconds ';}
+	$time_spent .= "to complete.";
+
+	if ($sync_success == TRUE) {
+		watchdog('gbif_ims', 'IMS synchronisation executed at %time', array('%time' => date_iso8601(time(0))), WATCHDOG_INFO);
+		$interval = variable_get('gbif_ims_sync_interval', 3 * 60 * 60);
+		// Cron could be set to run every minute, which is too heavy for IMS synchronisation.
+		// So we keep a time for the next run in a variable.
+		variable_set('gbif_ims_sync_next_execution', time() + $interval);
+
+		// Now the gbif_ims_* base tables are updated, it then makes sense to add content update to the queue.
+		$items = array('event_update');
+		$queue = DrupalQueue::get('gbif_ims_queue');
+		foreach ($items as $item) {
+			$queue->createItem($item);
+		}
+
+		return t('Synchronisation finished.') . ' ' . $time_spent;
+	}
+	else {
+		watchdog('gbif_ims', 'IMS synchronisation failed at %time', array('%time' => date_iso8601(time(0))), WATCHDOG_CRITICAL);
+		return t('Synchronisation failed.') . ' ' . $time_spent;
+	}
+}
+
+/**
+ * Check necessary tables exist.
+ */
+function gbif_ims_tables_exist($func) {
+	$tables = $func();
+	$results = array();
+	foreach ($tables as $table) {
+		$results[$table] = db_table_exists($table);
+	}
+	$test = array_search(FALSE, $results);
+	if ($test == FALSE) {
+		return TRUE;
+	}
+	else {
+		return FALSE;
+	}
+}
+
+/**
+ * Helper function to prevent empty text value from saving into node field.
+ * @param $value
+ * @param $format
+ * @return array|string|null
+ */
+function gbif_ims_format_value($value, $format = NULL) {
+	if (isset($format)) {
+		if (!empty($value)) {
+			$result = array(
+				'value' => htmlspecialchars_decode($value),
+				'format' => $format,
+			);
+			return $result;
+		}
+		elseif ((trim(strtolower($value))) == 'n/a') {
+			return NULL;
+		}
+		else {
+			return NULL;
+		}
+	}
+	else {
+		$result = (!empty($value) || (trim(strtolower($value))) == 'n/a') ? htmlspecialchars_decode($value) : NULL;
+		return $result;
+	}
+}
+
+/**
+ * Load FileMaker API if it's not already loaded.
+ * @return TRUE if the FileMaker API is loaded, FALSE otherwise.
+ */
+function filemaker_load_api() {
+
+	if (!class_exists('FileMaker')) {
+
+		// Try to use libraries module.
+		if (module_exists('libraries')) {
+
+			$libraries_path = drupal_get_path('module', 'libraries');
+			$libraries_include = $libraries_path . '/' . 'libraries.module';
+
+			include_once($libraries_include);
+
+			// Let's see if the FileMaker API is really available from libraries.
+			$filemaker_api = './' . libraries_get_path('filemaker') . '/FileMaker.php';
+			if (file_exists($filemaker_api)) {
+				include_once $filemaker_api;
+			}
+		}
+	}
+
+	if (!class_exists('FileMaker')) {
+		drupal_set_message(t('Can not find FileMaker API. Please place the FileMaker API at sites/all/libraries/filemakerapi/FileMaker. See README.txt for details.'), 'error');
+	}
+
+	// Tell the caller if the FileMaker class exists.
+	return class_exists('FileMaker');
+}
+
+/**
+ * This function is intended to be called by other modules that need to interact
+ * with the FileMaker based GBIF IMS.
+ * @return FileMaker
+ */
+function ims_connection() {
+	// Load FileMaker api
+	filemaker_load_api();
+
+	// Load credentials
+	$IMSCredential = variable_get('ims_connection');
+
+	$IMS = new FileMaker();
+	$IMS->setProperty('database', $IMSCredential['database']);
+	$IMS->setProperty('hostspec', $IMSCredential['hostname']);
+	$IMS->setProperty('username', $IMSCredential['username']);
+	$IMS->setProperty('password', $IMSCredential['password']);
+
+	return $IMS;
+}
+
+/**
+ * Helper function that provides the definition of contact groups.
+ * @param $key
+ * @return array
+ */
+function _gi_groups($key) {
+	$groups = array(
+		'bc' => t('Budget Committee'),
+		'ec' => t('Executive Committee'),
+		'nc' => t('Nodes Committee'),
+		'rc' => t('Rules Committee'),
+		'sc' => t('Science Committee'),
+		'nsg' => t('Nodes Steering Group'),
+		'gbifs' => t('GBIF Secretariat'),
+		'vp' => t('Voting Participant'),
+		'acp' => t('Associate Country Participant'),
+		'oap' => t('Other Associate Participant'),
+	);
+	if (!empty($key)) {
+		return $groups[$key];
+	}
+	else {
+		return $groups;
+	}
 }

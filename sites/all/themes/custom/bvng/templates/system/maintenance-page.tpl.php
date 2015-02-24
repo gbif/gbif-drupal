@@ -16,7 +16,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<link rel="shortcut icon" href="/sites/all/themes/custom/bvng/favicon.ico" type="image/vnd.microsoft.icon" />
 	<meta name="Generator" content="Drupal 7 (http://drupal.org)" />
-  <title>Page not found | GBIF.ORG</title>
+  <title>Page not found | GBIF.org</title>
   <style>@import url("/modules/system/system.base.css?n7sm76");</style>
 	<style>@import url("/sites/all/themes/custom/bvng/css/style.css?n7sm76");</style>
   <!-- HTML5 element support for IE6-8 -->
@@ -37,17 +37,17 @@
     <section id="masthead">
   <div class="container">
     <div class="row">
-      <div class="col-md-3 col-md-push-9"> 
+      <div class="col-xs-3 col-xs-push-9"> 
         <div class="region region-account">
  				</div>
 			</div>
     </div>
     <div class="row">
-      <div id="region-navigation" class="col-md-12">
+      <div id="region-navigation" class="col-xs-12">
     		<div class="navbar-header">
     			<div id="branding">
         		<a class="logo" href="/" title="Home"><img src="/sites/all/themes/custom/bvng/logo.png" alt="Home" /></a>
-        		<h1><a href="/" title="Home">GBIF.ORG</a></h1>
+        		<h1><a href="/" title="Home">GBIF.org</a></h1>
         		<span>Free and Open Access to Biodiversity Data</span>
           </div>
           <div id="navigation-menu" class="nav-inline">
@@ -65,11 +65,11 @@
 <section id="banner">
   <div class="container">
     <div class="row">
-      <div id="region-highlighted" class="col-md-12">
-        <h1>GBIF.ORG is under maintenance</h1>
+      <div id="region-highlighted" class="col-xs-12">
+        <h1>GBIF.org is under maintenance</h1>
         <h5>We are sorry for the inconvenience</h5>
   		</div>
-      <div id="region-menu" class="col-md-11"></div>
+      <div id="region-menu" class="col-xs-8"></div>
     </div>
   </div>
 </section>
@@ -78,9 +78,9 @@
     <div class="region region-content">
       <div class="container well well-lg well-margin-top well-margin-bottom">
 				<div class="row">
-					<div class="col-md-12">
+					<div class="col-xs-12">
     				<div class="row">
-  						<div class="view-column col-md-8">
+  						<div class="view-column col-xs-8">
     						<div class="generic-column">
       						<p>We are deploying a new version of the <strong>GBIF Portal</strong>.</p>
 									<p>GBIF.org shall be much improved and back online shortly.</p>
@@ -98,7 +98,7 @@
   <div id="footer-links">
     <div class="container">
       <div class="row">
-        <div class="footer col-md-12">
+        <div class="footer col-xs-12">
             <div class="region region-links">
     
     <section id="block-menu-block-gbif-navigation-footer-links" class="block block-menu-block clearfix">
@@ -138,7 +138,7 @@
   <div id="footer-credits">
     <div class="container">
       <div class="row">
-        <div class="footer col-md-12">
+        <div class="footer col-xs-12">
               <div class="region region-credits">
     <ul>
       <li>

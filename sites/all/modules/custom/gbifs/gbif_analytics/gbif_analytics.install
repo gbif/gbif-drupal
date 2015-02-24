@@ -1,0 +1,23 @@
+<?php
+
+/**
+ * Sets up the data directory from which the images will be served.  It is up the site administrator to
+ * populate the directory outside of Drupal (e.g. scp the contents in, and set permission etc).
+ * See https://github.com/gbif/analytics for the project to produce the images.
+ *
+ * Implements hook_install().
+ */
+function gbif_analytics_install() {
+	$data_dir = 'public://gbif_analytics';
+	$dir_exists = file_prepare_directory($data_dir);
+	if (!$dir_exists) {
+		drupal_mkdir($data_dir);
+	}
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function gbif_analytics_uninstall() {
+  // we deliberately don't delete the folder, as it is managed outside Drupal and contains large directories of images
+}

@@ -35,7 +35,7 @@
 			text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
 			color: #FFF;
 			font-size: 48px ;
-			
+		
 		}
 	}
 	h2 {
@@ -69,7 +69,7 @@
 		padding-right: 10px;
 		text-transform: uppercase;
 		vertical-align: top;
-		
+	
 		strong {
 			color: #FFF;
 			display: block;
@@ -79,12 +79,12 @@
 			line-height: 24px;
 			text-transform: none;
 		}
-		
+	
 		a {
 			color: #333;
 		}
 	}
-	
+
 	li:last-child {
 		border: none;
 		margin:0;
@@ -129,7 +129,7 @@
 					width: 255px;
 				}
 			}
-		
+	
 		}
 	}
 	.row-search-fp {
@@ -189,7 +189,7 @@
 
 .header-fp {
 	border-bottom: 1px solid #D8DCE1;
-	
+
 	h2 {
 		display: inline-block;
 		font-size: 23px;
@@ -235,7 +235,7 @@
 		p {
 			margin-bottom: 18px;
 		}
-		
+	
 	}
 	.latest4-fp {
 		.date {
@@ -243,37 +243,13 @@
 			font-size: 13px;
 			color: #999999;
 		}
-		.calendar-fp {
-			width: 44px;
-			height: 50px;
-			float: left;
-			position: relative;
-			background: url("../images/calendar.png") no-repeat;
-			.month {
-				top: 4px;
-				text-transform: uppercase;
-				font-size: 10px;
-				color: #fff;
-				position: absolute;
-				width: 44px;
-				text-align: center;
-			}
-			.year {
-				top: 24px;
-				font-size: 16px;
-				font-weight: normal;
-				position: absolute;
-				width: 44px;
-				text-align: center;
-			}
-		}
 		ul {
 			margin-bottom: 18px;
 			padding: 0px;
 			line-height: 18px;
 			font-size: 15px;
 			li {
-				height: 80px;
+				min-height: 80px;
 				list-style: none;
 				clear: both;
 				margin-bottom: 4px;
@@ -283,8 +259,19 @@
 					display: block;
 					position: relative;
 					top: 3px;
-					left: 5px;
 				}
+        .views-field-ge-location {
+          display: block;
+          color: @cGray2;
+          font-size: 0.9em;
+          position: relative;
+          top: 5px;
+          padding-left: 56px;
+          margin-bottom: 10px;
+        }
+        .views-field-ge-ims-date + span.views-field-title {
+          padding-left: 55px;
+        }
 			}
 		}
 	}
@@ -357,4 +344,4 @@
       }
     }
   }
-}
+}  

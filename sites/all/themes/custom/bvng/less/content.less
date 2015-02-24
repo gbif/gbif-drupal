@@ -35,16 +35,10 @@
 	}
 }
 
-.view-column {
-  margin-left: 15px;
-  padding-left: 0px;
-  padding-right: 0px;
-}
-
 .node-sidebar {
   width: 240px;
   margin-left: 30px;
-  padding-top: 25px;
+  padding-top: 20px;
   padding-left: 0px;
   padding-right: 0px;
   border-top: 1px solid @page-header-border-color;
@@ -85,18 +79,37 @@
 }
 
 .sidebar-filter {
-  width: 230px;
+  width: 240px;
   margin-left: 30px;
   padding-top: 15px;
   padding-left: 0px;
   padding-right: 0px;
   border-top: 1px solid @page-header-border-color;
+  h2.block-title {
+    margin-top: 10px;
+    font-size: 13px;
+    padding-left: 10px;
+    color: @cGray2;
+    text-transform: UPPERCASE;
+  }
   ul {
     margin-top: 20px;
     padding-left: 20px;
     li {
       margin-bottom: 2px;
+      .facetapi-checkbox {
+        margin-right: 5px;
+      }
     }
+    
+    .leaf {
+      font-size: 12px;
+      color: @cGray2;
+    }
+  }
+  a.facetapi-limit-link {
+    margin-left: 37px;
+    font-size: 12px;
   }
   p {
     padding-left: 10px;
@@ -171,6 +184,7 @@
   margin-bottom: 20px;
   padding-top: 10px;
   color: @cGray75;
+  min-height: 120px;
   
   p {
     font-size: 13px;
@@ -185,7 +199,7 @@
     color: @cGray3;
 	}
 
-  > h2 {
+  h2 {
     margin-top: 10px;
     margin-bottom: 7px;
     padding-bottom: 0px;
@@ -199,7 +213,7 @@
     }
   }
   
-  > footer {
+  footer {
     font-size: 13px;
     p { margin-bottom: 0px; }
     .date {
@@ -207,6 +221,45 @@
       margin-bottom: 0px;
       margin-top: 5px;
     }
+  }
+  
+  .node-view-resource-thumbnail {
+    margin-left: 115px;
+    h3 {
+      font-size: 17px;
+      font-weight: bold;
+      text-decoration: none;
+      margin-top: 10px;
+    }
+  }
+  
+  .node-view-gr-resource-type {
+    float: right;
+    text-transform: UPPERCASE;
+    font-size: 13px;
+    margin-top: 1px;
+    margin-left: 5px;
+  }
+  
+  .file {
+    float: right;
+    > a > img {
+      margin-top: 1px;
+      margin-left: 5px;
+    }
+  }
+
+  .external-link {
+    float: right;
+    > a > img {
+      margin-top: 1px;
+      margin-left: 5px;
+    }
+  }
+
+  img {
+    float: left;
+    margin-top: 10px;
   }
 }
 
@@ -285,6 +338,9 @@
     vertical-align: bottom;
     color: @cGray80;
   }
+	.field-item {
+		margin-bottom: 10px;
+	}
 }
 
 .node-next {
@@ -346,6 +402,14 @@
   }
 }
 
+h2.featured-resources {
+  margin-top: 0px;
+  margin-bottom: 15px;
+  font-size: 23px;
+  font-weight: normal;
+  text-shadow: 0 1px #fff;
+}
+
 .taxonomy-term {
   > h2 {
     margin-top: 0px;
@@ -398,42 +462,6 @@
   }
   .views-content-nid {
     display: none;
-  }
-}
-
-.views-slideshow-pager-field-item {
-  background: url('../images/slideshow-bullet.png') no-repeat;
-  &.active {
-    background: url('../images/slideshow-bullet-active.png') no-repeat;
-  }
-}
-
-.slideshow-image {
-  position: relative;
-  overflow: hidden;
-  width: 616px;
-  left: -10px;
-  top: -51px;
-  right: 24px;
-  border-top-right-radius: 3px;
-  border-bottom-right-radius: 3px;
-}
-
-.slideshow-intro {
-  padding-right: 30px;
-  h3 {
-    font-size: 23px;
-    //font-weight: normal;
-    line-height: 28px;
-    text-shadow: 0 1px @cWhite;
-    color: #333;
-  }
-  p {
-    font-size: 15px;
-    color: @cGray75;
-    .readmore {
-      font-size: 0.9em;
-    }
   }
 }
 
@@ -528,15 +556,6 @@
   }
 }
 
-/*
-After jquery.cycle is loaded, the width of the row container is rendered
-differently on Firefox. This style explicitly set the style so the slideshow
-image won't shift it's position.
-*/
-.views-slideshow-cycle-main-frame-row {
-  width: 930px;
-}
-
 .user-login-row {
   > .subscribe {
     padding: 40px 25px 20px 25px;
@@ -570,6 +589,13 @@ image won't shift it's position.
       width: 240px;
     }
   }
+  
+  .form-item-timezone {
+    label {
+      display: block;
+    }
+  }
+  
 }
 
 .field-name-field-firstname,
@@ -700,51 +726,20 @@ image won't shift it's position.
     }
   }
 }
-.node-resource-ims,
-.node-event-ims {
-	.node-content {
-		.field-name-body {
-			.field-label {
-				text-transform: uppercase;
-				font-weight: normal;
-				font-size: 13px;
-			}
-		}
-	}
+
+.node-event {
+  .content-sidebar {
+    .field-items {
+      padding-left: 0px;
+      .field-item {
+        list-style: none;
+      }
+    }
+  }
 }
 
 .form-item-field-country-mono-und {
 	width: 240px;
-}
-
-.field-name-field-authors,
-.field-name-field-publisher,
-.field-name-field-publishing-date,
-.field-name-field-target-audience,
-.field-name-field-contributors,
-.field-name-field-abstract,
-.field-name-field-bibliographic-citation,
-.field-name-field-rights,
-.field-name-field-rights-holder,
-.field-name-field-audience,
-.field-name-field-contact,
-.field-name-field-participants, 
-.field-name-field-dates,
-.field-name-field-venuecountry,
-.field-name-field-status,
-.field-name-field-language,
-.field-name-field-resources, 
-.field-name-field-publisher-w-date {
-	.field-label {
-		text-transform: uppercase;
-		font-weight: normal;
-		font-size: 13px;
-	}
-	margin-bottom: 18px;
-}
-
-.field-name-field-image-url {
-	margin-bottom: 20px;
 }
 
 .kinfo_width {
@@ -762,4 +757,138 @@ image won't shift it's position.
 }
 .mendeley_ul {
 	padding-left: 10px;
+}
+
+.rss-icon {
+	float: right;
+	margin-top: -8px;
+	margin-right: -35px;
+}
+
+.rss-link {
+  float: right;
+  margin-top: -45px;
+}
+
+div.feed-icon {
+	float: right;
+	margin-top: -3px;
+	margin-right: -35px;
+}
+
+div.feed-ical-icon {
+	float: right;
+	margin-top: -3px;
+}
+
+div.field-name-ge-date-ical {
+  margin-top: -16px;
+}
+
+// For participant list.
+table.alt-row-color tr:nth-child(even) {
+  background-color: @cGray5;
+}
+
+.service-links {
+  margin-bottom: 15px;
+  ul.links {
+    padding-left: 0px;
+    list-style: none;
+    li {
+      display: inline-block;
+    }
+    li.service-links-facebook-share {
+      vertical-align: 5px;
+    } 
+  }
+}
+
+.calendar-icon(@imgpath) {
+  background: url(@imgpath) no-repeat;
+  width: 24px;
+  height: 24px;
+}
+
+.calendar-thumbnail {
+	width: 44px;
+	height: 50px;
+  margin-right: 12px;
+	float: left;
+	position: relative;
+	background: url("../images/calendar.png") no-repeat;
+	.month {
+		top: 4px;
+		text-transform: uppercase;
+		font-size: 10px;
+		color: #fff;
+		position: absolute;
+		width: 44px;
+		text-align: center;
+	}
+	.day {
+		top: 24px;
+		font-size: 16px;
+		font-weight: normal;
+		position: absolute;
+		width: 44px;
+		text-align: center;
+	}
+}
+
+.event-lists {
+  ul {
+    padding-left: 0px;
+    li {
+      list-style: none;
+      border-top: 1px solid #eee;
+      margin-bottom: 20px;
+      color: #555;
+      > .views-field-title {
+        margin-top: 10px;
+        margin-bottom: 7px;
+        padding-bottom: 0px;
+        font-size: 17px;
+        font-weight: bold;
+      }
+      > .views-field-ge-location {
+        font-size: 13px;
+        margin-top: 19px;
+      }
+      > .views-field-ge-ims-date {
+        .month {
+          top: 5px;
+        }
+        .day {
+          top: 22px;
+        }
+      }
+    }
+  }
+}
+
+.content {
+  .service-links {
+    padding-top: 10px;
+    margin-bottom: 0px;
+    border-top: 1px solid @page-header-border-color;
+  }
+}
+
+.content ul.addtocal_menu {
+  display: inline-block;
+  padding-left: 0;
+  li {
+    list-style: none;
+    display: inline-block;
+    height: 24px;
+    a {
+      margin-top: -10px;
+      vertical-align: bottom;
+    }
+    a.ical { .calendar-icon("../images/calendar-icons.png"); background-position: 0px 0px; display: inline-block; width: 24px; }
+    a.outlook { .calendar-icon("../images/calendar-icons.png"); background-position: -25px 0px; display: inline-block; width: 24px; }
+    a.google { .calendar-icon("../images/calendar-icons.png"); background-position: -49px 0px; display: inline-block; width: 24px; }
+    a.yahoo { .calendar-icon("../images/calendar-icons.png"); background-position: -73px 0px; display: inline-block; width: 24px; }
+  }
 }

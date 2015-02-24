@@ -206,16 +206,6 @@ function npt_mendeley_block_info() {
   foreach ($tag_sets as $tag_set) {
 
     switch ($tag_set['type']) {
-      case 'country':
-        $delta = $tag_set['machine_name'];
-        $blocks[$delta] = array(
-          'info' => 'Country: ' . $tag_set['name'],
-          'region' => 'content',
-          'weight' => 1,
-          'status' => 0,
-        );
-        break;
-
       case 'gbif_used':
         $delta = $tag_set['machine_name'];
         $blocks[$delta] = array(

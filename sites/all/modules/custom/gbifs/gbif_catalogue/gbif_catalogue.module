@@ -403,7 +403,7 @@ function filemaker_load_api() {
   if (!class_exists('FileMaker')) {
     drupal_set_message(t('Can not find FileMaker API. Please place the FileMaker API at sites/all/libraries/filemakerapi/FileMaker. See README.txt for details.'), 'error');
   }
-  
+
   // Tell the caller if the FileMaker class exists.
   return class_exists('FileMaker');
 }

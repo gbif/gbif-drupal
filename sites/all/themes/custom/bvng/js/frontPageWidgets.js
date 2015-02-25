@@ -127,8 +127,8 @@
         $.getJSON(api_base_url + '/occurrence/count?callback=?', function (data)
           { $("#countOccurrences").html(numberWithCommas(data)); }
         );
-        $.getJSON(api_base_url + '/species/search?dataset_key=7ddf754f-d193-4cc9-b351-99906754a03b&limit=1&rank=species&status=accepted&status=DOUBTFUL&callback=?', function (data)
-          { $("#countSpecies").html(numberWithCommas(data.count)); }
+        $.getJSON(api_base_url + '/dataset/7ddf754f-d193-4cc9-b351-99906754a03b/metrics', function (data)
+          { $("#countSpecies").html(numberWithCommas(data.countByRank.SPECIES)); }
         );
         $.getJSON(api_base_url + '/dataset/search?limit=1&callback=?', function (data)
           { $("#countDatasets").html(numberWithCommas(data.count)); }

@@ -84,10 +84,11 @@
     <div class="col-xs-12">
 
       <article id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?> clearfix"<?php print $attributes; ?>>
-        <?php if ((!$page && !empty($title)) || !empty($title_prefix) || !empty($title_suffix) || $display_submitted): ?>
         <div class="row">
           <header class="content-header col-xs-12">
+						<?php if (!empty($type_title)): ?>
             <h3><?php print render($type_title); ?></h3>
+						<?php endif; ?>
             <?php print render($title_prefix); ?>
             <?php if (!empty($title)): ?>
             <h2<?php print $title_attributes; ?>><?php print $title; ?></h2>
@@ -95,7 +96,6 @@
             <?php print render($title_suffix); ?>
           </header>
         </div>
-        <?php endif; ?>
         <div class="row">
           <div class="node-content col-xs-8">
 
@@ -139,7 +139,7 @@
     </div>
   </div>
 </div>
-<?php if (!empty($next_node)): ?>
+<?php if (!empty($next_node) && in_array($type, array('newsarticle', 'featurreddataset', 'useofdata'))): ?>
 <div class="container well well-lg well-margin-bottom">
   <div class="row">
     <article class="col-xs-12 node-next">

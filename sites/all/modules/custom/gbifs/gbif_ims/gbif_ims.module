@@ -156,16 +156,21 @@ function gbif_ims_tokens($type, $tokens, array $data = array(), array $options =
  * Implements hook_cron().
  */
 function gbif_ims_cron() {
-	$interval = variable_get('gbif_ims_sync_interval', 60 * 60);
+	$interval = variable_get('gbif_ims_sync_interval');
 
-	// Cron could be set to run every minute, which is not possible and too heavy for IMS synchronisation.
-	// So we keep a time for the next run in a variable.
-	if (time() >= variable_get('gbif_ims_sync_next_execution', 0)) {
-		$sync_success = _gbif_ims_sync();
-		if ($sync_success == TRUE) {
-			watchdog('gbif_ims', 'IMS synchronisation executed at %time', array('%time' => date_iso8601(time(0))), WATCHDOG_INFO);
+	if ($interval == 0) {
+		watchdog('gbif_ims', 'IMS synchronisation has been suspended', array(), WATCHDOG_INFO);
+	}
+	else {
+		// Cron could be set to run every minute, which is not possible and too heavy for IMS synchronisation.
+		// So we keep a time for the next run in a variable.
+		if (time() >= variable_get('gbif_ims_sync_next_execution', 0)) {
+			$sync_success = _gbif_ims_sync();
+			if ($sync_success == TRUE) {
+				watchdog('gbif_ims', 'IMS synchronisation executed at %time', array('%time' => date_iso8601(time(0))), WATCHDOG_INFO);
+			}
+			variable_set('gbif_ims_sync_next_execution', time() + $interval);
 		}
-		variable_set('gbif_ims_sync_next_execution', time() + $interval);
 	}
 }
 

@@ -9,7 +9,7 @@
 module_load_include('inc', 'gbif_ims', 'gbif_ims.schema');
 
 /**
- * Implementation of hook_requiremensts()
+ * Implementation of hook_requirements()
  */
 function gbif_ims_requirements($phase) {
   $requirements = array();

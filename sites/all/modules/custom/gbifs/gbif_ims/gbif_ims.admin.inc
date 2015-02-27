@@ -64,6 +64,7 @@ function gbif_ims_config_form() {
 			60 * 60 * 6 => t('6 hours'),
 			60 * 60 * 12 => t('12 hours'),
 			60 * 60 * 24 => t('1 day'),
+			0 => t('Stop'),
 		),
 	);
 

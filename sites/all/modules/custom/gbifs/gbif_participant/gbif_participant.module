@@ -998,7 +998,6 @@ function _gbif_participant_print_largest_datasets($iso2, $mode) {
 	$env = variable_get('environment_settings');
 	$api_call = _gbif_participant_api_occurrence() . '/counts/datasets?country=' . $iso2;
 	$json = json_decode(file_get_contents($api_call), TRUE);
-	$count = count($json);
 	$datasets = $json;
 	if ($mode == 'digest') {
 		$datasets = array_slice($datasets, 0, 6, TRUE);
@@ -1007,37 +1006,44 @@ function _gbif_participant_print_largest_datasets($iso2, $mode) {
 	$output = array();
 
 	foreach ($datasets as $k => &$dataset) {
-		$d_count = $dataset;
-		$d = array('count_within_country' => $d_count);
-		$d['dataset_key'] = $k;
-
-		// Get country name
-		$d['country'] = $country_title;
-
 		// Get dataset metadata
 		$d_call = _gbif_participant_api_dataset() . '/' . $k;
 		$d_json = json_decode(file_get_contents($d_call), TRUE);
 
-		$d['title'] = $d_json['title'];
-		$d['description'] = $d_json['description'];
-		$d['modified'] = $d_json['modified'];
-		$d['type_formatted'] = _gbif_participant_format_datatype($d_json['type']);
-
-		// Get dataset counts
-		$d_call = _gbif_participant_api_occurrence() . '/count?datasetKey=' . $k;
-		$d_json = json_decode(file_get_contents($d_call), TRUE);
-
-		$d['occurrence_count'] = $d_json;
-		$percentage = $d['count_within_country'] / $d['occurrence_count'] * 100;
-		if ($percentage == 100) {
-			$d['percentage'] = 100;
+		if (isset($d_json['deleted'])) {
+			unset($datasets[$k]);
 		}
 		else {
-			$d['percentage'] = number_format((float)$percentage, 2, '.', '');
-		}
+			$d_count = $dataset;
+			$d = array('count_within_country' => $d_count);
+			$d['dataset_key'] = $k;
 
-		$dataset = $d;
+			// Get country name
+			$d['country'] = $country_title;
+
+			$d['title'] = $d_json['title'];
+			$d['description'] = $d_json['description'];
+			$d['modified'] = $d_json['modified'];
+			$d['type_formatted'] = _gbif_participant_format_datatype($d_json['type']);
+
+			// Get dataset counts
+			$d_call = _gbif_participant_api_occurrence() . '/count?datasetKey=' . $k;
+			$d_json = json_decode(file_get_contents($d_call), TRUE);
+
+			$d['occurrence_count'] = $d_json;
+			$percentage = $d['count_within_country'] / $d['occurrence_count'] * 100;
+			if ($percentage == 100) {
+				$d['percentage'] = 100;
+			}
+			else {
+				$d['percentage'] = number_format((float)$percentage, 2, '.', '');
+			}
+
+			$dataset = $d;
+		}
 	}
+
+	$count = count($datasets);
 
 	switch ($mode) {
 		case 'full':

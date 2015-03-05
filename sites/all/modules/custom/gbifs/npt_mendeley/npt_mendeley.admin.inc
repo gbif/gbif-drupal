@@ -6,7 +6,22 @@
  */
  
 function npt_mendeley_settings_form() {
-  drupal_add_library('npt_mendeley', 'progress', false); 
+  drupal_add_library('npt_mendeley', 'progress', false);
+	$form['npt_mendeley_api'] = array(
+		'#title' => t('Mendeley Applications settings'),
+		'#type' => 'fieldset',
+		'#description' => t('You need to setup an application in http://dev.mendeley.com for the synchronisation to work. When setting up, remember the callback URL is always your base URL followed by "/mendeley/oauth2_callback".'),
+	);
+	$form['npt_mendeley_api']['mendeley_app_id'] = array(
+		'#title' => t('Mendeley application ID'),
+		'#type' => 'textfield',
+		'#default_value' => variable_get('mendeley_app_id'),
+	);
+	$form['npt_mendeley_api']['mendeley_app_secret'] = array(
+		'#title' => t('Mendeley application secret'),
+		'#type' => 'textfield',
+		'#default_value' => variable_get('mendeley_app_secret'),
+	);
   $form['npt_mendeley_update'] = array(
     '#type' => 'fieldset',
     '#title' => t('Update documents from Mendeley'),
@@ -42,7 +57,7 @@ function npt_mendeley_settings_form() {
   $form['npt_mendeley_update_interval'] = array(
     '#title' => t('Automatic update interval'),
     '#type' => 'fieldset',
-    '#description' => t('You can decide how frequently you want to run the update together with the system cron tasks.'),
+    '#description' => t('You can decide how frequently you want to run the update together with the system cron jobs.'),
   );
   $interval = drupal_map_assoc(array(1800, 3600, 10800, 21600, 32400, 43200, 86400, 259200), 'format_interval');
   $interval[0] = '<' . t('none') . '>';
@@ -56,5 +71,7 @@ function npt_mendeley_settings_form() {
 }
 
 function npt_mendeley_settings_form_submit($form, &$form_state) {
+	variable_set('mendeley_app_id', $form_state['values']['mendeley_app_id']);
+	variable_set('mendeley_app_secret', $form_state['values']['mendeley_app_secret']);
   variable_set('npt_mendeley_update_interval', $form_state['values']['update_interval']);
 }

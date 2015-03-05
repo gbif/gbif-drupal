@@ -34,7 +34,8 @@ function npt_mendeley_uninstall() {
     drupal_set_message('The cached citations from GBIF public library on Mendeley are successfully deleted.');
   }
   variable_del('npt_mendeley_update_interval');
-  variable_del('npt_mendeley_tags');
   variable_del('npt_mendeley_retrieval_progress');
   variable_del('npt_mendeley_detail_updated');
+	variable_del('mendeley_app_id');
+	variable_del('mendeley_app_secret');
 }

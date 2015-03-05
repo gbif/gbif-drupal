@@ -9,8 +9,8 @@ include_once('HttpPost.php');
 include_once(drupal_get_path('module', 'npt_mendeley') . '/includes/curl_multi.inc');
 include_once(drupal_get_path('module', 'npt_mendeley') . '/npt_mendeley.theme_definition.inc');
 
-define('MENDELEY_GBIF_PORTAL_CLIENT_ID', variable_get('mendeley_client_id'));
-define('MENDELEY_GBIF_PORTAL_CLIENT_SECRET', variable_get('mendeley_client_secret'));
+define('MENDELEY_GBIF_PORTAL_CLIENT_ID', variable_get('mendeley_app_id'));
+define('MENDELEY_GBIF_PORTAL_CLIENT_SECRET', variable_get('mendeley_app_secret'));
 define('MENDELEY_GBIF_PUBLIC_GROUP_ID', 'dcb8ff61-dbc0-3519-af76-2072f22bc22f');
 define('MENDELEY_GBIF_STAFF_GROUP_ID', 'e5fcecec-e1e4-32cd-bde1-987edb6583f4');
 define('MENDELEY_API', 'https://api.mendeley.com:443');

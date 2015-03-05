@@ -96,11 +96,13 @@ function npt_mendeley_retrieve_by_oauth2() {
 		$token_expired = (time() - $mendeley_access_token->timestamp >= $mendeley_access_token->expires_in) ? TRUE : FALSE;
 		if ($token_expired == TRUE) {
 			// Refresh the token.
-			return _npt_mendeley_oauth2_callback($mendeley_access_token);
+			$message = _npt_mendeley_oauth2_callback($mendeley_access_token);
+			drupal_set_message($message, 'status');
 		}
 		elseif ($token_expired == FALSE) {
 			// Keep using the existing token and proceed to document retrieval.
-			return npt_mendeley_retrieve($mendeley_access_token);
+			$message = npt_mendeley_retrieve($mendeley_access_token);
+			drupal_set_message($message, 'status');
 		}
 	}
 }

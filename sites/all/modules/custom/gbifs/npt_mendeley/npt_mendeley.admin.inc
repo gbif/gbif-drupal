@@ -30,13 +30,7 @@ function npt_mendeley_settings_form() {
   $form['npt_mendeley_update']['update_submit'] = array(
     '#type' => 'submit',
     '#value' => t('Update now'),
-    '#prefix' => '<div id="update-div">',
-    '#suffix' => '<div id="status-wrapper"></div></div>',
-		'#ajax' => array(
-      'callback' => 'npt_mendeley_retrieve_by_oauth2',
-      'wrapper' => 'status-wrapper',
-      'effect' => 'fade',
-    ),
+		'#submit' => array('npt_mendeley_retrieve_by_oauth2'),
   );
   $form['npt_mendeley_analyse'] = array(
     '#type' => 'fieldset',

@@ -538,7 +538,7 @@ function _mendeley_print_publications($documents, $machine_name) {
 		$output['list_publications'] = $html;
 	}
 	else {
-		$output['list_publications'] = t('Publications in this category are temporarily unavailable. Please come back a few minutes later.', array('!country_name' => gbif_participant_country_lookup($iso2, 'iso2', 'title')));
+		$output['list_publications'] = t('Publications in this category are temporarily unavailable. Please come back a few minutes later.', array());
 	}
 
 	return $output;

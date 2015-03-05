@@ -189,10 +189,11 @@ function gbif_ims_cron_queue_info() {
  * Worker callback for IMS relevant tasks.
  */
 function gbif_ims_queue_process($item) {
+	$cron_reset = 1;
 	switch ($item) {
 		case 'event_update':
 			if (module_exists('gbif_event')) {
-				gbif_event_sync();
+				gbif_event_sync($cron_reset);
 			}
 			break;
 	}

@@ -362,7 +362,7 @@ function gbif_event_page_build(&$page) {
 	}
 }
 
-function gbif_event_sync($form, $form_state) {
+function gbif_event_sync($form_state) {
 	if (!empty($form_state['values']['cron_reset'])) {
 		variable_set('gbif_ims_sync_next_execution', 0);
 	}

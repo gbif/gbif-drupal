@@ -127,13 +127,18 @@
             <?php print render($content['comments']); ?>
           </div>
           <div class="node-sidebar col-xs-3">
-						<?php if (isset($content['service_links'])): ?>
-							<?php print render($content['service_links']); ?>
-						<?php endif; ?>
-            <?php
-              print $sidebar;
-            ?>
-          </div>
+						<div class="subscribe">
+							<h4>BID update</h4>
+							<p class=header>Alert me when GBIF announces more details about BID!</p>
+							<form id="subscribe-bid" method="post" action="http://www.jangomail.com/OptIn.aspx?RedirectURLSuccess=http%3A%2F%2Fwww.gbif.org%2Fprojects%2Fbid">
+								<input type="hidden" name="optinform$txtUniqueID" id="optinform_txtUniqueID" value="96801962-8d54-4da3-ae23-38afe85b63ed" />
+								<input name="optinform$Field0" id="optinform_Field0" type="text" placeholder="Email (required)" class="form-control">
+								<input name="optinform$Field524504240" id="optinform_Field524504240" type="text" placeholder="First name (required)" class="form-control">
+								<input name="optinform$Field524504432" id="optinform_Field524504432" type="text" placeholder="Last name (required)" class="form-control">
+								<input type="submit" id="optinform_btnSubscribe" name="optinform$btnSubscribe" class="form-submit btn btn-primary" value="Sign me up">
+							</form>
+						</div>
+					</div>
         </div>
       </article>
     </div>

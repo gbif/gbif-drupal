@@ -162,12 +162,20 @@ function _npt_mendeley_oauth2_callback($token_json = NULL) {
 	}
 	else {
 		$json->timestamp = time();
-		$json->code = ($token_json->code) ? $token_json->code : $_GET['code'];
-		$json->state = ($token_json->state) ? $token_json->state : $_GET['state'];
+		$json->code = (isset($token_json->code)) ? $token_json->code : $_GET['code'];
+		$json->state = (isset($token_json->state)) ? $token_json->state : $_GET['state'];
 		variable_set('mendeley_access_token', $json);
 
 		// Once the token is renewed, proceed to document retrieval.
-		return npt_mendeley_retrieve($json);
+		// If this is a call redirected from Mendeley, then we message via drupal_set_message().
+		if (!isset($token_json)) {
+			$message = t('Please press "Update now" again to continue document retrieval.');
+			drupal_set_message($message, 'status');
+			drupal_goto('admin/config/gbif/mendeley');
+		}
+		else {
+			return npt_mendeley_retrieve($json);
+		}
 	}
 }
 

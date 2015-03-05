@@ -277,7 +277,7 @@ function gbif_participant_theme($existing, $type, $theme, $path) {
 		'gp_publications_list_item' => array(
 			'template' => 'publications-list-item',
 			'path' => $path . '/theme',
-			'variables' => array('iso2' => NULL, 'publications' => NULL),
+			'variables' => array('iso2' => NULL, 'publications' => NULL, 'per_page' => NULL),
 		),
     'gp_data_trends' => array(
 			'template' => 'data-trends',
@@ -649,7 +649,7 @@ function gbif_participant_page_router($iso2, $chapter, $sub_chapter) {
 						'html' => $html,
 					));
 				case 'publications':
-					$html = gp_print_publications($iso2);
+					$html = _gp_print_publications($iso2);
 					return theme('gbif_participant_publications', array('participantID' => $participantID, 'iso2' => $iso2, 'node' => $node, 'participant_ims' => $results[0], 'html' => $html));
 			}
 
@@ -1496,14 +1496,20 @@ function _gp_participant_list_page() {
 	return theme('gp_participant_list_page', array('html' => $html, 'types' => $types));
 }
 
-function gp_print_publications($iso2) {
+/**
+ * @param $iso2
+ * @return array
+ * @throws Exception
+ * @todo Explore whether the template of publication list can be shared.
+ */
+function _gp_print_publications($iso2) {
 	$output = array();
 	$intro_title = t('Uses of GBIF in scientific research');
 	$intro_para = t('Peer-reviewed research citing GBIF as a data source, with at least one author from !country.', array('!country' => gbif_participant_country_lookup($iso2, 'iso2', 'title'))) . '<br>';
 	$intro_para .= t('Extracted from the !mendeley.', array('!mendeley' => l('Mendeley GBIF Public Library', 'http://www.mendeley.com/groups/1068301/gbif-public-library/')));
 	$list_title = t('List of publications');
 
-	// Get memdeley json for the country.
+	// Get mendeley json for the country.
 	$publications = json_decode(file_get_contents(file_build_uri('npt_mendeley/countries/' . $iso2 . '.json')), TRUE);
 	$count = count($publications);
 
@@ -1511,7 +1517,7 @@ function gp_print_publications($iso2) {
 		$per_page = 10;
 		$current_page = pager_default_initialize($count, $per_page);
 		$chunks = array_chunk($publications, $per_page, TRUE);
-		$html = theme('gp_publications_list_item', array('iso2' => $iso2, 'publications' => $chunks[$current_page]));
+		$html = theme('gp_publications_list_item', array('iso2' => $iso2, 'publications' => $chunks[$current_page], 'per_page' => $per_page));
 		$html .= '<hr>';
 		$html .= theme('pager', array('page', $count));
 		$output['list_publications'] = $html;

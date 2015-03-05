@@ -331,8 +331,8 @@ function bvng_preprocess_block(&$variables) {
 		  $suggested_path = 'http://www-old.gbif.org/' . $variables['block']->requested_path;
 			$suggested_text = '';
 		  $suggested_text .= '<p>' . t('We are sorry for the inconvenience.') . '</p>';
-		  $suggested_text .= '<p>' . t('Did you try searching? Enter a keyword(s) in the search field above.') . '</p>';
-		  $suggested_text .= '<p>' . t('You may be following an out-dated link based on GBIF’s previous portal which was active until September 2013 – if so, you may find the content you are looking for !here', array('!here' => l('here', $suggested_path))) . '.</p>';
+		  $suggested_text .= '<p>' . t('Did you try searching? Use the search field at the top-right of this page.') . '</p>';
+		  $suggested_text .= '<p>' . t('You may be following an out-dated link based on GBIF’s previous portal. Please use the "Feedback" button to let us know what you are looking for. Thank you.') . '</p>';
 		  $variables['content'] = $suggested_text;
 
     }
@@ -700,7 +700,6 @@ function _bvng_well_types($req_path, $system_main) {
     'alldatausearticles',
     'events',
 		'search',
-		'mendeley',
 		'resources',
   );
 
@@ -724,7 +723,7 @@ function _bvng_well_types($req_path, $system_main) {
 			return 'none';
 		}
   }
-	elseif (drupal_match_path($req_path, 'country*') || drupal_match_path($req_path, 'analytics*') || drupal_match_path($req_path, 'participation/list')) {
+	elseif (drupal_match_path($req_path, 'country*') || drupal_match_path($req_path, 'analytics*') || drupal_match_path($req_path, 'participation/list') || drupal_match_path($req_path, 'mendeley*')) {
 		if ($status == '404 Not Found') {
 			return 'normal';
 		}
@@ -1177,19 +1176,6 @@ function _bvng_get_more_search_options($tid = NULL, $search_string = NULL) {
 
   $links .= '</ul>';
   return $links;
-}
-
-function _bvng_get_more_use_cases() {
-	$tags = variable_get('npt_mendeley_tags');
-	$links = '';
-	$links .= '<ul class="filter-list">';
-	foreach ($tags as $tag) {
-		if ($tag['type'] == 'gbif_used') {
-			$links .= '<li>'. l($tag['tab_name'], 'mendeley/' . $tag['machine_name']) . '</li>';
-		}
-	}
-	$links .= '</ul>';
-	return $links;
 }
 
 /**

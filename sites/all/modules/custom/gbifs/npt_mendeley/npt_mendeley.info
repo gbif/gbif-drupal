@@ -1,10 +1,8 @@
 name = NPT Mendeley
 description = List professional publications of the GBIF Participant Node that is been associated with this Drupal site.
-version = 7.x-0.8
+version = 7.x-0.9
 package = GBIFS
 project = Nodes Portal Toolkit
 core = 7.x
 
-configure = admin/config/npt/mendeley_settings
-
-dependencies[] = npt_constants
+configure = admin/config/gbif/mendeley

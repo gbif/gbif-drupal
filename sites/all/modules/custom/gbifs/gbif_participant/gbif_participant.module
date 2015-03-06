@@ -130,6 +130,26 @@ function gbif_participant_library() {
 			),
 		)
 	);
+	$libraries['map-events'] = array(
+		'title' => 'Map events',
+		'js' => array(
+			$path . '/js/map-events.js' => array(
+				'type' => 'file',
+				'scope' => 'footer',
+				'weight' => 21,
+			)
+		),
+	);
+	$libraries['subscribe-map-events'] = array(
+		'title' => 'Subscribe map events',
+		'js' => array(
+			$path . '/js/subscribeMapEvents.js' => array(
+				'type' => 'file',
+				'scope' => 'footer',
+				'weight' => 22,
+			)
+		),
+	);
 	return $libraries;
 }
 
@@ -541,6 +561,11 @@ function gbif_participant_page_router($iso2, $chapter, $sub_chapter) {
 					$html = _gbif_participant_country_data($iso2);
 					$output = _gbif_participant_print_latest_datasets($iso2, $registry_json->key);
 					$html = array_merge($html, $output);
+
+					// Add JS libraries to support to provide view occurrence link.
+					drupal_add_library('gbif_participant', 'map-events');
+					drupal_add_library('gbif_participant', 'subscribe-map-events');
+
 					return theme('gbif_participant_summary', array(
 						'participantID' => $participantID,
 						'iso2' => $iso2,
@@ -583,6 +608,11 @@ function gbif_participant_page_router($iso2, $chapter, $sub_chapter) {
 						$contributed_by = _gp_country_repatriation($iso2, 'digest', 'about');
 						$html = array_merge($html, $contributed_by);
 						$html['trends'] = _gp_print_data_trends($iso2, 'about');
+
+						// Add JS libraries to support to provide view occurrence link.
+						drupal_add_library('gbif_participant', 'map-events');
+						drupal_add_library('gbif_participant', 'subscribe-map-events');
+
 						return theme('gbif_participant_about', array(
 							'participantID' => $participantID,
 							'iso2' => $iso2,
@@ -597,6 +627,11 @@ function gbif_participant_page_router($iso2, $chapter, $sub_chapter) {
 						$html = array();
 						$full_list = _gp_country_repatriation($iso2, 'full', 'from');
 						$html = array_merge($html, $full_list);
+
+						// Add JS libraries to support to provide view occurrence link.
+						drupal_add_library('gbif_participant', 'map-events');
+						drupal_add_library('gbif_participant', 'subscribe-map-events');
+
 						return theme('gp_about_countries', array(
 							'participantID' => $participantID,
 							'iso2' => $iso2,

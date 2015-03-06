@@ -1516,7 +1516,7 @@ function _gp_print_publications($iso2) {
 	$list_title = t('List of publications');
 
 	// Get mendeley json for the country.
-	$publications = json_decode(file_get_contents(file_build_uri('npt_mendeley/countries/' . $iso2 . '.json')), TRUE);
+	$publications = json_decode(file_get_contents(file_build_uri('gbif_mendeley/countries/' . $iso2 . '.json')), TRUE);
 	$count = count($publications);
 
 	if ($count > 0) {

@@ -17,8 +17,7 @@
     Drupal.behaviors.subscribeMapEvents = {
       attach: function (context, settings) {
         new GBIFMapListener().subscribe(function(id, searchUrl) {
-          $("#geoOccurrenceSearchAbout").attr("href", data_portal_base_url + "/occurrence/search?" +  searchUrl);
-          $("#geoOccurrenceSearchFrom").attr("href", data_portal_base_url + "/occurrence/search?" +  searchUrl);
+          $("#" + id + "-link").attr("href", data_portal_base_url + "/occurrence/search?" +  searchUrl);
         });
       }
     }

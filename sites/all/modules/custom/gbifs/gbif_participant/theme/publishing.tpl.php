@@ -20,7 +20,7 @@
 			<?php if ($html['count'] > 0): ?>
       <section id="data-from" class="col-xs-12 well well-lg well-margin-top clearfix"<?php print $attributes; ?>>
 				<div id="map-from" class="country-map">
-					<iframe id="mapByFrame" name="map" src="<?php print $env['gbif_api_base_url']; ?>/v1/map/index.html?type=PUBLISHING_COUNTRY&amp;key=<?php print $iso2; ?>" allowfullscreen="" height="100%" width="100%" frameborder="0"></iframe>
+					<iframe id="map-publishing" name="map-publishing" src="<?php print $env['gbif_api_base_url']; ?>/v1/map/index.html?type=PUBLISHING_COUNTRY&amp;key=<?php print $iso2; ?>" allowfullscreen="" height="100%" width="100%" frameborder="0"></iframe>
 				</div>
 				<div class="block-map-sidebar">
 					<div class="row">
@@ -33,7 +33,7 @@
 						</div>
 						<div class="content content-sidebar map-right col-xs-4">
 							<?php print $html['from']; ?>
-							<a id="geoOccurrenceSearchFrom">View records shown on the map</a>
+							<a id="map-publishing-link">View records shown on the map</a>
 						</div>
 					</div>
 				</div>

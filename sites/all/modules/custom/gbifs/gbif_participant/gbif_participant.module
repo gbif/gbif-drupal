@@ -379,6 +379,20 @@ function gbif_participant_preprocess_page(&$variables) {
 			}
 		}
 	}
+
+	// Add JS libraries to provide a link to "View occurrences on Map".
+	$args = arg();
+	if ($args[0] == 'country' && !isset($args[3])) {
+		switch ($args[2]) {
+			case 'about':
+			case 'summary':
+			case 'publishing':
+				drupal_add_library('gbif_participant', 'map-events');
+				drupal_add_library('gbif_participant', 'subscribe-map-events');
+				break;
+		}
+	}
+
 }
 
 /**
@@ -562,10 +576,6 @@ function gbif_participant_page_router($iso2, $chapter, $sub_chapter) {
 					$output = _gbif_participant_print_latest_datasets($iso2, $registry_json->key);
 					$html = array_merge($html, $output);
 
-					// Add JS libraries to support to provide view occurrence link.
-					drupal_add_library('gbif_participant', 'map-events');
-					drupal_add_library('gbif_participant', 'subscribe-map-events');
-
 					return theme('gbif_participant_summary', array(
 						'participantID' => $participantID,
 						'iso2' => $iso2,
@@ -609,10 +619,6 @@ function gbif_participant_page_router($iso2, $chapter, $sub_chapter) {
 						$html = array_merge($html, $contributed_by);
 						$html['trends'] = _gp_print_data_trends($iso2, 'about');
 
-						// Add JS libraries to support to provide view occurrence link.
-						drupal_add_library('gbif_participant', 'map-events');
-						drupal_add_library('gbif_participant', 'subscribe-map-events');
-
 						return theme('gbif_participant_about', array(
 							'participantID' => $participantID,
 							'iso2' => $iso2,
@@ -627,10 +633,6 @@ function gbif_participant_page_router($iso2, $chapter, $sub_chapter) {
 						$html = array();
 						$full_list = _gp_country_repatriation($iso2, 'full', 'from');
 						$html = array_merge($html, $full_list);
-
-						// Add JS libraries to support to provide view occurrence link.
-						drupal_add_library('gbif_participant', 'map-events');
-						drupal_add_library('gbif_participant', 'subscribe-map-events');
 
 						return theme('gp_about_countries', array(
 							'participantID' => $participantID,

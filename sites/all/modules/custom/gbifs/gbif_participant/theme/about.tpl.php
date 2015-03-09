@@ -6,7 +6,7 @@
 	<div class="row">
       <section id="data-about" class="col-xs-12 well well-lg well-margin-top clearfix"<?php print $attributes; ?>>
 				<div id="map-about" class="country-map">
-					<iframe id="mapAboutFrame" name="map" src="<?php print $env['gbif_api_base_url']; ?>/v1/map/index.html?type=COUNTRY&amp;key=<?php print $iso2; ?>" allowfullscreen="" height="100%" width="100%" frameborder="0"></iframe>
+					<iframe id="map-about" name="map-about" src="<?php print $env['gbif_api_base_url']; ?>/v1/map/index.html?type=COUNTRY&amp;key=<?php print $iso2; ?>" allowfullscreen="" height="100%" width="100%" frameborder="0"></iframe>
 				</div>
 				<div class="block-map-sidebar">
 					<div class="row">
@@ -19,7 +19,7 @@
 						</div>
 						<div class="content content-sidebar map-right col-xs-4">
 							<?php print $html['about']; ?>
-							<a id="geoOccurrenceSearchAbout">View records shown on the map</a>
+							<a id="map-about-link">View records shown on the map</a>
 						</div>
 					</div>
 				</div>

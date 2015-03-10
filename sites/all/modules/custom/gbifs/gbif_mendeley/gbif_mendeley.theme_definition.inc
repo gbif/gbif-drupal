@@ -96,7 +96,7 @@ function gbif_mendeley_default_tag_sets() {
 		'machine_name' => 'data_management',
 		'url' => 'data-management',
 		'type' => 'gbif_used',
-		'desc' => t('[to be revised] Publications about data management'),
+		'desc' => t('Peer-reviewed literature citing GBIF infrastructure and tools for data management'),
 		'tags' => array('GBIF_used', 'data_management'),
 		'weight' => 8,
 	);
@@ -106,7 +106,7 @@ function gbif_mendeley_default_tag_sets() {
 		'machine_name' => 'ecosystem_services',
 		'url' => 'ecosystem-services',
 		'type' => 'gbif_used',
-		'desc' => t('[to be revised] Publications about ecosystem services'),
+		'desc' => t('Peer-reviewed research using GBIF-mediated data to analyse the benefits that ecosystems provide to economies, livelihoods and human well-being'),
 		'tags' => array('GBIF_used', 'ecosystem_services'),
 		'tags_alt' => array(
 			array('GBIF_used', 'ecosystem_function'),
@@ -119,7 +119,7 @@ function gbif_mendeley_default_tag_sets() {
 		'machine_name' => 'phylogenetics',
 		'url' => 'phylogenetics',
 		'type' => 'gbif_used',
-		'desc' => t('[to be revised] Peer-reviewed publications on phylogenetics'),
+		'desc' => t('Peer-reviewed research that uses GBIF-mediated data and molecular sequencing data to study evolutionary relationships between species'),
 		'tags' => array('GBIF_used', 'phylogenetics'),
 		'tags_alt' => array(
 			array('GBIF_used', 'evolution')

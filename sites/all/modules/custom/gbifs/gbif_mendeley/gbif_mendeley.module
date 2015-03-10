@@ -528,8 +528,8 @@ function _mendeley_print_publications($documents, $machine_name) {
 	// Find the title and description for used in the page.
 	foreach ($tag_sets as $tag_set) {
 		if ($tag_set['machine_name'] == $machine_name) {
-			$output['title'] = $tag_set['name'];
-			$output['desc'] = $tag_set['desc'];
+			$output['title'] = $tag_set['tab_name'];
+			$output['desc'] = $tag_set['desc'] . '.';
 			$output['count_header'] = format_plural($count,
 				'1 publication for @theme',
 				'!count publications for @theme',

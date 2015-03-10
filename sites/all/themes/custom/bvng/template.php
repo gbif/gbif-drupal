@@ -766,6 +766,8 @@ function bvng_feed_ical_icon($variables) {
  * highlighted region.
  *
  * The description is retrieved from the description of the menu item.
+ *
+ * @todo Perhaps title and slogan should be common fields in content types.
  */
 function _bvng_get_title_data($node_count = NULL, $user = NULL, $req_path = NULL, $node = NULL) {
   $status = drupal_get_http_header("status");
@@ -888,6 +890,23 @@ function _bvng_get_title_data($node_count = NULL, $user = NULL, $req_path = NULL
 				'name' => t('Resources'),
 				'description' => t('Library of documents, tools and and other information to support the GBIF community'),
 			);
+		}
+		// For individual "page" type of pages.
+		elseif (in_array($node->type, array('page'))) {
+			switch ($req_path) {
+				case 'node/2998':
+					$title = array(
+						'name' => t('Thank you!'),
+						'description' => t('Successfully subscribed'),
+					);
+					break;
+				case 'node/82102':
+					$title = array(
+						'name' => t('Thank you!'),
+						'description' => t('Please verify your email address'),
+					);
+					break;
+			}
 		}
 	}
 	elseif (strpos(current_path(), 'taxonomy/term') !== FALSE) {

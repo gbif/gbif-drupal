@@ -30,6 +30,15 @@
  *       hence we can monitor the subscription from within Drupal, and use jangomail
  *       for the delivery.
  */
+
+// Prepare JangoMail redirection on successful signing up.
+//http://www.jangomail.com/OptIn.aspx?RedirectURLSuccess=http%3A%2F%2Fwww.gbif.org%2Fpage%2F2998
+$redirection_on_success = url('http://www.jangomail.com/OptIn.aspx', array(
+	'query' => array(
+		'RedirectURLSuccess' => 'http://www.gbif.org/newsletter-subscription/confirmation',
+	)
+));
+
 ?>
 <div class="container well well-lg well-margin-bottom">
   <div class="row news-summary">
@@ -93,7 +102,7 @@
         <a id="signup"></a>
         <h4>GBITS NEWSLETTER</h4>
         <p>Download the latest issue of our bimonthly newsletter <a href="/newsroom/newsletter">here</a> or keep up to date with the latest GBIF news by signing up to GBits</p>
-        <form id="subscribe-newsletter" method="post" action="http://www.jangomail.com/OptIn.aspx?RedirectURLSuccess=http%3A%2F%2Fwww.gbif.org%2Fpage%2F2998">
+        <form id="subscribe-newsletter" method="post" action="<?php print $redirection_on_success; ?>">
           	<input name="optinform$txtUniqueID" id="optinform_txtUniqueID" value="6f1fe36b-52ee-4ac3-a83f-98f800f3c16c" type="hidden">
 		        <input name="optinform$Field0" id="optinform_Field0" type="text" placeholder="Enter your email (required)" class="form-control">
 		        <input name="optinform$Field5649548" id="optinform_Field5649548" type="text" placeholder="First Name (required)" class="form-control">

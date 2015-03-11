@@ -14,17 +14,11 @@
 		}
 		$year = isset($p['year']) ? ', ' . $p['year'] . '.' : NULL;
 
-		$journal = '';
-
-		if (isset($p['source']) && isset($p['volume']) && isset($p['issue']) && isset($p['pages'])) {
-			$journal .= (!empty($p['source'])) ? '<em>' . $p['source'] . '</em>' : '';
-			$journal .= (!empty($p['volume'])) ? ' ' . $p['volume'] : '';
-			$journal .= (!empty($p['issue'])) ? '(' . $p['issue'] . ')' : '';
-			$journal .= (!empty($p['pages'])) ? ' ' . $p['pages'] . '.' : '. ';
-		}
-		else {
-			$journal .= '(' . t('Citation information pending.') . ')';
-		}
+		$journal = (!empty($p['source'])) ? '<em>' . $p['source'] . '</em>' : '';
+		$journal .= (!empty($p['volume'])) ? ' ' . $p['volume'] : '';
+		$journal .= (!empty($p['issue'])) ? '(' . $p['issue'] . ')' : '';
+		$journal .= (!empty($p['pages'])) ? ' ' . $p['pages'] : '';
+		$journal .= (!empty($journal)) ? '.' : '';
 
 		// Keywords
 		if (count($p['keywords']) > 0) {

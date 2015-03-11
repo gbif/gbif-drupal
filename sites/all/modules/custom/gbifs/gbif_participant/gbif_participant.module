@@ -350,7 +350,10 @@ function gbif_participant_preprocess_page(&$variables) {
 
 		// Preprocess for the menu tabs.
 		if (isset($variables['page']['menu']['menu_block_gbif_navigation_country_page'])) {
+
+			// Load metrics JS for about/publishing pages.
 			drupal_add_library('gbif_participant', 'metrics');
+
 			foreach ($variables['page']['menu']['menu_block_gbif_navigation_country_page']['#content'] as $k => $tab) {
 				if (gettype($k) == 'integer') {
 					$path = explode('/', $tab['#href']);

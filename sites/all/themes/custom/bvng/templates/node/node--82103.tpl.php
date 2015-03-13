@@ -133,7 +133,7 @@
             <?php
               print $sidebar;
             ?>
-						<p>If you wish to receive the latest newsletter when it's out, please <a href="/newsroom/summary#sign-up">subscribe here</a>.</p>
+						<p>If you wish to receive the latest newsletter, please <a href="/newsroom/summary#sign-up">subscribe here</a>.</p>
           </div>
         </div>
       </article>

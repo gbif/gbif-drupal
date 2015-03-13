@@ -99,7 +99,7 @@ $redirection_on_success = url('http://www.jangomail.com/OptIn.aspx', array(
     </div>
     <div class="sidebar-signup col-xs-3">
       <div class="subscribe">
-        <a id="signup"></a>
+        <a id="signup" name="sign-up"></a>
         <h4>GBITS NEWSLETTER</h4>
         <p>Download the latest issue of our bimonthly newsletter <a href="/newsroom/newsletter">here</a> or keep up to date with the latest GBIF news by signing up to GBits</p>
         <form id="subscribe-newsletter" method="post" action="<?php print $redirection_on_success; ?>">

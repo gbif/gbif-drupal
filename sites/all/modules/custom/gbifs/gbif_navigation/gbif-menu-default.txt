@@ -50,7 +50,7 @@ Community {"url":"<front>"}
 -Participation {"url":"participation\/summary", "description": "Being part of the GBIF community"}
 --Summary {"url":"participation\/summary"}
 --Membership {"url":"participation\/membership"}
---Participant list {"url":"participation\/list"}
+--Participant list {"url":"participation\/participant-list"}
 --How to join {"url":"participation\/howtojoin"}
 -Capacity enhancement {"url":"capacityenhancement\/summary", "description": "Sharing expertise, experience and technology around the GBIF community"}
 --Summary {"url":"capacityenhancement\/summary"}

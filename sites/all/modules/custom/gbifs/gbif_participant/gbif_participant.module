@@ -28,7 +28,7 @@ function gbif_participant_menu() {
 		'type' => MENU_NORMAL_ITEM,
 		'file' => 'gbif_participant.admin.inc',
 	);
-	$items['participation/list'] = array(
+	$items['participation/participant-list'] = array(
 		'title' => t('Participant List'),
 		'description' => 'List of GBIF Participant.',
 		'page callback' => '_gp_participant_list_page',
@@ -1489,7 +1489,7 @@ function _gp_participant_list_page() {
 	$types = gbif_participant_membership_types();
 	$lists = array();
 	foreach ($types as &$type) {
-		$type['url'] = 'participant/list';
+		$type['url'] = 'participation/participant-list';
 		$lists[] = l($type['title'], $type['url'], array('fragment' =>  $type['key']));
 		$participants = _gbif_participant_membership_query($type['title']);
 		$count = count($participants);

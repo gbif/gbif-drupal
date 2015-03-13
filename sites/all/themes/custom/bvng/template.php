@@ -723,7 +723,7 @@ function _bvng_well_types($req_path, $system_main) {
 			return 'none';
 		}
   }
-	elseif (drupal_match_path($req_path, 'country*') || drupal_match_path($req_path, 'analytics*') || drupal_match_path($req_path, 'participation/list') || drupal_match_path($req_path, 'mendeley*')) {
+	elseif (drupal_match_path($req_path, 'country*') || drupal_match_path($req_path, 'analytics*') || drupal_match_path($req_path, 'participation/participant-list') || drupal_match_path($req_path, 'mendeley*')) {
 		if ($status == '404 Not Found') {
 			return 'normal';
 		}

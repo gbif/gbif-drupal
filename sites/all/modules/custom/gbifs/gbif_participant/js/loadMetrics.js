@@ -28,7 +28,7 @@
           function incrementCount(target, value) {
             var currentCount = Number($(target).val()) + Number(value);
             $(target).html(currentCount);
-            console.log(currentCount);
+            //console.log(currentCount);
           }
 
           function _refresh(baseAddress, target, nest) {

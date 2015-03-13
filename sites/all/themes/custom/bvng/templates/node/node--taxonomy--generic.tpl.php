@@ -86,7 +86,7 @@
       <h2<?php print $title_attributes; ?>><a href="<?php print $node_url; ?>"><?php print $title; ?></a></h2>
     <?php endif; ?>
 
-    <?php if ($display_submitted && user_is_logged_in()): ?>
+    <?php if (user_is_logged_in()): ?>
     <div class="submitted">
       <?php print $submitted; ?>
   		<?php if (!empty($tabs)): ?>

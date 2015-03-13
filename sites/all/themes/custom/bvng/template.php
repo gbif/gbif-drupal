@@ -487,7 +487,7 @@ function bvng_preprocess_node(&$variables) {
   global $user;
 
   // Bring the local tasks tab into node template.
-  // @todo To investigate that this doesn't work for data use.
+  // @todo To investigate why this doesn't work for data use.
   $variables['tabs'] = menu_local_tabs();
 
   /* Determine what local task to show according to the role.

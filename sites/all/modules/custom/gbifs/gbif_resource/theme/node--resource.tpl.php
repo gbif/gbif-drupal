@@ -20,7 +20,7 @@
 			<div class="row">
 				<div class="content col-xs-8">
 
-					<?php if ($display_submitted && user_is_logged_in()): ?>
+					<?php if (user_is_logged_in()): ?>
 						<div class="submitted">
 							<?php print $submitted; ?>
 							<?php if (!empty($tabs)): ?>

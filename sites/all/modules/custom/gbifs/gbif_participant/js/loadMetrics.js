@@ -20,7 +20,7 @@
           this.each(function() {
             var baseAddress = $(this).attr("data-address");
             //console.debug(baseAddress);
-            $(this).find('td.total div').each(function() {
+            $(this).find('td.totalgeo div').each(function() {
               _refresh(baseAddress, $(this), true);
             });
           });
@@ -50,41 +50,48 @@
             }
             var ws = baseUrl + 'occurrence/count' + address;
 
-            // This is where the call is made and the result get written into HTML.
-            // We need to deal with the call for OBSERVATION count separately as per POR-2702.
-            // Hence a conditional clause and duplicated statements.
-            if ($target.closest("td").attr("data-bor") !== null && $target.closest("td").attr("data-bor") === "OBSERVATION") {
-              var params = $.parseParams(ws);
-              var observationTypes = ["OBSERVATION", "HUMAN_OBSERVATION", "MACHINE_OBSERVATION"];
-              for (var i in observationTypes) {
-                params.basisOfRecord = observationTypes[i];
-                var query = $.constructQuery(params);
-                $.getJSON(baseUrl + "occurrence/count" + query + '&callback=?', function (data) {
-                  incrementCount(target, data);
+            $.getJSON(ws + '&callback=?', function (data) {
+
+              // We need to add human observation and machine one to existing OBSERVATION count. See POR-2702.
+              if ($target.closest("td").attr("data-bor") === "OBSERVATION") {
+                var params = $.parseParams(ws);
+                var observationTypes = ["OBSERVATION", "HUMAN_OBSERVATION", "MACHINE_OBSERVATION"];
+
+                for (var i in observationTypes) {
+                  params.basisOfRecord = observationTypes[i];
+                  var query = $.constructQuery(params);
+                  $.getJSON(baseUrl + "occurrence/count" + query + '&callback=?', function (data) {
+                    incrementCount($target, data);
+                  });
+                }
+              }
+              else {
+                $(target).html(data);
+              }
+
+              if (nest && data != 0) {
+                // load the rest of the row
+                $target.closest('tr').find('div').each(function () {
+                  _refresh(baseAddress, $(this), false);
                 });
               }
-            }
-            else {
-              $.getJSON(ws + '&callback=?', function (data) {
-                $(target).html(data);
-                if (nest && data != 0) {
-                  // load the rest of the row
-                  $target.closest('tr').find('div').each(function() {
-                    _refresh(baseAddress, $(this), false);
-                  });
-                }
-                else if (nest) {
-                  // set the rest of the row to 0
-                  $target.closest('tr').find('div').each(function() {
-                    $(this).html("0");
-                  });
-                }
-              });
+              else if (nest) {
+                // set the rest of the row to 0
+                $target.closest('tr').find('div').each(function () {
+                  $(this).html("0");
+                });
+              }
+            });
+
+            function incrementCount(target, value) {
+              // It could be that the innerHTML value hasn't been set yet. If so, we assume zero.
+              if (target.html() === "-") target.html(0);
+              target.html(Number(target.html()) + Number(value));
             }
           }
-        };
-      }
+      };
     }
+  }
 
     Drupal.behaviors.loadMetrics = {
       attach: function (context, settings) {

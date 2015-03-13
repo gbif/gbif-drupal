@@ -33,10 +33,10 @@
 						</div>
 						<div class="content content-sidebar map-right col-xs-4">
 							<?php print $html['from']; ?>
-							<a id="map-publishing-link">View records shown on the map</a>
 						</div>
 					</div>
 				</div>
+        <a id="map-publishing-link">View records shown on the map</a>
       </section>
 			<?php endif; ?>
 

@@ -9,6 +9,8 @@
  * @see https://api.drupal.org/api/views/views.module/function/views_embed_view/7
  */
 
+include_once 'gbif_pages.features.inc';
+
 /**
  * Implements hook_menu_alter().
  */
@@ -273,4 +275,23 @@ function gbif_pages_image_default_styles() {
 	);
 
 	return $styles;
+}
+
+/**
+ * Manually set the highlighted_title here instead of in the theme. This reduces
+ * dependency on the theme.
+ * @param $page
+ */
+function gbif_pages_page_build(&$page) {
+	$status = drupal_get_http_header("status");
+	$jobs_adverts = array('node/82115', 'node/82116', 'node/82117');
+	if ($status == '404 Not Found') {
+		// Do nothing.
+	}
+	elseif (in_array(current_path(), $jobs_adverts)) {
+		$page['highlighted_title'] = array(
+			'name' => t('GBIF Newsroom'),
+			'description' => t('News and events from around the GBIF community'),
+		);
+	}
 }

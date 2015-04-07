@@ -4,3 +4,9 @@ core = 7.x
 version = 7.x-0.1
 package = GBIFS
 project = GBIF Portal
+
+dependencies[] = context
+dependencies[] = ctools
+features[context][] = jobs_menu
+features[ctools][] = context:context:3
+features[features_api][] = api:2

@@ -415,4 +415,6 @@ function gbif_navigation_menutab_visibility() {
 	else {
 		return TRUE;
 	}
+
+	return TRUE;
 }

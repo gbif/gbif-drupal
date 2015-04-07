@@ -144,6 +144,11 @@ function bvng_preprocess_page(&$variables) {
 				break;
 			case 'generictemplate':
         if (drupal_match_path($req_path, 'node/241')) $altered_path = 'user';
+
+				$jobs_adverts = array('node/82115', 'node/82116', 'node/82117');
+				if (in_array($req_path, $jobs_adverts)) {
+					$altered_path = drupal_get_normal_path('newsroom/opportunities'); // node/242
+				}
 			  break;
 		}
 	}
@@ -154,7 +159,7 @@ function bvng_preprocess_page(&$variables) {
 		$altered_path = drupal_get_normal_path('newsroom/uses'); // taxonomy/term/567
 	}
 	elseif (strpos($req_path, 'resources') !== FALSE) {
-		$altered_path = drupal_get_normal_path('resources'); // taxonomy/term/764
+		$altered_path = drupal_get_normal_path('resources');
 	}
 	elseif (drupal_match_path($req_path, 'user') || drupal_match_path($req_path, 'user/*')) {
 		$altered_path = 'user';

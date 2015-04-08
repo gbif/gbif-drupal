@@ -1,10 +1,9 @@
 name = GBIF Pages
 description = Control how contents of some specific pages are prepared.
 core = 7.x
-version = 7.x-0.1
 package = GBIFS
+version = 7.x-0.2
 project = GBIF Portal
-
 dependencies[] = context
 dependencies[] = ctools
 features[context][] = jobs_menu

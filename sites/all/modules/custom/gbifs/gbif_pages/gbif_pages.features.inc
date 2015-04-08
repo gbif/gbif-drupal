@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * gbif_page.features.inc
+ * gbif_pages.features.inc
  */
 
 /**
  * Implements hook_ctools_plugin_api().
  */
-function gbif_page_ctools_plugin_api($module = NULL, $api = NULL) {
+function gbif_pages_ctools_plugin_api($module = NULL, $api = NULL) {
   if ($module == "context" && $api == "context") {
     return array("version" => "3");
   }

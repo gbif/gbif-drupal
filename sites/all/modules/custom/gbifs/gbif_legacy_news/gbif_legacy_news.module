@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the GBIF Legacy News feature.
+ */
+
+include_once 'gbif_legacy_news.features.inc';

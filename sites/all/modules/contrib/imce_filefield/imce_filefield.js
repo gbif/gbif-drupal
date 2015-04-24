@@ -19,7 +19,7 @@ Drupal.behaviors.imce_filefield = {attach: function(context, settings) {
       });
       return;
     }
-    if ($button.is('.imce-filefield-processed')) return;
+    if ($button.hasClass('imce-filefield-processed')) return;
     $button.addClass('imce-filefield-processed');
     // Check and run queue.
     if (imce_filefield.runQueue(fieldID)) return;

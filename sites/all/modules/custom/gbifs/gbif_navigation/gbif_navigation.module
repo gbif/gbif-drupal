@@ -418,3 +418,33 @@ function gbif_navigation_menutab_visibility() {
 
 	return TRUE;
 }
+
+/**
+ * Definition of default menus.
+ */
+function _gbif_navigation_default_menus() {
+	$t = get_t();
+	$menus = array(
+		array(
+			'menu_name' => 'gbif-menu',
+			'title' => $t('GBIF Menu'),
+			'description' => $t('The <em>GBIF Menu</em> contains links for navigation and menu tabs that are specific to GBIF Portal.'),
+		),
+		array(
+			'menu_name' => 'footer-links',
+			'title' => $t('Footer links'),
+			'description' => $t('The <em>Footer Links</em> contains links for displaying in footer region that are specific to GBIF Portal.'),
+		),
+		array(
+			'menu_name' => 'country-page',
+			'title' => $t('Country page'),
+			'description' => $t('The <em>Country Page</em> contains links for displaying menu tabs for country pages.'),
+		),
+		array(
+			'menu_name' => 'analytics',
+			'title' => $t('Analytics'),
+			'description' => $t('The <em>Analytics Menu</em> contains links for menu tabs that are shown when visiting analytics pages.'),
+		),
+	);
+	return $menus;
+}

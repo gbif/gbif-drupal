@@ -8,7 +8,7 @@ Data {"url":"<front>"}
 -Publishing data {"url":"publishingdata\/summary", "description": "How and why you should make biodiversity datasets accessible through GBIF"}
 --Summary {"url":"publishingdata\/summary", "description": "How and why you should make biodiversity datasets accessible through GBIF"}
 --Mobilizing data {"url":"publishingdata\/mobilizingdata"}
---How to publish {"url":"publishingdata\/howtopublish"}
+--How to publish {"url":"publishing-data\/how-to-publish"}
 --Data papers {"url":"publishingdata\/datapapers"}
 -Using Data {"url":"usingdata\/summary", "description": "How data accessed through GBIF are used in research and policy"}
 --Summary {"url":"usingdata\/summary", "description": "How data accessed through GBIF are used in research and policy"}
@@ -19,7 +19,7 @@ Data {"url":"<front>"}
 -Infrastructure {"url":"infrastructure\/summary", "description": "How GBIF works as a global informatics infrastructure", "non_drupal_url":true}
 --Summary {"url":"infrastructure\/summary", "non_drupal_url":true}
 --Registry {"url":"infrastructure\/registry", "non_drupal_url":true}
---Occurences {"url":"infrastructure\/occurrences", "non_drupal_url":true}
+--Occurrences {"url":"infrastructure\/occurrences", "non_drupal_url":true}
 --Data processing {"url":"infrastructure\/data-processing","hidden":true, "non_drupal_url":true}
 --Tools {"url":"infrastructure\/tools", "non_drupal_url":true}
 --Species {"url":"<front>","hidden":true, "non_drupal_url":true}

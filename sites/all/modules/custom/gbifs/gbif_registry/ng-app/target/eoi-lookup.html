@@ -1,0 +1,41 @@
+<!-- eoi-lookup.html -->
+
+<section id="step_lookup">
+  <h3>Organization lookup</h3>
+  <p>First, please see if your organization is already registered as a GBIF publisher.</p>
+  <div angucomplete-alt
+    id="organizationLookup"
+    placeholder="Organization lookup"
+    pause="100"
+    selected-object="eoiCtrl.organizationSelected"
+    local-data="eoiCtrl.organizations"
+    search-fields="title"
+    title-field="title"
+    minlength="1"
+    clear-selected="true"
+    input-class="form-control form-control-small"
+    match-class="highlight">
+  </div>
+  
+  <div id="lookup-result" ng-show="eoiCtrl.selectedOrg.selected">
+    <p>
+      You've selected:<br/>
+      <a href="{{eoiCtrl.selectedOrg.url}}" target="_blank"><strong ng-bind="eoiCtrl.selectedOrg.title"></strong></a><br ng-show="eoiCtrl.selectedOrg.contact"/>
+      <span ng-show="eoiCtrl.selectedOrg.contact">Contact: <a href="mailto:{{eoiCtrl.selectedOrg.contact.email}}">{{eoiCtrl.selectedOrg.contact.name}}</a></span><br ng-show="eoiCtrl.selectedOrg.location"/>
+      <span ng-bind="eoiCtrl.selectedOrg.location"></span><br ng-show="eoiCtrl.selectedOrg.endorsingNode"/>
+      Endorsed by <a target="_blank" href="{{eoiCtrl.selectedOrg.endorsingNode.url}}" ng-bind="eoiCtrl.selectedOrg.endorsingNode.title"></a>
+    </p>
+
+    <h3>Is this your affiliating organization?</h3>
+    <p>
+      If the information above belongs to your organization or one with which you're affiliated, you should approach the contact for practical knowledge of data publishing. You do not need to complete the rest of this form.
+    </p>
+    <p>
+      If you have not found your organization in our system, chances are that it is not yet endorsed and registered as a GBIF publisher. Please continue to the next step, and we will guide you through the form.
+    </p>
+  </div>
+  <div ng-show="eoiForm.$dirty">
+    <a ui-sref="form.contacts" class="btn btn-primary next-step">I cannot find my organization. Next step <span class="glyphicon glyphicon-arrow-right"></span></a>
+  </div>
+
+</section>

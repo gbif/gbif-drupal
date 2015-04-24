@@ -1,0 +1,188 @@
+<!-- eoi-contacts.html -->
+
+<section id="step_contacts">
+    <p class="lead">
+      Please fill out the form as fully and completely as possible. Doing so will greatly improve GBIF's efficiency in reviewing your registration and endorsement request.
+    </p>
+    <h3>Contact</h3>
+    <div class="form-group">
+      <label for="contactTitle">Title</label> <span class="highlight" ng-show="eoiForm.ctitle.$invalid">*</span>
+      <select class="form-control contact-title" ng-model="eoiCtrl.formData.contact.title" ng-options="item.value as item.title for item in eoiCtrl.titleItems" id="contactTitle" name="ctitle" required></select>
+    </div>
+    <div class="form-group">
+      <label for="contactFirstName">First name</label> <span class="highlight" ng-show="eoiForm.cfname.$invalid">*</span>
+      <input type="text" class="form-control contact-name" ng-model="eoiCtrl.formData.contact.firstName" id="contactFirstName" name="cfname" required>
+    </div>
+    <div class="form-group">
+      <label for="contactLastName">Last name</label> <span class="highlight" ng-show="eoiForm.clname.$invalid">*</span>
+      <input type="text" class="form-control contact-name" ng-model="eoiCtrl.formData.contact.lastName" id="contactLastName" name="clname" required>
+    </div>
+    <div class="form-group">
+      <label for="contactEmail">Email</label> <span class="highlight" ng-show="eoiForm.cemail.$invalid">*</span>
+      <input type="email" class="form-control contact-email" ng-model="eoiCtrl.formData.contact.email"  id="contactEmail" name="cemail" required>
+      <div ng-show="eoiForm.cemail.$dirty">
+        <span ng-show="eoiForm.cemail.$invalid">Incorrect email address</span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="contactPhone">Phone</label> <span class="highlight" ng-show="eoiForm.cphone.$invalid">*</span>
+      <input type="text" class="form-control contact-phone" ng-model="eoiCtrl.formData.contact.phone" placeholder="+[country code]-[phone number]" id="contactPhone" name="cphone" ng-pattern="/\+\d{1,3}-\d+/" required>
+      <span ng-show="eoiForm.cphone.$invalid">Please use "+" and "-" to indicate country code</span>
+    </div>
+    <h3>Organizational details</h3>
+    <div class="form-group">
+      <label for="orgTitle">Organization name</label> <span class="highlight" ng-show="eoiForm.otitle.$invalid">*</span>
+      <input type="text" class="form-control org-title" ng-model="eoiCtrl.formData.org.title" id="orgTitle" name="otitle" required>
+    </div>
+    <div class="form-group">
+      <label for="orgUrl">URL</label>
+      <input type="url" class="form-control org-url" ng-model="eoiCtrl.formData.org.url" name="ourl" id="orgUrl">
+      <div ng-show="eoiForm.ourl.$dirty">
+        <span ng-show="eoiForm.ourl.$invalid">Incorrect URL</span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="orgAddress">Address</label> <span class="highlight" ng-show="eoiForm.oaddress.$invalid">*</span>
+      <input type="text" class="form-control org-address" ng-model="eoiCtrl.formData.org.address" name="oaddress" id="orgAddress" required>
+    </div>
+    <div class="form-inline">
+      <div class="form-group">
+        <label for="orgCity">City</label> <span class="highlight" ng-show="eoiForm.ocity.$invalid">*</span>
+        <input type="text" class="form-control org-city" ng-model="eoiCtrl.formData.org.city" id="orgCity" name="ocity" required>
+      </div>
+      <div class="form-group">
+        <label for="orgProvince">Province</label>
+        <input type="text" class="form-control org-province" ng-model="eoiCtrl.formData.org.province" name="oprovince" id="orgProvince">
+      </div>
+      <div class="form-group">
+        <label for="orgZip">Postal Code</label> <span class="highlight" ng-show="eoiForm.ozip.$invalid">*</span>
+        <input type="text" class="form-control org-zip" ng-model="eoiCtrl.formData.org.zip" id="orgZip" name="ozip" required>
+      </div>
+    </div>
+    <br/>
+    <div class="form-group">
+      <label for="countryLookup">Country</label> <span class="highlight" ng-hide="eoiCtrl.formData.org.countrySelected">*</span>
+      <div angucomplete-alt
+        id="countryLookup"
+        placeholder="Country lookup"
+        pause="100"
+        selected-object="eoiCtrl.countrySelected"
+        initial-value="{{eoiCtrl.formData.org.country.title}}"
+        local-data="eoiCtrl.countries"
+        search-fields="title"
+        title-field="title"
+        minlength="2"
+        input-class="form-control org-country"
+        match-class="highlight">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="isIntlOrgYes">Is your institution an international organization?</label>
+      <input type="radio" id="isIntlOrgYes" name="isIntlOrg" ng-model="eoiCtrl.formData.org.isIntlOrg" value="yes" ng-change="eoiCtrl.isIntlOrg('yes')" required> Yes
+      <input type="radio" id="isIntlOrgNo" name="isIntlOrg" ng-model="eoiCtrl.formData.org.isIntlOrg" value="no" ng-change="eoiCtrl.isIntlOrg('no')"> No
+      <span ng-show="eoiForm.isIntOrg.$error.required">Incorrect URL</span>
+    </div>
+    <div class="form-group">
+      <label for="orgDesc">Description</label> <span class="highlight" ng-show="eoiForm.odesc.$invalid">*</span>
+      <textarea class="form-control org-desc" ng-model="eoiCtrl.formData.org.desc" name="odesc" id="orgDesc" required></textarea>
+      <p>Briefly describe the scope of your institution/organization in relation to GBIF's mission (e.g. collection holdings, research focus, biodiversity information management, etc.). Upon receiving endorsement, this description will appear on your publisher page (<a href="http://www.gbif.org/publisher/7a646477-bd22-4832-902c-19d9671f3ab1">example</a>).</p>
+    </div>
+    <div class="form-group">
+      <label for="example-file">If available, please upload an example of your records from your dataset so that the endorser can review and understand the nature of your data.</label>
+      <button id="example-file" class="btn btn-default" ngf-select ng-model="eoiCtrl.exampleFiles">Upload example</button> (max. 8MB)
+
+      <!-- beginning of file handling -->
+      <ul style="clear:both" ng-show="eoiCtrl.exampleFiles.length > 0" class="response">
+        <li class="sel-file" ng-repeat="f in eoiCtrl.exampleFiles">
+          <img ng-show="f.dataUrl" ng-src="{{f.dataUrl}}" class="thumb">
+				  <span class="progress" ng-show="f.progress >= 0"><div style="width:{{f.progress}}%">{{f.progress}}%</div></span>
+          <button class="button" ng-click="f.upload.abort();f.upload.aborted=true" ng-show="f.upload != null && f.progress < 100 && !f.upload.aborted">Abort</button>
+          {{f.name}} - size: {{f.size}}B - type: {{f.type}} <br/><span class="{{f.class}}">{{f.serverResponse}}</span>
+          <a ng-show="f.result" href="javascript:void(0)" ng-click="f.showDetail = !f.showDetail">details</a>
+          <div ng-show="f.showDetail">
+            <br/>
+            <div data-ng-show="f.result.result == null">{{f.result}}</div>
+            <ul>
+              <li ng-repeat="item in f.result.result">
+                <div data-ng-show="item.name">file name: {{item.name}}</div>
+                <div data-ng-show="item.fieldName">name: {{item.fieldName}}</div>
+                <div data-ng-show="item.size">size on the serve: {{item.size}}</div>
+                <div data-ng-show="item.value">value: {{item.value}}</div>
+              </li>
+            </ul>
+            <div data-ng-show="f.result.requestHeaders" class="reqh">request headers: {{f.result.requestHeaders}}</div>
+          </div>
+        </li>
+      </ul>
+      <!-- end of file handling -->
+
+    </div>
+    <div class="form-group">
+      <p>In our experience, it is helpful to have at least two contacts for any data publisher. We encourage submitters to identify at least one additional administrative or technical contact below.</p>
+      <label for="isAdminContactYes">Are you the administrative contact?</label>
+      <input type="radio" id="isAdminContactYes" name="isAdminContact" ng-model="eoiCtrl.formData.org.isAdminContact" value="yes"> Yes
+      <input type="radio" id="isAdminContactNo" name="isAdminContact" ng-model="eoiCtrl.formData.org.isAdminContact" value="no"> No
+      <div ng-show="eoiCtrl.formData.org.isAdminContact=='no'">
+        <p>Please provide the administrative contact which will be the personnel for general affairs.</p>
+        <div class="form-group">
+          <label for="adminContactTitle">Title</label>
+          <select class="form-control contact-title" ng-model="eoiCtrl.formData.org.adminContact.title" ng-options="item.value as item.title for item in eoiCtrl.titleItems" id="adminContactTitle" name="actitle"></select>
+        </div>
+        <div class="form-group">
+          <label for="adminContactFirstName">First name</label>
+          <input type="text" class="form-control contact-name" ng-model="eoiCtrl.formData.org.adminContact.firstName" id="adminContactFirstName">
+        </div>
+        <div class="form-group">
+          <label for="adminContactLastName">Last name</label>
+          <input type="text" class="form-control contact-name" ng-model="eoiCtrl.formData.org.adminContact.lastName" id="adminContactLastName">
+        </div>
+        <div class="form-group">
+          <label for="adminContactEmail">Email</label>
+          <input type="email" class="form-control contact-email" ng-model="eoiCtrl.formData.org.adminContact.email" id="adminContactEmail" name="acemail">
+          <div ng-show="eoiForm.acemail.$dirty">
+            <span ng-show="eoiForm.acemail.$invalid">Incorrect email address</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="adminContactPhone">Phone</label>
+          <input type="text" class="form-control contact-phone" ng-model="eoiCtrl.formData.org.adminContact.phone" placeholder="+[country code]-[phone number]" id="adminContactPhone" name="acphone" ng-pattern="/\+\d{1,3}-\d+/">
+          <span ng-show="eoiForm.acphone.$invalid">Please use "+" and "-" to indicate country code</span>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="isTechContactYes">Are you the technical contact?</label>
+      <input type="radio" id="isTechContactYes" name="isTechContact" ng-model="eoiCtrl.formData.org.isTechContact" value="yes"> Yes
+      <input type="radio" id="isTechContactNo" name="isTechContact" ng-model="eoiCtrl.formData.org.isTechContact" value="no"> No
+      <div ng-show="eoiCtrl.formData.org.isTechContact=='no'">
+        <p>Please provide the technical contact which will be the personnel for technical or data issues.</p>
+        <div class="form-group">
+          <label for="techContactTitle">Title</label>
+          <select class="form-control contact-title" ng-model="eoiCtrl.formData.org.techContact.title" ng-options="item.value as item.title for item in eoiCtrl.titleItems" id="techContactTitle" name="tctitle"></select>
+        </div>
+        <div class="form-group">
+          <label for="techContactFirstName">First name</label>
+          <input type="text" class="form-control contact-name" ng-model="eoiCtrl.formData.org.techContact.firstName" id="techContactFirstName">
+        </div>
+        <div class="form-group">
+          <label for="techContactLastName">Last name</label>
+          <input type="text" class="form-control contact-name" ng-model="eoiCtrl.formData.org.techContact.lastName" id="techContactLastName">
+        </div>
+        <div class="form-group">
+          <label for="techContactEmail">Email</label>
+          <input type="email" class="form-control contact-email" ng-model="eoiCtrl.formData.org.techContact.email"  id="techContactEmail" name="tcemail">
+          <div ng-show="eoiForm.tcemail.$dirty">
+            <span ng-show="eoiForm.tcemail.$invalid">Incorrect email address</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="techContactPhone">Phone</label>
+          <input type="text" class="form-control contact-phone" ng-model="eoiCtrl.formData.org.techContact.phone" placeholder="+[country code]-[phone number]" id="techContactPhone" name="tcphone" ng-pattern="/\+\d{1,3}-\d+/">
+          <span ng-show="eoiForm.tcphone.$invalid">Please use "+" and "-" to indicate country code</span>
+        </div>
+      </div>
+    </div>
+    <div class="bottom-button">
+      <a ui-sref="form.endorsement" class="btn btn-primary next-step" ng-disabled="eoiCtrl.contactValidate(eoiForm)">Next step <span class="glyphicon glyphicon-arrow-right"></span></a><span class="hint" ng-show="eoiCtrl.contactValidate(eoiForm)">This button will be activated once all required fields are provided.</span>
+    </div>
+</section>

@@ -169,3 +169,11 @@ function gbif_tweaks_theme_control() {
 	);
 	drupal_write_record('themekey_properties', $themekey);
 }
+
+/**
+ * Mime mail settings for use in gbif_registry module.
+ */
+function gbif_tweaks_update_7100(&$sandbox) {
+  variable_set('mimemail_format', 'plain_text');
+  variable_set('mimemail_textonly', '1');
+}

@@ -153,7 +153,7 @@ function gbif_event_preprocess_page(&$variables) {
 					if ($tab['#href'] == $highlighted_path) {
 						// make it active
 						array_push($variables['page']['menu']['menu_block_gbif_navigation_menu_tabs']['#content'][$k]['#attributes']['class'], 'active');
-						watchdog('gbif_event', 'Active menu item set.', array(), WATCHDOG_DEBUG);
+						watchdog('gbif_event', 'Active menu item set.', NULL, WATCHDOG_DEBUG);
 					}
 				}
 			}
@@ -168,7 +168,7 @@ function gbif_event_preprocess_page(&$variables) {
 				if ($tab['#href'] == $highlighted_path) {
 					// make it active
 					array_push($variables['page']['menu']['menu_block_gbif_navigation_menu_tabs']['#content'][$k]['#attributes']['class'], 'active');
-					watchdog('gbif_event', 'Active menu item set for node.', array(), WATCHDOG_DEBUG);
+					watchdog('gbif_event', 'Active menu item set for node.', NULL, WATCHDOG_DEBUG);
 				}
 			}
 		}

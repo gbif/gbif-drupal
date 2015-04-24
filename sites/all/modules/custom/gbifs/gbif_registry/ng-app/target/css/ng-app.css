@@ -1,0 +1,293 @@
+/*ng-app.less*/
+/*eoi.less*/
+#eoi-container {
+  /* breadcrumb */
+  /* lookup */
+  /* contact */
+  /* endorsement */
+  /* terms and conditions */
+}
+#eoi-container input,
+#eoi-container textarea {
+  border-radius: 4px;
+}
+#eoi-container .breadcrumb {
+  border-radius: 4px;
+}
+#eoi-container .breadcrumb > .active {
+  color: #555;
+}
+#eoi-container .breadcrumb span {
+  margin-left: -8px;
+}
+#eoi-container .breadcrumb li > a {
+  margin-left: -4px;
+}
+#eoi-container .lead {
+  font-size: 21px;
+  font-weight: 300;
+  line-height: 1.3;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  color: #555;
+}
+#eoi-container #lookup-result {
+  margin-top: 10px;
+}
+#eoi-container .btn-group > .btn:first-child {
+  margin-right: 0px;
+}
+#eoi-container #orgZip {
+  width: 75px;
+}
+#eoi-container #orgCity {
+  width: 135px;
+}
+#eoi-container #orgProvince {
+  width: 135px;
+}
+#eoi-container #formData,
+#eoi-container #selectedOrg,
+#eoi-container #formControl {
+  overflow: scroll;
+  border-radius: 4px;
+}
+#eoi-container #formData {
+  height: 800px;
+}
+#eoi-container .form-indent {
+  margin-left: 20px;
+}
+#eoi-container .contact-title.ng-dirty.ng-invalid-required,
+#eoi-container .contact-name.ng-dirty.ng-invalid-required,
+#eoi-container .contact-email.ng-dirty.ng-invalid-required,
+#eoi-container .contact-phone.ng-invalid-pattern,
+#eoi-container .org-title.ng-dirty.ng-invalid-required,
+#eoi-container .org-address.ng-dirty.ng-invalid-required,
+#eoi-container .org-city.ng-dirty.ng-invalid-required,
+#eoi-container .org-country.ng-dirty.ng-invalid-required,
+#eoi-container .org-desc.ng-dirty.ng-invalid-required {
+  background-color: lightpink;
+}
+#eoi-container .next-step {
+  margin-top: 20px;
+}
+#eoi-container #endorsingOapFormNp_value {
+  width: 300px;
+}
+#eoi-container #captcha-box {
+  margin-top: 10px;
+}
+#eoi-container .recaptcha-invalid {
+  color: red;
+}
+#eoi-container .bottom-button .hint {
+  position: absolute;
+  margin-top: 27px;
+  margin-left: 10px;
+  color: grey;
+}
+#eoi-container .bottom-button .hint-2lines {
+  position: absolute;
+  margin-top: 16px;
+  margin-left: 10px;
+  color: grey;
+}
+#eoi-container {
+  /* for IE*/
+}
+#eoi-container .upload-button {
+  Height: 26px;
+  line-height: 30px;
+  padding: 0 10px;
+  background: #CCC;
+  appearance: button;
+  -moz-appearance: button;
+  /* Firefox */
+  -webkit-appearance: button;
+  /* Safari and Chrome */
+  position: relative;
+  text-align: center;
+  top: 7px;
+  cursor: pointer;
+}
+#eoi-container .sel-file {
+  padding: 1px 5px;
+  color: grey;
+}
+#eoi-container .response {
+  padding: 0;
+  padding-top: 10px;
+  margin: 3px 0;
+  clear: both;
+  list-style: none;
+}
+#eoi-container .response .sel-file li,
+#eoi-container .response .reqh {
+  color: blue;
+  padding-bottom: 5px;
+}
+#eoi-container .progress {
+  display: inline-block;
+  width: 100px;
+  border: 3px groove #CCC;
+}
+#eoi-container .progress div {
+  font-size: smaller;
+  background: orange;
+  width: 0;
+}
+#eoi-container .drop-box {
+  background: #F8F8F8;
+  border: 5px dashed #DDD;
+  width: 200px;
+  height: 65px;
+  text-align: center;
+  padding-top: 25px;
+  float: left;
+  margin-left: 10px;
+}
+#eoi-container .up-buttons {
+  float: left;
+}
+#eoi-container .drop-box.dragover {
+  border: 5px dashed blue;
+}
+#eoi-container .drop-box.dragover-err {
+  border: 5px dashed red;
+}
+#eoi-container .js-fileapi-wrapper {
+  display: inline-block;
+  vertical-align: middle;
+}
+#eoi-container .ng-v {
+  float: right;
+}
+#eoi-container .thumb {
+  float: left;
+  width: 18px;
+  height: 18px;
+  padding-right: 10px;
+}
+#eoi-container form .thumb {
+  width: 24px;
+  height: 24px;
+  float: none;
+  position: relative;
+  top: 7px;
+}
+#eoi-container form .progress {
+  line-height: 15px;
+}
+#eoi-container .edit-area {
+  font-size: 14px;
+  background: black;
+  color: #f9f9f9;
+  padding: 5px 1px;
+}
+#eoi-container #htmlEdit {
+  margin-bottom: 25px;
+}
+#eoi-container .edit-div {
+  font-size: smaller;
+}
+#eoi-container .CodeMirror {
+  font-size: 14px;
+  border: 1px solid #ccc;
+  margin-bottom: 15px;
+}
+#eoi-container .sub {
+  font-size: smaller;
+  color: #777;
+  padding-top: 5px;
+  padding-left: 10px;
+}
+#eoi-container .err {
+  font-size: 12px;
+  color: #C53F00;
+  margin: 15px;
+  padding: 15px;
+  background-color: #F0F0F0;
+  border: 1px solid black;
+}
+#eoi-container .howto {
+  margin-left: 10px;
+}
+#eoi-container .server {
+  margin-bottom: 20px;
+}
+#eoi-container .srv-title {
+  font-weight: bold;
+  padding: 5px 0 10px 0;
+}
+#eoi-container :not(output):-moz-ui-invalid {
+  box-shadow: none;
+}
+#eoi-container .file-upload-error {
+  color: red;
+}
+#eoi-container .file-upload-success {
+  color: lightgreen;
+}
+.angucomplete-holder {
+  position: relative;
+}
+.angucomplete-dropdown {
+  border-color: #ececec;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 2px;
+  width: 600px;
+  padding: 6px;
+  cursor: pointer;
+  z-index: 9999;
+  position: absolute;
+  /*top: 32px;
+    left: 0px;
+    */
+  margin-top: -6px;
+  background-color: #ffffff;
+}
+.angucomplete-searching {
+  color: #acacac;
+  font-size: 14px;
+}
+.angucomplete-description {
+  font-size: 14px;
+}
+.angucomplete-row {
+  padding: 5px;
+  color: #000000;
+  margin-bottom: 4px;
+  clear: both;
+}
+.angucomplete-selected-row {
+  background-color: lightblue;
+  color: #ffffff;
+}
+.angucomplete-image-holder {
+  padding-top: 2px;
+  float: left;
+  margin-right: 10px;
+  margin-left: 5px;
+}
+.angucomplete-image {
+  height: 34px;
+  width: 34px;
+  border-radius: 50%;
+  border-color: #ececec;
+  border-style: solid;
+  border-width: 1px;
+}
+.angucomplete-image-default {
+  /* Add your own default image here
+     background-image: url('/assets/default.png');
+    */
+  background-position: center;
+  background-size: contain;
+  height: 34px;
+  width: 34px;
+}
+.highlight {
+  color: #ff0000;
+}

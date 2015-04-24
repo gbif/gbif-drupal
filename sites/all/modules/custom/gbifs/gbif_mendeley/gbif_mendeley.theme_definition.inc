@@ -128,7 +128,7 @@ function gbif_mendeley_default_tag_sets() {
 	);
 
 	// Prepare tag sets for countries
-	include_once DRUPAL_ROOT . '/includes/iso.inc' ;
+	include_once DRUPAL_ROOT . '/includes/locale.inc';
 	$countries = country_get_list();
 	$iso_countries = array();
 	foreach ($countries as $iso => $country) {

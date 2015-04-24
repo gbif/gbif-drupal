@@ -234,3 +234,25 @@ function gbif_tweaks_format_time($format = 'c', $timestamp = NULL, $timezone = N
 
 	return $formatted_date;
 }
+
+/**
+ * Convert MB to bytes
+ * @param $p_sFormatted
+ * @return bool|string
+ * @see http://stackoverflow.com/questions/11807115/php-convert-kb-mb-gb-tb-etc-to-bytes
+ */
+function gbif_tweaks_to_byte_size($p_sFormatted) {
+	$aUnits = array('B' => 0, 'KB' => 1, 'MB' => 2, 'GB' => 3, 'TB' => 4, 'PB' => 5, 'EB' => 6, 'ZB' => 7, 'YB' => 8);
+  $sUnit = strtoupper(trim(substr($p_sFormatted, -2)));
+  if (intval($sUnit) !== 0) {
+		$sUnit = 'B';
+	}
+  if (!in_array($sUnit, array_keys($aUnits))) {
+		return false;
+	}
+  $iUnits = trim(substr($p_sFormatted, 0, strlen($p_sFormatted) - 2));
+  if (!intval($iUnits) == $iUnits) {
+		return false;
+	}
+  return $iUnits * pow(1024, $aUnits[$sUnit]);
+}

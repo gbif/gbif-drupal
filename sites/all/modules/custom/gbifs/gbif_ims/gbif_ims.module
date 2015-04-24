@@ -159,7 +159,7 @@ function gbif_ims_cron() {
 	$interval = variable_get('gbif_ims_sync_interval');
 
 	if ($interval == 0) {
-		watchdog('gbif_ims', 'IMS synchronisation has been suspended', array(), WATCHDOG_INFO);
+		watchdog('gbif_ims', 'IMS synchronisation has been suspended', NULL, WATCHDOG_INFO);
 	}
 	else {
 		// Cron could be set to run every minute, which is not possible and too heavy for IMS synchronisation.

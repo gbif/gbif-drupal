@@ -72,7 +72,7 @@ function _gbif_analytics_detail_view($type, $iso2, $extra_args) {
 
 
 	if ($type == 'global') {
-		watchdog('analytics', 'ISO: ' . $iso2, array(), WATCHDOG_DEBUG);
+		watchdog('analytics', 'ISO: ' . $iso2, NULL, WATCHDOG_DEBUG);
 		$base_images_url = $base_images_url . "global/figure";
 		$data_sharing =
 			'This chart shows the total number of records published through GBIF over time, with separate colours for '
@@ -130,13 +130,13 @@ function _gbif_analytics_index_view($type, $extra_args) {
 
   if (file_exists(drupal_realpath($file)) == TRUE) {
 		$json = json_decode(file_get_contents(file_create_url($file)), true); // true required to return an array
-		watchdog('analytics', 'Number of countries: ' . count($json), array(), WATCHDOG_DEBUG);
+		watchdog('analytics', 'Number of countries: @count', array('@count' => count($json)), WATCHDOG_DEBUG);
 
 		// turn it into 4 columns for display
 		$columular_countries = _columular_countries($json, 4);
 	}
 	else {
-		watchdog('analytics', 'JSON country inventory file missing: ' . $file, array(), WATCHDOG_WARNING);
+		watchdog('analytics', 'JSON country inventory file missing: @file', array('@file' => $file), WATCHDOG_WARNING);
 		$columular_countries = array(); // defensive coding
 	}
 
@@ -244,7 +244,7 @@ function gbif_analytics_preprocess_page(&$variables) {
 
 	// load in lightbox CSS and JS
 	if (drupal_match_path(current_path(), 'analytics*')) {
-		watchdog('analytics', 'Loading custom libraries for module', array(), WATCHDOG_DEBUG);
+		watchdog('analytics', 'Loading custom libraries for module', NULL, WATCHDOG_DEBUG);
 		drupal_add_library('gbif_analytics', 'analytics');
 	}
 
@@ -259,7 +259,7 @@ function gbif_analytics_preprocess_page(&$variables) {
 			foreach ($variables['page']['menu']['menu_block_gbif_navigation_analytics']['#content'] as $k => $tab) {
 				if (gettype($k) == 'integer') {
 					if ($tab['#href'] == $menu_item) {
-						watchdog('analytics', 'setting it!', array(), WATCHDOG_DEBUG);
+						watchdog('analytics', 'setting it!', NULL, WATCHDOG_DEBUG);
 						// make it active
 						array_push($variables['page']['menu']['menu_block_gbif_navigation_analytics']['#content'][$k]['#attributes']['class'], "active");
 					}

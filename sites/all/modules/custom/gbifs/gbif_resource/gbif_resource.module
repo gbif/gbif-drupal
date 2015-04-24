@@ -246,7 +246,7 @@ function gbif_resource_preprocess_page(&$variables) {
 					array_push($variables['page']['menu']['menu_block_gbif_navigation_menu_tabs']['#content'][$k]['#attributes']['class'], 'back-menu');
 					// To change the title to "Resource"(singular) for individual resource pages.
 					// $variables['page']['menu']['menu_block_gbif_navigation_menu_tabs']['#content'][$k]['#title'] = t('Resource');
-					watchdog('gbif_resource', 'Active detail menu item set for node.', array(), WATCHDOG_DEBUG);
+					watchdog('gbif_resource', 'Active detail menu item set for node.', NULL, WATCHDOG_DEBUG);
 				}
 			}
 		}

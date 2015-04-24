@@ -54,7 +54,7 @@ class ParallelGet {
 			}
 			else {
 				$message = "Curl error on handle $i: $curlError";
-				watchdog('mendeley', $message, array(), WATCHDOG_ERROR);
+				watchdog('mendeley', $message, NULL, WATCHDOG_ERROR);
 				$response[$i] = 'error';
 			}
 			// Remove and close the handle

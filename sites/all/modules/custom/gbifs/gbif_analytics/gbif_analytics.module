@@ -277,7 +277,7 @@ function gbif_analytics_page_build(&$page) {
 	if (isset($page) && arg(0) == 'analytics') {
 
 		$title = t('Global data trends');
-		$slogan = t('Trends in data availability on the GBIF network, 2008 to 2014');
+		$slogan = t('Trends in data availability on the GBIF network, 2008 to @year', array('@year' => date('Y')));
 
 		$current_path = explode('/', current_path());
 		if ($current_path[1] == 'faq') {

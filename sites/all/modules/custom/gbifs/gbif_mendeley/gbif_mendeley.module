@@ -420,27 +420,33 @@ function _gbif_mendeley_get_group_documents_detail($token_json, $documents_json)
  * Implementation of hook_cron().
  */
 function gbif_mendeley_cron() {
-  $interval = variable_get('gbif_mendeley_update_interval');
-
-  if ($interval == 0) {
-    watchdog('mendeley', 'Mendeley synchronisation has been suspended', NULL, WATCHDOG_INFO);
+  $sync_status = variable_get('gbif_tweaks_sync_status');
+  if ($sync_status == 'halted') {
+    // do nothing
   }
   else {
-    $documents_file_loc = file_build_uri('gbif_mendeley/documents.json');
-    $file_exists = file_exists(drupal_realpath($documents_file_loc));
-
-    if ($file_exists == TRUE) {
-      $documents = json_decode(file_get_contents(file_create_url($documents_file_loc)));
-      if (count($documents) > 0) {
-        $cron_result = gbif_mendeley_retrieve_by_oauth2();
-        watchdog('mendeley', t('Cron attempted: ') . $cron_result, WATCHDOG_INFO);
-        $analyse_result = gbif_mendeley_analyse();
-        watchdog('mendeley', t('Publication analysis attempted: ') . $analyse_result, WATCHDOG_INFO);
-      }
+    // sync according to interval setting
+    $interval = variable_get('gbif_mendeley_update_interval');
+    if ($interval == 0) {
+      watchdog('mendeley', 'Mendeley synchronisation has been suspended', NULL, WATCHDOG_INFO);
     }
     else {
-      $message = t('Please manually trigger the first synchronisation for the cron job to run automatically.', array());
-      watchdog('mendeley', $message, array(), WATCHDOG_ERROR);
+      $documents_file_loc = file_build_uri('gbif_mendeley/documents.json');
+      $file_exists = file_exists(drupal_realpath($documents_file_loc));
+
+      if ($file_exists == TRUE) {
+        $documents = json_decode(file_get_contents(file_create_url($documents_file_loc)));
+        if (count($documents) > 0) {
+          $cron_result = gbif_mendeley_retrieve_by_oauth2();
+          watchdog('mendeley', t('Cron attempted: ') . $cron_result, WATCHDOG_INFO);
+          $analyse_result = gbif_mendeley_analyse();
+          watchdog('mendeley', t('Publication analysis attempted: ') . $analyse_result, WATCHDOG_INFO);
+        }
+      }
+      else {
+        $message = t('Please manually trigger the first synchronisation for the cron job to run automatically.', array());
+        watchdog('mendeley', $message, array(), WATCHDOG_ERROR);
+      }
     }
   }
 }

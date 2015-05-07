@@ -55,8 +55,8 @@
         <input type="text" class="form-control org-province" ng-model="eoiCtrl.formData.org.province" name="oprovince" id="orgProvince">
       </div>
       <div class="form-group">
-        <label for="orgZip">Postal Code</label> <span class="highlight" ng-show="eoiForm.ozip.$invalid">*</span>
-        <input type="text" class="form-control org-zip" ng-model="eoiCtrl.formData.org.zip" id="orgZip" name="ozip" required>
+        <label for="orgZip">Postal Code</label>
+        <input type="text" class="form-control org-zip" ng-model="eoiCtrl.formData.org.zip" id="orgZip" name="ozip">
       </div>
     </div>
     <br/>
@@ -85,11 +85,11 @@
     <div class="form-group">
       <label for="orgDesc">Description</label> <span class="highlight" ng-show="eoiForm.odesc.$invalid">*</span>
       <textarea class="form-control org-desc" ng-model="eoiCtrl.formData.org.desc" name="odesc" id="orgDesc" required></textarea>
-      <p>Briefly describe the scope of your institution/organization in relation to GBIF's mission (e.g. collection holdings, research focus, biodiversity information management, etc.). Upon receiving endorsement, this description will appear on your publisher page (<a href="http://www.gbif.org/publisher/7a646477-bd22-4832-902c-19d9671f3ab1">example</a>).</p>
+      <p>Briefly describe the scope of your institution/organization in relation to GBIF's mission (e.g. collection holdings, research focus, biodiversity information management, etc.). Upon receiving endorsement, this description will appear on your publisher page (<a href="http://www.gbif.org/publisher/7a646477-bd22-4832-902c-19d9671f3ab1" target="_blank">example</a>).</p>
     </div>
     <div class="form-group">
       <label for="example-file">If available, please upload an example of your records from your dataset so that the endorser can review and understand the nature of your data.</label>
-      <button id="example-file" class="btn btn-default" ngf-select ng-model="eoiCtrl.exampleFiles">Upload example</button> (max. 8MB)
+      <button id="example-file" class="btn btn-default" ngf-select ng-model="eoiCtrl.exampleFiles">Upload example</button> (Max. 8MB. The file can't be changed once chosen.)
 
       <!-- beginning of file handling -->
       <ul style="clear:both" ng-show="eoiCtrl.exampleFiles.length > 0" class="response">

@@ -694,7 +694,7 @@ function gbif_registry_library() {
 			)
 		),
 		'css' => array(
-			$path . '/ng-app/target/css/ng-app.css' => array(
+			$path . '/ng-app/target/css/app.css' => array(
 				'type' => 'file',
 				'weight' => 20,
 			),

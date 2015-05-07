@@ -739,12 +739,17 @@ function _bvng_well_types($req_path, $system_main) {
 		}
 	}
   elseif ($req_path) {
-    // Others are views.
-    foreach ($filter_paths as $path) {
-      $match = strpos($req_path, $path);
-      if ($match !== FALSE) return 'filter';
-    }
-    return 'normal';
+		if (drupal_match_path($req_path, 'publishing-data*')) {
+			return 'normal';
+		}
+		else {
+			// Others are views.
+			foreach ($filter_paths as $path) {
+				$match = strpos($req_path, $path);
+				if ($match !== FALSE) return 'filter';
+			}
+			return 'normal';
+		}
   }
 }
 

@@ -6,8 +6,6 @@
 
 module_load_include('inc', 'gbif_resource', 'gbif_resource.filemaker');
 
-// @todo Redirection of old Drupal node ID.
-
 /**
  * @file
  * Code for the GBIF Resource feature.
@@ -33,17 +31,24 @@ function gbif_resource_menu() {
 		'access callback' => TRUE,
 		'type' => MENU_CALLBACK,
 	);
-	/* Disabled admin page since we no longer need to sync from the FileMaker.
-	$items['admin/config/gbif/resource'] = array(
-		'title' => 'GBIF resource',
-		'description' => t('Configure GBIF resource related features.'),
-		'page callback' => 'drupal_get_form',
-		'page arguments' => array('gbif_resource_settings_form'),
-		'access arguments' => array('administer site configuration'),
-		'type' => MENU_NORMAL_ITEM,
-		'file' => 'gbif_resource.admin.inc',
-	);
-	*/
+  $items['publishing-data/resources'] = array(
+    'title' => 'Resource about publishing data',
+    'page callback' => 'gbif_resource_publishing_data',
+    'access callback' => TRUE,
+    'type' => MENU_NORMAL_ITEM,
+    'weight' => 30,
+  );
+  /* Disabled admin page since we no longer need to sync from the FileMaker.
+  $items['admin/config/gbif/resource'] = array(
+    'title' => 'GBIF resource',
+    'description' => t('Configure GBIF resource related features.'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('gbif_resource_settings_form'),
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'gbif_resource.admin.inc',
+  );
+  */
 	return $items;
 }
 
@@ -111,52 +116,6 @@ function gbif_resource_form_resource_node_form_alter(&$form, &$form_state) {
 	$form['gr_number_of_downloads']['#disabled'] = TRUE;
 }
 
-/* Disabled since we no longer need to sync from the FileMaker.
-function gbif_resource_sync_ui($form, $form_state) {
-	if (!empty($form_state['values']['cron_reset'])) {
-		variable_set('gbif_ims_sync_next_execution', 0);
-	}
-
-	if (time() >= variable_get('gbif_ims_sync_next_execution', 0)) {
-		return gbif_resource_sync();
-	}
-	else {
-		$next_time = variable_get('gbif_ims_sync_next_execution');
-		watchdog('gbif_resource', "Resource update didn't run because current interval is not expired yet. Next run is at %next.", array('%next' => date_iso8601($next_time)), WATCHDOG_INFO);
-		return t("Resource update didn't run because current interval is not expired yet. Next run is at %next.", array('%next' => date_iso8601($next_time)));
-	}
-}
-*/
-
-/* Disabled since we no longer need to sync from the FileMaker.
-function gbif_resource_sync() {
-	$start_time = new DateTime();
-	$sync_success = _gbif_resource_sync();
-	$end_time = new DateTime();
-	$time = $end_time->diff($start_time);
-	$time_spent = "This task took ";
-	if ($time->y > 0) {$time_spent .= $time->y.' years, ';}
-	if ($time->m > 0) {$time_spent .= $time->m.' months, ';}
-	if ($time->d > 0) {$time_spent .= $time->d.' days, ';}
-	if ($time->h > 0) {$time_spent .= $time->h.' hours, ';}
-	if ($time->i > 0) {$time_spent .= $time->i.' minutes, ';}
-	if ($time->s > 0) {$time_spent .= $time->s.' seconds ';}
-	$time_spent .= "to complete.";
-
-	// Should examine the result before informing via the UI.
-	if ($sync_success == TRUE) {
-		watchdog('gbif_resource', 'Resource update executed at %time', array('%time' => date_iso8601(time(0))), WATCHDOG_INFO);
-		$interval = variable_get('gbif_ims_sync_interval', 3 * 60 * 60);
-		variable_set('gbif_ims_sync_next_execution', time() + $interval);
-		return t('Synchronisation finished.') . ' ' . $time_spent;
-	}
-	else {
-		watchdog('gbif_resource', 'IMS synchronisation failed at %time', array('%time' => date_iso8601(time(0))), WATCHDOG_CRITICAL);
-		return t('Resource updated.') . ' ' . $time_spent;
-	}
-}
-*/
-
 function _gr_required_tables() {
 	$tables = array(
 		'gbif_ims_country',
@@ -200,7 +159,6 @@ function gbif_resource_help($path, $arg) {
 	}
 }
 
-
 /**
  * Implements hook_theme().
  */
@@ -215,6 +173,10 @@ function gbif_resource_theme($existing, $type, $theme, $path) {
 			'template' => 'node--view--resources',
 			'path' => $path . '/theme',
 		),
+    'publishing_data__resources' => array(
+      'template' => 'publishing-data--resources',
+      'path' => $path . '/theme',
+    ),
 	);
 }
 
@@ -228,6 +190,8 @@ function gbif_resource_theme_registry_alter(&$theme_registry) {
 	$theme_registry['views_view__resources_search__page']['path'] = drupal_get_path('module', 'gbif_resource') . '/theme';
 	$theme_registry['views_view_fields__resources_search__page']['path'] = drupal_get_path('module', 'gbif_resource') . '/theme';
 	$theme_registry['views_view_unformatted__resources__featured_block']['path'] = drupal_get_path('module', 'gbif_resource') . '/theme';
+	$theme_registry['views_view_unformatted__resources__block_docs']['path'] = drupal_get_path('module', 'gbif_resource') . '/theme';
+  $theme_registry['views_view_unformatted__resources__page_publishing']['path'] = drupal_get_path('module', 'gbif_resource') . '/theme';
 }
 
 /**
@@ -325,16 +289,108 @@ function gbif_resource_preprocess_field(&$variables) {
 }
 
 /**
+ * Tweak themed output for the url and file icon for "featured" blocks
+ * Implements hook_preprocess_views_view_field().
+ */
+function gbif_resource_preprocess_views_view_field(&$vars) {
+  // blocks to tweak
+  $applied_blocks = array('featured_block', 'block_docs', 'block_tools');
+
+	// for gr_file
+  if (in_array($vars['view']->current_display, $applied_blocks) && $vars['field']->field == 'gr_file') {
+		// show this field only if the resource type is document.
+
+		// load node object for resource type checking.
+		$node = node_load($vars['row']->nid);
+		$wrapper = entity_metadata_wrapper('node', $node);
+		$value = $wrapper->gr_resource_type->value();
+		if ($value->name == 'Document') {
+			$view_field = 'field_' . $vars['field']->field;
+
+			// check if there is a value
+			if (count($vars['row']->$view_field) != 0) {
+				$lang_code = $vars['row']->_field_data['nid']['entity']->language;
+				$link_title = t('Download') . ' ' . $vars['row']->_field_data['nid']['entity']->gr_file[$lang_code][0]['description'];
+				$link_path = 'system/files_force' . substr($vars['row']->_field_data['nid']['entity']->gr_file[$lang_code][0]['uri'], 8); // Strip off file schema.
+				$img = theme_image(
+					array(
+						'path' => drupal_get_path('module', 'gbif_resource') . '/icons/download164.png',
+						'width' => 16,
+						'height' => 16,
+						'alt' => $link_title,
+						'title' => $link_title,
+						'attributes' => array(
+							'class' => 'file-icon',
+						),
+					)
+				);
+				$link = l($img, $link_path, array(
+					'html' => TRUE,
+					'attributes' => array(
+						'type' => $vars['row']->_field_data['nid']['entity']->gr_file[$lang_code][0]['filemime'],
+					),
+					'query' => array(
+						'download' => 1,
+					),
+				));
+				$vars['output'] = '<span class="file">' . $link . '</span>';
+			}
+			else {
+				$vars['output'] = '';
+			}
+		}
+		else {
+			$vars['output'] = '';
+		}
+  }
+
+  // for gr_url
+  if (in_array($vars['view']->current_display, $applied_blocks) && $vars['field']->field == 'gr_url') {
+		$node = node_load($vars['row']->nid);
+		$wrapper = entity_metadata_wrapper('node', $node);
+		$value = $wrapper->gr_resource_type->value();
+		if ($value->name == 'Tool') {
+			$view_field = 'field_' . $vars['field']->field;
+
+			// check if there is a value
+			if (count($vars['row']->$view_field) != 0) {
+				$lang_code = $vars['row']->_field_data['nid']['entity']->language;
+				$link_title = $vars['row']->_field_data['nid']['entity']->title;
+				$link_path = $vars['row']->field_gr_url[0]['raw']['value'];
+				$img = theme_image(
+					array(
+						'path' => drupal_get_path('module', 'gbif_resource') . '/icons/external16.png',
+						'width' => 16,
+						'height' => 16,
+						'alt' => $link_title,
+						'title' => $link_title,
+						'attributes' => array(
+							'class' => 'external-link-icon',
+						),
+					)
+				);
+				$link = l($img, $link_path, array(
+					'html' => TRUE,
+					'attributes' => array(
+						'target' => '_blank',
+					),
+				));
+				$vars['output'] = '<span class="external-link">' . $link . '</span>';
+			}
+			else {
+				$vars['output'] = '';
+			}
+		}
+		else {
+			$vars['output'] = '';
+		}
+	}
+}
+
+/**
  * Implements hook_preprocess_views_view().
  */
 function gbif_resource_preprocess_views_view(&$variables) {
-	if (isset($variables) && $variables['view']->name == 'resources') {
-		// Experimental code. To be removed if not utilised.
-		//drupal_add_js(drupal_get_path('module', 'gbif_resource') . '/js/query-string/query-string.js', array('type' => 'file', 'scope' => 'footer'));
-		//drupal_add_js(drupal_get_path('module', 'gbif_resource') . '/js/resources-widgets.js', array('type' => 'file', 'scope' => 'footer'));
-		//drupal_add_library('system', 'jquery.cookie');
-	}
-
 	if (isset($variables) && $variables['view']->name == 'resources_search') {
 		// Define our own template.
 		$variables['theme_hook_suggestions'][] = 'views_view__resources_search__page';
@@ -472,4 +528,8 @@ function gbif_resource_show_featured_resources() {
 	else {
 		return TRUE;
 	}
+}
+
+function gbif_resource_publishing_data() {
+  return theme('publishing_data__resources');
 }

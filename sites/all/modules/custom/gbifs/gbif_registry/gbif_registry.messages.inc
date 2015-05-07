@@ -8,8 +8,8 @@ function _gbif_registry_notify_endorsing_node_manager($message, $params, $option
 
   // Note that the message body is an array, not a string.
   $message['body'][] = t('Dear Node Manager,', array(), $options);
-  $message['body'][] = t('The organization, @organization-title, has submitted an expression of interest in registering as a new publisher in the GBIF network and has requested endorsement by the @node-name.', array('@organization-title' => $params['org']['title'], '@node-name' => $params['endorsement']['endorsingParticipant']['title']), $options);
-  $message['body'][] = t('We ask you to review this request — the full text of which is included below — and consider this request for endorsement. If you approve it, the publisher "@organization-title" will be listed in the GBIF registry under your organization here: !node-url.', array('@organization-title' => $params['org']['title'], '!node-url' => $params['node_url']), $options);
+  $message['body'][] = t("The organization '@organization-title' has submitted an expression of interest in registering as a new publisher in the GBIF network and has requested endorsement by the @node-name.", array('@organization-title' => $params['org']['title'], '@node-name' => $params['endorsement']['endorsingParticipant']['title']), $options);
+  $message['body'][] = t('We ask you to review this request — the full text of which is included below — and consider this request for endorsement. If you approve it, the publisher "@organization-title" will be listed in the GBIF registry under your Participant node here: !node-url.', array('@organization-title' => $params['org']['title'], '!node-url' => $params['node_url']), $options);
   $message['body'][] = t("Do note that none of @organization-title's datasets will be indexed through GBIF.org until you act on the request.", array('@organization-title' => $params['org']['title']), $options);
   $message['body'][] = t('You may wish to consult these guidance notes on endorsement on GBIF.org (!publisher-guide). If you have any questions, please reply to us at helpdesk@gbif.org.', array('!publisher-guide' => 'http://www.gbif.org/publishing-data'), $options); //@todo link to be updated.
   $message['body'][] = t('Please answer YES, NO, or reply to request further details.', array(), $options);
@@ -90,11 +90,11 @@ function _gbif_registry_detail_of_submission(&$message, $params, $options) {
   $message['body'][] = t("------------\nOrganization\n------------", array(), $options);
   $message['body'][] = t("Name: @name\nURL: @url\nAddress: @address\nCity: @city\nProvince: @province\nPostal code: @zip\nCountry: @country\nDescription: @desc\nIs an international organization? @isIntlOrg\nExample file provided? @exampleFile", array(
     '@name' => $params['org']['title'],
-    '@url' => $params['org']['url'],
+    '@url' => (!empty($params['org']['url'])) ? $params['org']['url'] : t('no URL provided.'),
     '@address' => $params['org']['address'],
     '@city' => $params['org']['city'],
     '@province' => (!empty($params['org']['province'])) ? $params['org']['province'] : t('no province information provided.'),
-    '@zip' => $params['org']['zip'],
+    '@zip' => (!empty($params['org']['zip'])) ? $params['org']['zip'] : t('no postal code provided.'),
     '@country' => $params['org']['country']['title'],
     '@desc' => $params['org']['desc'],
     '@isIntlOrg' => $params['org']['isIntlOrg'],

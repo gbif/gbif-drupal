@@ -5,11 +5,13 @@ Data {"url":"<front>"}
 -Explore by country {"url":"country"}
 -Explore data trends {"url":"analytics\/global"}
 -Separator {"url":"<separator>"}        
--Publishing data {"url":"publishingdata\/summary", "description": "How and why you should make biodiversity datasets accessible through GBIF"}
---Summary {"url":"publishingdata\/summary", "description": "How and why you should make biodiversity datasets accessible through GBIF"}
---Mobilizing data {"url":"publishingdata\/mobilizingdata"}
+-Publishing data {"url":"publishing-data\/summary", "description": "How and why you should make biodiversity datasets accessible through GBIF"}
+--Summary {"url":"publishing-data\/summary", "description": "How and why you should make biodiversity datasets accessible through GBIF"}
+--Benefits {"url":"publishing-data\/benefits"}
 --How to publish {"url":"publishing-data\/how-to-publish"}
---Data papers {"url":"publishingdata\/datapapers"}
+--Guidelines {"url":"publishing-data\/guidelines"}
+--Data papers {"url":"publishing-data\/data-papers"}
+--Resources {"url":"publishing-data\/resources"}
 -Using Data {"url":"usingdata\/summary", "description": "How data accessed through GBIF are used in research and policy"}
 --Summary {"url":"usingdata\/summary", "description": "How data accessed through GBIF are used in research and policy"}
 --Science relevance {"url":"usingdata\/sciencerelevance"}

@@ -1,0 +1,17 @@
+<!-- eoi.html -->
+
+<div ncy-breadcrumb></div>
+<div class="row">
+  <div class="col-xs-8">
+    <form name="eoiForm" ng-submit="eoiCtrl.submit(eoiCtrl.formData)">
+      <div id="form-views" ui-view></div>
+    </form>
+  </div>
+  <div class="col-xs-4">
+    <!-- for debugging
+    <pre id="formData">{{eoiCtrl.formData | json}}</pre>
+    <pre id="selectedOrg">{{eoiCtrl.selectedOrg | json}}</pre>
+    <pre id="formControl">{{eoiCtrl.formControl | json}}</pre>
+    -->
+  </div>
+</div>

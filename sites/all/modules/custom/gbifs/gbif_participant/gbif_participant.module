@@ -973,6 +973,8 @@ function _gbif_participant_print_latest_datasets($iso2, $uuid) {
 	$env = variable_get('environment_settings');
 	// E.g. http://api.gbif.org/v1/node/fb11cfe1-ebc3-45af-9159-17d9fddbcdac/dataset?limit=7 => this one is not correct.
 	// E.g. http://api.gbif.org/v1/dataset?country=DK
+	// The order of dataset follows the API, which is based on date created.
+	// @see https://github.com/gbif/registry/blob/master/registry-ws/src/main/resources/org/gbif/registry/persistence/mapper/DatasetMapper.xml#L147
 	$api_call = _gbif_participant_api_dataset() . '?country=' . $iso2;
 	$json = json_decode(file_get_contents($api_call), TRUE);
 	$count = $json['count'];

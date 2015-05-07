@@ -1,0 +1,115 @@
+<!-- eoi-endorsement.html -->
+
+<section id="step_endorsement">
+  <h2>Endorsement</h2>
+  <div ng-hide="eoiCtrl.formControl.toDataHosting">
+    <p>Please fill the form in the previous step to reveal options for endorsement.</p>
+  </div>
+
+  <!-- has national participant node -->
+  <div ng-show="eoiCtrl.formControl.formNp">
+    <p><strong>National participant node: {{eoiCtrl.formData.endorsement.nationalParticipant.participantTitle}}</strong></p>
+    <p>Your country is represented by a GBIF Participant. The default option is to seek endorsement from the national node.</p>
+    <div class="form-inline">
+      <div class="radio">
+        <label for="beEndorsedByTypeP">
+          <input type="radio" value="cp" name="beEndorsedByType" ng-model="eoiCtrl.formData.endorsement.beEndorsedByType" id="beEndorsedByTypeP" ng-click="eoiCtrl.toBeEndorsedByCp(endorsingOapFormNp)"> We request endorsement from our national node.
+        </label>
+      </div>
+    </div>
+    <br/>
+    <p>In some circumstances, organizations may wish to request endorsement by a <a href="http://www.gbif.org/participation/participant-list#other">non-country participant</a>. Use the lookup to choose this endorsement option.</p>
+    <div class="form-inline">
+      <div class="radio">
+        <label for="endorsingOapFormNp">
+          <input type="radio" value="oap" name="beEndorsedByType" ng-model="eoiCtrl.formData.endorsement.beEndorsedByType" id="beEndorsedByTypeOap" ng-click="eoiCtrl.toBeEndorsedByOap()"> We request endorsement from:
+        </label>
+      </div>
+      <div class="form-group">
+        <div angucomplete-alt id="endorsingOapFormNp"
+          placeholder="Search other associate participants"
+          pause="100"
+          selected-object="eoiCtrl.oapSelectedFormNp"
+          local-data="eoiCtrl.otherAssociateParticipants"
+          search-fields="participantTitle"
+          title-field="participantTitle" minlength="2"
+          input-class="form-control"
+          match-class="highlight">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- has no national participant node -->
+  <div ng-show="eoiCtrl.formControl.formNoNp">
+    <p><strong>National participant node: none</strong></p>
+    <p>Your organization's host country, {{eoiCtrl.formData.org.country.title}}, is not yet represented in GBIF and does not have a national node. As a result, you may choose one of two endorsement options.</p>
+    <div class="form-group">
+      <div class="radio">
+        <label for="beEndorsedByTypeOapN">
+          <input type="radio" value="oap" name="beEndorsedByTypeNoNp" ng-model="eoiCtrl.formData.endorsement.beEndorsedByType" id="beEndorsedByTypeOapN" > Our institution has an existing connection with one of GBIF's non-national participants.
+        </label>
+      </div>
+    </div>
+    <div class="form-indent">
+      <div class="form-group">
+        <label for="endorsingOapFormNoNp">We request endorsement from:</label>
+        <div angucomplete-alt id="endorsingOapFormNoNp"
+          placeholder="Other Associate Participant lookup"
+          pause="100"
+          selected-object="eoiCtrl.oapSelectedFormNoNp"
+          local-data="eoiCtrl.otherAssociateParticipants"
+          search-fields="participantTitle"
+          title-field="participantTitle" minlength="2"
+          input-class="form-control form-control-small participant-lookup"
+          match-class="highlight">
+        </div>
+      </div>
+    </div>
+      <div class="form-group">
+      <div class="radio">
+        <label for="beEndorsedByTypeNoNp">
+          <input type="radio" value="nc" name="beEndorsedByTypeNoNp" id="beEndorsedByTypeNoNp" ng-model="eoiCtrl.formData.endorsement.beEndorsedByType" id="beEndorsedByTypeNcN" ng-click="eoiCtrl.toBeEndorsedByNc(endorsingOapFormNoNp)"> We request the GBIF Secretariat to seek endorsement on our behalf from the wider GBIF community through the GBIF Participant Node Managers Committee.
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- is international organisation -->
+  <div ng-show="eoiCtrl.formControl.formIntlOrg">
+    <p>As an international organization, your institution may choose one of two endorsement options:
+    <div class="form-group">
+      <div class="radio">
+        <label for="beEndorsedByTypeOapIntl">
+          <input type="radio" value="p" name="beEndorsedByTypeIntlOrg" ng-model="eoiCtrl.formData.endorsement.beEndorsedByType" id="beEndorsedByTypeOapIntl"> Our institution has an existing connection with a GBIF Participant.
+        </label>
+      </div>
+    </div>
+    <div class="form-indent">
+      <div class="form-group">
+        <label for="endorsingPFormIntlOrg">We request endorsement from:</label>
+        <div angucomplete-alt id="endorsingPFormIntlOrg"
+          placeholder="Participant lookup"
+          pause="100"
+          selected-object="eoiCtrl.oapSelectedFormIntlOrg"
+          local-data="eoiCtrl.participants"
+          search-fields="participantTitle"
+          title-field="participantTitle" minlength="2"
+          input-class="form-control form-control-small participant-lookup"
+          match-class="highlight">
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+    <div class="radio">
+      <label for="beEndorsedByTypeNcIntl">
+        <input type="radio" value="nc" name="beEndorsedByTypeIntlOrg" ng-model="eoiCtrl.formData.endorsement.beEndorsedByType" id="beEndorsedByTypeNcIntl" ng-click="eoiCtrl.toBeEndorsedByNc(endorsingPFormIntlOrg)"> We request the GBIF Secretariat to seek endorsement on our behalf from the wider GBIF community through the GBIF Participant Node Managers Committee.
+      </label>
+    </div>
+  </div>
+  </div>
+
+  <div class="bottom-button">
+    <a ui-sref="form.dataHosting" class="btn btn-primary next-step" ng-disabled="eoiCtrl.endorsementValidate(eoiForm)">Next step <span class="glyphicon glyphicon-arrow-right"></span></a><span class="hint" ng-show="eoiCtrl.endorsementValidate(eoiForm)">This button will be activated once all required fields are provided.</span>
+  </div>
+</section>

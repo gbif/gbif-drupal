@@ -52,7 +52,7 @@ function _gbif_ims_sync() {
 					try {
 						_gi_insert_records($result, $table_name, $table);
 					} catch (Exception $e) {
-						watchdog('gbif_ims', $e->getMessage(), array(), WATCHDOG_ERROR);
+						watchdog('gbif_ims', $e->getMessage(), NULL, WATCHDOG_ERROR);
 						return FALSE;
 					}
 				}

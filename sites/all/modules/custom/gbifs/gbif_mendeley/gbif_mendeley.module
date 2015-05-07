@@ -395,7 +395,7 @@ function _gbif_mendeley_get_group_documents_detail($token_json, $documents_json)
 				}
 				else {
 					$message = t("Document !id doesn't match the !url of handle !k", array('!id' => $headers['json']->id, '!url' => $url, '!k' => $k));
-					watchdog('mendeley', $message, array(), WATCHDOG_ERROR);
+					watchdog('mendeley', $message, NULL, WATCHDOG_ERROR);
 				}
 			}
 		}
@@ -405,13 +405,13 @@ function _gbif_mendeley_get_group_documents_detail($token_json, $documents_json)
 		}
 		else {
 			$message = t('There are !number errors when analysing headers.', array('!number' => count($failed_curl_resource)));
-			watchdog('mendeley', $message, array(), WATCHDOG_ERROR);
+			watchdog('mendeley', $message, NULL, WATCHDOG_ERROR);
 			return $documents_json;
 		}
 	}
 	else {
 		$message = t('There are !number failed resources.', array('!number' => count($failed_curl_resource)));
-		watchdog('mendeley', $message, array(), WATCHDOG_ERROR);
+		watchdog('mendeley', $message, NULL, WATCHDOG_ERROR);
 		return $documents_json;
 	}
 }
@@ -420,22 +420,29 @@ function _gbif_mendeley_get_group_documents_detail($token_json, $documents_json)
  * Implementation of hook_cron().
  */
 function gbif_mendeley_cron() {
-  $documents_file_loc = file_build_uri('gbif_mendeley/documents.json');
-  $file_exists = file_exists(drupal_realpath($documents_file_loc));
+  $interval = variable_get('gbif_mendeley_update_interval');
 
-  if ($file_exists == TRUE) {
-    $documents = json_decode(file_get_contents(file_create_url($documents_file_loc)));
-    if (count($documents) > 0) {
-      $cron_result = gbif_mendeley_retrieve_by_oauth2();
-			watchdog('mendeley', t('Cron attempted: ') . $cron_result, WATCHDOG_INFO);
-			$analyse_result = gbif_mendeley_analyse();
-			watchdog('mendeley', t('Publication analysis attempted: ') . $analyse_result, WATCHDOG_INFO);
+  if ($interval == 0) {
+    watchdog('mendeley', 'Mendeley synchronisation has been suspended', NULL, WATCHDOG_INFO);
+  }
+  else {
+    $documents_file_loc = file_build_uri('gbif_mendeley/documents.json');
+    $file_exists = file_exists(drupal_realpath($documents_file_loc));
+
+    if ($file_exists == TRUE) {
+      $documents = json_decode(file_get_contents(file_create_url($documents_file_loc)));
+      if (count($documents) > 0) {
+        $cron_result = gbif_mendeley_retrieve_by_oauth2();
+        watchdog('mendeley', t('Cron attempted: ') . $cron_result, WATCHDOG_INFO);
+        $analyse_result = gbif_mendeley_analyse();
+        watchdog('mendeley', t('Publication analysis attempted: ') . $analyse_result, WATCHDOG_INFO);
+      }
+    }
+    else {
+      $message = t('Please manually trigger the first synchronisation for the cron job to run automatically.', array());
+      watchdog('mendeley', $message, array(), WATCHDOG_ERROR);
     }
   }
-	else {
-		$message = t('Please manually trigger the first synchronisation for the cron job to run automatically.', array());
-		watchdog('mendeley', $message, array(), WATCHDOG_ERROR);
-	}
 }
 
 /**
@@ -799,7 +806,7 @@ function _mendeley_print_recent_publications($machine_name, $number) {
 		}
 		else {
 			$message = t('Invalid token used.');
-			watchdog('mendeley', $message, WATCHDOG_WARNING);
+			watchdog('mendeley', $message, NULL, WATCHDOG_WARNING);
 		}
 	}
 }

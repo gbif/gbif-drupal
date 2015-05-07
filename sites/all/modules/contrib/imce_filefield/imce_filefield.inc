@@ -57,6 +57,7 @@ function _imce_filefield_field_process($element, &$form_state, $form) {
   // file, the entire group of file fields is updated together.
   // Copied from file_field_widget_process().
   $field = field_widget_field($element, $form_state);
+  $id = preg_replace('/\-upload$/', '', $element['#id']);
   if ($field['cardinality'] != 1) {
     $parents = array_slice($element['#array_parents'], 0, -1);
     $ajax_path = 'file/ajax/' . implode('/', $parents) . '/' . $form['form_build_id']['#value'];
@@ -65,11 +66,11 @@ function _imce_filefield_field_process($element, &$form_state, $form) {
   }
   else {
     $ajax_path = 'file/ajax/' . implode('/', $element['#array_parents']) . '/' . $form['form_build_id']['#value'];
-    $ajax_wrapper = $element['#id'] . '-ajax-wrapper';
+    $ajax_wrapper = $id . '-ajax-wrapper';
   }
 
   $element['imce_filefield_fid'] = array(
-    '#attributes' => array('id' => $element['#id'] . '-imce-filefield-fid'),
+    '#attributes' => array('id' => $id . '-imce-filefield-fid'),
     '#type' => 'hidden',
     '#value' => '',
   );
@@ -80,7 +81,7 @@ function _imce_filefield_field_process($element, &$form_state, $form) {
     '#submit' => array('imce_filefield_field_submit'),
     '#limit_validation_errors' => array(array_slice($element['#parents'], 0, -1)),
     '#name' => $element['#name'] . '[imce_filefield_submit]',
-    '#id' => $element['#id'] . '-imce-filefield-submit',
+    '#id' => $id . '-imce-filefield-submit',
     '#attributes' => array('style' => 'display: none;'),
     '#ajax' => array(
       'path' => $ajax_path,
@@ -120,7 +121,7 @@ function _imce_filefield_field_value($element, &$item, &$form_state) {
  */
 function _imce_filefield_field_pre_render(&$element) {
   imce_filefield_jscss();
-  $jset['imce_filefield']['fields'][$element['#id']] = array('path' => $element['#entity_type']  . '/' . $element['#bundle'] . '/' . $element['#field_name']);
+  $jset['imce_filefield']['fields'][preg_replace('/\-upload$/', '', $element['#id'])] = array('path' => $element['#entity_type']  . '/' . $element['#bundle'] . '/' . $element['#field_name']);
   drupal_add_js($jset, 'setting');
   if (!empty($element['#value']['fid'])) {
     $element['imce_filefield_fid']['#access'] = FALSE;
@@ -222,6 +223,10 @@ function _imce_js_imce_filefield(&$imce) {
  * Check download access to a file.
  */
 function imce_filefield_download_access($file) {
+  // Allow access to the owner
+  if ($file->uid == $GLOBALS['user']->uid) {
+    return TRUE;
+  }
   $headers = array();
   foreach (module_implements('file_download') as $module) {
     $function = $module . '_file_download';

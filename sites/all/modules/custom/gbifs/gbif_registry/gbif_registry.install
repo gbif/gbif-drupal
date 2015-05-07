@@ -1,0 +1,55 @@
+<?php
+
+/**
+ * Implements hook_install().
+ */
+function gbif_registry_install() {
+
+	// Create file directories.
+	foreach (gbif_registry_file_directories() as $dir) {
+		gbif_tweaks_file_directories('create', $dir);
+	}
+
+	// Initial CORS settings.
+	variable_set('cors_domains', array(
+		'eoi/sample-file-upload' => '<mirror>',
+		'eoi/form-data-submit' => '*|POST|Content-Type',
+	));
+
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function gbif_registry_uninstall() {
+	// Delete data directory
+	$uri = 'public://gbif_registry';
+	$dir_exists = file_prepare_directory($uri);
+	$deleted = NULL;
+
+	if ($dir_exists) {
+		$deleted = file_unmanaged_delete_recursive($uri);
+	}
+
+	if ($deleted == TRUE) {
+		drupal_set_message('All the records of the expression of interest are deleted.');
+	}
+}
+
+/**
+ * File system structure under public://gbif_registry.
+ */
+function gbif_registry_file_directories() {
+	$root = 'gbif_registry';
+	$sub_directories = array(
+		'eoi/queue',
+		'eoi/approved',
+		'eoi/rejected',
+		'eoi/example_files'
+	);
+	$directory = array();
+	foreach ($sub_directories as $dir) {
+		$directory[] = $root . '/' . $dir;
+	}
+	return $directory;
+}

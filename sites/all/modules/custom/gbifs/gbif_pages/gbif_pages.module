@@ -134,7 +134,7 @@ function gbif_pages_preprocess_page(&$variables) {
 			foreach ($variables['page']['menu']['menu_block_gbif_navigation_menu_tabs']['#content'] as $k => $tab) {
 				if (gettype($k) == 'integer') {
 					array_push($variables['page']['menu']['menu_block_gbif_navigation_menu_tabs']['#content'][$k]['#attributes']['class'], 'narrow-tab');
-					watchdog('gbif_pages', 'Extra class in capacity pages set.', array(), WATCHDOG_DEBUG);
+					watchdog('gbif_pages', 'Extra class in capacity pages set.', NULL, WATCHDOG_DEBUG);
 				}
 			}
 		}

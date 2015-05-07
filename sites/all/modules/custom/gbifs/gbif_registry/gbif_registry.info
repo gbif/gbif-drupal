@@ -1,0 +1,10 @@
+name = GBIF Registry
+description = Handling expression of interest and post them to the GBIF Registry
+core = 7.x
+package = GBIFS
+version = 7.x-1.0
+project = GBIF Portal
+
+dependencies[] = cors
+dependencies[] = mailsystem
+dependencies[] = mimemail

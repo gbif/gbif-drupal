@@ -1,0 +1,24 @@
+<!-- eoi-dataHosting.html -->
+
+<section id="step_dataHosting">
+  <h2>Data hosting and publishing</h2>
+  <p>GBIF.org provides a data access service that presents an index of published primary data and metadata. The responsibility of hosting the original data remains with the data publisher or owner. In order to fulfil this requirement, please answer the following questions.</p>
+  <div class="form-group">
+    <label for="server_capable_yes">Do you have EITHER the capacity to run a live server, OR access to a server, through which you will make your original dataset available to GBIF.org?</label>
+    <input type="radio" id="server_capable_yes" ng-model="eoiCtrl.formData.dataHosting.serverCapable" value="yes" required> Yes
+    <input type="radio" id="server_capable_no" ng-model="eoiCtrl.formData.dataHosting.serverCapable" value="no"> No
+  </div>
+  <div class="form-group">
+    <label for="tool_planned_yes">Are you planning to install and run a publishing software to publish your data directly to GBIF.org?</label>
+    <input type="radio" id="tool_planned_yes" ng-model="eoiCtrl.formData.dataHosting.toolPlanned" value="yes" required> Yes
+    <input type="radio" id="tool_planned_no" ng-model="eoiCtrl.formData.dataHosting.toolPlanned" value="no"> No
+  </div>
+  <div class="form-group">
+    <label for="help_needed_yes">Do you need help in publishing your data?</label>
+    <input type="radio" id="help_needed_yes" ng-model="eoiCtrl.formData.dataHosting.helpNeeded" value="yes" required> Yes
+    <input type="radio" id="help_needed_no" ng-model="eoiCtrl.formData.dataHosting.helpNeeded" value="no"> No
+  </div>
+  <div class="bottom-button">
+    <a ui-sref="form.terms" class="btn btn-primary next-step" ng-disabled="eoiForm.$invalid">Next step <span class="glyphicon glyphicon-arrow-right"></span></a><span class="hint" ng-show="eoiForm.$invalid">This button will be activated once all questions are answered.</span>
+  </div>
+</section>

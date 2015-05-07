@@ -160,3 +160,99 @@ function format_bytes($bytes, $precision = 2) {
 
 	return round($bytes, $precision) . ' ' . $units[$pow];
 }
+
+/**
+ * Create module directory
+ * @param null $mode
+ * @param $name
+ */
+function gbif_tweaks_file_directories($mode = NULL, $name) {
+	switch ($mode) {
+		case 'create':
+			// Create directories for storing relevant files for IMS resources.
+			$uris = array(
+				'public://' . $name
+			);
+			foreach ($uris as $uri) {
+				$dir_exists = file_prepare_directory($uri);
+				if (!$dir_exists) {
+					$dir_created = drupal_mkdir($uri, NULL, TRUE);
+					if ($dir_created == TRUE) {
+						watchdog('gbif_tweaks', '!directory created.', array('!directory' => $uri), WATCHDOG_NOTICE);
+					}
+					else {
+						watchdog('gbif_tweaks', '!directory creation failed.', array('!directory' => $uri), WATCHDOG_ERROR);
+					}
+				}
+				else {
+					watchdog('gbif_tweaks', '!directory already exists.', array('!directory' => $uri), WATCHDOG_WARNING);
+				}
+			}
+			break;
+
+		case 'delete':
+			$uri = 'public://' . $name;
+			$dir_exists = file_prepare_directory($uri);
+			if ($dir_exists) {
+				$deleted = file_unmanaged_delete_recursive($uri);
+				if ($deleted == TRUE) {
+					watchdog('gbif_tweaks', '!directory deleted.', array('!directory' => $uri), WATCHDOG_NOTICE);
+					drupal_set_message('Module directory !directory is successfully deleted.', array('!directory' => $uri));
+				}
+			}
+			break;
+	}
+}
+
+/**
+ * UUID generator.
+ * @see http://stackoverflow.com/questions/2040240/php-function-to-generate-v4-uuid
+ */
+function gbif_tweaks_guidv4() {
+	$data = openssl_random_pseudo_bytes(16);
+	assert(strlen($data) == 16);
+
+	$data[6] = chr(ord($data[6]) & 0x0f | 0x40); // set version to 0100
+	$data[8] = chr(ord($data[8]) & 0x3f | 0x80); // set bits 6-7 to 10
+
+	return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
+}
+
+/**
+ * @param string $format
+ * @param null $timestamp
+ * @param null $timezone
+ * @return string
+ */
+function gbif_tweaks_format_time($format = 'c', $timestamp = NULL, $timezone = NULL) {
+	if ($timestamp == NULL) $timestamp = time();
+	if ($timezone == NULL) $timezone = date_default_timezone_get();
+
+	$datetime = new DateTime('now', new DateTimeZone($timezone));
+	$datetime->setTimestamp($timestamp);
+	$formatted_date = $datetime->format($format);
+
+	return $formatted_date;
+}
+
+/**
+ * Convert MB to bytes
+ * @param $p_sFormatted
+ * @return bool|string
+ * @see http://stackoverflow.com/questions/11807115/php-convert-kb-mb-gb-tb-etc-to-bytes
+ */
+function gbif_tweaks_to_byte_size($p_sFormatted) {
+	$aUnits = array('B' => 0, 'KB' => 1, 'MB' => 2, 'GB' => 3, 'TB' => 4, 'PB' => 5, 'EB' => 6, 'ZB' => 7, 'YB' => 8);
+  $sUnit = strtoupper(trim(substr($p_sFormatted, -2)));
+  if (intval($sUnit) !== 0) {
+		$sUnit = 'B';
+	}
+  if (!in_array($sUnit, array_keys($aUnits))) {
+		return false;
+	}
+  $iUnits = trim(substr($p_sFormatted, 0, strlen($p_sFormatted) - 2));
+  if (!intval($iUnits) == $iUnits) {
+		return false;
+	}
+  return $iUnits * pow(1024, $aUnits[$sUnit]);
+}

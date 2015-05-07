@@ -1,0 +1,772 @@
+<?php
+/**
+ * @file
+ * gbif_registry.module
+ *
+ * Pay attention to potential segmentation fault when integrating npm modules
+ * @see http://drupal.stackexchange.com/questions/126880/how-do-i-prevent-drupal-raising-a-segmentation-fault-when-using-a-node-js-themin
+ */
+
+// constants
+define('GBIF_REGISTRY_DOC_ROOT', 'public://gbif_registry');
+define('ALGORITHM', 'SHA1');
+define('HEADER_ORIGINAL_REQUEST_URL', 'x-url');
+define('HEADER_CONTENT_TYPE', 'Content-Type');
+define('CHAR_ENCODING', 'utf-8'); // Check if the registry side can validate this case insensitively.
+define('HEADER_GBIF_USER', 'x-gbif-user');
+define('HEADER_GBIF_DATE', 'x-gbif-date');
+define('HEADER_CONTENT_MD5', 'Content-MD5');
+define('HEADER_AUTHORIZATION', 'Authorization');
+define('GBIF_SCHEME', 'GBIF');
+define('EMAIL_ADMIN', 'bko@gbif.org');
+define('EMAIL_HELPDESK', 'helpdesk@gbif.org');
+
+module_load_include('inc', 'gbif_registry', 'gbif_registry.messages');
+
+/**
+ * Implements hook_menu().
+ */
+function gbif_registry_menu() {
+	$items['publishing-data/how-to-publish'] = array(
+		'title' => t('Data holder: Expression of interest'),
+		'description' => 'The landing page for the eoi form.',
+		'page callback' => 'gbif_registry_eoi_form',
+		'access arguments' => array('access content'),
+		'type' => MENU_CALLBACK,
+	);
+	$items['eoi/example-file-upload'] = array(
+		'title' => t('Receiving sample files'),
+		'description' => 'The access point for receiving sample files.',
+		'page callback' => 'gbif_registry_example_file_upload',
+		'access arguments' => array('access content'),
+		'type' => MENU_CALLBACK,
+	);
+	$items['eoi/form-data-submit'] = array(
+		'title' => t('Receiving EOI form data'),
+		'description' => 'The access point for receiving EOI form data.',
+		'page callback' => 'gbif_registry_eoi_form_data',
+		'access arguments' => array('access content'),
+		'type' => MENU_CALLBACK,
+	);
+	$items['admin/config/gbif/registry/eoi/process'] = array(
+		'title' => t('Processing EOI form data'),
+		'description' => 'Handling the operation on the submitted form data.',
+		'page callback' => 'gbif_registry_eoi_operation',
+		'access arguments' => array('access registry console'),
+		'type' => MENU_CALLBACK,
+	);
+	$items['admin/config/gbif/registry/eoi'] = array(
+		'title' => 'Expression of interest',
+		'description' => t('Management for EOI in queue.'),
+		'page callback' => 'drupal_get_form',
+		'page arguments' => array('gbif_registry_eoi_settings_form'),
+		'access arguments' => array('administer site configuration'),
+		'type' => MENU_NORMAL_ITEM,
+		'file' => 'gbif_registry.admin.inc',
+	);
+	return $items;
+}
+
+/**
+ * Implements hook_cron()
+ */
+function gbif_registry_cron() {
+	// send notification to helpdesk if any request is older than 1 week.
+	module_load_include('inc', 'gbif_registry', 'gbif_registry.admin');
+	$queue_items = _gbif_registry_list_queue('queue');
+	foreach ($queue_items as $item) {
+		if (time() - $item['raw_json']['workflow_control']['timestamp'] > 604800) { // 1 week is 604800 seconds.
+			$env = variable_get('environment_settings');
+			$drupal_edit_base_url = str_replace('www', 'drupaledit', $env['data_portal_base_url']);
+
+			$module = 'gbif_registry';
+			$key = 'reminder';
+			$to = 'helpdesk@gbif.org';
+			$language = language_default();
+			$params = $item['raw_json'];
+			$params['mgt_url'] = $drupal_edit_base_url . '/admin/config/gbif/registry/eoi';
+			$from = 'helpdesk@gbif.org';
+			$send = TRUE;
+			$result = drupal_mail($module, $key, $to, $language, $params, $from, $send);
+			if ($result['result'] == TRUE) {
+				watchdog('gbif_registry', 'Weekly reminder sent for the eoi request from @org-title', array('@org-title' => $item['raw_json']['org']['title']), WATCHDOG_INFO);
+			}
+			else {
+				watchdog('gbif_registry', 'Weekly reminder failed to send for the eoi request from @org-title', array('@org-title' => $item['raw_json']['org']['title']), WATCHDOG_INFO);
+			}
+		}
+	}
+}
+
+/**
+ * Handling uploaded sample files from AngularJS app.
+ */
+function gbif_registry_example_file_upload() {
+	// Validate the request is a POST and return proper response code on failure.
+	if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+		header('HTTP/1.1 405 Not Post');
+		drupal_json_output(array('message' => 'Not a POST request.'));
+	}
+	else {
+		$file_name = $_FILES['file']['name'];
+		if (!empty($file_name)) {
+			$file_destination = file_build_uri('gbif_registry/eoi/example_files/' . $_POST['hash'] . '-' . $file_name);
+			$uploaded = move_uploaded_file($_FILES['file']['tmp_name'] , $file_destination );
+			if ($uploaded == true) {
+				header('HTTP/1.1 201 Created');
+				drupal_json_output(array('message' => 'File successfully uploaded.'));
+			}
+			else {
+				header('HTTP/1.1 400 Bad Request');
+				drupal_json_output(array('message' => 'File not uploaded successfully. Please report this issue to helpdesk@gbif.org.'));
+			}
+		}
+		else {
+			// detect if the file is larger then the php variable upload_max_file
+			if (isset($_SERVER['CONTENT_LENGTH']) && (int) $_SERVER['CONTENT_LENGTH'] > gbif_tweaks_to_byte_size(ini_get('post_max_size'))) {
+				header('HTTP/1.1 400 Bad Request');
+				drupal_json_output(array('message' => 'File size exceeds maximum.'));
+			}
+			else {
+				header('HTTP/1.1 400 Bad Request');
+				drupal_json_output(array('message' => 'No file detected.'));
+			}
+		}
+	}
+}
+
+/**
+ * Handling submitted form data.
+ */
+function gbif_registry_eoi_form_data() {
+	// AngularJS sends a testing request first before the actual POST.
+	// Hence the first conditional.
+	if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+		header('HTTP/1.1 200 OK');
+		drupal_json_output(array('message' => 'Server is responding.'));
+	}
+	// Validate whether the request is a POST.
+	elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
+		$json = drupal_json_decode(file_get_contents("php://input",  TRUE), TRUE);
+
+		// Make sure there is actually something posted.
+		if (!empty($json)) {
+
+			// validate the json
+			if (gbif_registry_form_data_validation($json)) {
+				// Verify the reCAPTCHA challenge.
+				_recaptcha_load_library();
+				$challenge = $json['recaptcha']['challenge'];
+				$response = $json['recaptcha']['response'];
+				$recaptcha_valid = gbif_registry_captcha_validation($challenge, $response);
+
+				if ($recaptcha_valid == TRUE) {
+					// File the POST request into queue.
+					// Put in the status bit for workflow control.
+					$timestamp = time();
+					$json['workflow_control'] = array(
+						'status' => 'queue',
+						'timestamp' => $timestamp,
+						'date' => date('Ymd', $timestamp),
+						'UUID' => gbif_tweaks_guidv4(),
+						'processor' => 'Drupal'
+					);
+
+					// Use date and UUID as file name.
+					$file_destination = file_build_uri('gbif_registry/eoi/queue/' . $json['workflow_control']['date'] . '-' . $json['workflow_control']['UUID'] . '.json');
+					$file_save_success = file_save_data(json_encode($json), $file_destination, FILE_EXISTS_ERROR);
+
+					if ($file_save_success == TRUE) {
+
+						// send notifications to relevant party
+						$notified = gbif_registry_eoi_notifications($json);
+						if ($notified == TRUE) {
+							header('HTTP/1.1 201 Created');
+							drupal_json_output(array('message' => 'We have received your request. You should receive a notification shortly.'));
+						}
+						else {
+							$message = t('Failed to send notifications for EOI case !file.', array('!file' => $file_destination));
+							watchdog('gbif_registry', $message, NULL, WATCHDOG_ERROR);
+							// @todo send alert to admin.
+							header('HTTP/1.1 202 Accepted');
+							drupal_json_output(array('message' => 'The submitted data is queued. You will be contacted shortly via email.'));
+						}
+					}
+					// The submission is successful, but file saving failed.
+					else {
+						header('HTTP/1.1 202 Accepted');
+						drupal_json_output(array('message' => 'The submitted data is not queued successfully. Please keep the browser open and inform this error to helpdesk@gbif.org. We appreciate your help!'));
+					}
+				}
+				// If the recaptcha validation failed.
+				else {
+					header('HTTP/1.1 400 Bad Request');
+					drupal_json_output(array('message' => 'reCAPTCHA validation failed. Please try again.'));
+				}
+			}
+			else {
+				header('HTTP/1.1 400 Bad Request');
+				drupal_json_output(array('message' => 'Form data incomplete. Please try again.'));
+			}
+		}
+		// The form data is empty.
+		else {
+			header('HTTP/1.1 400 Bad Request');
+			drupal_json_output(array('message' => 'The form data is empty. Please keep the browser open and inform this error to helpdesk@gbif.org. We appreciate your help!'));
+		}
+	}
+}
+
+/**
+ * Implements hook_permission().
+ */
+function gbif_registry_permission() {
+	return array(
+		'access registry console' => array(
+			'title' => t('Access GBIF registry console'),
+			'description' => t('Allow operation on the GBIF registry')
+		)
+	);
+}
+
+/**
+ * Implements hook_theme().
+ */
+function gbif_registry_theme($existing, $type, $theme, $path) {
+	$path = drupal_get_path('module', 'gbif_registry');
+	return array(
+		'eoi_queue_form' => array(
+			'render element' => 'form',
+		),
+		'eoi_form_landing' => array(
+		'template' => 'eoi-form-landing',
+		'path' => $path . '/theme',
+		'variables' => array()
+		)
+	);
+}
+
+/**
+ * Theme queue display
+ * @param $variables
+ * @return string
+ * @throws Exception
+ */
+function theme_eoi_queue_form($variables) {
+	$form = $variables['form'];
+
+	$rows = array();
+
+	foreach (element_children($form) as $key) {
+		if (!empty($form[$key]['raw_value'])) {
+			$item = &$form[$key];
+			$row = array();
+
+			$row[] = drupal_render($item['date']);
+			$row[] = drupal_render($item['institution']);
+			$row[] = drupal_render($item['contact']);
+			$row[] = drupal_render($item['beEndorsedBy']);
+			$row[] = drupal_render($item['status']);
+			$row[] = drupal_render($item['file_path']);
+			$row[] = drupal_render($item['operation_approve']);
+			$row[] = drupal_render($item['operation_reject']);
+
+			$row = array('data' => $row);
+			$rows[$key] = $row;
+		}
+	}
+
+	$header = array(
+		array(
+			'data' => t('Date'),
+			'colspan' => 1
+		),
+		t('Institution'),
+		t('Contact'),
+		t('Endorsing body'),
+		t('Status'),
+		array(
+			'data' => t('Operation(s)'),
+			'colspan' => 3
+		)
+	);
+
+	$output = '';
+
+	if (!empty($rows)) {
+		$output = theme('table', array('header' => $header, 'rows' => $rows));
+		$output .= drupal_render_children($form);
+
+		// AJAX result for each form.
+		$output .= '<div id="action-wrapper-'. array_search($variables['form']['#title'], gbif_registry_queue_types()) . '"></div>';
+	}
+
+	return $output;
+}
+
+function gbif_registry_queue_types() {
+	return array(
+		'queue' => t('Awaiting for approval'),
+		'rejected' => t('Previously rejected'),
+		'approved' => t('Already approved')
+	);
+}
+
+/**
+ * Calling the Registry API to operate on entities.
+ * @param $json
+ * @param $user
+ * @return bool
+ */
+function gbif_registry_create_organisation($json, $user) {
+	// essential variables
+	$env = variable_get('environment_settings');
+	$base_url = $env['gbif_api_base_url'];
+	$request_uri = '/v' . $env['gbif_api_version'] . '/organization'; // for organization calls.
+  $request_url = $base_url . $request_uri;
+	$app_key = 'gbif.drupal';
+	$secret = variable_get('gbif_drupal_secret');
+
+	$registry_base_url = str_replace('www', 'registry', $env['data_portal_base_url']);
+
+	// Check if the registry is available by sending a test call.
+	if (is_array(json_decode(file_get_contents($request_url), TRUE))) {
+
+		// Prepare data for drupal_http_request()
+		// createdBy, modifiedBy, created and modified must be null.
+		$data = array(
+			'endorsingNodeKey' => $json['endorsement']['endorsingParticipant']['key'],
+			'endorsementApproved' => true,
+			'title' => $json['org']['title'],
+			'description' => $json['org']['desc'],
+			'language' => 'eng',
+			'address' => array($json['org']['address']),
+			'city' => $json['org']['city'],
+			'postalCode' => $json['org']['zip'],
+			'latitude' => '',
+			'longitude' => '',
+			'numPublishedDatasets' => ''
+		);
+    if (!empty($json['org']['url'])) $data['homepage'] = array($json['org']['url']);
+    if (!empty($json['org']['province'])) $data['province'] = array($json['org']['province']);
+		$data_json = json_encode($data);
+
+		// MD5 Digest $data to be posted.
+		$data_digest_md5 = base64_encode(md5($data_json, true));
+
+		// Prepare $options for, signing, and eventually for drupal_http_request()
+		$options = array(
+			'method' => 'POST',
+			'data' => $data_json,
+			'timeout' => 3,
+			'headers' => array(
+				HEADER_CONTENT_TYPE => 'application/json; charset=' . CHAR_ENCODING,
+				HEADER_GBIF_USER => $user->name,
+				HEADER_ORIGINAL_REQUEST_URL => $request_uri,
+				HEADER_CONTENT_MD5 => $data_digest_md5,
+			)
+		);
+		// Build string for signing
+		$string_to_sign = gbif_registry_build_string_to_sign($options);
+		// Build signature
+		$signature = gbif_registry_build_signature($string_to_sign, $secret);
+		// Append the authorization header
+		$options['headers']['Authorization'] = GBIF_SCHEME . ' ' . $app_key . ':' . $signature;
+
+		// The following line is here for debugging using Basic scheme for authentication.
+		// $options['headers']['Authorization'] = 'Basic ' . base64_encode('username:password');
+
+		// Make a request to the Registry
+		$create_org = drupal_http_request($request_url, $options);
+
+		if ($create_org->code == '201' && $create_org->status_message == 'Created') {
+
+			// once the organization is successfully created, we can add admin and/or tech contacts
+      $request_uri = $request_uri . '/' . str_replace('"', '', $create_org->data) . '/contact'; // for creating contact.
+      $request_url = $base_url . $request_uri;
+      // we create a generic 'POINT_OF_CONTACT' for the submitter, no matter
+      // he/she indicates other contacts
+      $create_contact_success = gbif_registry_create_contact($user, $json['contact'], 'POINT_OF_CONTACT', $request_uri, $request_url, $secret, $app_key);
+      // create other contacts if provided
+      $contact_types = array(
+        'adminContact' => 'ADMINISTRATIVE_POINT_OF_CONTACT',
+        'techContact' => 'TECHNICAL_POINT_OF_CONTACT'
+      );
+      foreach ($contact_types as $k => $contact_type) {
+        $is_property = 'is' . ucfirst($k);
+        // if the submitter explicitly indicate admin or tech contact, we create
+        // contacts as per submitted information
+        if ($json['org'][$is_property] == 'no' && !empty($json['org'][$k])) {
+          $create_contact_success = gbif_registry_create_contact($user, $json['org'][$k], $contact_type, $request_uri, $request_url, $secret, $app_key);
+        }
+        // if the submitter explicitly indicate him/herself as admin or tech
+        // contact, we'd create one accordingly
+        elseif ($json['org'][$is_property] == 'yes') {
+          $create_contact_success = gbif_registry_create_contact($user, $json['contact'], $contact_type, $request_uri, $request_url, $secret, $app_key);
+        }
+      }
+			$message = t('Organization !uuid created on the !link.', array('!uuid' => $create_org->data, '!link' => l('GBIF Registry', $registry_base_url . '/web/index.html#/organization/' . str_replace('"', '', $create_org->data), array('attributes' => array('target' => '_blank')))));
+			drupal_set_message($message, 'status');
+			watchdog('gbif_registry', $message, NULL, WATCHDOG_INFO);
+			return TRUE;
+		}
+		else {
+			$message = t('Organization is not created successfully. Please check log.');
+			drupal_set_message($message, 'error');
+			watchdog('gbif_registry', 'Organization is not successfully created. Server responded<br/>Http code: !code<br/>Status message: !status<br/>Data: !data', array('!code' => $create_org->code, '!status' => $create_org->status_message, '!data' => $create_org->data), WATCHDOG_WARNING);
+			return FALSE;
+		}
+	}
+	else {
+		$message = t('GBIF registry is temporarily not available.');
+		drupal_set_message($message, 'error');
+		watchdog('gbif_registry', $message, NULL, WATCHDOG_WARNING);
+		return FALSE;
+	}
+}
+
+/**
+ * Create a contact under a given organization
+ *
+ * @param $user
+ * @param $contact_obj
+ * @param $contact_type
+ * @param $request_uri
+ * @param $request_url
+ * @param $secret
+ * @param $app_key
+ */
+function gbif_registry_create_contact($user, $contact_obj, $contact_type, $request_uri, $request_url, $secret, $app_key) {
+  // preparing data object
+  $data = array(
+    'type' => $contact_type,
+    'primary' => true,
+    'firstName' => $contact_obj['firstName'],
+    'lastName' => $contact_obj['lastName'],
+    'email' => array($contact_obj['email'])
+  );
+  if (!empty($contact_obj['phone'])) $data['phone'] = array($contact_obj['phone']);
+  $data_json = json_encode($data);
+  $data_digest_md5 = base64_encode(md5($data_json, true));
+  $options = array(
+    'method' => 'POST',
+    'data' => $data_json,
+    'timeout' => 3,
+    'headers' => array(
+      HEADER_CONTENT_TYPE => 'application/json; charset=' . CHAR_ENCODING,
+      HEADER_GBIF_USER => $user->name,
+      HEADER_ORIGINAL_REQUEST_URL => $request_uri,
+      HEADER_CONTENT_MD5 => $data_digest_md5,
+    )
+  );
+  $string_to_sign = gbif_registry_build_string_to_sign($options);	// Build signature
+  $signature = gbif_registry_build_signature($string_to_sign, $secret);
+  $options['headers']['Authorization'] = GBIF_SCHEME . ' ' . $app_key . ':' . $signature; // Append the authorization header
+  $create_contact = drupal_http_request($request_url, $options);
+  if ($create_contact->code == '201' && $create_contact->status_message == 'Created') {
+    watchdog('gbif_registry', '@contact_type created', array('@contact_type' => $contact_type), WATCHDOG_INFO);
+    return TRUE;
+  }
+  else {
+    watchdog('gbif_registry', 'Error in creating @contact_type', array('@contact_type' => $contact_type), WATCHDOG_ERROR);
+    return FALSE;
+  }
+}
+
+/**
+ * This is a partial port of the Java GbifAppAuthService. Only functions for
+ * signing request are implemented.
+ *
+ * @see https://github.com/gbif/gbif-common-ws/blob/master/src/main/java/org/gbif/ws/security/GbifAppAuthService.java#L190
+ * @param $options
+ * @return string
+ * @todo OOP.
+ */
+function gbif_registry_build_string_to_sign($options) {
+	$string_to_sign = '';
+	$string_to_sign .= $options['method'];
+	$string_to_sign .= "\n" . $options['headers'][HEADER_ORIGINAL_REQUEST_URL];
+	$string_to_sign .= "\n" . $options['headers'][HEADER_CONTENT_TYPE];
+	$string_to_sign .= "\n" . $options['headers'][HEADER_CONTENT_MD5];
+	$string_to_sign .= "\n" . $options['headers'][HEADER_GBIF_USER];
+	return $string_to_sign;
+}
+
+function gbif_registry_build_signature($string_to_sign, $secret) {
+	$signature = base64_encode(hash_hmac(ALGORITHM, $string_to_sign, $secret, true));
+	return $signature;
+}
+
+function gbif_registry_eoi_operation($action = NULL, $case = NULL) {
+	global $user;
+
+	if (!empty($action) && !empty($case)) {
+		$role = user_role_load_by_name('REGISTRY_ADMIN');
+		if (user_has_role($role->rid)) {
+			$case = explode('_', $case);
+			$directory = drupal_realpath('public://gbif_registry/eoi/queue');
+			$file_path = $directory . '/' . $case[0] . '-' . $case[1] . '.json';
+			$json = json_decode(file_get_contents($file_path), TRUE);
+			$json['workflow_control']['modified_timestamp'] = time();
+			$json['workflow_control']['modified_time_formatted'] = gbif_tweaks_format_time();
+			$json['workflow_control']['processor'] = $user->name;
+
+			// POST this as a request to the GBIF Registry.
+			if ($action === 'approve') {
+				$json['workflow_control']['status'] = 'approved';
+
+        // On success, update and move the file
+        if (gbif_registry_create_organisation($json, $user) === TRUE) {
+          $file_destination = file_build_uri('gbif_registry/eoi/approved/' . $json['workflow_control']['date'] . '-' . $json['workflow_control']['UUID'] . '.json');
+          $file_save_success = file_save_data(json_encode($json), $file_destination, FILE_EXISTS_ERROR);
+          // Delete the old file after file has successfully moved.
+          if ($file_save_success !== FALSE) {
+            $file_delete_success = unlink($file_path);
+            if ($file_delete_success === TRUE) {
+              $message = t('!organisation created in the GBIF Registry', array('!organisation' => $json['org']['title']));
+              watchdog('gbif_registry', $message, NULL, WATCHDOG_NOTICE);
+              drupal_set_message($message, 'status');
+            }
+          }
+        }
+			}
+      // On rejecting a case, simply remove the file.
+			elseif ($action === 'reject') {
+				$json['workflow_control']['status'] = 'rejected';
+				$file_destination = file_build_uri('gbif_registry/eoi/rejected/' . $json['workflow_control']['date'] . '-' . $json['workflow_control']['UUID'] . '.json');
+				$file_save_success = file_save_data(json_encode($json), $file_destination, FILE_EXISTS_ERROR);
+				// Delete the old file after file has successfully moved.
+				if ($file_save_success !== FALSE) {
+					$file_delete_success = unlink($file_path);
+					if ($file_delete_success === TRUE) {
+						$message = t('!organisation request rejected', array('!organisation' => $json['org']['title']));
+						watchdog('gbif_registry', $message, NULL, WATCHDOG_NOTICE);
+						drupal_set_message($message, 'status');
+					}
+				}
+			}
+		}
+		else {
+			$message = t("You don't have sufficient privilege to perform this operation.");
+			drupal_set_message($message, 'error');
+		}
+	}
+
+	drupal_goto($_GET['destination']);
+}
+
+/**
+ * Implements hook_mail().
+ * @param $key
+ * @param $message
+ * @param $params
+ */
+function gbif_registry_mail($key, &$message, $params) {
+	$options = array(
+		'langcode' => $message['language']->language,
+	);
+	switch ($key) {
+		// Send a message to the endorsing node.
+		case 'notify_endorsing_node_manager':
+      $message = _gbif_registry_notify_endorsing_node_manager($message, $params, $options);
+			break;
+		// Send a message to the contact of EOI.
+		case 'notify_eoi_contact':
+      $message = _gbif_registry_notify_eoi_contact($message, $params, $options);
+			break;
+		// Send a message to the helpdesk.
+		case 'notify_helpdesk':
+      $message = _gbif_registry_notify_helpdesk($message, $params, $options);
+			break;
+		// Weekly reminder to helpdesk.
+		case 'reminder':
+			$message = _gbif_registry_weekly_reminder($message, $params, $options);
+			break;
+	}
+}
+
+/**
+ * Prepare and send notifications to 1)endorsing node; 2)helpdesk; 3)form-submitter.
+ */
+function gbif_registry_eoi_notifications($json) {
+	$env = variable_get('environment_settings');
+	$drupal_edit_base_url = str_replace('www', 'drupaledit', $env['data_portal_base_url']);
+
+	$module = 'gbif_registry';
+  $from = EMAIL_HELPDESK;
+  $params = $json;
+	$params['mgt_url'] = $drupal_edit_base_url . '/admin/config/gbif/registry/eoi';
+
+	// determine the node url
+	if ($params['endorsement']['endorsingParticipant']['type'] == 'COUNTRY' || $params['endorsement']['endorsingParticipant']['participantTitle'] == 'Chinese Taipei') {
+		$params['node_url'] = $env['data_portal_base_url'] . '/country/' . $params['endorsement']['endorsingParticipant']['country'];
+	}
+	elseif ($params['endorsement']['endorsingParticipant']['type'] == 'OTHER') {
+		$params['node_url'] = $env['data_portal_base_url'] . '/node/' . $params['endorsement']['endorsingParticipant']['key'];
+	}
+
+  $language = language_default();
+  $send = TRUE;
+
+	// Attach the example file if there is one
+	if (!empty($json['org']['exampleFileHash']) && $json['org']['exampleFile'] == TRUE) {
+		$file = _gbif_registry_get_example_file($json);
+
+		// @todo To fix that it's possible to have files with the same hash.
+		if (count($file) == 1) {
+			$params['attachment'] = $file[0];
+		}
+	}
+
+	$node_manager = _gbif_registry_find_contact($params['endorsement']['endorsingParticipant'], 'NODE_MANAGER');
+
+	$notifications = array(
+		//'notify_endorsing_node_manager' => $node_manager['email'][0], @todo uncomment when releasing.
+		'notify_endorsing_node_manager' => EMAIL_ADMIN,
+		'notify_eoi_contact' => $params['contact']['email'],
+		'notify_helpdesk' => EMAIL_HELPDESK,
+	);
+
+	$sent = array();
+	foreach ($notifications as $key => $to) {
+		$key_result = $key . '_result';
+    // if the request is addressed to the Nodes Committee, then no message to
+    // a Node manager.
+    if ($params['endorsement']['beEndorsedByType'] == 'nc' && $key == 'notify_endorsing_node_manager') {
+			// do nothing
+    }
+		else {
+			$result = drupal_mail($module, $key, $to, $language, $params, $from, $send);
+			$params[$key_result] = $result['result'];
+			$sent[] = $result;
+		}
+	}
+
+	// determine if there is any failed notification
+	$sent_result = TRUE;
+	foreach ($sent as $result) {
+		if ($result['result'] == FALSE) $sent_result = FALSE;
+	}
+
+  if ($sent_result == TRUE) {
+		watchdog('gbif_registry', 'Your message has been sent.', NULL, WATCHDOG_INFO);
+		return TRUE;
+  }
+  else {
+    watchdog('gbif_registry', 'There was a problem sending notifications. Result dump here: !dump', array('!dump' => serialize($sent)), WATCHDOG_ERROR);
+		return FALSE;
+  }
+}
+
+/**
+ * Find the contact of a particular role in the contact array returned from the GBIF Registry.
+ * @param array $org_object
+ * @param string $role
+ * @return bool
+ */
+function _gbif_registry_find_contact($org_object, $role) {
+	if (isset($org_object)) {
+		foreach ($org_object['contacts'] as $contact) {
+			if ($contact['type'] == $role) {
+				return $contact;
+			}
+		}
+	}
+	else {
+		return FALSE;
+	}
+}
+
+function gbif_registry_eoi_form() {
+	drupal_add_library('gbif_registry', 'eoi');
+	return theme('eoi_form_landing', array());
+}
+
+function gbif_registry_library() {
+	$path = drupal_get_path('module', 'gbif_registry');
+	$libraries['eoi'] = array(
+		'title' => 'AngularJS app for EOI',
+		'js' => array(
+			$path . '/ng-app/target/js/main.bundle.js' => array(
+				'type' => 'file',
+				'scope' => 'footer',
+				'weight' => 100,
+			)
+		),
+		'css' => array(
+			$path . '/ng-app/target/css/ng-app.css' => array(
+				'type' => 'file',
+				'weight' => 20,
+			),
+		)
+	);
+	return $libraries;
+}
+
+/**
+ * CAPTCHA Callback; Validates the reCAPTCHA code.
+ * Modified from the recaptcha module.
+ */
+function gbif_registry_captcha_validation($challenge, $response) {
+	$recaptcha_private_key = variable_get('recaptcha_private_key', FALSE);
+	$ip_address = ip_address();
+	if ($recaptcha_private_key && $ip_address && !empty($challenge) && !empty($response)) {
+		$resp = recaptcha_check_answer(
+			$recaptcha_private_key,
+			$ip_address,
+			check_plain($challenge),
+			check_plain($response)
+		);
+		return $resp->is_valid;
+	}
+	return FALSE;
+}
+
+/**
+ * Very preliminary data check because the validation should be done at the AngularJS end.
+ */
+function gbif_registry_form_data_validation($json) {
+	$result = TRUE;
+	// test mandatory fields
+	if (empty($json['recaptcha']) || empty($json['org']['title'])) {
+		$result = FALSE;
+	}
+	return $result;
+}
+
+/**
+ * Helper function to get the example file.
+ */
+function _gbif_registry_get_example_file($json) {
+	$hash = $json['org']['exampleFileHash'];
+	$directory = drupal_realpath('public://gbif_registry/eoi/example_files');
+	$matched_files = array();
+	$iterator = new DirectoryIterator($directory);
+	foreach ($iterator as $file) {
+		if ($file->isFile() && $file->isReadable() && $file->isWritable()) {
+			// check if hash matches
+			$hashs = explode('-', $file->getFilename());
+			if ($hashs[0] == $hash) {
+        array_shift($hashs);
+        // reconstruct file name
+        $file_name = '';
+        foreach ($hashs as $n) {
+          $file_name .= $n;
+        }
+				$file_path = $directory . '/' . $file->getFilename();
+        $file_content = file_get_contents($file_path);
+        // retrieve MIME file type
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $file_mime = finfo_file($finfo, $file_path);
+        finfo_close($finfo);
+				$item = array(
+					'filecontent' => $file_content,
+          'filename' => $file_name,
+          'filemime' => $file_mime
+				);
+				$matched_files[] = $item;
+			}
+		}
+	}
+	return $matched_files;
+}

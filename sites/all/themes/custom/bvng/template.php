@@ -58,6 +58,8 @@ function bvng_preprocess(&$variables, $hook) {
 	$variables['data_portal_base_url'] = $env['data_portal_base_url'];
 	$variables['gbif_api_base_url'] = $env['gbif_api_base_url'];
 	$variables['gbif_api_version'] = $env['gbif_api_version'];
+	global $base_url;
+	$env['base_url'] = $base_url;
 	drupal_add_js(array('environment_settings' => $env), 'setting');
 
 	/* The $current_path will change after setting active menu item,

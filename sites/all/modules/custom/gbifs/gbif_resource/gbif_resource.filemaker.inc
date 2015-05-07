@@ -405,7 +405,7 @@ function _gbif_resource_sync() {
 								}
 							}
 						} catch (Exception $e) {
-							watchdog('gbif_resource', $e->getMessage(), array(), WATCHDOG_ERROR);
+							watchdog('gbif_resource', $e->getMessage(), NULL, WATCHDOG_ERROR);
 							continue;
 						}
 						unset($query, $entities, $tid, $lang_code, $tid_exist, $node_array, $field_values, $v);
@@ -536,7 +536,7 @@ function _gbif_resource_sync() {
 			unset($ims_id, $node_wrapper, $node);
 
 		} catch (Exception $e) {
-			watchdog('gbif_resource', $e->getMessage(), array(), WATCHDOG_ERROR);
+			watchdog('gbif_resource', $e->getMessage(), NULL, WATCHDOG_ERROR);
 			continue;
 		}
 	}

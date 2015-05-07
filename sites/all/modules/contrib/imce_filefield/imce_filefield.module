@@ -52,7 +52,9 @@ function imce_filefield_form_field_ui_field_edit_form_alter(&$form, &$form_state
  */
 function imce_filefield_field_widget_info_alter(&$info) {
   foreach (imce_filefield_supported_widgets() as $widget) {
-    $info[$widget]['settings']['imce_filefield_on'] = 0;
+    if (isset($info[$widget])) {
+      $info[$widget]['settings']['imce_filefield_on'] = 0;
+    }
   }
 }
 

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset='utf-8'/>
+  <title>GBIF.org | Data holder: Expression of interest</title>
+  <link rel="stylesheet" href="css/app.css"/>
+</head>
+<body ng-app="lpApp">
+  <div class="container" ng-controller="lpController as lpCtrl">
+    <div id="latest-publisher-container">
+      <h3>Latest data publishers</h3>
+      <div class="views-row" ng-repeat="org in lpCtrl.orgs">
+        <div class="views-field views-field-title"><h3 class="field-content"><a href="{{org.portalUrl}}">{{org.title}}</a></h3></div>
+        <div class="views-field views-field-body">
+          <p class="field-content">{{org.summary}}</p>
+          <p ng-bind-html="org.endorsedText"></p>
+        </div>
+        <div class="views-field views-field-gr-image"><img class="org-logo" src="{{org.logoUrl}}"></div>
+      </div>
+    </div>
+  </div>
+</body>
+<script src="/js/main.bundle.js" type="text/javascript"></script>
+</html>

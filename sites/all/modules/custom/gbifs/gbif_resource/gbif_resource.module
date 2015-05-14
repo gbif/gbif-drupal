@@ -81,6 +81,31 @@ function gbif_resource_redirect() {
 }
 
 /**
+ * Implements hook_library().
+ * @return mixed
+ */
+function gbif_resource_library() {
+  $path = drupal_get_path('module', 'gbif_resource');
+  $libraries['lp'] = array(
+    'title' => 'Latest resource block',
+    'js' => array(
+      $path . '/ng-app/target/js/main.bundle.js' => array(
+        'type' => 'file',
+        'scope' => 'footer',
+        'weight' => 100,
+      )
+    ),
+    'css' => array(
+      $path . '/ng-app/target/css/app.css' => array(
+        'type' => 'file',
+        'weight' => 20,
+      ),
+    )
+  );
+  return $libraries;
+}
+
+/**
  * Handling the redirection of the old style URLs of ORC.
  */
 function gbif_resource_orc_redirect() {
@@ -531,5 +556,6 @@ function gbif_resource_show_featured_resources() {
 }
 
 function gbif_resource_publishing_data() {
+  drupal_add_library('gbif_resource', 'lp');
   return theme('publishing_data__resources');
 }

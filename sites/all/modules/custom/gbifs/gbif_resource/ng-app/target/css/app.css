@@ -1,0 +1,43 @@
+/*app.less*/
+/*latest-publishers.less*/
+#latest-publisher-container .views-row {
+  display: inline-table;
+  position: relative;
+  border: 1px solid #eeeeee;
+  border-radius: 5px;
+  background-color: #fefefe;
+  margin: 0px 5px 10px 0px;
+  padding: 15px;
+  height: 200px;
+  width: 284px;
+  line-height: 21px;
+  overflow: hidden;
+  -moz-box-shadow: 0px 0px 9px 0px #eee;
+  -webkit-box-shadow: 0px 0px 9px 0px #eee;
+  box-shadow: 0px 0px 9px 0px #eee;
+}
+#latest-publisher-container .views-row .views-field-gr-image {
+  left: 15px;
+}
+#latest-publisher-container .views-row .views-field-gr-image img.org-logo {
+  margin-right: 10px;
+  max-width: 200px;
+  max-height: 50px;
+}
+#latest-publisher-container .views-row .views-field-gr-resource-type {
+  position: absolute;
+  left: 15px;
+  bottom: 10px;
+  font-size: 11px;
+}
+#latest-publisher-container .views-row .views-field-title h3 {
+  font-size: 16px;
+  margin-top: 0px;
+}
+#latest-publisher-container .views-row .views-field-body p {
+  font-size: 13px;
+  line-height: 1.3em;
+}
+#latest-publisher-container p.more {
+  margin-bottom: 20px;
+}

@@ -51,290 +51,119 @@
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/*! angular-breadcrumb - v0.3.3
-	* http://ncuillery.github.io/angular-breadcrumb
-	* Copyright (c) 2014 Nicolas Cuillery; Licensed MIT */
+	angular.module('reCAPTCHA', []).provider('reCAPTCHA', function() {
+	    var _publicKey = null,
+	        _options = {},
+	        self = this;
 	
-	(function (window, angular, undefined) {
-	'use strict';
-	
-	function isAOlderThanB(scopeA, scopeB) {
-	    if(angular.equals(scopeA.length, scopeB.length)) {
-	        return scopeA > scopeB;
-	    } else {
-	        return scopeA.length > scopeB.length;
-	    }
-	}
-	
-	function parseStateRef(ref) {
-	    var parsed = ref.replace(/\n/g, " ").match(/^([^(]+?)\s*(\((.*)\))?$/);
-	    if (!parsed || parsed.length !== 4) { throw new Error("Invalid state ref '" + ref + "'"); }
-	    return { state: parsed[1], paramExpr: parsed[3] || null };
-	}
-	
-	function $Breadcrumb() {
-	
-	    var $$options = {
-	        prefixStateName: null,
-	        template: 'bootstrap3',
-	        templateUrl: null,
-	        includeAbstract : false
+	    this.setPublicKey = function(publicKey) {
+	        _publicKey = publicKey;
 	    };
 	
 	    this.setOptions = function(options) {
-	        angular.extend($$options, options);
+	        _options = options;
 	    };
 	
-	    this.$get = ['$state', '$stateParams', '$rootScope', function($state, $stateParams, $rootScope) {
-	
-	        var $lastViewScope = $rootScope;
-	
-	        // Early catch of $viewContentLoaded event
-	        $rootScope.$on('$viewContentLoaded', function (event) {
-	            // With nested views, the event occur several times, in "wrong" order
-	            if(isAOlderThanB(event.targetScope.$id, $lastViewScope.$id)) {
-	                $lastViewScope = event.targetScope;
-	            }
-	        });
-	
-	        // Get the parent state
-	        var $$parentState = function(state) {
-	            // Check if state has explicit parent OR we try guess parent from its name
-	            var name = state.parent || (/^(.+)\.[^.]+$/.exec(state.name) || [])[1];
-	            // If we were able to figure out parent name then get this state
-	            return name;
-	        };
-	
-	        // Add the state in the chain if not already in and if not abstract
-	        var $$addStateInChain = function(chain, stateRef) {
-	            var conf,
-	                parentParams,
-	                ref = parseStateRef(stateRef);
-	
-	            for(var i=0, l=chain.length; i<l; i+=1) {
-	                if (chain[i].name === ref.state) {
-	                    return;
-	                }
-	            }
-	
-	            conf = $state.get(ref.state);
-	            if((!conf.abstract || $$options.includeAbstract) && !(conf.ncyBreadcrumb && conf.ncyBreadcrumb.skip)) {
-	                if(ref.paramExpr) {
-	                    parentParams = $lastViewScope.$eval(ref.paramExpr);
-	                }
-	
-	                conf.ncyBreadcrumbLink = $state.href(ref.state, parentParams || $stateParams || {});
-	                chain.unshift(conf);
+	    this._createScript = function($document, callback) {
+	        var scriptTag = $document.createElement('script');
+	        scriptTag.type = 'text/javascript';
+	        scriptTag.async = true;
+	        scriptTag.src = '//www.google.com/recaptcha/api/js/recaptcha_ajax.js';
+	        scriptTag.onreadystatechange = function() {
+	            if (this.readyState == 'complete') {
+	                callback();
 	            }
 	        };
+	        scriptTag.onload = callback;
+	        var s = $document.getElementsByTagName('body')[0];
+	        s.appendChild(scriptTag);
+	    };
 	
-	        // Get the state for the parent step in the breadcrumb
-	        var $$breadcrumbParentState = function(stateRef) {
-	            var ref = parseStateRef(stateRef),
-	                conf = $state.get(ref.state);
+	    this.$get = ['$q', '$rootScope', '$window', '$document', function($q, $rootScope, $window, $document) {
+	        var deferred = $q.defer();
 	
-	            if(conf.ncyBreadcrumb && conf.ncyBreadcrumb.parent) {
-	                // Handle the "parent" property of the breadcrumb, override the parent/child relation of the state
-	                var isFunction = typeof conf.ncyBreadcrumb.parent === 'function';
-	                var parentStateRef = isFunction ? conf.ncyBreadcrumb.parent($lastViewScope) : conf.ncyBreadcrumb.parent;
-	                if(parentStateRef) {
-	                    return parentStateRef;
-	                }
-	            }
-	
-	            return $$parentState(conf);
-	        };
+	        if (!$window.Recaptcha) {
+	            self._createScript($document[0], deferred.resolve);
+	        } else {
+	            deferred.resolve();
+	        }
 	
 	        return {
-	
-	            getTemplate: function(templates) {
-	                if($$options.templateUrl) {
-	                    // templateUrl takes precedence over template
-	                    return null;
-	                } else if(templates[$$options.template]) {
-	                    // Predefined templates (bootstrap, ...)
-	                    return templates[$$options.template];
-	                } else {
-	                    return $$options.template;
+	            create: function(element, callback) {
+	                if (!_publicKey) {
+	                    throw new Error('Please provide your PublicKey via setPublicKey');
 	                }
+	                _options.callback = callback;
+	
+	                deferred.promise.then(function() {
+	                    $window.Recaptcha.create(
+	                        _publicKey,
+	                        element,
+	                        _options
+	                    );
+	                });
 	            },
-	
-	            getTemplateUrl: function() {
-	                return $$options.templateUrl;
+	            setPublicKey: function(publicKey) {
+	                _publicKey = publicKey;
 	            },
-	
-	            getStatesChain: function(exitOnFirst) { // Deliberately undocumented param, see getLastStep
-	                var chain = [];
-	
-	                // From current state to the root
-	                for(var stateRef = $state.$current.self.name; stateRef; stateRef=$$breadcrumbParentState(stateRef)) {
-	                    $$addStateInChain(chain, stateRef);
-	                    if(exitOnFirst && chain.length) {
-	                        return chain;
-	                    }
+	            response: function() {
+	                return $window.Recaptcha.get_response();
+	            },
+	            challenge: function() {
+	                return $window.Recaptcha.get_challenge();
+	            },
+	            reload: function() {
+	                return $window.Recaptcha.reload();
+	            },
+	            destroy: function() {
+	                if ($window.Recaptcha) {
+	                    $window.Recaptcha.destroy();
 	                }
-	
-	                // Prefix state treatment
-	                if($$options.prefixStateName) {
-	                    $$addStateInChain(chain, $$options.prefixStateName);
-	                }
-	
-	                return chain;
-	            },
-	
-	            getLastStep: function() {
-	                var chain = this.getStatesChain(true);
-	                return chain.length ? chain[0] : undefined;
-	            },
-	
-	            $getLastViewScope: function() {
-	                return $lastViewScope;
 	            }
 	        };
 	    }];
-	}
 	
-	var getExpression = function(interpolationFunction) {
-	    if(interpolationFunction.expressions) {
-	        return interpolationFunction.expressions;
-	    } else {
-	        var expressions = [];
-	        angular.forEach(interpolationFunction.parts, function(part) {
-	            if(angular.isFunction(part)) {
-	                expressions.push(part.exp);
-	            }
-	        });
-	        return expressions;
-	    }
-	};
-	
-	var registerWatchers = function(labelWatcherArray, interpolationFunction, viewScope, step) {
-	    angular.forEach(getExpression(interpolationFunction), function(expression) {
-	        var watcher = viewScope.$watch(expression, function() {
-	            step.ncyBreadcrumbLabel = interpolationFunction(viewScope);
-	        });
-	        labelWatcherArray.push(watcher);
-	    });
-	
-	};
-	
-	var deregisterWatchers = function(labelWatcherArray) {
-	    angular.forEach(labelWatcherArray, function(deregisterWatch) {
-	        deregisterWatch();
-	    });
-	    labelWatcherArray = [];
-	};
-	
-	function BreadcrumbDirective($interpolate, $breadcrumb, $rootScope) {
-	    var $$templates = {
-	        bootstrap2: '<ul class="breadcrumb">' +
-	            '<li ng-repeat="step in steps" ng-switch="$last || !!step.abstract" ng-class="{active: $last}">' +
-	            '<a ng-switch-when="false" href="{{step.ncyBreadcrumbLink}}">{{step.ncyBreadcrumbLabel}}</a> ' +
-	            '<span ng-switch-when="true">{{step.ncyBreadcrumbLabel}}</span>' +
-	            '<span class="divider" ng-hide="$last">/</span>' +
-	            '</li>' +
-	            '</ul>',
-	        bootstrap3: '<ol class="breadcrumb">' +
-	            '<li ng-repeat="step in steps" ng-class="{active: $last}" ng-switch="$last || !!step.abstract">' +
-	            '<a ng-switch-when="false" href="{{step.ncyBreadcrumbLink}}">{{step.ncyBreadcrumbLabel}}</a> ' +
-	            '<span ng-switch-when="true">{{step.ncyBreadcrumbLabel}}</span>' +
-	            '</li>' +
-	            '</ol>'
-	    };
-	
-	    return {
-	        restrict: 'AE',
-	        replace: true,
-	        scope: {},
-	        template: $breadcrumb.getTemplate($$templates),
-	        templateUrl: $breadcrumb.getTemplateUrl(),
-	        link: {
-	            post: function postLink(scope) {
-	                var labelWatchers = [];
-	
-	                var renderBreadcrumb = function() {
-	                    deregisterWatchers(labelWatchers);
-	                    var viewScope = $breadcrumb.$getLastViewScope();
-	                    scope.steps = $breadcrumb.getStatesChain();
-	                    angular.forEach(scope.steps, function (step) {
-	                        if (step.ncyBreadcrumb && step.ncyBreadcrumb.label) {
-	                            var parseLabel = $interpolate(step.ncyBreadcrumb.label);
-	                            step.ncyBreadcrumbLabel = parseLabel(viewScope);
-	                            // Watcher for further viewScope updates
-	                            registerWatchers(labelWatchers, parseLabel, viewScope, step);
-	                        } else {
-	                            step.ncyBreadcrumbLabel = step.name;
-	                        }
-	                    });
-	                };
-	
-	                $rootScope.$on('$viewContentLoaded', function () {
-	                    renderBreadcrumb();
-	                });
-	
-	                // View(s) may be already loaded while the directive's linking
-	                renderBreadcrumb();
-	            }
-	        }
-	    };
-	}
-	BreadcrumbDirective.$inject = ['$interpolate', '$breadcrumb', '$rootScope'];
-	
-	function BreadcrumbLastDirective($interpolate, $breadcrumb, $rootScope) {
-	
+	}).directive('reCaptcha', ['reCAPTCHA', '$compile', function(reCAPTCHA, $compile) {
 	    return {
 	        restrict: 'A',
-	        scope: {},
-	        template: '{{ncyBreadcrumbLabel}}',
-	        compile: function(cElement, cAttrs) {
-	
-	            // Override the default template if ncyBreadcrumbLast has a value
-	            var template = cElement.attr(cAttrs.$attr.ncyBreadcrumbLast);
-	            if(template) {
-	                cElement.html(template);
-	            }
-	
-	            return {
-	                post: function postLink(scope) {
-	                    var labelWatchers = [];
-	
-	                    var renderLabel = function() {
-	                        deregisterWatchers(labelWatchers);
-	                        var viewScope = $breadcrumb.$getLastViewScope();
-	                        var lastStep = $breadcrumb.getLastStep();
-	                        if(lastStep) {
-	                            scope.ncyBreadcrumbLink = lastStep.ncyBreadcrumbLink;
-	                            if (lastStep.ncyBreadcrumb && lastStep.ncyBreadcrumb.label) {
-	                                var parseLabel = $interpolate(lastStep.ncyBreadcrumb.label);
-	                                scope.ncyBreadcrumbLabel = parseLabel(viewScope);
-	                                // Watcher for further viewScope updates
-	                                // Tricky last arg: the last step is the entire scope of the directive !
-	                                registerWatchers(labelWatchers, parseLabel, viewScope, scope);
-	                            } else {
-	                                scope.ncyBreadcrumbLabel = lastStep.name;
-	                            }
-	                        }
-	                    };
-	
-	                    $rootScope.$on('$viewContentLoaded', function () {
-	                        renderLabel();
-	                    });
-	
-	                    // View(s) may be already loaded while the directive's linking
-	                    renderLabel();
-	                }
+	        require: 'ngModel',
+	        scope: {
+	            ngModel: '='
+	        },
+	        link: function(scope, element, attrs, controller) {
+	            var name = attrs.name || 'reCaptcha';
+	            scope.clear = function() {
+	                scope.ngModel = {
+	                    response: '',
+	                    challenge: false
+	                };
 	            };
 	
+	            // Create reCAPTCHA
+	            reCAPTCHA.create(element[0], function() {
+	
+	                // Reset on Start
+	                scope.clear();
+	
+	                // watch if challenge changes
+	                scope.$watch(function() {
+	                    return reCAPTCHA.challenge();
+	                }, function (newValue) {
+	                    scope.ngModel.challenge = newValue;
+	                });
+	
+	                // Attach model and click handler
+	                $compile(angular.element(document.querySelector('input#recaptcha_response_field')).attr('ng-required', 'true'))(scope);
+	                $compile(angular.element(document.querySelector('input#recaptcha_response_field')).attr('ng-model', 'ngModel.response'))(scope);
+	                $compile(angular.element(document.querySelector('a#recaptcha_reload_btn')).attr('ng-click', 'clear()'))(scope);
+	
+	            });
+	
+	            // Destroy Element
+	            scope.$on('$destroy', reCAPTCHA.destroy);
 	        }
 	    };
-	}
-	BreadcrumbLastDirective.$inject = ['$interpolate', '$breadcrumb', '$rootScope'];
-	
-	angular.module('ncy-angular-breadcrumb', ['ui.router.state'])
-	    .provider('$breadcrumb', $Breadcrumb)
-	    .directive('ncyBreadcrumb', BreadcrumbDirective)
-	    .directive('ncyBreadcrumbLast', BreadcrumbLastDirective);
-	})(window, window.angular);
+	}]);
 
 
 /***/ },
@@ -343,19 +172,1573 @@
 
 	module.exports = function () {  
 	  /* JS */
-	  __webpack_require__(6);
 	  __webpack_require__(7);
-	  __webpack_require__(13);
 	  __webpack_require__(8);
-	  __webpack_require__(9);
 	  __webpack_require__(10);
+	  __webpack_require__(6);
+	  __webpack_require__(9);
 	  __webpack_require__(1);
 	  __webpack_require__(12);
+	  __webpack_require__(13);
 	  //require('bootstrap-webpack!./bootstrap.config.js');
 	};
 
 /***/ },
 /* 3 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;//     Underscore.js 1.8.3
+	//     http://underscorejs.org
+	//     (c) 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+	//     Underscore may be freely distributed under the MIT license.
+	
+	(function() {
+	
+	  // Baseline setup
+	  // --------------
+	
+	  // Establish the root object, `window` in the browser, or `exports` on the server.
+	  var root = this;
+	
+	  // Save the previous value of the `_` variable.
+	  var previousUnderscore = root._;
+	
+	  // Save bytes in the minified (but not gzipped) version:
+	  var ArrayProto = Array.prototype, ObjProto = Object.prototype, FuncProto = Function.prototype;
+	
+	  // Create quick reference variables for speed access to core prototypes.
+	  var
+	    push             = ArrayProto.push,
+	    slice            = ArrayProto.slice,
+	    toString         = ObjProto.toString,
+	    hasOwnProperty   = ObjProto.hasOwnProperty;
+	
+	  // All **ECMAScript 5** native function implementations that we hope to use
+	  // are declared here.
+	  var
+	    nativeIsArray      = Array.isArray,
+	    nativeKeys         = Object.keys,
+	    nativeBind         = FuncProto.bind,
+	    nativeCreate       = Object.create;
+	
+	  // Naked function reference for surrogate-prototype-swapping.
+	  var Ctor = function(){};
+	
+	  // Create a safe reference to the Underscore object for use below.
+	  var _ = function(obj) {
+	    if (obj instanceof _) return obj;
+	    if (!(this instanceof _)) return new _(obj);
+	    this._wrapped = obj;
+	  };
+	
+	  // Export the Underscore object for **Node.js**, with
+	  // backwards-compatibility for the old `require()` API. If we're in
+	  // the browser, add `_` as a global object.
+	  if (true) {
+	    if (typeof module !== 'undefined' && module.exports) {
+	      exports = module.exports = _;
+	    }
+	    exports._ = _;
+	  } else {
+	    root._ = _;
+	  }
+	
+	  // Current version.
+	  _.VERSION = '1.8.3';
+	
+	  // Internal function that returns an efficient (for current engines) version
+	  // of the passed-in callback, to be repeatedly applied in other Underscore
+	  // functions.
+	  var optimizeCb = function(func, context, argCount) {
+	    if (context === void 0) return func;
+	    switch (argCount == null ? 3 : argCount) {
+	      case 1: return function(value) {
+	        return func.call(context, value);
+	      };
+	      case 2: return function(value, other) {
+	        return func.call(context, value, other);
+	      };
+	      case 3: return function(value, index, collection) {
+	        return func.call(context, value, index, collection);
+	      };
+	      case 4: return function(accumulator, value, index, collection) {
+	        return func.call(context, accumulator, value, index, collection);
+	      };
+	    }
+	    return function() {
+	      return func.apply(context, arguments);
+	    };
+	  };
+	
+	  // A mostly-internal function to generate callbacks that can be applied
+	  // to each element in a collection, returning the desired result — either
+	  // identity, an arbitrary callback, a property matcher, or a property accessor.
+	  var cb = function(value, context, argCount) {
+	    if (value == null) return _.identity;
+	    if (_.isFunction(value)) return optimizeCb(value, context, argCount);
+	    if (_.isObject(value)) return _.matcher(value);
+	    return _.property(value);
+	  };
+	  _.iteratee = function(value, context) {
+	    return cb(value, context, Infinity);
+	  };
+	
+	  // An internal function for creating assigner functions.
+	  var createAssigner = function(keysFunc, undefinedOnly) {
+	    return function(obj) {
+	      var length = arguments.length;
+	      if (length < 2 || obj == null) return obj;
+	      for (var index = 1; index < length; index++) {
+	        var source = arguments[index],
+	            keys = keysFunc(source),
+	            l = keys.length;
+	        for (var i = 0; i < l; i++) {
+	          var key = keys[i];
+	          if (!undefinedOnly || obj[key] === void 0) obj[key] = source[key];
+	        }
+	      }
+	      return obj;
+	    };
+	  };
+	
+	  // An internal function for creating a new object that inherits from another.
+	  var baseCreate = function(prototype) {
+	    if (!_.isObject(prototype)) return {};
+	    if (nativeCreate) return nativeCreate(prototype);
+	    Ctor.prototype = prototype;
+	    var result = new Ctor;
+	    Ctor.prototype = null;
+	    return result;
+	  };
+	
+	  var property = function(key) {
+	    return function(obj) {
+	      return obj == null ? void 0 : obj[key];
+	    };
+	  };
+	
+	  // Helper for collection methods to determine whether a collection
+	  // should be iterated as an array or as an object
+	  // Related: http://people.mozilla.org/~jorendorff/es6-draft.html#sec-tolength
+	  // Avoids a very nasty iOS 8 JIT bug on ARM-64. #2094
+	  var MAX_ARRAY_INDEX = Math.pow(2, 53) - 1;
+	  var getLength = property('length');
+	  var isArrayLike = function(collection) {
+	    var length = getLength(collection);
+	    return typeof length == 'number' && length >= 0 && length <= MAX_ARRAY_INDEX;
+	  };
+	
+	  // Collection Functions
+	  // --------------------
+	
+	  // The cornerstone, an `each` implementation, aka `forEach`.
+	  // Handles raw objects in addition to array-likes. Treats all
+	  // sparse array-likes as if they were dense.
+	  _.each = _.forEach = function(obj, iteratee, context) {
+	    iteratee = optimizeCb(iteratee, context);
+	    var i, length;
+	    if (isArrayLike(obj)) {
+	      for (i = 0, length = obj.length; i < length; i++) {
+	        iteratee(obj[i], i, obj);
+	      }
+	    } else {
+	      var keys = _.keys(obj);
+	      for (i = 0, length = keys.length; i < length; i++) {
+	        iteratee(obj[keys[i]], keys[i], obj);
+	      }
+	    }
+	    return obj;
+	  };
+	
+	  // Return the results of applying the iteratee to each element.
+	  _.map = _.collect = function(obj, iteratee, context) {
+	    iteratee = cb(iteratee, context);
+	    var keys = !isArrayLike(obj) && _.keys(obj),
+	        length = (keys || obj).length,
+	        results = Array(length);
+	    for (var index = 0; index < length; index++) {
+	      var currentKey = keys ? keys[index] : index;
+	      results[index] = iteratee(obj[currentKey], currentKey, obj);
+	    }
+	    return results;
+	  };
+	
+	  // Create a reducing function iterating left or right.
+	  function createReduce(dir) {
+	    // Optimized iterator function as using arguments.length
+	    // in the main function will deoptimize the, see #1991.
+	    function iterator(obj, iteratee, memo, keys, index, length) {
+	      for (; index >= 0 && index < length; index += dir) {
+	        var currentKey = keys ? keys[index] : index;
+	        memo = iteratee(memo, obj[currentKey], currentKey, obj);
+	      }
+	      return memo;
+	    }
+	
+	    return function(obj, iteratee, memo, context) {
+	      iteratee = optimizeCb(iteratee, context, 4);
+	      var keys = !isArrayLike(obj) && _.keys(obj),
+	          length = (keys || obj).length,
+	          index = dir > 0 ? 0 : length - 1;
+	      // Determine the initial value if none is provided.
+	      if (arguments.length < 3) {
+	        memo = obj[keys ? keys[index] : index];
+	        index += dir;
+	      }
+	      return iterator(obj, iteratee, memo, keys, index, length);
+	    };
+	  }
+	
+	  // **Reduce** builds up a single result from a list of values, aka `inject`,
+	  // or `foldl`.
+	  _.reduce = _.foldl = _.inject = createReduce(1);
+	
+	  // The right-associative version of reduce, also known as `foldr`.
+	  _.reduceRight = _.foldr = createReduce(-1);
+	
+	  // Return the first value which passes a truth test. Aliased as `detect`.
+	  _.find = _.detect = function(obj, predicate, context) {
+	    var key;
+	    if (isArrayLike(obj)) {
+	      key = _.findIndex(obj, predicate, context);
+	    } else {
+	      key = _.findKey(obj, predicate, context);
+	    }
+	    if (key !== void 0 && key !== -1) return obj[key];
+	  };
+	
+	  // Return all the elements that pass a truth test.
+	  // Aliased as `select`.
+	  _.filter = _.select = function(obj, predicate, context) {
+	    var results = [];
+	    predicate = cb(predicate, context);
+	    _.each(obj, function(value, index, list) {
+	      if (predicate(value, index, list)) results.push(value);
+	    });
+	    return results;
+	  };
+	
+	  // Return all the elements for which a truth test fails.
+	  _.reject = function(obj, predicate, context) {
+	    return _.filter(obj, _.negate(cb(predicate)), context);
+	  };
+	
+	  // Determine whether all of the elements match a truth test.
+	  // Aliased as `all`.
+	  _.every = _.all = function(obj, predicate, context) {
+	    predicate = cb(predicate, context);
+	    var keys = !isArrayLike(obj) && _.keys(obj),
+	        length = (keys || obj).length;
+	    for (var index = 0; index < length; index++) {
+	      var currentKey = keys ? keys[index] : index;
+	      if (!predicate(obj[currentKey], currentKey, obj)) return false;
+	    }
+	    return true;
+	  };
+	
+	  // Determine if at least one element in the object matches a truth test.
+	  // Aliased as `any`.
+	  _.some = _.any = function(obj, predicate, context) {
+	    predicate = cb(predicate, context);
+	    var keys = !isArrayLike(obj) && _.keys(obj),
+	        length = (keys || obj).length;
+	    for (var index = 0; index < length; index++) {
+	      var currentKey = keys ? keys[index] : index;
+	      if (predicate(obj[currentKey], currentKey, obj)) return true;
+	    }
+	    return false;
+	  };
+	
+	  // Determine if the array or object contains a given item (using `===`).
+	  // Aliased as `includes` and `include`.
+	  _.contains = _.includes = _.include = function(obj, item, fromIndex, guard) {
+	    if (!isArrayLike(obj)) obj = _.values(obj);
+	    if (typeof fromIndex != 'number' || guard) fromIndex = 0;
+	    return _.indexOf(obj, item, fromIndex) >= 0;
+	  };
+	
+	  // Invoke a method (with arguments) on every item in a collection.
+	  _.invoke = function(obj, method) {
+	    var args = slice.call(arguments, 2);
+	    var isFunc = _.isFunction(method);
+	    return _.map(obj, function(value) {
+	      var func = isFunc ? method : value[method];
+	      return func == null ? func : func.apply(value, args);
+	    });
+	  };
+	
+	  // Convenience version of a common use case of `map`: fetching a property.
+	  _.pluck = function(obj, key) {
+	    return _.map(obj, _.property(key));
+	  };
+	
+	  // Convenience version of a common use case of `filter`: selecting only objects
+	  // containing specific `key:value` pairs.
+	  _.where = function(obj, attrs) {
+	    return _.filter(obj, _.matcher(attrs));
+	  };
+	
+	  // Convenience version of a common use case of `find`: getting the first object
+	  // containing specific `key:value` pairs.
+	  _.findWhere = function(obj, attrs) {
+	    return _.find(obj, _.matcher(attrs));
+	  };
+	
+	  // Return the maximum element (or element-based computation).
+	  _.max = function(obj, iteratee, context) {
+	    var result = -Infinity, lastComputed = -Infinity,
+	        value, computed;
+	    if (iteratee == null && obj != null) {
+	      obj = isArrayLike(obj) ? obj : _.values(obj);
+	      for (var i = 0, length = obj.length; i < length; i++) {
+	        value = obj[i];
+	        if (value > result) {
+	          result = value;
+	        }
+	      }
+	    } else {
+	      iteratee = cb(iteratee, context);
+	      _.each(obj, function(value, index, list) {
+	        computed = iteratee(value, index, list);
+	        if (computed > lastComputed || computed === -Infinity && result === -Infinity) {
+	          result = value;
+	          lastComputed = computed;
+	        }
+	      });
+	    }
+	    return result;
+	  };
+	
+	  // Return the minimum element (or element-based computation).
+	  _.min = function(obj, iteratee, context) {
+	    var result = Infinity, lastComputed = Infinity,
+	        value, computed;
+	    if (iteratee == null && obj != null) {
+	      obj = isArrayLike(obj) ? obj : _.values(obj);
+	      for (var i = 0, length = obj.length; i < length; i++) {
+	        value = obj[i];
+	        if (value < result) {
+	          result = value;
+	        }
+	      }
+	    } else {
+	      iteratee = cb(iteratee, context);
+	      _.each(obj, function(value, index, list) {
+	        computed = iteratee(value, index, list);
+	        if (computed < lastComputed || computed === Infinity && result === Infinity) {
+	          result = value;
+	          lastComputed = computed;
+	        }
+	      });
+	    }
+	    return result;
+	  };
+	
+	  // Shuffle a collection, using the modern version of the
+	  // [Fisher-Yates shuffle](http://en.wikipedia.org/wiki/Fisher–Yates_shuffle).
+	  _.shuffle = function(obj) {
+	    var set = isArrayLike(obj) ? obj : _.values(obj);
+	    var length = set.length;
+	    var shuffled = Array(length);
+	    for (var index = 0, rand; index < length; index++) {
+	      rand = _.random(0, index);
+	      if (rand !== index) shuffled[index] = shuffled[rand];
+	      shuffled[rand] = set[index];
+	    }
+	    return shuffled;
+	  };
+	
+	  // Sample **n** random values from a collection.
+	  // If **n** is not specified, returns a single random element.
+	  // The internal `guard` argument allows it to work with `map`.
+	  _.sample = function(obj, n, guard) {
+	    if (n == null || guard) {
+	      if (!isArrayLike(obj)) obj = _.values(obj);
+	      return obj[_.random(obj.length - 1)];
+	    }
+	    return _.shuffle(obj).slice(0, Math.max(0, n));
+	  };
+	
+	  // Sort the object's values by a criterion produced by an iteratee.
+	  _.sortBy = function(obj, iteratee, context) {
+	    iteratee = cb(iteratee, context);
+	    return _.pluck(_.map(obj, function(value, index, list) {
+	      return {
+	        value: value,
+	        index: index,
+	        criteria: iteratee(value, index, list)
+	      };
+	    }).sort(function(left, right) {
+	      var a = left.criteria;
+	      var b = right.criteria;
+	      if (a !== b) {
+	        if (a > b || a === void 0) return 1;
+	        if (a < b || b === void 0) return -1;
+	      }
+	      return left.index - right.index;
+	    }), 'value');
+	  };
+	
+	  // An internal function used for aggregate "group by" operations.
+	  var group = function(behavior) {
+	    return function(obj, iteratee, context) {
+	      var result = {};
+	      iteratee = cb(iteratee, context);
+	      _.each(obj, function(value, index) {
+	        var key = iteratee(value, index, obj);
+	        behavior(result, value, key);
+	      });
+	      return result;
+	    };
+	  };
+	
+	  // Groups the object's values by a criterion. Pass either a string attribute
+	  // to group by, or a function that returns the criterion.
+	  _.groupBy = group(function(result, value, key) {
+	    if (_.has(result, key)) result[key].push(value); else result[key] = [value];
+	  });
+	
+	  // Indexes the object's values by a criterion, similar to `groupBy`, but for
+	  // when you know that your index values will be unique.
+	  _.indexBy = group(function(result, value, key) {
+	    result[key] = value;
+	  });
+	
+	  // Counts instances of an object that group by a certain criterion. Pass
+	  // either a string attribute to count by, or a function that returns the
+	  // criterion.
+	  _.countBy = group(function(result, value, key) {
+	    if (_.has(result, key)) result[key]++; else result[key] = 1;
+	  });
+	
+	  // Safely create a real, live array from anything iterable.
+	  _.toArray = function(obj) {
+	    if (!obj) return [];
+	    if (_.isArray(obj)) return slice.call(obj);
+	    if (isArrayLike(obj)) return _.map(obj, _.identity);
+	    return _.values(obj);
+	  };
+	
+	  // Return the number of elements in an object.
+	  _.size = function(obj) {
+	    if (obj == null) return 0;
+	    return isArrayLike(obj) ? obj.length : _.keys(obj).length;
+	  };
+	
+	  // Split a collection into two arrays: one whose elements all satisfy the given
+	  // predicate, and one whose elements all do not satisfy the predicate.
+	  _.partition = function(obj, predicate, context) {
+	    predicate = cb(predicate, context);
+	    var pass = [], fail = [];
+	    _.each(obj, function(value, key, obj) {
+	      (predicate(value, key, obj) ? pass : fail).push(value);
+	    });
+	    return [pass, fail];
+	  };
+	
+	  // Array Functions
+	  // ---------------
+	
+	  // Get the first element of an array. Passing **n** will return the first N
+	  // values in the array. Aliased as `head` and `take`. The **guard** check
+	  // allows it to work with `_.map`.
+	  _.first = _.head = _.take = function(array, n, guard) {
+	    if (array == null) return void 0;
+	    if (n == null || guard) return array[0];
+	    return _.initial(array, array.length - n);
+	  };
+	
+	  // Returns everything but the last entry of the array. Especially useful on
+	  // the arguments object. Passing **n** will return all the values in
+	  // the array, excluding the last N.
+	  _.initial = function(array, n, guard) {
+	    return slice.call(array, 0, Math.max(0, array.length - (n == null || guard ? 1 : n)));
+	  };
+	
+	  // Get the last element of an array. Passing **n** will return the last N
+	  // values in the array.
+	  _.last = function(array, n, guard) {
+	    if (array == null) return void 0;
+	    if (n == null || guard) return array[array.length - 1];
+	    return _.rest(array, Math.max(0, array.length - n));
+	  };
+	
+	  // Returns everything but the first entry of the array. Aliased as `tail` and `drop`.
+	  // Especially useful on the arguments object. Passing an **n** will return
+	  // the rest N values in the array.
+	  _.rest = _.tail = _.drop = function(array, n, guard) {
+	    return slice.call(array, n == null || guard ? 1 : n);
+	  };
+	
+	  // Trim out all falsy values from an array.
+	  _.compact = function(array) {
+	    return _.filter(array, _.identity);
+	  };
+	
+	  // Internal implementation of a recursive `flatten` function.
+	  var flatten = function(input, shallow, strict, startIndex) {
+	    var output = [], idx = 0;
+	    for (var i = startIndex || 0, length = getLength(input); i < length; i++) {
+	      var value = input[i];
+	      if (isArrayLike(value) && (_.isArray(value) || _.isArguments(value))) {
+	        //flatten current level of array or arguments object
+	        if (!shallow) value = flatten(value, shallow, strict);
+	        var j = 0, len = value.length;
+	        output.length += len;
+	        while (j < len) {
+	          output[idx++] = value[j++];
+	        }
+	      } else if (!strict) {
+	        output[idx++] = value;
+	      }
+	    }
+	    return output;
+	  };
+	
+	  // Flatten out an array, either recursively (by default), or just one level.
+	  _.flatten = function(array, shallow) {
+	    return flatten(array, shallow, false);
+	  };
+	
+	  // Return a version of the array that does not contain the specified value(s).
+	  _.without = function(array) {
+	    return _.difference(array, slice.call(arguments, 1));
+	  };
+	
+	  // Produce a duplicate-free version of the array. If the array has already
+	  // been sorted, you have the option of using a faster algorithm.
+	  // Aliased as `unique`.
+	  _.uniq = _.unique = function(array, isSorted, iteratee, context) {
+	    if (!_.isBoolean(isSorted)) {
+	      context = iteratee;
+	      iteratee = isSorted;
+	      isSorted = false;
+	    }
+	    if (iteratee != null) iteratee = cb(iteratee, context);
+	    var result = [];
+	    var seen = [];
+	    for (var i = 0, length = getLength(array); i < length; i++) {
+	      var value = array[i],
+	          computed = iteratee ? iteratee(value, i, array) : value;
+	      if (isSorted) {
+	        if (!i || seen !== computed) result.push(value);
+	        seen = computed;
+	      } else if (iteratee) {
+	        if (!_.contains(seen, computed)) {
+	          seen.push(computed);
+	          result.push(value);
+	        }
+	      } else if (!_.contains(result, value)) {
+	        result.push(value);
+	      }
+	    }
+	    return result;
+	  };
+	
+	  // Produce an array that contains the union: each distinct element from all of
+	  // the passed-in arrays.
+	  _.union = function() {
+	    return _.uniq(flatten(arguments, true, true));
+	  };
+	
+	  // Produce an array that contains every item shared between all the
+	  // passed-in arrays.
+	  _.intersection = function(array) {
+	    var result = [];
+	    var argsLength = arguments.length;
+	    for (var i = 0, length = getLength(array); i < length; i++) {
+	      var item = array[i];
+	      if (_.contains(result, item)) continue;
+	      for (var j = 1; j < argsLength; j++) {
+	        if (!_.contains(arguments[j], item)) break;
+	      }
+	      if (j === argsLength) result.push(item);
+	    }
+	    return result;
+	  };
+	
+	  // Take the difference between one array and a number of other arrays.
+	  // Only the elements present in just the first array will remain.
+	  _.difference = function(array) {
+	    var rest = flatten(arguments, true, true, 1);
+	    return _.filter(array, function(value){
+	      return !_.contains(rest, value);
+	    });
+	  };
+	
+	  // Zip together multiple lists into a single array -- elements that share
+	  // an index go together.
+	  _.zip = function() {
+	    return _.unzip(arguments);
+	  };
+	
+	  // Complement of _.zip. Unzip accepts an array of arrays and groups
+	  // each array's elements on shared indices
+	  _.unzip = function(array) {
+	    var length = array && _.max(array, getLength).length || 0;
+	    var result = Array(length);
+	
+	    for (var index = 0; index < length; index++) {
+	      result[index] = _.pluck(array, index);
+	    }
+	    return result;
+	  };
+	
+	  // Converts lists into objects. Pass either a single array of `[key, value]`
+	  // pairs, or two parallel arrays of the same length -- one of keys, and one of
+	  // the corresponding values.
+	  _.object = function(list, values) {
+	    var result = {};
+	    for (var i = 0, length = getLength(list); i < length; i++) {
+	      if (values) {
+	        result[list[i]] = values[i];
+	      } else {
+	        result[list[i][0]] = list[i][1];
+	      }
+	    }
+	    return result;
+	  };
+	
+	  // Generator function to create the findIndex and findLastIndex functions
+	  function createPredicateIndexFinder(dir) {
+	    return function(array, predicate, context) {
+	      predicate = cb(predicate, context);
+	      var length = getLength(array);
+	      var index = dir > 0 ? 0 : length - 1;
+	      for (; index >= 0 && index < length; index += dir) {
+	        if (predicate(array[index], index, array)) return index;
+	      }
+	      return -1;
+	    };
+	  }
+	
+	  // Returns the first index on an array-like that passes a predicate test
+	  _.findIndex = createPredicateIndexFinder(1);
+	  _.findLastIndex = createPredicateIndexFinder(-1);
+	
+	  // Use a comparator function to figure out the smallest index at which
+	  // an object should be inserted so as to maintain order. Uses binary search.
+	  _.sortedIndex = function(array, obj, iteratee, context) {
+	    iteratee = cb(iteratee, context, 1);
+	    var value = iteratee(obj);
+	    var low = 0, high = getLength(array);
+	    while (low < high) {
+	      var mid = Math.floor((low + high) / 2);
+	      if (iteratee(array[mid]) < value) low = mid + 1; else high = mid;
+	    }
+	    return low;
+	  };
+	
+	  // Generator function to create the indexOf and lastIndexOf functions
+	  function createIndexFinder(dir, predicateFind, sortedIndex) {
+	    return function(array, item, idx) {
+	      var i = 0, length = getLength(array);
+	      if (typeof idx == 'number') {
+	        if (dir > 0) {
+	            i = idx >= 0 ? idx : Math.max(idx + length, i);
+	        } else {
+	            length = idx >= 0 ? Math.min(idx + 1, length) : idx + length + 1;
+	        }
+	      } else if (sortedIndex && idx && length) {
+	        idx = sortedIndex(array, item);
+	        return array[idx] === item ? idx : -1;
+	      }
+	      if (item !== item) {
+	        idx = predicateFind(slice.call(array, i, length), _.isNaN);
+	        return idx >= 0 ? idx + i : -1;
+	      }
+	      for (idx = dir > 0 ? i : length - 1; idx >= 0 && idx < length; idx += dir) {
+	        if (array[idx] === item) return idx;
+	      }
+	      return -1;
+	    };
+	  }
+	
+	  // Return the position of the first occurrence of an item in an array,
+	  // or -1 if the item is not included in the array.
+	  // If the array is large and already in sort order, pass `true`
+	  // for **isSorted** to use binary search.
+	  _.indexOf = createIndexFinder(1, _.findIndex, _.sortedIndex);
+	  _.lastIndexOf = createIndexFinder(-1, _.findLastIndex);
+	
+	  // Generate an integer Array containing an arithmetic progression. A port of
+	  // the native Python `range()` function. See
+	  // [the Python documentation](http://docs.python.org/library/functions.html#range).
+	  _.range = function(start, stop, step) {
+	    if (stop == null) {
+	      stop = start || 0;
+	      start = 0;
+	    }
+	    step = step || 1;
+	
+	    var length = Math.max(Math.ceil((stop - start) / step), 0);
+	    var range = Array(length);
+	
+	    for (var idx = 0; idx < length; idx++, start += step) {
+	      range[idx] = start;
+	    }
+	
+	    return range;
+	  };
+	
+	  // Function (ahem) Functions
+	  // ------------------
+	
+	  // Determines whether to execute a function as a constructor
+	  // or a normal function with the provided arguments
+	  var executeBound = function(sourceFunc, boundFunc, context, callingContext, args) {
+	    if (!(callingContext instanceof boundFunc)) return sourceFunc.apply(context, args);
+	    var self = baseCreate(sourceFunc.prototype);
+	    var result = sourceFunc.apply(self, args);
+	    if (_.isObject(result)) return result;
+	    return self;
+	  };
+	
+	  // Create a function bound to a given object (assigning `this`, and arguments,
+	  // optionally). Delegates to **ECMAScript 5**'s native `Function.bind` if
+	  // available.
+	  _.bind = function(func, context) {
+	    if (nativeBind && func.bind === nativeBind) return nativeBind.apply(func, slice.call(arguments, 1));
+	    if (!_.isFunction(func)) throw new TypeError('Bind must be called on a function');
+	    var args = slice.call(arguments, 2);
+	    var bound = function() {
+	      return executeBound(func, bound, context, this, args.concat(slice.call(arguments)));
+	    };
+	    return bound;
+	  };
+	
+	  // Partially apply a function by creating a version that has had some of its
+	  // arguments pre-filled, without changing its dynamic `this` context. _ acts
+	  // as a placeholder, allowing any combination of arguments to be pre-filled.
+	  _.partial = function(func) {
+	    var boundArgs = slice.call(arguments, 1);
+	    var bound = function() {
+	      var position = 0, length = boundArgs.length;
+	      var args = Array(length);
+	      for (var i = 0; i < length; i++) {
+	        args[i] = boundArgs[i] === _ ? arguments[position++] : boundArgs[i];
+	      }
+	      while (position < arguments.length) args.push(arguments[position++]);
+	      return executeBound(func, bound, this, this, args);
+	    };
+	    return bound;
+	  };
+	
+	  // Bind a number of an object's methods to that object. Remaining arguments
+	  // are the method names to be bound. Useful for ensuring that all callbacks
+	  // defined on an object belong to it.
+	  _.bindAll = function(obj) {
+	    var i, length = arguments.length, key;
+	    if (length <= 1) throw new Error('bindAll must be passed function names');
+	    for (i = 1; i < length; i++) {
+	      key = arguments[i];
+	      obj[key] = _.bind(obj[key], obj);
+	    }
+	    return obj;
+	  };
+	
+	  // Memoize an expensive function by storing its results.
+	  _.memoize = function(func, hasher) {
+	    var memoize = function(key) {
+	      var cache = memoize.cache;
+	      var address = '' + (hasher ? hasher.apply(this, arguments) : key);
+	      if (!_.has(cache, address)) cache[address] = func.apply(this, arguments);
+	      return cache[address];
+	    };
+	    memoize.cache = {};
+	    return memoize;
+	  };
+	
+	  // Delays a function for the given number of milliseconds, and then calls
+	  // it with the arguments supplied.
+	  _.delay = function(func, wait) {
+	    var args = slice.call(arguments, 2);
+	    return setTimeout(function(){
+	      return func.apply(null, args);
+	    }, wait);
+	  };
+	
+	  // Defers a function, scheduling it to run after the current call stack has
+	  // cleared.
+	  _.defer = _.partial(_.delay, _, 1);
+	
+	  // Returns a function, that, when invoked, will only be triggered at most once
+	  // during a given window of time. Normally, the throttled function will run
+	  // as much as it can, without ever going more than once per `wait` duration;
+	  // but if you'd like to disable the execution on the leading edge, pass
+	  // `{leading: false}`. To disable execution on the trailing edge, ditto.
+	  _.throttle = function(func, wait, options) {
+	    var context, args, result;
+	    var timeout = null;
+	    var previous = 0;
+	    if (!options) options = {};
+	    var later = function() {
+	      previous = options.leading === false ? 0 : _.now();
+	      timeout = null;
+	      result = func.apply(context, args);
+	      if (!timeout) context = args = null;
+	    };
+	    return function() {
+	      var now = _.now();
+	      if (!previous && options.leading === false) previous = now;
+	      var remaining = wait - (now - previous);
+	      context = this;
+	      args = arguments;
+	      if (remaining <= 0 || remaining > wait) {
+	        if (timeout) {
+	          clearTimeout(timeout);
+	          timeout = null;
+	        }
+	        previous = now;
+	        result = func.apply(context, args);
+	        if (!timeout) context = args = null;
+	      } else if (!timeout && options.trailing !== false) {
+	        timeout = setTimeout(later, remaining);
+	      }
+	      return result;
+	    };
+	  };
+	
+	  // Returns a function, that, as long as it continues to be invoked, will not
+	  // be triggered. The function will be called after it stops being called for
+	  // N milliseconds. If `immediate` is passed, trigger the function on the
+	  // leading edge, instead of the trailing.
+	  _.debounce = function(func, wait, immediate) {
+	    var timeout, args, context, timestamp, result;
+	
+	    var later = function() {
+	      var last = _.now() - timestamp;
+	
+	      if (last < wait && last >= 0) {
+	        timeout = setTimeout(later, wait - last);
+	      } else {
+	        timeout = null;
+	        if (!immediate) {
+	          result = func.apply(context, args);
+	          if (!timeout) context = args = null;
+	        }
+	      }
+	    };
+	
+	    return function() {
+	      context = this;
+	      args = arguments;
+	      timestamp = _.now();
+	      var callNow = immediate && !timeout;
+	      if (!timeout) timeout = setTimeout(later, wait);
+	      if (callNow) {
+	        result = func.apply(context, args);
+	        context = args = null;
+	      }
+	
+	      return result;
+	    };
+	  };
+	
+	  // Returns the first function passed as an argument to the second,
+	  // allowing you to adjust arguments, run code before and after, and
+	  // conditionally execute the original function.
+	  _.wrap = function(func, wrapper) {
+	    return _.partial(wrapper, func);
+	  };
+	
+	  // Returns a negated version of the passed-in predicate.
+	  _.negate = function(predicate) {
+	    return function() {
+	      return !predicate.apply(this, arguments);
+	    };
+	  };
+	
+	  // Returns a function that is the composition of a list of functions, each
+	  // consuming the return value of the function that follows.
+	  _.compose = function() {
+	    var args = arguments;
+	    var start = args.length - 1;
+	    return function() {
+	      var i = start;
+	      var result = args[start].apply(this, arguments);
+	      while (i--) result = args[i].call(this, result);
+	      return result;
+	    };
+	  };
+	
+	  // Returns a function that will only be executed on and after the Nth call.
+	  _.after = function(times, func) {
+	    return function() {
+	      if (--times < 1) {
+	        return func.apply(this, arguments);
+	      }
+	    };
+	  };
+	
+	  // Returns a function that will only be executed up to (but not including) the Nth call.
+	  _.before = function(times, func) {
+	    var memo;
+	    return function() {
+	      if (--times > 0) {
+	        memo = func.apply(this, arguments);
+	      }
+	      if (times <= 1) func = null;
+	      return memo;
+	    };
+	  };
+	
+	  // Returns a function that will be executed at most one time, no matter how
+	  // often you call it. Useful for lazy initialization.
+	  _.once = _.partial(_.before, 2);
+	
+	  // Object Functions
+	  // ----------------
+	
+	  // Keys in IE < 9 that won't be iterated by `for key in ...` and thus missed.
+	  var hasEnumBug = !{toString: null}.propertyIsEnumerable('toString');
+	  var nonEnumerableProps = ['valueOf', 'isPrototypeOf', 'toString',
+	                      'propertyIsEnumerable', 'hasOwnProperty', 'toLocaleString'];
+	
+	  function collectNonEnumProps(obj, keys) {
+	    var nonEnumIdx = nonEnumerableProps.length;
+	    var constructor = obj.constructor;
+	    var proto = (_.isFunction(constructor) && constructor.prototype) || ObjProto;
+	
+	    // Constructor is a special case.
+	    var prop = 'constructor';
+	    if (_.has(obj, prop) && !_.contains(keys, prop)) keys.push(prop);
+	
+	    while (nonEnumIdx--) {
+	      prop = nonEnumerableProps[nonEnumIdx];
+	      if (prop in obj && obj[prop] !== proto[prop] && !_.contains(keys, prop)) {
+	        keys.push(prop);
+	      }
+	    }
+	  }
+	
+	  // Retrieve the names of an object's own properties.
+	  // Delegates to **ECMAScript 5**'s native `Object.keys`
+	  _.keys = function(obj) {
+	    if (!_.isObject(obj)) return [];
+	    if (nativeKeys) return nativeKeys(obj);
+	    var keys = [];
+	    for (var key in obj) if (_.has(obj, key)) keys.push(key);
+	    // Ahem, IE < 9.
+	    if (hasEnumBug) collectNonEnumProps(obj, keys);
+	    return keys;
+	  };
+	
+	  // Retrieve all the property names of an object.
+	  _.allKeys = function(obj) {
+	    if (!_.isObject(obj)) return [];
+	    var keys = [];
+	    for (var key in obj) keys.push(key);
+	    // Ahem, IE < 9.
+	    if (hasEnumBug) collectNonEnumProps(obj, keys);
+	    return keys;
+	  };
+	
+	  // Retrieve the values of an object's properties.
+	  _.values = function(obj) {
+	    var keys = _.keys(obj);
+	    var length = keys.length;
+	    var values = Array(length);
+	    for (var i = 0; i < length; i++) {
+	      values[i] = obj[keys[i]];
+	    }
+	    return values;
+	  };
+	
+	  // Returns the results of applying the iteratee to each element of the object
+	  // In contrast to _.map it returns an object
+	  _.mapObject = function(obj, iteratee, context) {
+	    iteratee = cb(iteratee, context);
+	    var keys =  _.keys(obj),
+	          length = keys.length,
+	          results = {},
+	          currentKey;
+	      for (var index = 0; index < length; index++) {
+	        currentKey = keys[index];
+	        results[currentKey] = iteratee(obj[currentKey], currentKey, obj);
+	      }
+	      return results;
+	  };
+	
+	  // Convert an object into a list of `[key, value]` pairs.
+	  _.pairs = function(obj) {
+	    var keys = _.keys(obj);
+	    var length = keys.length;
+	    var pairs = Array(length);
+	    for (var i = 0; i < length; i++) {
+	      pairs[i] = [keys[i], obj[keys[i]]];
+	    }
+	    return pairs;
+	  };
+	
+	  // Invert the keys and values of an object. The values must be serializable.
+	  _.invert = function(obj) {
+	    var result = {};
+	    var keys = _.keys(obj);
+	    for (var i = 0, length = keys.length; i < length; i++) {
+	      result[obj[keys[i]]] = keys[i];
+	    }
+	    return result;
+	  };
+	
+	  // Return a sorted list of the function names available on the object.
+	  // Aliased as `methods`
+	  _.functions = _.methods = function(obj) {
+	    var names = [];
+	    for (var key in obj) {
+	      if (_.isFunction(obj[key])) names.push(key);
+	    }
+	    return names.sort();
+	  };
+	
+	  // Extend a given object with all the properties in passed-in object(s).
+	  _.extend = createAssigner(_.allKeys);
+	
+	  // Assigns a given object with all the own properties in the passed-in object(s)
+	  // (https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object/assign)
+	  _.extendOwn = _.assign = createAssigner(_.keys);
+	
+	  // Returns the first key on an object that passes a predicate test
+	  _.findKey = function(obj, predicate, context) {
+	    predicate = cb(predicate, context);
+	    var keys = _.keys(obj), key;
+	    for (var i = 0, length = keys.length; i < length; i++) {
+	      key = keys[i];
+	      if (predicate(obj[key], key, obj)) return key;
+	    }
+	  };
+	
+	  // Return a copy of the object only containing the whitelisted properties.
+	  _.pick = function(object, oiteratee, context) {
+	    var result = {}, obj = object, iteratee, keys;
+	    if (obj == null) return result;
+	    if (_.isFunction(oiteratee)) {
+	      keys = _.allKeys(obj);
+	      iteratee = optimizeCb(oiteratee, context);
+	    } else {
+	      keys = flatten(arguments, false, false, 1);
+	      iteratee = function(value, key, obj) { return key in obj; };
+	      obj = Object(obj);
+	    }
+	    for (var i = 0, length = keys.length; i < length; i++) {
+	      var key = keys[i];
+	      var value = obj[key];
+	      if (iteratee(value, key, obj)) result[key] = value;
+	    }
+	    return result;
+	  };
+	
+	   // Return a copy of the object without the blacklisted properties.
+	  _.omit = function(obj, iteratee, context) {
+	    if (_.isFunction(iteratee)) {
+	      iteratee = _.negate(iteratee);
+	    } else {
+	      var keys = _.map(flatten(arguments, false, false, 1), String);
+	      iteratee = function(value, key) {
+	        return !_.contains(keys, key);
+	      };
+	    }
+	    return _.pick(obj, iteratee, context);
+	  };
+	
+	  // Fill in a given object with default properties.
+	  _.defaults = createAssigner(_.allKeys, true);
+	
+	  // Creates an object that inherits from the given prototype object.
+	  // If additional properties are provided then they will be added to the
+	  // created object.
+	  _.create = function(prototype, props) {
+	    var result = baseCreate(prototype);
+	    if (props) _.extendOwn(result, props);
+	    return result;
+	  };
+	
+	  // Create a (shallow-cloned) duplicate of an object.
+	  _.clone = function(obj) {
+	    if (!_.isObject(obj)) return obj;
+	    return _.isArray(obj) ? obj.slice() : _.extend({}, obj);
+	  };
+	
+	  // Invokes interceptor with the obj, and then returns obj.
+	  // The primary purpose of this method is to "tap into" a method chain, in
+	  // order to perform operations on intermediate results within the chain.
+	  _.tap = function(obj, interceptor) {
+	    interceptor(obj);
+	    return obj;
+	  };
+	
+	  // Returns whether an object has a given set of `key:value` pairs.
+	  _.isMatch = function(object, attrs) {
+	    var keys = _.keys(attrs), length = keys.length;
+	    if (object == null) return !length;
+	    var obj = Object(object);
+	    for (var i = 0; i < length; i++) {
+	      var key = keys[i];
+	      if (attrs[key] !== obj[key] || !(key in obj)) return false;
+	    }
+	    return true;
+	  };
+	
+	
+	  // Internal recursive comparison function for `isEqual`.
+	  var eq = function(a, b, aStack, bStack) {
+	    // Identical objects are equal. `0 === -0`, but they aren't identical.
+	    // See the [Harmony `egal` proposal](http://wiki.ecmascript.org/doku.php?id=harmony:egal).
+	    if (a === b) return a !== 0 || 1 / a === 1 / b;
+	    // A strict comparison is necessary because `null == undefined`.
+	    if (a == null || b == null) return a === b;
+	    // Unwrap any wrapped objects.
+	    if (a instanceof _) a = a._wrapped;
+	    if (b instanceof _) b = b._wrapped;
+	    // Compare `[[Class]]` names.
+	    var className = toString.call(a);
+	    if (className !== toString.call(b)) return false;
+	    switch (className) {
+	      // Strings, numbers, regular expressions, dates, and booleans are compared by value.
+	      case '[object RegExp]':
+	      // RegExps are coerced to strings for comparison (Note: '' + /a/i === '/a/i')
+	      case '[object String]':
+	        // Primitives and their corresponding object wrappers are equivalent; thus, `"5"` is
+	        // equivalent to `new String("5")`.
+	        return '' + a === '' + b;
+	      case '[object Number]':
+	        // `NaN`s are equivalent, but non-reflexive.
+	        // Object(NaN) is equivalent to NaN
+	        if (+a !== +a) return +b !== +b;
+	        // An `egal` comparison is performed for other numeric values.
+	        return +a === 0 ? 1 / +a === 1 / b : +a === +b;
+	      case '[object Date]':
+	      case '[object Boolean]':
+	        // Coerce dates and booleans to numeric primitive values. Dates are compared by their
+	        // millisecond representations. Note that invalid dates with millisecond representations
+	        // of `NaN` are not equivalent.
+	        return +a === +b;
+	    }
+	
+	    var areArrays = className === '[object Array]';
+	    if (!areArrays) {
+	      if (typeof a != 'object' || typeof b != 'object') return false;
+	
+	      // Objects with different constructors are not equivalent, but `Object`s or `Array`s
+	      // from different frames are.
+	      var aCtor = a.constructor, bCtor = b.constructor;
+	      if (aCtor !== bCtor && !(_.isFunction(aCtor) && aCtor instanceof aCtor &&
+	                               _.isFunction(bCtor) && bCtor instanceof bCtor)
+	                          && ('constructor' in a && 'constructor' in b)) {
+	        return false;
+	      }
+	    }
+	    // Assume equality for cyclic structures. The algorithm for detecting cyclic
+	    // structures is adapted from ES 5.1 section 15.12.3, abstract operation `JO`.
+	
+	    // Initializing stack of traversed objects.
+	    // It's done here since we only need them for objects and arrays comparison.
+	    aStack = aStack || [];
+	    bStack = bStack || [];
+	    var length = aStack.length;
+	    while (length--) {
+	      // Linear search. Performance is inversely proportional to the number of
+	      // unique nested structures.
+	      if (aStack[length] === a) return bStack[length] === b;
+	    }
+	
+	    // Add the first object to the stack of traversed objects.
+	    aStack.push(a);
+	    bStack.push(b);
+	
+	    // Recursively compare objects and arrays.
+	    if (areArrays) {
+	      // Compare array lengths to determine if a deep comparison is necessary.
+	      length = a.length;
+	      if (length !== b.length) return false;
+	      // Deep compare the contents, ignoring non-numeric properties.
+	      while (length--) {
+	        if (!eq(a[length], b[length], aStack, bStack)) return false;
+	      }
+	    } else {
+	      // Deep compare objects.
+	      var keys = _.keys(a), key;
+	      length = keys.length;
+	      // Ensure that both objects contain the same number of properties before comparing deep equality.
+	      if (_.keys(b).length !== length) return false;
+	      while (length--) {
+	        // Deep compare each member
+	        key = keys[length];
+	        if (!(_.has(b, key) && eq(a[key], b[key], aStack, bStack))) return false;
+	      }
+	    }
+	    // Remove the first object from the stack of traversed objects.
+	    aStack.pop();
+	    bStack.pop();
+	    return true;
+	  };
+	
+	  // Perform a deep comparison to check if two objects are equal.
+	  _.isEqual = function(a, b) {
+	    return eq(a, b);
+	  };
+	
+	  // Is a given array, string, or object empty?
+	  // An "empty" object has no enumerable own-properties.
+	  _.isEmpty = function(obj) {
+	    if (obj == null) return true;
+	    if (isArrayLike(obj) && (_.isArray(obj) || _.isString(obj) || _.isArguments(obj))) return obj.length === 0;
+	    return _.keys(obj).length === 0;
+	  };
+	
+	  // Is a given value a DOM element?
+	  _.isElement = function(obj) {
+	    return !!(obj && obj.nodeType === 1);
+	  };
+	
+	  // Is a given value an array?
+	  // Delegates to ECMA5's native Array.isArray
+	  _.isArray = nativeIsArray || function(obj) {
+	    return toString.call(obj) === '[object Array]';
+	  };
+	
+	  // Is a given variable an object?
+	  _.isObject = function(obj) {
+	    var type = typeof obj;
+	    return type === 'function' || type === 'object' && !!obj;
+	  };
+	
+	  // Add some isType methods: isArguments, isFunction, isString, isNumber, isDate, isRegExp, isError.
+	  _.each(['Arguments', 'Function', 'String', 'Number', 'Date', 'RegExp', 'Error'], function(name) {
+	    _['is' + name] = function(obj) {
+	      return toString.call(obj) === '[object ' + name + ']';
+	    };
+	  });
+	
+	  // Define a fallback version of the method in browsers (ahem, IE < 9), where
+	  // there isn't any inspectable "Arguments" type.
+	  if (!_.isArguments(arguments)) {
+	    _.isArguments = function(obj) {
+	      return _.has(obj, 'callee');
+	    };
+	  }
+	
+	  // Optimize `isFunction` if appropriate. Work around some typeof bugs in old v8,
+	  // IE 11 (#1621), and in Safari 8 (#1929).
+	  if (typeof /./ != 'function' && typeof Int8Array != 'object') {
+	    _.isFunction = function(obj) {
+	      return typeof obj == 'function' || false;
+	    };
+	  }
+	
+	  // Is a given object a finite number?
+	  _.isFinite = function(obj) {
+	    return isFinite(obj) && !isNaN(parseFloat(obj));
+	  };
+	
+	  // Is the given value `NaN`? (NaN is the only number which does not equal itself).
+	  _.isNaN = function(obj) {
+	    return _.isNumber(obj) && obj !== +obj;
+	  };
+	
+	  // Is a given value a boolean?
+	  _.isBoolean = function(obj) {
+	    return obj === true || obj === false || toString.call(obj) === '[object Boolean]';
+	  };
+	
+	  // Is a given value equal to null?
+	  _.isNull = function(obj) {
+	    return obj === null;
+	  };
+	
+	  // Is a given variable undefined?
+	  _.isUndefined = function(obj) {
+	    return obj === void 0;
+	  };
+	
+	  // Shortcut function for checking if an object has a given property directly
+	  // on itself (in other words, not on a prototype).
+	  _.has = function(obj, key) {
+	    return obj != null && hasOwnProperty.call(obj, key);
+	  };
+	
+	  // Utility Functions
+	  // -----------------
+	
+	  // Run Underscore.js in *noConflict* mode, returning the `_` variable to its
+	  // previous owner. Returns a reference to the Underscore object.
+	  _.noConflict = function() {
+	    root._ = previousUnderscore;
+	    return this;
+	  };
+	
+	  // Keep the identity function around for default iteratees.
+	  _.identity = function(value) {
+	    return value;
+	  };
+	
+	  // Predicate-generating functions. Often useful outside of Underscore.
+	  _.constant = function(value) {
+	    return function() {
+	      return value;
+	    };
+	  };
+	
+	  _.noop = function(){};
+	
+	  _.property = property;
+	
+	  // Generates a function for a given object that returns a given property.
+	  _.propertyOf = function(obj) {
+	    return obj == null ? function(){} : function(key) {
+	      return obj[key];
+	    };
+	  };
+	
+	  // Returns a predicate for checking whether an object has a given set of
+	  // `key:value` pairs.
+	  _.matcher = _.matches = function(attrs) {
+	    attrs = _.extendOwn({}, attrs);
+	    return function(obj) {
+	      return _.isMatch(obj, attrs);
+	    };
+	  };
+	
+	  // Run a function **n** times.
+	  _.times = function(n, iteratee, context) {
+	    var accum = Array(Math.max(0, n));
+	    iteratee = optimizeCb(iteratee, context, 1);
+	    for (var i = 0; i < n; i++) accum[i] = iteratee(i);
+	    return accum;
+	  };
+	
+	  // Return a random integer between min and max (inclusive).
+	  _.random = function(min, max) {
+	    if (max == null) {
+	      max = min;
+	      min = 0;
+	    }
+	    return min + Math.floor(Math.random() * (max - min + 1));
+	  };
+	
+	  // A (possibly faster) way to get the current timestamp as an integer.
+	  _.now = Date.now || function() {
+	    return new Date().getTime();
+	  };
+	
+	   // List of HTML entities for escaping.
+	  var escapeMap = {
+	    '&': '&amp;',
+	    '<': '&lt;',
+	    '>': '&gt;',
+	    '"': '&quot;',
+	    "'": '&#x27;',
+	    '`': '&#x60;'
+	  };
+	  var unescapeMap = _.invert(escapeMap);
+	
+	  // Functions for escaping and unescaping strings to/from HTML interpolation.
+	  var createEscaper = function(map) {
+	    var escaper = function(match) {
+	      return map[match];
+	    };
+	    // Regexes for identifying a key that needs to be escaped
+	    var source = '(?:' + _.keys(map).join('|') + ')';
+	    var testRegexp = RegExp(source);
+	    var replaceRegexp = RegExp(source, 'g');
+	    return function(string) {
+	      string = string == null ? '' : '' + string;
+	      return testRegexp.test(string) ? string.replace(replaceRegexp, escaper) : string;
+	    };
+	  };
+	  _.escape = createEscaper(escapeMap);
+	  _.unescape = createEscaper(unescapeMap);
+	
+	  // If the value of the named `property` is a function then invoke it with the
+	  // `object` as context; otherwise, return it.
+	  _.result = function(object, property, fallback) {
+	    var value = object == null ? void 0 : object[property];
+	    if (value === void 0) {
+	      value = fallback;
+	    }
+	    return _.isFunction(value) ? value.call(object) : value;
+	  };
+	
+	  // Generate a unique integer id (unique within the entire client session).
+	  // Useful for temporary DOM ids.
+	  var idCounter = 0;
+	  _.uniqueId = function(prefix) {
+	    var id = ++idCounter + '';
+	    return prefix ? prefix + id : id;
+	  };
+	
+	  // By default, Underscore uses ERB-style template delimiters, change the
+	  // following template settings to use alternative delimiters.
+	  _.templateSettings = {
+	    evaluate    : /<%([\s\S]+?)%>/g,
+	    interpolate : /<%=([\s\S]+?)%>/g,
+	    escape      : /<%-([\s\S]+?)%>/g
+	  };
+	
+	  // When customizing `templateSettings`, if you don't want to define an
+	  // interpolation, evaluation or escaping regex, we need one that is
+	  // guaranteed not to match.
+	  var noMatch = /(.)^/;
+	
+	  // Certain characters need to be escaped so that they can be put into a
+	  // string literal.
+	  var escapes = {
+	    "'":      "'",
+	    '\\':     '\\',
+	    '\r':     'r',
+	    '\n':     'n',
+	    '\u2028': 'u2028',
+	    '\u2029': 'u2029'
+	  };
+	
+	  var escaper = /\\|'|\r|\n|\u2028|\u2029/g;
+	
+	  var escapeChar = function(match) {
+	    return '\\' + escapes[match];
+	  };
+	
+	  // JavaScript micro-templating, similar to John Resig's implementation.
+	  // Underscore templating handles arbitrary delimiters, preserves whitespace,
+	  // and correctly escapes quotes within interpolated code.
+	  // NB: `oldSettings` only exists for backwards compatibility.
+	  _.template = function(text, settings, oldSettings) {
+	    if (!settings && oldSettings) settings = oldSettings;
+	    settings = _.defaults({}, settings, _.templateSettings);
+	
+	    // Combine delimiters into one regular expression via alternation.
+	    var matcher = RegExp([
+	      (settings.escape || noMatch).source,
+	      (settings.interpolate || noMatch).source,
+	      (settings.evaluate || noMatch).source
+	    ].join('|') + '|$', 'g');
+	
+	    // Compile the template source, escaping string literals appropriately.
+	    var index = 0;
+	    var source = "__p+='";
+	    text.replace(matcher, function(match, escape, interpolate, evaluate, offset) {
+	      source += text.slice(index, offset).replace(escaper, escapeChar);
+	      index = offset + match.length;
+	
+	      if (escape) {
+	        source += "'+\n((__t=(" + escape + "))==null?'':_.escape(__t))+\n'";
+	      } else if (interpolate) {
+	        source += "'+\n((__t=(" + interpolate + "))==null?'':__t)+\n'";
+	      } else if (evaluate) {
+	        source += "';\n" + evaluate + "\n__p+='";
+	      }
+	
+	      // Adobe VMs need the match returned to produce the correct offest.
+	      return match;
+	    });
+	    source += "';\n";
+	
+	    // If a variable is not specified, place data values in local scope.
+	    if (!settings.variable) source = 'with(obj||{}){\n' + source + '}\n';
+	
+	    source = "var __t,__p='',__j=Array.prototype.join," +
+	      "print=function(){__p+=__j.call(arguments,'');};\n" +
+	      source + 'return __p;\n';
+	
+	    try {
+	      var render = new Function(settings.variable || 'obj', '_', source);
+	    } catch (e) {
+	      e.source = source;
+	      throw e;
+	    }
+	
+	    var template = function(data) {
+	      return render.call(this, data, _);
+	    };
+	
+	    // Provide the compiled source as a convenience for precompilation.
+	    var argument = settings.variable || 'obj';
+	    template.source = 'function(' + argument + '){\n' + source + '}';
+	
+	    return template;
+	  };
+	
+	  // Add a "chain" function. Start chaining a wrapped Underscore object.
+	  _.chain = function(obj) {
+	    var instance = _(obj);
+	    instance._chain = true;
+	    return instance;
+	  };
+	
+	  // OOP
+	  // ---------------
+	  // If Underscore is called as a function, it returns a wrapped object that
+	  // can be used OO-style. This wrapper holds altered versions of all the
+	  // underscore functions. Wrapped objects may be chained.
+	
+	  // Helper function to continue chaining intermediate results.
+	  var result = function(instance, obj) {
+	    return instance._chain ? _(obj).chain() : obj;
+	  };
+	
+	  // Add your own custom functions to the Underscore object.
+	  _.mixin = function(obj) {
+	    _.each(_.functions(obj), function(name) {
+	      var func = _[name] = obj[name];
+	      _.prototype[name] = function() {
+	        var args = [this._wrapped];
+	        push.apply(args, arguments);
+	        return result(this, func.apply(_, args));
+	      };
+	    });
+	  };
+	
+	  // Add all of the Underscore functions to the wrapper object.
+	  _.mixin(_);
+	
+	  // Add all mutator Array functions to the wrapper.
+	  _.each(['pop', 'push', 'reverse', 'shift', 'sort', 'splice', 'unshift'], function(name) {
+	    var method = ArrayProto[name];
+	    _.prototype[name] = function() {
+	      var obj = this._wrapped;
+	      method.apply(obj, arguments);
+	      if ((name === 'shift' || name === 'splice') && obj.length === 0) delete obj[0];
+	      return result(this, obj);
+	    };
+	  });
+	
+	  // Add all accessor Array functions to the wrapper.
+	  _.each(['concat', 'join', 'slice'], function(name) {
+	    var method = ArrayProto[name];
+	    _.prototype[name] = function() {
+	      return result(this, method.apply(this._wrapped, arguments));
+	    };
+	  });
+	
+	  // Extracts the result from a wrapped and chained object.
+	  _.prototype.value = function() {
+	    return this._wrapped;
+	  };
+	
+	  // Provide unwrapping proxy for some methods used in engine operations
+	  // such as arithmetic and JSON stringification.
+	  _.prototype.valueOf = _.prototype.toJSON = _.prototype.value;
+	
+	  _.prototype.toString = function() {
+	    return '' + this._wrapped;
+	  };
+	
+	  // AMD registration happens at the end for compatibility with AMD loaders
+	  // that may not enforce next-turn semantics on modules. Even though general
+	  // practice for AMD registration is to be anonymous, underscore registers
+	  // as a named module because, like jQuery, it is a base library that is
+	  // popular enough to be bundled in a third party lib, but not be part of
+	  // an AMD load request. Those cases could generate an error when an
+	  // anonymous define() is called outside of a loader request.
+	  if (true) {
+	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function() {
+	      return _;
+	    }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	  }
+	}.call(this));
+
+
+/***/ },
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Buffer) {(function(){
@@ -522,7 +1905,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(17).Buffer))
 
 /***/ },
-/* 4 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -9738,1581 +11121,27 @@
 
 
 /***/ },
-/* 5 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;//     Underscore.js 1.8.3
-	//     http://underscorejs.org
-	//     (c) 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
-	//     Underscore may be freely distributed under the MIT license.
-	
-	(function() {
-	
-	  // Baseline setup
-	  // --------------
-	
-	  // Establish the root object, `window` in the browser, or `exports` on the server.
-	  var root = this;
-	
-	  // Save the previous value of the `_` variable.
-	  var previousUnderscore = root._;
-	
-	  // Save bytes in the minified (but not gzipped) version:
-	  var ArrayProto = Array.prototype, ObjProto = Object.prototype, FuncProto = Function.prototype;
-	
-	  // Create quick reference variables for speed access to core prototypes.
-	  var
-	    push             = ArrayProto.push,
-	    slice            = ArrayProto.slice,
-	    toString         = ObjProto.toString,
-	    hasOwnProperty   = ObjProto.hasOwnProperty;
-	
-	  // All **ECMAScript 5** native function implementations that we hope to use
-	  // are declared here.
-	  var
-	    nativeIsArray      = Array.isArray,
-	    nativeKeys         = Object.keys,
-	    nativeBind         = FuncProto.bind,
-	    nativeCreate       = Object.create;
-	
-	  // Naked function reference for surrogate-prototype-swapping.
-	  var Ctor = function(){};
-	
-	  // Create a safe reference to the Underscore object for use below.
-	  var _ = function(obj) {
-	    if (obj instanceof _) return obj;
-	    if (!(this instanceof _)) return new _(obj);
-	    this._wrapped = obj;
-	  };
-	
-	  // Export the Underscore object for **Node.js**, with
-	  // backwards-compatibility for the old `require()` API. If we're in
-	  // the browser, add `_` as a global object.
-	  if (true) {
-	    if (typeof module !== 'undefined' && module.exports) {
-	      exports = module.exports = _;
-	    }
-	    exports._ = _;
-	  } else {
-	    root._ = _;
-	  }
-	
-	  // Current version.
-	  _.VERSION = '1.8.3';
-	
-	  // Internal function that returns an efficient (for current engines) version
-	  // of the passed-in callback, to be repeatedly applied in other Underscore
-	  // functions.
-	  var optimizeCb = function(func, context, argCount) {
-	    if (context === void 0) return func;
-	    switch (argCount == null ? 3 : argCount) {
-	      case 1: return function(value) {
-	        return func.call(context, value);
-	      };
-	      case 2: return function(value, other) {
-	        return func.call(context, value, other);
-	      };
-	      case 3: return function(value, index, collection) {
-	        return func.call(context, value, index, collection);
-	      };
-	      case 4: return function(accumulator, value, index, collection) {
-	        return func.call(context, accumulator, value, index, collection);
-	      };
-	    }
-	    return function() {
-	      return func.apply(context, arguments);
-	    };
-	  };
-	
-	  // A mostly-internal function to generate callbacks that can be applied
-	  // to each element in a collection, returning the desired result — either
-	  // identity, an arbitrary callback, a property matcher, or a property accessor.
-	  var cb = function(value, context, argCount) {
-	    if (value == null) return _.identity;
-	    if (_.isFunction(value)) return optimizeCb(value, context, argCount);
-	    if (_.isObject(value)) return _.matcher(value);
-	    return _.property(value);
-	  };
-	  _.iteratee = function(value, context) {
-	    return cb(value, context, Infinity);
-	  };
-	
-	  // An internal function for creating assigner functions.
-	  var createAssigner = function(keysFunc, undefinedOnly) {
-	    return function(obj) {
-	      var length = arguments.length;
-	      if (length < 2 || obj == null) return obj;
-	      for (var index = 1; index < length; index++) {
-	        var source = arguments[index],
-	            keys = keysFunc(source),
-	            l = keys.length;
-	        for (var i = 0; i < l; i++) {
-	          var key = keys[i];
-	          if (!undefinedOnly || obj[key] === void 0) obj[key] = source[key];
-	        }
-	      }
-	      return obj;
-	    };
-	  };
-	
-	  // An internal function for creating a new object that inherits from another.
-	  var baseCreate = function(prototype) {
-	    if (!_.isObject(prototype)) return {};
-	    if (nativeCreate) return nativeCreate(prototype);
-	    Ctor.prototype = prototype;
-	    var result = new Ctor;
-	    Ctor.prototype = null;
-	    return result;
-	  };
-	
-	  var property = function(key) {
-	    return function(obj) {
-	      return obj == null ? void 0 : obj[key];
-	    };
-	  };
-	
-	  // Helper for collection methods to determine whether a collection
-	  // should be iterated as an array or as an object
-	  // Related: http://people.mozilla.org/~jorendorff/es6-draft.html#sec-tolength
-	  // Avoids a very nasty iOS 8 JIT bug on ARM-64. #2094
-	  var MAX_ARRAY_INDEX = Math.pow(2, 53) - 1;
-	  var getLength = property('length');
-	  var isArrayLike = function(collection) {
-	    var length = getLength(collection);
-	    return typeof length == 'number' && length >= 0 && length <= MAX_ARRAY_INDEX;
-	  };
-	
-	  // Collection Functions
-	  // --------------------
-	
-	  // The cornerstone, an `each` implementation, aka `forEach`.
-	  // Handles raw objects in addition to array-likes. Treats all
-	  // sparse array-likes as if they were dense.
-	  _.each = _.forEach = function(obj, iteratee, context) {
-	    iteratee = optimizeCb(iteratee, context);
-	    var i, length;
-	    if (isArrayLike(obj)) {
-	      for (i = 0, length = obj.length; i < length; i++) {
-	        iteratee(obj[i], i, obj);
-	      }
-	    } else {
-	      var keys = _.keys(obj);
-	      for (i = 0, length = keys.length; i < length; i++) {
-	        iteratee(obj[keys[i]], keys[i], obj);
-	      }
-	    }
-	    return obj;
-	  };
-	
-	  // Return the results of applying the iteratee to each element.
-	  _.map = _.collect = function(obj, iteratee, context) {
-	    iteratee = cb(iteratee, context);
-	    var keys = !isArrayLike(obj) && _.keys(obj),
-	        length = (keys || obj).length,
-	        results = Array(length);
-	    for (var index = 0; index < length; index++) {
-	      var currentKey = keys ? keys[index] : index;
-	      results[index] = iteratee(obj[currentKey], currentKey, obj);
-	    }
-	    return results;
-	  };
-	
-	  // Create a reducing function iterating left or right.
-	  function createReduce(dir) {
-	    // Optimized iterator function as using arguments.length
-	    // in the main function will deoptimize the, see #1991.
-	    function iterator(obj, iteratee, memo, keys, index, length) {
-	      for (; index >= 0 && index < length; index += dir) {
-	        var currentKey = keys ? keys[index] : index;
-	        memo = iteratee(memo, obj[currentKey], currentKey, obj);
-	      }
-	      return memo;
-	    }
-	
-	    return function(obj, iteratee, memo, context) {
-	      iteratee = optimizeCb(iteratee, context, 4);
-	      var keys = !isArrayLike(obj) && _.keys(obj),
-	          length = (keys || obj).length,
-	          index = dir > 0 ? 0 : length - 1;
-	      // Determine the initial value if none is provided.
-	      if (arguments.length < 3) {
-	        memo = obj[keys ? keys[index] : index];
-	        index += dir;
-	      }
-	      return iterator(obj, iteratee, memo, keys, index, length);
-	    };
-	  }
-	
-	  // **Reduce** builds up a single result from a list of values, aka `inject`,
-	  // or `foldl`.
-	  _.reduce = _.foldl = _.inject = createReduce(1);
-	
-	  // The right-associative version of reduce, also known as `foldr`.
-	  _.reduceRight = _.foldr = createReduce(-1);
-	
-	  // Return the first value which passes a truth test. Aliased as `detect`.
-	  _.find = _.detect = function(obj, predicate, context) {
-	    var key;
-	    if (isArrayLike(obj)) {
-	      key = _.findIndex(obj, predicate, context);
-	    } else {
-	      key = _.findKey(obj, predicate, context);
-	    }
-	    if (key !== void 0 && key !== -1) return obj[key];
-	  };
-	
-	  // Return all the elements that pass a truth test.
-	  // Aliased as `select`.
-	  _.filter = _.select = function(obj, predicate, context) {
-	    var results = [];
-	    predicate = cb(predicate, context);
-	    _.each(obj, function(value, index, list) {
-	      if (predicate(value, index, list)) results.push(value);
-	    });
-	    return results;
-	  };
-	
-	  // Return all the elements for which a truth test fails.
-	  _.reject = function(obj, predicate, context) {
-	    return _.filter(obj, _.negate(cb(predicate)), context);
-	  };
-	
-	  // Determine whether all of the elements match a truth test.
-	  // Aliased as `all`.
-	  _.every = _.all = function(obj, predicate, context) {
-	    predicate = cb(predicate, context);
-	    var keys = !isArrayLike(obj) && _.keys(obj),
-	        length = (keys || obj).length;
-	    for (var index = 0; index < length; index++) {
-	      var currentKey = keys ? keys[index] : index;
-	      if (!predicate(obj[currentKey], currentKey, obj)) return false;
-	    }
-	    return true;
-	  };
-	
-	  // Determine if at least one element in the object matches a truth test.
-	  // Aliased as `any`.
-	  _.some = _.any = function(obj, predicate, context) {
-	    predicate = cb(predicate, context);
-	    var keys = !isArrayLike(obj) && _.keys(obj),
-	        length = (keys || obj).length;
-	    for (var index = 0; index < length; index++) {
-	      var currentKey = keys ? keys[index] : index;
-	      if (predicate(obj[currentKey], currentKey, obj)) return true;
-	    }
-	    return false;
-	  };
-	
-	  // Determine if the array or object contains a given item (using `===`).
-	  // Aliased as `includes` and `include`.
-	  _.contains = _.includes = _.include = function(obj, item, fromIndex, guard) {
-	    if (!isArrayLike(obj)) obj = _.values(obj);
-	    if (typeof fromIndex != 'number' || guard) fromIndex = 0;
-	    return _.indexOf(obj, item, fromIndex) >= 0;
-	  };
-	
-	  // Invoke a method (with arguments) on every item in a collection.
-	  _.invoke = function(obj, method) {
-	    var args = slice.call(arguments, 2);
-	    var isFunc = _.isFunction(method);
-	    return _.map(obj, function(value) {
-	      var func = isFunc ? method : value[method];
-	      return func == null ? func : func.apply(value, args);
-	    });
-	  };
-	
-	  // Convenience version of a common use case of `map`: fetching a property.
-	  _.pluck = function(obj, key) {
-	    return _.map(obj, _.property(key));
-	  };
-	
-	  // Convenience version of a common use case of `filter`: selecting only objects
-	  // containing specific `key:value` pairs.
-	  _.where = function(obj, attrs) {
-	    return _.filter(obj, _.matcher(attrs));
-	  };
-	
-	  // Convenience version of a common use case of `find`: getting the first object
-	  // containing specific `key:value` pairs.
-	  _.findWhere = function(obj, attrs) {
-	    return _.find(obj, _.matcher(attrs));
-	  };
-	
-	  // Return the maximum element (or element-based computation).
-	  _.max = function(obj, iteratee, context) {
-	    var result = -Infinity, lastComputed = -Infinity,
-	        value, computed;
-	    if (iteratee == null && obj != null) {
-	      obj = isArrayLike(obj) ? obj : _.values(obj);
-	      for (var i = 0, length = obj.length; i < length; i++) {
-	        value = obj[i];
-	        if (value > result) {
-	          result = value;
-	        }
-	      }
-	    } else {
-	      iteratee = cb(iteratee, context);
-	      _.each(obj, function(value, index, list) {
-	        computed = iteratee(value, index, list);
-	        if (computed > lastComputed || computed === -Infinity && result === -Infinity) {
-	          result = value;
-	          lastComputed = computed;
-	        }
-	      });
-	    }
-	    return result;
-	  };
-	
-	  // Return the minimum element (or element-based computation).
-	  _.min = function(obj, iteratee, context) {
-	    var result = Infinity, lastComputed = Infinity,
-	        value, computed;
-	    if (iteratee == null && obj != null) {
-	      obj = isArrayLike(obj) ? obj : _.values(obj);
-	      for (var i = 0, length = obj.length; i < length; i++) {
-	        value = obj[i];
-	        if (value < result) {
-	          result = value;
-	        }
-	      }
-	    } else {
-	      iteratee = cb(iteratee, context);
-	      _.each(obj, function(value, index, list) {
-	        computed = iteratee(value, index, list);
-	        if (computed < lastComputed || computed === Infinity && result === Infinity) {
-	          result = value;
-	          lastComputed = computed;
-	        }
-	      });
-	    }
-	    return result;
-	  };
-	
-	  // Shuffle a collection, using the modern version of the
-	  // [Fisher-Yates shuffle](http://en.wikipedia.org/wiki/Fisher–Yates_shuffle).
-	  _.shuffle = function(obj) {
-	    var set = isArrayLike(obj) ? obj : _.values(obj);
-	    var length = set.length;
-	    var shuffled = Array(length);
-	    for (var index = 0, rand; index < length; index++) {
-	      rand = _.random(0, index);
-	      if (rand !== index) shuffled[index] = shuffled[rand];
-	      shuffled[rand] = set[index];
-	    }
-	    return shuffled;
-	  };
-	
-	  // Sample **n** random values from a collection.
-	  // If **n** is not specified, returns a single random element.
-	  // The internal `guard` argument allows it to work with `map`.
-	  _.sample = function(obj, n, guard) {
-	    if (n == null || guard) {
-	      if (!isArrayLike(obj)) obj = _.values(obj);
-	      return obj[_.random(obj.length - 1)];
-	    }
-	    return _.shuffle(obj).slice(0, Math.max(0, n));
-	  };
-	
-	  // Sort the object's values by a criterion produced by an iteratee.
-	  _.sortBy = function(obj, iteratee, context) {
-	    iteratee = cb(iteratee, context);
-	    return _.pluck(_.map(obj, function(value, index, list) {
-	      return {
-	        value: value,
-	        index: index,
-	        criteria: iteratee(value, index, list)
-	      };
-	    }).sort(function(left, right) {
-	      var a = left.criteria;
-	      var b = right.criteria;
-	      if (a !== b) {
-	        if (a > b || a === void 0) return 1;
-	        if (a < b || b === void 0) return -1;
-	      }
-	      return left.index - right.index;
-	    }), 'value');
-	  };
-	
-	  // An internal function used for aggregate "group by" operations.
-	  var group = function(behavior) {
-	    return function(obj, iteratee, context) {
-	      var result = {};
-	      iteratee = cb(iteratee, context);
-	      _.each(obj, function(value, index) {
-	        var key = iteratee(value, index, obj);
-	        behavior(result, value, key);
-	      });
-	      return result;
-	    };
-	  };
-	
-	  // Groups the object's values by a criterion. Pass either a string attribute
-	  // to group by, or a function that returns the criterion.
-	  _.groupBy = group(function(result, value, key) {
-	    if (_.has(result, key)) result[key].push(value); else result[key] = [value];
-	  });
-	
-	  // Indexes the object's values by a criterion, similar to `groupBy`, but for
-	  // when you know that your index values will be unique.
-	  _.indexBy = group(function(result, value, key) {
-	    result[key] = value;
-	  });
-	
-	  // Counts instances of an object that group by a certain criterion. Pass
-	  // either a string attribute to count by, or a function that returns the
-	  // criterion.
-	  _.countBy = group(function(result, value, key) {
-	    if (_.has(result, key)) result[key]++; else result[key] = 1;
-	  });
-	
-	  // Safely create a real, live array from anything iterable.
-	  _.toArray = function(obj) {
-	    if (!obj) return [];
-	    if (_.isArray(obj)) return slice.call(obj);
-	    if (isArrayLike(obj)) return _.map(obj, _.identity);
-	    return _.values(obj);
-	  };
-	
-	  // Return the number of elements in an object.
-	  _.size = function(obj) {
-	    if (obj == null) return 0;
-	    return isArrayLike(obj) ? obj.length : _.keys(obj).length;
-	  };
-	
-	  // Split a collection into two arrays: one whose elements all satisfy the given
-	  // predicate, and one whose elements all do not satisfy the predicate.
-	  _.partition = function(obj, predicate, context) {
-	    predicate = cb(predicate, context);
-	    var pass = [], fail = [];
-	    _.each(obj, function(value, key, obj) {
-	      (predicate(value, key, obj) ? pass : fail).push(value);
-	    });
-	    return [pass, fail];
-	  };
-	
-	  // Array Functions
-	  // ---------------
-	
-	  // Get the first element of an array. Passing **n** will return the first N
-	  // values in the array. Aliased as `head` and `take`. The **guard** check
-	  // allows it to work with `_.map`.
-	  _.first = _.head = _.take = function(array, n, guard) {
-	    if (array == null) return void 0;
-	    if (n == null || guard) return array[0];
-	    return _.initial(array, array.length - n);
-	  };
-	
-	  // Returns everything but the last entry of the array. Especially useful on
-	  // the arguments object. Passing **n** will return all the values in
-	  // the array, excluding the last N.
-	  _.initial = function(array, n, guard) {
-	    return slice.call(array, 0, Math.max(0, array.length - (n == null || guard ? 1 : n)));
-	  };
-	
-	  // Get the last element of an array. Passing **n** will return the last N
-	  // values in the array.
-	  _.last = function(array, n, guard) {
-	    if (array == null) return void 0;
-	    if (n == null || guard) return array[array.length - 1];
-	    return _.rest(array, Math.max(0, array.length - n));
-	  };
-	
-	  // Returns everything but the first entry of the array. Aliased as `tail` and `drop`.
-	  // Especially useful on the arguments object. Passing an **n** will return
-	  // the rest N values in the array.
-	  _.rest = _.tail = _.drop = function(array, n, guard) {
-	    return slice.call(array, n == null || guard ? 1 : n);
-	  };
-	
-	  // Trim out all falsy values from an array.
-	  _.compact = function(array) {
-	    return _.filter(array, _.identity);
-	  };
-	
-	  // Internal implementation of a recursive `flatten` function.
-	  var flatten = function(input, shallow, strict, startIndex) {
-	    var output = [], idx = 0;
-	    for (var i = startIndex || 0, length = getLength(input); i < length; i++) {
-	      var value = input[i];
-	      if (isArrayLike(value) && (_.isArray(value) || _.isArguments(value))) {
-	        //flatten current level of array or arguments object
-	        if (!shallow) value = flatten(value, shallow, strict);
-	        var j = 0, len = value.length;
-	        output.length += len;
-	        while (j < len) {
-	          output[idx++] = value[j++];
-	        }
-	      } else if (!strict) {
-	        output[idx++] = value;
-	      }
-	    }
-	    return output;
-	  };
-	
-	  // Flatten out an array, either recursively (by default), or just one level.
-	  _.flatten = function(array, shallow) {
-	    return flatten(array, shallow, false);
-	  };
-	
-	  // Return a version of the array that does not contain the specified value(s).
-	  _.without = function(array) {
-	    return _.difference(array, slice.call(arguments, 1));
-	  };
-	
-	  // Produce a duplicate-free version of the array. If the array has already
-	  // been sorted, you have the option of using a faster algorithm.
-	  // Aliased as `unique`.
-	  _.uniq = _.unique = function(array, isSorted, iteratee, context) {
-	    if (!_.isBoolean(isSorted)) {
-	      context = iteratee;
-	      iteratee = isSorted;
-	      isSorted = false;
-	    }
-	    if (iteratee != null) iteratee = cb(iteratee, context);
-	    var result = [];
-	    var seen = [];
-	    for (var i = 0, length = getLength(array); i < length; i++) {
-	      var value = array[i],
-	          computed = iteratee ? iteratee(value, i, array) : value;
-	      if (isSorted) {
-	        if (!i || seen !== computed) result.push(value);
-	        seen = computed;
-	      } else if (iteratee) {
-	        if (!_.contains(seen, computed)) {
-	          seen.push(computed);
-	          result.push(value);
-	        }
-	      } else if (!_.contains(result, value)) {
-	        result.push(value);
-	      }
-	    }
-	    return result;
-	  };
-	
-	  // Produce an array that contains the union: each distinct element from all of
-	  // the passed-in arrays.
-	  _.union = function() {
-	    return _.uniq(flatten(arguments, true, true));
-	  };
-	
-	  // Produce an array that contains every item shared between all the
-	  // passed-in arrays.
-	  _.intersection = function(array) {
-	    var result = [];
-	    var argsLength = arguments.length;
-	    for (var i = 0, length = getLength(array); i < length; i++) {
-	      var item = array[i];
-	      if (_.contains(result, item)) continue;
-	      for (var j = 1; j < argsLength; j++) {
-	        if (!_.contains(arguments[j], item)) break;
-	      }
-	      if (j === argsLength) result.push(item);
-	    }
-	    return result;
-	  };
-	
-	  // Take the difference between one array and a number of other arrays.
-	  // Only the elements present in just the first array will remain.
-	  _.difference = function(array) {
-	    var rest = flatten(arguments, true, true, 1);
-	    return _.filter(array, function(value){
-	      return !_.contains(rest, value);
-	    });
-	  };
-	
-	  // Zip together multiple lists into a single array -- elements that share
-	  // an index go together.
-	  _.zip = function() {
-	    return _.unzip(arguments);
-	  };
-	
-	  // Complement of _.zip. Unzip accepts an array of arrays and groups
-	  // each array's elements on shared indices
-	  _.unzip = function(array) {
-	    var length = array && _.max(array, getLength).length || 0;
-	    var result = Array(length);
-	
-	    for (var index = 0; index < length; index++) {
-	      result[index] = _.pluck(array, index);
-	    }
-	    return result;
-	  };
-	
-	  // Converts lists into objects. Pass either a single array of `[key, value]`
-	  // pairs, or two parallel arrays of the same length -- one of keys, and one of
-	  // the corresponding values.
-	  _.object = function(list, values) {
-	    var result = {};
-	    for (var i = 0, length = getLength(list); i < length; i++) {
-	      if (values) {
-	        result[list[i]] = values[i];
-	      } else {
-	        result[list[i][0]] = list[i][1];
-	      }
-	    }
-	    return result;
-	  };
-	
-	  // Generator function to create the findIndex and findLastIndex functions
-	  function createPredicateIndexFinder(dir) {
-	    return function(array, predicate, context) {
-	      predicate = cb(predicate, context);
-	      var length = getLength(array);
-	      var index = dir > 0 ? 0 : length - 1;
-	      for (; index >= 0 && index < length; index += dir) {
-	        if (predicate(array[index], index, array)) return index;
-	      }
-	      return -1;
-	    };
-	  }
-	
-	  // Returns the first index on an array-like that passes a predicate test
-	  _.findIndex = createPredicateIndexFinder(1);
-	  _.findLastIndex = createPredicateIndexFinder(-1);
-	
-	  // Use a comparator function to figure out the smallest index at which
-	  // an object should be inserted so as to maintain order. Uses binary search.
-	  _.sortedIndex = function(array, obj, iteratee, context) {
-	    iteratee = cb(iteratee, context, 1);
-	    var value = iteratee(obj);
-	    var low = 0, high = getLength(array);
-	    while (low < high) {
-	      var mid = Math.floor((low + high) / 2);
-	      if (iteratee(array[mid]) < value) low = mid + 1; else high = mid;
-	    }
-	    return low;
-	  };
-	
-	  // Generator function to create the indexOf and lastIndexOf functions
-	  function createIndexFinder(dir, predicateFind, sortedIndex) {
-	    return function(array, item, idx) {
-	      var i = 0, length = getLength(array);
-	      if (typeof idx == 'number') {
-	        if (dir > 0) {
-	            i = idx >= 0 ? idx : Math.max(idx + length, i);
-	        } else {
-	            length = idx >= 0 ? Math.min(idx + 1, length) : idx + length + 1;
-	        }
-	      } else if (sortedIndex && idx && length) {
-	        idx = sortedIndex(array, item);
-	        return array[idx] === item ? idx : -1;
-	      }
-	      if (item !== item) {
-	        idx = predicateFind(slice.call(array, i, length), _.isNaN);
-	        return idx >= 0 ? idx + i : -1;
-	      }
-	      for (idx = dir > 0 ? i : length - 1; idx >= 0 && idx < length; idx += dir) {
-	        if (array[idx] === item) return idx;
-	      }
-	      return -1;
-	    };
-	  }
-	
-	  // Return the position of the first occurrence of an item in an array,
-	  // or -1 if the item is not included in the array.
-	  // If the array is large and already in sort order, pass `true`
-	  // for **isSorted** to use binary search.
-	  _.indexOf = createIndexFinder(1, _.findIndex, _.sortedIndex);
-	  _.lastIndexOf = createIndexFinder(-1, _.findLastIndex);
-	
-	  // Generate an integer Array containing an arithmetic progression. A port of
-	  // the native Python `range()` function. See
-	  // [the Python documentation](http://docs.python.org/library/functions.html#range).
-	  _.range = function(start, stop, step) {
-	    if (stop == null) {
-	      stop = start || 0;
-	      start = 0;
-	    }
-	    step = step || 1;
-	
-	    var length = Math.max(Math.ceil((stop - start) / step), 0);
-	    var range = Array(length);
-	
-	    for (var idx = 0; idx < length; idx++, start += step) {
-	      range[idx] = start;
-	    }
-	
-	    return range;
-	  };
-	
-	  // Function (ahem) Functions
-	  // ------------------
-	
-	  // Determines whether to execute a function as a constructor
-	  // or a normal function with the provided arguments
-	  var executeBound = function(sourceFunc, boundFunc, context, callingContext, args) {
-	    if (!(callingContext instanceof boundFunc)) return sourceFunc.apply(context, args);
-	    var self = baseCreate(sourceFunc.prototype);
-	    var result = sourceFunc.apply(self, args);
-	    if (_.isObject(result)) return result;
-	    return self;
-	  };
-	
-	  // Create a function bound to a given object (assigning `this`, and arguments,
-	  // optionally). Delegates to **ECMAScript 5**'s native `Function.bind` if
-	  // available.
-	  _.bind = function(func, context) {
-	    if (nativeBind && func.bind === nativeBind) return nativeBind.apply(func, slice.call(arguments, 1));
-	    if (!_.isFunction(func)) throw new TypeError('Bind must be called on a function');
-	    var args = slice.call(arguments, 2);
-	    var bound = function() {
-	      return executeBound(func, bound, context, this, args.concat(slice.call(arguments)));
-	    };
-	    return bound;
-	  };
-	
-	  // Partially apply a function by creating a version that has had some of its
-	  // arguments pre-filled, without changing its dynamic `this` context. _ acts
-	  // as a placeholder, allowing any combination of arguments to be pre-filled.
-	  _.partial = function(func) {
-	    var boundArgs = slice.call(arguments, 1);
-	    var bound = function() {
-	      var position = 0, length = boundArgs.length;
-	      var args = Array(length);
-	      for (var i = 0; i < length; i++) {
-	        args[i] = boundArgs[i] === _ ? arguments[position++] : boundArgs[i];
-	      }
-	      while (position < arguments.length) args.push(arguments[position++]);
-	      return executeBound(func, bound, this, this, args);
-	    };
-	    return bound;
-	  };
-	
-	  // Bind a number of an object's methods to that object. Remaining arguments
-	  // are the method names to be bound. Useful for ensuring that all callbacks
-	  // defined on an object belong to it.
-	  _.bindAll = function(obj) {
-	    var i, length = arguments.length, key;
-	    if (length <= 1) throw new Error('bindAll must be passed function names');
-	    for (i = 1; i < length; i++) {
-	      key = arguments[i];
-	      obj[key] = _.bind(obj[key], obj);
-	    }
-	    return obj;
-	  };
-	
-	  // Memoize an expensive function by storing its results.
-	  _.memoize = function(func, hasher) {
-	    var memoize = function(key) {
-	      var cache = memoize.cache;
-	      var address = '' + (hasher ? hasher.apply(this, arguments) : key);
-	      if (!_.has(cache, address)) cache[address] = func.apply(this, arguments);
-	      return cache[address];
-	    };
-	    memoize.cache = {};
-	    return memoize;
-	  };
-	
-	  // Delays a function for the given number of milliseconds, and then calls
-	  // it with the arguments supplied.
-	  _.delay = function(func, wait) {
-	    var args = slice.call(arguments, 2);
-	    return setTimeout(function(){
-	      return func.apply(null, args);
-	    }, wait);
-	  };
-	
-	  // Defers a function, scheduling it to run after the current call stack has
-	  // cleared.
-	  _.defer = _.partial(_.delay, _, 1);
-	
-	  // Returns a function, that, when invoked, will only be triggered at most once
-	  // during a given window of time. Normally, the throttled function will run
-	  // as much as it can, without ever going more than once per `wait` duration;
-	  // but if you'd like to disable the execution on the leading edge, pass
-	  // `{leading: false}`. To disable execution on the trailing edge, ditto.
-	  _.throttle = function(func, wait, options) {
-	    var context, args, result;
-	    var timeout = null;
-	    var previous = 0;
-	    if (!options) options = {};
-	    var later = function() {
-	      previous = options.leading === false ? 0 : _.now();
-	      timeout = null;
-	      result = func.apply(context, args);
-	      if (!timeout) context = args = null;
-	    };
-	    return function() {
-	      var now = _.now();
-	      if (!previous && options.leading === false) previous = now;
-	      var remaining = wait - (now - previous);
-	      context = this;
-	      args = arguments;
-	      if (remaining <= 0 || remaining > wait) {
-	        if (timeout) {
-	          clearTimeout(timeout);
-	          timeout = null;
-	        }
-	        previous = now;
-	        result = func.apply(context, args);
-	        if (!timeout) context = args = null;
-	      } else if (!timeout && options.trailing !== false) {
-	        timeout = setTimeout(later, remaining);
-	      }
-	      return result;
-	    };
-	  };
-	
-	  // Returns a function, that, as long as it continues to be invoked, will not
-	  // be triggered. The function will be called after it stops being called for
-	  // N milliseconds. If `immediate` is passed, trigger the function on the
-	  // leading edge, instead of the trailing.
-	  _.debounce = function(func, wait, immediate) {
-	    var timeout, args, context, timestamp, result;
-	
-	    var later = function() {
-	      var last = _.now() - timestamp;
-	
-	      if (last < wait && last >= 0) {
-	        timeout = setTimeout(later, wait - last);
-	      } else {
-	        timeout = null;
-	        if (!immediate) {
-	          result = func.apply(context, args);
-	          if (!timeout) context = args = null;
-	        }
-	      }
-	    };
-	
-	    return function() {
-	      context = this;
-	      args = arguments;
-	      timestamp = _.now();
-	      var callNow = immediate && !timeout;
-	      if (!timeout) timeout = setTimeout(later, wait);
-	      if (callNow) {
-	        result = func.apply(context, args);
-	        context = args = null;
-	      }
-	
-	      return result;
-	    };
-	  };
-	
-	  // Returns the first function passed as an argument to the second,
-	  // allowing you to adjust arguments, run code before and after, and
-	  // conditionally execute the original function.
-	  _.wrap = function(func, wrapper) {
-	    return _.partial(wrapper, func);
-	  };
-	
-	  // Returns a negated version of the passed-in predicate.
-	  _.negate = function(predicate) {
-	    return function() {
-	      return !predicate.apply(this, arguments);
-	    };
-	  };
-	
-	  // Returns a function that is the composition of a list of functions, each
-	  // consuming the return value of the function that follows.
-	  _.compose = function() {
-	    var args = arguments;
-	    var start = args.length - 1;
-	    return function() {
-	      var i = start;
-	      var result = args[start].apply(this, arguments);
-	      while (i--) result = args[i].call(this, result);
-	      return result;
-	    };
-	  };
-	
-	  // Returns a function that will only be executed on and after the Nth call.
-	  _.after = function(times, func) {
-	    return function() {
-	      if (--times < 1) {
-	        return func.apply(this, arguments);
-	      }
-	    };
-	  };
-	
-	  // Returns a function that will only be executed up to (but not including) the Nth call.
-	  _.before = function(times, func) {
-	    var memo;
-	    return function() {
-	      if (--times > 0) {
-	        memo = func.apply(this, arguments);
-	      }
-	      if (times <= 1) func = null;
-	      return memo;
-	    };
-	  };
-	
-	  // Returns a function that will be executed at most one time, no matter how
-	  // often you call it. Useful for lazy initialization.
-	  _.once = _.partial(_.before, 2);
-	
-	  // Object Functions
-	  // ----------------
-	
-	  // Keys in IE < 9 that won't be iterated by `for key in ...` and thus missed.
-	  var hasEnumBug = !{toString: null}.propertyIsEnumerable('toString');
-	  var nonEnumerableProps = ['valueOf', 'isPrototypeOf', 'toString',
-	                      'propertyIsEnumerable', 'hasOwnProperty', 'toLocaleString'];
-	
-	  function collectNonEnumProps(obj, keys) {
-	    var nonEnumIdx = nonEnumerableProps.length;
-	    var constructor = obj.constructor;
-	    var proto = (_.isFunction(constructor) && constructor.prototype) || ObjProto;
-	
-	    // Constructor is a special case.
-	    var prop = 'constructor';
-	    if (_.has(obj, prop) && !_.contains(keys, prop)) keys.push(prop);
-	
-	    while (nonEnumIdx--) {
-	      prop = nonEnumerableProps[nonEnumIdx];
-	      if (prop in obj && obj[prop] !== proto[prop] && !_.contains(keys, prop)) {
-	        keys.push(prop);
-	      }
-	    }
-	  }
-	
-	  // Retrieve the names of an object's own properties.
-	  // Delegates to **ECMAScript 5**'s native `Object.keys`
-	  _.keys = function(obj) {
-	    if (!_.isObject(obj)) return [];
-	    if (nativeKeys) return nativeKeys(obj);
-	    var keys = [];
-	    for (var key in obj) if (_.has(obj, key)) keys.push(key);
-	    // Ahem, IE < 9.
-	    if (hasEnumBug) collectNonEnumProps(obj, keys);
-	    return keys;
-	  };
-	
-	  // Retrieve all the property names of an object.
-	  _.allKeys = function(obj) {
-	    if (!_.isObject(obj)) return [];
-	    var keys = [];
-	    for (var key in obj) keys.push(key);
-	    // Ahem, IE < 9.
-	    if (hasEnumBug) collectNonEnumProps(obj, keys);
-	    return keys;
-	  };
-	
-	  // Retrieve the values of an object's properties.
-	  _.values = function(obj) {
-	    var keys = _.keys(obj);
-	    var length = keys.length;
-	    var values = Array(length);
-	    for (var i = 0; i < length; i++) {
-	      values[i] = obj[keys[i]];
-	    }
-	    return values;
-	  };
-	
-	  // Returns the results of applying the iteratee to each element of the object
-	  // In contrast to _.map it returns an object
-	  _.mapObject = function(obj, iteratee, context) {
-	    iteratee = cb(iteratee, context);
-	    var keys =  _.keys(obj),
-	          length = keys.length,
-	          results = {},
-	          currentKey;
-	      for (var index = 0; index < length; index++) {
-	        currentKey = keys[index];
-	        results[currentKey] = iteratee(obj[currentKey], currentKey, obj);
-	      }
-	      return results;
-	  };
-	
-	  // Convert an object into a list of `[key, value]` pairs.
-	  _.pairs = function(obj) {
-	    var keys = _.keys(obj);
-	    var length = keys.length;
-	    var pairs = Array(length);
-	    for (var i = 0; i < length; i++) {
-	      pairs[i] = [keys[i], obj[keys[i]]];
-	    }
-	    return pairs;
-	  };
-	
-	  // Invert the keys and values of an object. The values must be serializable.
-	  _.invert = function(obj) {
-	    var result = {};
-	    var keys = _.keys(obj);
-	    for (var i = 0, length = keys.length; i < length; i++) {
-	      result[obj[keys[i]]] = keys[i];
-	    }
-	    return result;
-	  };
-	
-	  // Return a sorted list of the function names available on the object.
-	  // Aliased as `methods`
-	  _.functions = _.methods = function(obj) {
-	    var names = [];
-	    for (var key in obj) {
-	      if (_.isFunction(obj[key])) names.push(key);
-	    }
-	    return names.sort();
-	  };
-	
-	  // Extend a given object with all the properties in passed-in object(s).
-	  _.extend = createAssigner(_.allKeys);
-	
-	  // Assigns a given object with all the own properties in the passed-in object(s)
-	  // (https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object/assign)
-	  _.extendOwn = _.assign = createAssigner(_.keys);
-	
-	  // Returns the first key on an object that passes a predicate test
-	  _.findKey = function(obj, predicate, context) {
-	    predicate = cb(predicate, context);
-	    var keys = _.keys(obj), key;
-	    for (var i = 0, length = keys.length; i < length; i++) {
-	      key = keys[i];
-	      if (predicate(obj[key], key, obj)) return key;
-	    }
-	  };
-	
-	  // Return a copy of the object only containing the whitelisted properties.
-	  _.pick = function(object, oiteratee, context) {
-	    var result = {}, obj = object, iteratee, keys;
-	    if (obj == null) return result;
-	    if (_.isFunction(oiteratee)) {
-	      keys = _.allKeys(obj);
-	      iteratee = optimizeCb(oiteratee, context);
-	    } else {
-	      keys = flatten(arguments, false, false, 1);
-	      iteratee = function(value, key, obj) { return key in obj; };
-	      obj = Object(obj);
-	    }
-	    for (var i = 0, length = keys.length; i < length; i++) {
-	      var key = keys[i];
-	      var value = obj[key];
-	      if (iteratee(value, key, obj)) result[key] = value;
-	    }
-	    return result;
-	  };
-	
-	   // Return a copy of the object without the blacklisted properties.
-	  _.omit = function(obj, iteratee, context) {
-	    if (_.isFunction(iteratee)) {
-	      iteratee = _.negate(iteratee);
-	    } else {
-	      var keys = _.map(flatten(arguments, false, false, 1), String);
-	      iteratee = function(value, key) {
-	        return !_.contains(keys, key);
-	      };
-	    }
-	    return _.pick(obj, iteratee, context);
-	  };
-	
-	  // Fill in a given object with default properties.
-	  _.defaults = createAssigner(_.allKeys, true);
-	
-	  // Creates an object that inherits from the given prototype object.
-	  // If additional properties are provided then they will be added to the
-	  // created object.
-	  _.create = function(prototype, props) {
-	    var result = baseCreate(prototype);
-	    if (props) _.extendOwn(result, props);
-	    return result;
-	  };
-	
-	  // Create a (shallow-cloned) duplicate of an object.
-	  _.clone = function(obj) {
-	    if (!_.isObject(obj)) return obj;
-	    return _.isArray(obj) ? obj.slice() : _.extend({}, obj);
-	  };
-	
-	  // Invokes interceptor with the obj, and then returns obj.
-	  // The primary purpose of this method is to "tap into" a method chain, in
-	  // order to perform operations on intermediate results within the chain.
-	  _.tap = function(obj, interceptor) {
-	    interceptor(obj);
-	    return obj;
-	  };
-	
-	  // Returns whether an object has a given set of `key:value` pairs.
-	  _.isMatch = function(object, attrs) {
-	    var keys = _.keys(attrs), length = keys.length;
-	    if (object == null) return !length;
-	    var obj = Object(object);
-	    for (var i = 0; i < length; i++) {
-	      var key = keys[i];
-	      if (attrs[key] !== obj[key] || !(key in obj)) return false;
-	    }
-	    return true;
-	  };
-	
-	
-	  // Internal recursive comparison function for `isEqual`.
-	  var eq = function(a, b, aStack, bStack) {
-	    // Identical objects are equal. `0 === -0`, but they aren't identical.
-	    // See the [Harmony `egal` proposal](http://wiki.ecmascript.org/doku.php?id=harmony:egal).
-	    if (a === b) return a !== 0 || 1 / a === 1 / b;
-	    // A strict comparison is necessary because `null == undefined`.
-	    if (a == null || b == null) return a === b;
-	    // Unwrap any wrapped objects.
-	    if (a instanceof _) a = a._wrapped;
-	    if (b instanceof _) b = b._wrapped;
-	    // Compare `[[Class]]` names.
-	    var className = toString.call(a);
-	    if (className !== toString.call(b)) return false;
-	    switch (className) {
-	      // Strings, numbers, regular expressions, dates, and booleans are compared by value.
-	      case '[object RegExp]':
-	      // RegExps are coerced to strings for comparison (Note: '' + /a/i === '/a/i')
-	      case '[object String]':
-	        // Primitives and their corresponding object wrappers are equivalent; thus, `"5"` is
-	        // equivalent to `new String("5")`.
-	        return '' + a === '' + b;
-	      case '[object Number]':
-	        // `NaN`s are equivalent, but non-reflexive.
-	        // Object(NaN) is equivalent to NaN
-	        if (+a !== +a) return +b !== +b;
-	        // An `egal` comparison is performed for other numeric values.
-	        return +a === 0 ? 1 / +a === 1 / b : +a === +b;
-	      case '[object Date]':
-	      case '[object Boolean]':
-	        // Coerce dates and booleans to numeric primitive values. Dates are compared by their
-	        // millisecond representations. Note that invalid dates with millisecond representations
-	        // of `NaN` are not equivalent.
-	        return +a === +b;
-	    }
-	
-	    var areArrays = className === '[object Array]';
-	    if (!areArrays) {
-	      if (typeof a != 'object' || typeof b != 'object') return false;
-	
-	      // Objects with different constructors are not equivalent, but `Object`s or `Array`s
-	      // from different frames are.
-	      var aCtor = a.constructor, bCtor = b.constructor;
-	      if (aCtor !== bCtor && !(_.isFunction(aCtor) && aCtor instanceof aCtor &&
-	                               _.isFunction(bCtor) && bCtor instanceof bCtor)
-	                          && ('constructor' in a && 'constructor' in b)) {
-	        return false;
-	      }
-	    }
-	    // Assume equality for cyclic structures. The algorithm for detecting cyclic
-	    // structures is adapted from ES 5.1 section 15.12.3, abstract operation `JO`.
-	
-	    // Initializing stack of traversed objects.
-	    // It's done here since we only need them for objects and arrays comparison.
-	    aStack = aStack || [];
-	    bStack = bStack || [];
-	    var length = aStack.length;
-	    while (length--) {
-	      // Linear search. Performance is inversely proportional to the number of
-	      // unique nested structures.
-	      if (aStack[length] === a) return bStack[length] === b;
-	    }
-	
-	    // Add the first object to the stack of traversed objects.
-	    aStack.push(a);
-	    bStack.push(b);
-	
-	    // Recursively compare objects and arrays.
-	    if (areArrays) {
-	      // Compare array lengths to determine if a deep comparison is necessary.
-	      length = a.length;
-	      if (length !== b.length) return false;
-	      // Deep compare the contents, ignoring non-numeric properties.
-	      while (length--) {
-	        if (!eq(a[length], b[length], aStack, bStack)) return false;
-	      }
-	    } else {
-	      // Deep compare objects.
-	      var keys = _.keys(a), key;
-	      length = keys.length;
-	      // Ensure that both objects contain the same number of properties before comparing deep equality.
-	      if (_.keys(b).length !== length) return false;
-	      while (length--) {
-	        // Deep compare each member
-	        key = keys[length];
-	        if (!(_.has(b, key) && eq(a[key], b[key], aStack, bStack))) return false;
-	      }
-	    }
-	    // Remove the first object from the stack of traversed objects.
-	    aStack.pop();
-	    bStack.pop();
-	    return true;
-	  };
-	
-	  // Perform a deep comparison to check if two objects are equal.
-	  _.isEqual = function(a, b) {
-	    return eq(a, b);
-	  };
-	
-	  // Is a given array, string, or object empty?
-	  // An "empty" object has no enumerable own-properties.
-	  _.isEmpty = function(obj) {
-	    if (obj == null) return true;
-	    if (isArrayLike(obj) && (_.isArray(obj) || _.isString(obj) || _.isArguments(obj))) return obj.length === 0;
-	    return _.keys(obj).length === 0;
-	  };
-	
-	  // Is a given value a DOM element?
-	  _.isElement = function(obj) {
-	    return !!(obj && obj.nodeType === 1);
-	  };
-	
-	  // Is a given value an array?
-	  // Delegates to ECMA5's native Array.isArray
-	  _.isArray = nativeIsArray || function(obj) {
-	    return toString.call(obj) === '[object Array]';
-	  };
-	
-	  // Is a given variable an object?
-	  _.isObject = function(obj) {
-	    var type = typeof obj;
-	    return type === 'function' || type === 'object' && !!obj;
-	  };
-	
-	  // Add some isType methods: isArguments, isFunction, isString, isNumber, isDate, isRegExp, isError.
-	  _.each(['Arguments', 'Function', 'String', 'Number', 'Date', 'RegExp', 'Error'], function(name) {
-	    _['is' + name] = function(obj) {
-	      return toString.call(obj) === '[object ' + name + ']';
-	    };
-	  });
-	
-	  // Define a fallback version of the method in browsers (ahem, IE < 9), where
-	  // there isn't any inspectable "Arguments" type.
-	  if (!_.isArguments(arguments)) {
-	    _.isArguments = function(obj) {
-	      return _.has(obj, 'callee');
-	    };
-	  }
-	
-	  // Optimize `isFunction` if appropriate. Work around some typeof bugs in old v8,
-	  // IE 11 (#1621), and in Safari 8 (#1929).
-	  if (typeof /./ != 'function' && typeof Int8Array != 'object') {
-	    _.isFunction = function(obj) {
-	      return typeof obj == 'function' || false;
-	    };
-	  }
-	
-	  // Is a given object a finite number?
-	  _.isFinite = function(obj) {
-	    return isFinite(obj) && !isNaN(parseFloat(obj));
-	  };
-	
-	  // Is the given value `NaN`? (NaN is the only number which does not equal itself).
-	  _.isNaN = function(obj) {
-	    return _.isNumber(obj) && obj !== +obj;
-	  };
-	
-	  // Is a given value a boolean?
-	  _.isBoolean = function(obj) {
-	    return obj === true || obj === false || toString.call(obj) === '[object Boolean]';
-	  };
-	
-	  // Is a given value equal to null?
-	  _.isNull = function(obj) {
-	    return obj === null;
-	  };
-	
-	  // Is a given variable undefined?
-	  _.isUndefined = function(obj) {
-	    return obj === void 0;
-	  };
-	
-	  // Shortcut function for checking if an object has a given property directly
-	  // on itself (in other words, not on a prototype).
-	  _.has = function(obj, key) {
-	    return obj != null && hasOwnProperty.call(obj, key);
-	  };
-	
-	  // Utility Functions
-	  // -----------------
-	
-	  // Run Underscore.js in *noConflict* mode, returning the `_` variable to its
-	  // previous owner. Returns a reference to the Underscore object.
-	  _.noConflict = function() {
-	    root._ = previousUnderscore;
-	    return this;
-	  };
-	
-	  // Keep the identity function around for default iteratees.
-	  _.identity = function(value) {
-	    return value;
-	  };
-	
-	  // Predicate-generating functions. Often useful outside of Underscore.
-	  _.constant = function(value) {
-	    return function() {
-	      return value;
-	    };
-	  };
-	
-	  _.noop = function(){};
-	
-	  _.property = property;
-	
-	  // Generates a function for a given object that returns a given property.
-	  _.propertyOf = function(obj) {
-	    return obj == null ? function(){} : function(key) {
-	      return obj[key];
-	    };
-	  };
-	
-	  // Returns a predicate for checking whether an object has a given set of
-	  // `key:value` pairs.
-	  _.matcher = _.matches = function(attrs) {
-	    attrs = _.extendOwn({}, attrs);
-	    return function(obj) {
-	      return _.isMatch(obj, attrs);
-	    };
-	  };
-	
-	  // Run a function **n** times.
-	  _.times = function(n, iteratee, context) {
-	    var accum = Array(Math.max(0, n));
-	    iteratee = optimizeCb(iteratee, context, 1);
-	    for (var i = 0; i < n; i++) accum[i] = iteratee(i);
-	    return accum;
-	  };
-	
-	  // Return a random integer between min and max (inclusive).
-	  _.random = function(min, max) {
-	    if (max == null) {
-	      max = min;
-	      min = 0;
-	    }
-	    return min + Math.floor(Math.random() * (max - min + 1));
-	  };
-	
-	  // A (possibly faster) way to get the current timestamp as an integer.
-	  _.now = Date.now || function() {
-	    return new Date().getTime();
-	  };
-	
-	   // List of HTML entities for escaping.
-	  var escapeMap = {
-	    '&': '&amp;',
-	    '<': '&lt;',
-	    '>': '&gt;',
-	    '"': '&quot;',
-	    "'": '&#x27;',
-	    '`': '&#x60;'
-	  };
-	  var unescapeMap = _.invert(escapeMap);
-	
-	  // Functions for escaping and unescaping strings to/from HTML interpolation.
-	  var createEscaper = function(map) {
-	    var escaper = function(match) {
-	      return map[match];
-	    };
-	    // Regexes for identifying a key that needs to be escaped
-	    var source = '(?:' + _.keys(map).join('|') + ')';
-	    var testRegexp = RegExp(source);
-	    var replaceRegexp = RegExp(source, 'g');
-	    return function(string) {
-	      string = string == null ? '' : '' + string;
-	      return testRegexp.test(string) ? string.replace(replaceRegexp, escaper) : string;
-	    };
-	  };
-	  _.escape = createEscaper(escapeMap);
-	  _.unescape = createEscaper(unescapeMap);
-	
-	  // If the value of the named `property` is a function then invoke it with the
-	  // `object` as context; otherwise, return it.
-	  _.result = function(object, property, fallback) {
-	    var value = object == null ? void 0 : object[property];
-	    if (value === void 0) {
-	      value = fallback;
-	    }
-	    return _.isFunction(value) ? value.call(object) : value;
-	  };
-	
-	  // Generate a unique integer id (unique within the entire client session).
-	  // Useful for temporary DOM ids.
-	  var idCounter = 0;
-	  _.uniqueId = function(prefix) {
-	    var id = ++idCounter + '';
-	    return prefix ? prefix + id : id;
-	  };
-	
-	  // By default, Underscore uses ERB-style template delimiters, change the
-	  // following template settings to use alternative delimiters.
-	  _.templateSettings = {
-	    evaluate    : /<%([\s\S]+?)%>/g,
-	    interpolate : /<%=([\s\S]+?)%>/g,
-	    escape      : /<%-([\s\S]+?)%>/g
-	  };
-	
-	  // When customizing `templateSettings`, if you don't want to define an
-	  // interpolation, evaluation or escaping regex, we need one that is
-	  // guaranteed not to match.
-	  var noMatch = /(.)^/;
-	
-	  // Certain characters need to be escaped so that they can be put into a
-	  // string literal.
-	  var escapes = {
-	    "'":      "'",
-	    '\\':     '\\',
-	    '\r':     'r',
-	    '\n':     'n',
-	    '\u2028': 'u2028',
-	    '\u2029': 'u2029'
-	  };
-	
-	  var escaper = /\\|'|\r|\n|\u2028|\u2029/g;
-	
-	  var escapeChar = function(match) {
-	    return '\\' + escapes[match];
-	  };
-	
-	  // JavaScript micro-templating, similar to John Resig's implementation.
-	  // Underscore templating handles arbitrary delimiters, preserves whitespace,
-	  // and correctly escapes quotes within interpolated code.
-	  // NB: `oldSettings` only exists for backwards compatibility.
-	  _.template = function(text, settings, oldSettings) {
-	    if (!settings && oldSettings) settings = oldSettings;
-	    settings = _.defaults({}, settings, _.templateSettings);
-	
-	    // Combine delimiters into one regular expression via alternation.
-	    var matcher = RegExp([
-	      (settings.escape || noMatch).source,
-	      (settings.interpolate || noMatch).source,
-	      (settings.evaluate || noMatch).source
-	    ].join('|') + '|$', 'g');
-	
-	    // Compile the template source, escaping string literals appropriately.
-	    var index = 0;
-	    var source = "__p+='";
-	    text.replace(matcher, function(match, escape, interpolate, evaluate, offset) {
-	      source += text.slice(index, offset).replace(escaper, escapeChar);
-	      index = offset + match.length;
-	
-	      if (escape) {
-	        source += "'+\n((__t=(" + escape + "))==null?'':_.escape(__t))+\n'";
-	      } else if (interpolate) {
-	        source += "'+\n((__t=(" + interpolate + "))==null?'':__t)+\n'";
-	      } else if (evaluate) {
-	        source += "';\n" + evaluate + "\n__p+='";
-	      }
-	
-	      // Adobe VMs need the match returned to produce the correct offest.
-	      return match;
-	    });
-	    source += "';\n";
-	
-	    // If a variable is not specified, place data values in local scope.
-	    if (!settings.variable) source = 'with(obj||{}){\n' + source + '}\n';
-	
-	    source = "var __t,__p='',__j=Array.prototype.join," +
-	      "print=function(){__p+=__j.call(arguments,'');};\n" +
-	      source + 'return __p;\n';
-	
-	    try {
-	      var render = new Function(settings.variable || 'obj', '_', source);
-	    } catch (e) {
-	      e.source = source;
-	      throw e;
-	    }
-	
-	    var template = function(data) {
-	      return render.call(this, data, _);
-	    };
-	
-	    // Provide the compiled source as a convenience for precompilation.
-	    var argument = settings.variable || 'obj';
-	    template.source = 'function(' + argument + '){\n' + source + '}';
-	
-	    return template;
-	  };
-	
-	  // Add a "chain" function. Start chaining a wrapped Underscore object.
-	  _.chain = function(obj) {
-	    var instance = _(obj);
-	    instance._chain = true;
-	    return instance;
-	  };
-	
-	  // OOP
-	  // ---------------
-	  // If Underscore is called as a function, it returns a wrapped object that
-	  // can be used OO-style. This wrapper holds altered versions of all the
-	  // underscore functions. Wrapped objects may be chained.
-	
-	  // Helper function to continue chaining intermediate results.
-	  var result = function(instance, obj) {
-	    return instance._chain ? _(obj).chain() : obj;
-	  };
-	
-	  // Add your own custom functions to the Underscore object.
-	  _.mixin = function(obj) {
-	    _.each(_.functions(obj), function(name) {
-	      var func = _[name] = obj[name];
-	      _.prototype[name] = function() {
-	        var args = [this._wrapped];
-	        push.apply(args, arguments);
-	        return result(this, func.apply(_, args));
-	      };
-	    });
-	  };
-	
-	  // Add all of the Underscore functions to the wrapper object.
-	  _.mixin(_);
-	
-	  // Add all mutator Array functions to the wrapper.
-	  _.each(['pop', 'push', 'reverse', 'shift', 'sort', 'splice', 'unshift'], function(name) {
-	    var method = ArrayProto[name];
-	    _.prototype[name] = function() {
-	      var obj = this._wrapped;
-	      method.apply(obj, arguments);
-	      if ((name === 'shift' || name === 'splice') && obj.length === 0) delete obj[0];
-	      return result(this, obj);
-	    };
-	  });
-	
-	  // Add all accessor Array functions to the wrapper.
-	  _.each(['concat', 'join', 'slice'], function(name) {
-	    var method = ArrayProto[name];
-	    _.prototype[name] = function() {
-	      return result(this, method.apply(this._wrapped, arguments));
-	    };
-	  });
-	
-	  // Extracts the result from a wrapped and chained object.
-	  _.prototype.value = function() {
-	    return this._wrapped;
-	  };
-	
-	  // Provide unwrapping proxy for some methods used in engine operations
-	  // such as arithmetic and JSON stringification.
-	  _.prototype.valueOf = _.prototype.toJSON = _.prototype.value;
-	
-	  _.prototype.toString = function() {
-	    return '' + this._wrapped;
-	  };
-	
-	  // AMD registration happens at the end for compatibility with AMD loaders
-	  // that may not enforce next-turn semantics on modules. Even though general
-	  // practice for AMD registration is to be anonymous, underscore registers
-	  // as a named module because, like jQuery, it is a base library that is
-	  // popular enough to be bundled in a third party lib, but not be part of
-	  // an AMD load request. Those cases could generate an error when an
-	  // anonymous define() is called outside of a loader request.
-	  if (true) {
-	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function() {
-	      return _;
-	    }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-	  }
-	}.call(this));
-
-
-/***/ },
 /* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(16);
-	module.exports = angular;
+	__webpack_require__(14);
+	module.exports = 'ngAnimate';
 
 
 /***/ },
 /* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(14);
-	module.exports = 'ngTouch';
+	__webpack_require__(15);
+	module.exports = angular;
 
 
 /***/ },
 /* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(15);
-	module.exports = 'ngAnimate';
+	__webpack_require__(16);
+	module.exports = 'ngTouch';
 
 
 /***/ },
@@ -11333,10 +11162,10 @@
 	(function (root, factory) {
 	  if (typeof module !== 'undefined' && module.exports) {
 	    // CommonJS
-	    module.exports = factory(__webpack_require__(6));
+	    module.exports = factory(__webpack_require__(7));
 	  } else if (true) {
 	    // AMD
-	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(6)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(7)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 	  } else {
 	    // Global Variables
 	    factory(root.angular);
@@ -11994,1726 +11823,6 @@
 
 /***/ },
 /* 10 */
-/***/ function(module, exports, __webpack_require__) {
-
-	angular.module('reCAPTCHA', []).provider('reCAPTCHA', function() {
-	    var _publicKey = null,
-	        _options = {},
-	        self = this;
-	
-	    this.setPublicKey = function(publicKey) {
-	        _publicKey = publicKey;
-	    };
-	
-	    this.setOptions = function(options) {
-	        _options = options;
-	    };
-	
-	    this._createScript = function($document, callback) {
-	        var scriptTag = $document.createElement('script');
-	        scriptTag.type = 'text/javascript';
-	        scriptTag.async = true;
-	        scriptTag.src = '//www.google.com/recaptcha/api/js/recaptcha_ajax.js';
-	        scriptTag.onreadystatechange = function() {
-	            if (this.readyState == 'complete') {
-	                callback();
-	            }
-	        };
-	        scriptTag.onload = callback;
-	        var s = $document.getElementsByTagName('body')[0];
-	        s.appendChild(scriptTag);
-	    };
-	
-	    this.$get = ['$q', '$rootScope', '$window', '$document', function($q, $rootScope, $window, $document) {
-	        var deferred = $q.defer();
-	
-	        if (!$window.Recaptcha) {
-	            self._createScript($document[0], deferred.resolve);
-	        } else {
-	            deferred.resolve();
-	        }
-	
-	        return {
-	            create: function(element, callback) {
-	                if (!_publicKey) {
-	                    throw new Error('Please provide your PublicKey via setPublicKey');
-	                }
-	                _options.callback = callback;
-	
-	                deferred.promise.then(function() {
-	                    $window.Recaptcha.create(
-	                        _publicKey,
-	                        element,
-	                        _options
-	                    );
-	                });
-	            },
-	            setPublicKey: function(publicKey) {
-	                _publicKey = publicKey;
-	            },
-	            response: function() {
-	                return $window.Recaptcha.get_response();
-	            },
-	            challenge: function() {
-	                return $window.Recaptcha.get_challenge();
-	            },
-	            reload: function() {
-	                return $window.Recaptcha.reload();
-	            },
-	            destroy: function() {
-	                if ($window.Recaptcha) {
-	                    $window.Recaptcha.destroy();
-	                }
-	            }
-	        };
-	    }];
-	
-	}).directive('reCaptcha', ['reCAPTCHA', '$compile', function(reCAPTCHA, $compile) {
-	    return {
-	        restrict: 'A',
-	        require: 'ngModel',
-	        scope: {
-	            ngModel: '='
-	        },
-	        link: function(scope, element, attrs, controller) {
-	            var name = attrs.name || 'reCaptcha';
-	            scope.clear = function() {
-	                scope.ngModel = {
-	                    response: '',
-	                    challenge: false
-	                };
-	            };
-	
-	            // Create reCAPTCHA
-	            reCAPTCHA.create(element[0], function() {
-	
-	                // Reset on Start
-	                scope.clear();
-	
-	                // watch if challenge changes
-	                scope.$watch(function() {
-	                    return reCAPTCHA.challenge();
-	                }, function (newValue) {
-	                    scope.ngModel.challenge = newValue;
-	                });
-	
-	                // Attach model and click handler
-	                $compile(angular.element(document.querySelector('input#recaptcha_response_field')).attr('ng-required', 'true'))(scope);
-	                $compile(angular.element(document.querySelector('input#recaptcha_response_field')).attr('ng-model', 'ngModel.response'))(scope);
-	                $compile(angular.element(document.querySelector('a#recaptcha_reload_btn')).attr('ng-click', 'clear()'))(scope);
-	
-	            });
-	
-	            // Destroy Element
-	            scope.$on('$destroy', reCAPTCHA.destroy);
-	        }
-	    };
-	}]);
-
-
-/***/ },
-/* 11 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function($) {/**
-	 * Main application handling the Expression of Interest form.
-	 * @todo implement form validation according to https://github.com/gbif/gbif-api/blob/master/src/main/java/org/gbif/api/model/registry/Organization.java#L167
-	 */
-	
-	'use strict';
-	
-	__webpack_require__(2)();
-	
-	// run phase
-	var _ = __webpack_require__(5); // Include the JS library this way because we don't need it in HTML(yet).
-	/*
-	 var underscore = angular.module('underscore', []);
-	 underscore.factory('_', function() {
-	 return window._;
-	 });
-	 */
-	
-	var MD5 = __webpack_require__(3);
-	
-	// environmental variables, for compatibility with GBIF Drupal environment
-	if (typeof Drupal === 'undefined') {
-	  var basePath = '';
-	  var env = {
-	    'data_portal_base_url': 'http://www.gbif-dev.org'
-	  };
-	}
-	else {
-	  var env = Drupal.settings.environment_settings;
-	  var baseUrl = env.base_url;
-	  var basePath = baseUrl + '/sites/all/modules/custom/gbifs/gbif_registry/ng-app/target';
-	}
-	
-	// Define our module and it's dependency modules.
-	var eoiApp = angular.module('eoiApp', ['ngTouch', 'angucomplete-alt', 'ngAnimate', 'ui.router', 'ncy-angular-breadcrumb', 'reCAPTCHA', 'ngFileUpload']);
-	
-	// configuration phase of the app
-	// @see http://stackoverflow.com/questions/12664787/what-providers-services-are-available-in-module-config
-	eoiApp
-	  // constants
-	  .constant("BASE_URL", baseUrl)
-	  .constant("BASE_PATH", basePath)
-	  .constant("DATA_PORTAL_BASE_URL", env.data_portal_base_url)
-	  // ui-route and breadcrumb
-	  // Prefix intro page in the breadcrumb
-	  .config(function($breadcrumbProvider) {
-	    $breadcrumbProvider.setOptions({
-	      prefixStateName: 'intro'
-	    });
-	  })
-	  // Configuring ui routes.
-	  .config(function($stateProvider, $urlRouterProvider, BASE_PATH) {
-	    $stateProvider
-	      // route to show our starting form (/eoi)
-	      .state('form', {
-	        url: '/eoi',
-	        templateUrl: BASE_PATH + '/eoi.html',
-	        controller: 'EOIController'
-	      })
-	      // route to show our starting form (/intro)
-	      .state('intro', {
-	        url: '/intro',
-	        templateUrl: BASE_PATH + '/intro.html',
-	        controller: 'EOIController',
-	        ncyBreadcrumb: {
-	          label: 'Intro'
-	        }
-	      })
-	      // route to show lookup form (/eoi/lookup)
-	      .state('form.lookup', {
-	        url: '/lookup',
-	        templateUrl: BASE_PATH + '/eoi-lookup.html',
-	        ncyBreadcrumb: {
-	          label: 'Organization lookup',
-	          parent: 'intro'
-	        }
-	      })
-	      // route to show contacts form (/eoi/contacts)
-	      .state('form.contacts', {
-	        url: '/contacts',
-	        templateUrl: BASE_PATH + '/eoi-contacts.html',
-	        ncyBreadcrumb: {
-	          label: 'Contacts',
-	          parent: 'form.lookup'
-	        }
-	      })
-	      // route to show endorsement form (/eoi/endorsement)
-	      .state('form.endorsement', {
-	        url: '/endorsement',
-	        templateUrl: BASE_PATH + '/eoi-endorsement.html',
-	        ncyBreadcrumb: {
-	          label: 'Endorsement',
-	          parent: 'form.contacts'
-	        }
-	      })
-	      // route to show contacts form (/eoi/data-hosting)
-	      .state('form.dataHosting', {
-	        url: '/data-hosting',
-	        templateUrl: BASE_PATH + '/eoi-dataHosting.html',
-	        ncyBreadcrumb: {
-	          label: 'Data hosting',
-	          parent: 'form.endorsement'
-	        }
-	      })
-	      // route to show terms form (/eoi/terms)
-	      .state('form.terms', {
-	        url: '/terms',
-	        templateUrl: BASE_PATH + '/eoi-terms.html',
-	        ncyBreadcrumb: {
-	          label: 'Terms and conditions',
-	          parent: 'form.dataHosting'
-	        }
-	      })
-	      // route to show terms form (/submitted)
-	      .state('form.completion', {
-	        url: '/submitted',
-	        templateUrl: BASE_PATH + '/eoi-submitted.html',
-	        ncyBreadcrumb: {
-	          label: 'Submission successful',
-	          parent: 'form.terms'
-	        }
-	      })
-	      // route to show terms form (/failed)
-	      .state('form.failed', {
-	        url: '/failed',
-	        templateUrl: BASE_PATH + '/eoi-failed.html',
-	        ncyBreadcrumb: {
-	          label: 'Submission failed',
-	          parent: 'form.terms'
-	        }
-	      });
-	
-	    // Catch all routes and send users to the intro page.
-	    $urlRouterProvider.otherwise('/intro');
-	  })
-	  .run(['$state', '$rootScope', function($state, $rootScope) {
-	    // start from intro
-	    $state.transitionTo('intro');
-	    // scroll to top when changing ui-route
-	    $rootScope.$on('$viewContentLoaded', function(){
-	      var interval = setInterval(function(){
-	        if (document.readyState == "complete") {
-	          window.scrollTo(0, 0);
-	          clearInterval(interval);
-	        }
-	      },200);
-	    });
-	  }])
-	  // A controller that handles the submission of the "expression-of-interest" form.
-	  .controller('EOIController',['$rootScope', '$scope', 'Upload', 'RegistryOrgService', 'RegistryNodeService', 'RegistryEnumService', 'DrupalFormService', '$state', 'reCAPTCHA', 'DATA_PORTAL_BASE_URL',
-	    function($rootScope, $scope, Upload, registryOrgService, registryNodeService, registryEnumService, drupalFormService, $state, reCAPTCHA, DATA_PORTAL_BASE_URL) {
-	      // good practice: to avoid "this" being overwritten by 3rd party codes and confusion at various scopes.
-	      var self = this;
-	
-	      // Define the formData object.
-	      self.formData = {
-	        "contact": {
-	          "title": '',
-	          "firstName": '',
-	          "lastName": '',
-	          "email": '',
-	          "phone": ''
-	        },
-	        "org": {
-	          "title": '', // GBIF Registry uses 'title' as the property, while for label we use 'name'.
-	          "url": '',
-	          "address": '',
-	          "city": '',
-	          "province": '',
-	          "zip": '',
-	          "country": '',
-	          "desc": '',
-	          "isIntlOrg": 'no',
-	          "isAdminContact": '',
-	          "adminContact": {},
-	          "isTechContact": '',
-	          "techContact": {}
-	        },
-	        "endorsement": {
-	          "nationalParticipant": '',
-	          "endorsingParticipant": '',
-	          "beEndorsedByType": ''
-	        }
-	      };
-	
-	      // formControl is only for controlling show/hide of forms.
-	      self.formControl = {
-	        "formNp": '',
-	        "formNoNp": '',
-	        "formIntlOrg": ''
-	      };
-	
-	      // selectedOrg is stored when in the "look up" view.
-	      self.selectedOrg = {};
-	
-	      // initial show state
-	      self.showLookupResult = false;
-	
-	      // Load the list of organizations.
-	      self.organizations = [];
-	      var getOrganizations = function() {
-	        return registryOrgService.list().then(
-	          function (response) {
-	            // On success, set the response as the array of organizations.
-	            self.organizations = response.data.results;
-	          }, function(errResponse) {
-	            console.error('Error while fetching organizations');
-	          }
-	        );
-	      };
-	      getOrganizations();
-	
-	      // Load the list of countries.
-	      self.countries = [];
-	      var getCountries = function() {
-	        return registryEnumService.list('country').then(
-	          function (response) {
-	            // On success, set the response as the array of countries.
-	            self.countries = response.data;
-	          }, function(errResponse) {
-	            console.error('Error while fetching countries')
-	          }
-	        );
-	      };
-	      getCountries();
-	
-	      // Load the list of GBIF Participants.
-	      self.participants = [];
-	      var getParticipants = function() {
-	        return registryNodeService.list().then(
-	          function (response) {
-	            // On success, set the response as the array of participants.
-	            self.participants = response.data.results;
-	          }, function(errResponse) {
-	            console.error('Error while fetching participants')
-	          }
-	        );
-	      };
-	      getParticipants();
-	
-	      // Load the list of GBIF Other Associate Participants.
-	      self.otherAssociateParticipants = [];
-	      var getOtherAssociateParticipants = function() {
-	        return registryNodeService.list().then(
-	          function (response) {
-	            // On success, filter the response to only OAP before appending.
-	            self.otherAssociateParticipants = _.filter(response.data.results, function(node) {
-	              return node.type === 'OTHER';
-	            });
-	          }, function(errResponse) {
-	            console.error('Error while fetching participants')
-	          }
-	        );
-	      };
-	      getOtherAssociateParticipants();
-	
-	      // Default titles for contacts
-	      self.titleItems = [
-	        {value: 'Mr.', title: 'Mr.'},
-	        {value: 'Ms.', title: 'Ms.'},
-	        {value: 'Mrs.', title: 'Mrs.'},
-	        {value: 'Dr.', title: 'Dr.'},
-	        {value: 'Prof.', title: 'Prof.'}
-	      ];
-	
-	      // Set endorsing body to Nodes Committee. Therefore clear relevant values if any.
-	      self.toBeEndorsedByNc = function(id) {
-	        self.formData.endorsement.endorsingParticipant = '';
-	        // clear angucomplete-alt input field
-	        // @see https://github.com/ghiden/angucomplete-alt#clear-input
-	        $scope.$broadcast('angucomplete-alt:clearInput', id);
-	      };
-	
-	      // Set endorsing body to country participant. Clear oap value in angucomplete-alt.
-	      self.toBeEndorsedByCp = function(id) {
-	        self.formData.endorsement.endorsingParticipant = self.formData.endorsement.nationalParticipant;
-	        $scope.$broadcast('angucomplete-alt:clearInput', id);
-	      }
-	
-	      self.toBeEndorsedByOap = function() {
-	        self.formData.endorsement.endorsingParticipant = '';
-	      }
-	
-	      // For angucomplete-alt. For actions when oap is selected in the national participant form.
-	      self.oapSelectedFormNp = function(selected) {
-	        self.formData.endorsement.beEndorsedByType = 'oap';
-	        self.formData.endorsement.endorsingParticipant = selected.originalObject;
-	      };
-	
-	      // For angucomplete-alt. For actions when oap is selected in the no national participant form.
-	      self.oapSelectedFormNoNp = function(selected) {
-	        if (_.isEmpty(selected)) {
-	          self.formData.endorsement.endorsingParticipant = '';
-	        }
-	        else {
-	          self.formData.endorsement.beEndorsedByType = 'oap';
-	          self.formData.endorsement.endorsingParticipant = selected.originalObject;
-	        }
-	      };
-	
-	      // Assist validation for the Endorsement form. True to disable.
-	      self.endorsementValidate = function(form) {
-	        if (self.formData.endorsement.beEndorsedByType === 'nc') {
-	          // if the visitor choose Nodes Committee as endorsing type, then it's fine that
-	          // the endorsingParticipant is empty.
-	          if (form.$invalid == true) {
-	            return true;
-	          }
-	          else {
-	            return false;
-	          }
-	        }
-	        else {
-	          if (_.isEmpty(self.formData.endorsement.endorsingParticipant) || form.$invalid == true) {
-	            return true;
-	          }
-	          else {
-	            return false;
-	          }
-	        }
-	      };
-	
-	      // Remote URL request formatter.
-	      self.remoteUrlRequestFn = function(str) {
-	        return {q: str};
-	      };
-	
-	      // For angucomplete-alt. For actions when a participant is selected in the intlorg form.
-	      self.oapSelectedFormIntlOrg = function(selected) {
-	        self.formData.endorsement.endorsingParticipant = selected.originalObject;
-	        self.formData.endorsement.beEndorsedByType = "p";
-	      };
-	
-	      // For angucompelte-alt. For actions when a country is selected.
-	      self.countrySelected = function(selected) {
-	        if (_.isEmpty(selected)) {
-	          self.formData.org.country = '';
-	          self.formData.org.countrySelected = false;
-	        }
-	        else {
-	          self.formData.org.country = selected.originalObject;
-	          self.formData.org.countrySelected = true;
-	          // Check if the country is a participant.
-	          var verifyCountry = function(iso2) {
-	            return registryNodeService.list().then(
-	              function (response) {
-	                // First tease out all non-country entries.
-	                var initialResults = response.data.results;
-	                var countryParticipants = [];
-	                var validType = ['COUNTRY'];
-	                initialResults.forEach(function (element, index, array) {
-	                  if (validType.indexOf(element.type) !== -1 ) countryParticipants.push(element);
-	                  // Chinese Taipei has a hybrid status so an exception here.
-	                  if (element.participantTitle == 'Chinese Taipei') countryParticipants.push(element);
-	                });
-	
-	                // Determine which form to show according to the status of the selected country.
-	                var isParticipant = $.grep(countryParticipants, function (e) { return e.country == selected.originalObject.iso2});
-	                if (isParticipant.length == 1) {
-	                  self.formData.endorsement.nationalParticipant = isParticipant[0];
-	                  self.formData.endorsement.endorsingParticipant = isParticipant[0];
-	                  // the value of beEndorsedByType determines the default option
-	                  self.formData.endorsement.beEndorsedByType = 'cp';
-	                  self.formControl.formNp = true;
-	                  self.formControl.formNoNp = false;
-	                  self.formControl.formIntlOrg = false;
-	                  self.formControl.toDataHosting = true;
-	                }
-	                else if (isParticipant.length == 0) {
-	                  self.formData.endorsement.nationalParticipant = 'none';
-	                  self.formData.endorsement.endorsingParticipant = '';
-	                  self.formControl.formNp = false;
-	                  self.formControl.formNoNp = true;
-	                  self.formControl.formIntlOrg = false;
-	                  self.formControl.toDataHosting = true;
-	                }
-	                self.formData.org.isIntlOrg = 'no';
-	              }, function (errResponse) {
-	                console.log('Error verifying country participation status.');
-	              }
-	            );
-	          };
-	          verifyCountry(selected.description.iso2);
-	        }
-	      };
-	
-	      // Register form status if it's international organisation.
-	      self.isIntlOrg = function(value) {
-	        if (value == 'yes') {
-	          self.formControl.formNp = false;
-	          self.formControl.formNoNp = false;
-	          self.formControl.formIntlOrg = true;
-	          self.formControl.toDataHosting = true;
-	          self.formData.endorsement.endorsingParticipant = "";
-	        }
-	        else if (value == 'no') {
-	          if (self.formData.org.country.length > 0) {
-	            self.countrySelected();
-	          }
-	          else {
-	            self.formControl.formNp = false;
-	            self.formControl.formNoNp = false;
-	            self.formControl.formIntlOrg = false;
-	            self.formControl.toDataHosting = true;
-	          }
-	        }
-	      };
-	
-	      // Include countrySelected status in the evaluation of $invalid.
-	      self.contactValidate = function(form) {
-	        if (self.formData.org.countrySelected != true || form.$invalid == true) {
-	          return true;
-	        }
-	        else {
-	          return false;
-	        }
-	      };
-	
-	      // Prepare the object of organization details for binding in HTML when selected.
-	      self.organizationSelected = function(selected) {
-	        // Reset all variables.
-	        self.selectedOrg = {
-	          title: selected.title,
-	          url: DATA_PORTAL_BASE_URL + '/publisher/' + selected.originalObject.key,
-	          selected: true,
-	          endorsingNode: {}
-	        };
-	
-	        // Country lookup.
-	        var getCountry = function() {
-	          return registryEnumService.list('country').then(
-	            function (response) {
-	              // On success, find the country name.
-	              function findCountry(element, index, array) {
-	                if (element.iso2 == selected.description.country) {
-	                  self.selectedOrg.country = element.title;
-	                }
-	              }
-	              response.data.forEach(findCountry);
-	            }, function(errResponse) {
-	              console.log('Error getting country enumeration.');
-	            }
-	          );
-	        };
-	
-	        // Node lookup.
-	        var getNode = function() {
-	          return registryNodeService.query(selected.description.endorsingNodeKey).then(
-	            function(response) {
-	              // If it's a country participant, link to participation page. Otherwise node page.
-	              var nodeUrl;
-	              if (response.data.type == 'COUNTRY') {
-	                nodeUrl = DATA_PORTAL_BASE_URL + '/country/' + response.data.country + '/participation';
-	              }
-	              else {
-	                nodeUrl = DATA_PORTAL_BASE_URL + '/node/' + selected.description.endorsingNodeKey;
-	              }
-	              self.selectedOrg.endorsingNode = {
-	                title: response.data.title,
-	                key: response.data.key,
-	                url: nodeUrl
-	              };
-	            }, function(errResponse) {
-	              console.log('Error getting node details.');
-	            }
-	          );
-	        };
-	
-	        // Chaining getCountry() and getNode() calls.
-	        getCountry().then(
-	          function (response) {
-	            // Prepare location string.
-	            var location = (self.selectedOrg.country || selected.description.city) ? 'Located in: ' : '';
-	            location += selected.description.city ? selected.description.city : '';
-	            location += (self.selectedOrg.country && selected.description.city) ? ', ' : '';
-	            location += self.selectedOrg.country ? self.selectedOrg.country : '';
-	            self.selectedOrg.location = location;
-	
-	            // Find administrative contact. If not, technical one.
-	            function findAdminContact(element, index, array) {
-	              if (element.type == 'ADMINISTRATIVE_POINT_OF_CONTACT') {
-	                // Prepare contact string.
-	                var contact = {};
-	                contact.html = 'Administrative contact: ';
-	                contact.html += (element.email[0]) ? '<a href="mailto:' + element.email[0] + '">' + element.firstName + ' ' + element.lastName + '</a>' : element.firstName + ' ' + element.lastName;
-	                contact.email = (element.email[0]) ? element.email[0] : null;
-	                contact.name = element.firstName + ' ' + element.lastName;
-	                self.selectedOrg.contact = contact;
-	              }
-	            }
-	            selected.description.contacts.forEach(findAdminContact);
-	            getNode();
-	          }, function (errResponse) {
-	            console.log('Error processing the chain.');
-	          }
-	        );
-	      };
-	
-	      // Handling file upload.
-	      // For 'controller as' syntax of using $watch, @see http://toddmotto.com/digging-into-angulars-controller-as-syntax/
-	      $scope.$watch(function () {
-	        return self.exampleFiles;
-	      }, function () {
-	        self.upload(self.exampleFiles);
-	      });
-	      self.upload = function (exampleFiles) {
-	        if (exampleFiles && exampleFiles.length) {
-	          for (var i = 0; i < exampleFiles.length; i++) {
-	            var file = exampleFiles[i];
-	            self.hash = MD5(file);
-	            Upload.upload({
-	              url: '/eoi/example-file-upload?XDEBUG_SESSION_START=11182',
-	              fields: {'hash': self.hash},
-	              file: file
-	            }).progress(function (evt) {
-	              var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-	              console.log('progress: ' + progressPercentage + '% ' + evt.config.file.name);
-	            }).success(function (data, status, headers, config) {
-	              self.formData.org.exampleFile = true;
-	              self.formData.org.exampleFileHash = self.hash;
-	              config.file.serverResponse = data.message;
-	              config.file.class = 'file-upload-success';
-	              console.log('file ' + config.file.name + ' uploaded. Response: ' + data.message);
-	            }).error(function (data, status, headers, config) {
-	              config.file.serverResponse = data.message;
-	              config.file.class = 'file-upload-error';
-	              console.log('file ' + config.file.name + ' failed uploading. Response: ' + data.message)
-	            });
-	          }
-	        }
-	      };
-	
-	      // Handling form upload.
-	      self.submit = function(formData) {
-	        return drupalFormService.submit(formData).then(
-	          function(response) {
-	            $state.transitionTo('form.completion');
-	            // clear form data
-	            self.formData = '';
-	            self.formControl = '';
-	            self.selectedOrg = '';
-	            console.log('Form submission successful. ' + response.data.message);
-	          }, function(errResponse) {
-	            if (errResponse.data.message == "reCAPTCHA validation failed. Please try again.") {
-	              self.formControl.recaptcha_invalid = true;
-	              reCAPTCHA.reload();
-	            }
-	            console.log('Error submitting form. ' + errResponse.data.message);
-	          }
-	        );
-	      };
-	    }]
-	  )
-	  .config(function (reCAPTCHAProvider) {
-	    reCAPTCHAProvider.setPublicKey('6LdWh_gSAAAAAJZ2oUqgpUQJQ0Xv6s3Ppa7uHNs2');
-	    reCAPTCHAProvider.setOptions({
-	      theme: 'clean'
-	    });
-	  })
-	  // A GBIF Registry service that exposes /node access point.
-	  .factory('RegistryNodeService', ['$http', function($http) {
-	    return {
-	      list: function() {
-	        return $http.get('http://api.gbif.org/v1/node', {params: {limit: 300}});
-	      },
-	      query: function(uuid) {
-	        return $http.get('http://api.gbif.org/v1/node/' + uuid);
-	      }
-	    };
-	  }])
-	  // A GBIF Registry service that exposes /organization access point.
-	  .factory('RegistryOrgService', ['$http', function($http) {
-	    return {
-	      list: function() {
-	        return $http.get('http://api.gbif.org/v1/organization', {params: {limit: 900}});
-	      }
-	    };
-	  }])
-	  // A GBIF Registry service that exposes /enumeration access point.
-	  .factory('RegistryEnumService', ['$http', function($http) {
-	    return {
-	      list: function(type) {
-	        return $http.get('http://api.gbif.org/v1/enumeration/' + type);
-	      }
-	    };
-	  }])
-	  // A service that handles form submission to Drupal endpoint.
-	  .factory('DrupalFormService', ['$http', 'BASE_URL', function($http, BASE_URL) {
-	    return {
-	      submit: function(formData) {
-	        return $http({
-	          method: 'POST',
-	          url: BASE_URL + '/eoi/form-data-submit?XDEBUG_SESSION_START=11182',
-	          data: formData
-	        });
-	      }
-	    };
-	  }]);
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
-
-/***/ },
-/* 12 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**!
-	 * AngularJS file upload/drop directive and service with progress and abort
-	 * @author  Danial  <danial.farid@gmail.com>
-	 * @version 4.2.0
-	 */
-	(function () {
-	
-	var key, i;
-	function patchXHR(fnName, newFn) {
-	    window.XMLHttpRequest.prototype[fnName] = newFn(window.XMLHttpRequest.prototype[fnName]);
-	}
-	
-	if (window.XMLHttpRequest && !window.XMLHttpRequest.__isFileAPIShim) {
-	    patchXHR('setRequestHeader', function (orig) {
-	        return function (header, value) {
-	            if (header === '__setXHR_') {
-	                var val = value(this);
-	                // fix for angular < 1.2.0
-	                if (val instanceof Function) {
-	                    val(this);
-	                }
-	            } else {
-	                orig.apply(this, arguments);
-	            }
-	        }
-	    });
-	}
-	
-	var ngFileUpload = angular.module('ngFileUpload', []);
-	
-	ngFileUpload.version = '4.2.0';
-	ngFileUpload.service('Upload', ['$http', '$q', '$timeout', function ($http, $q, $timeout) {
-	    function sendHttp(config) {
-	        config.method = config.method || 'POST';
-	        config.headers = config.headers || {};
-	        config.transformRequest = config.transformRequest || function (data, headersGetter) {
-	            if (window.ArrayBuffer && data instanceof window.ArrayBuffer) {
-	                return data;
-	            }
-	            return $http.defaults.transformRequest[0](data, headersGetter);
-	        };
-	        var deferred = $q.defer();
-	        var promise = deferred.promise;
-	
-	        config.headers['__setXHR_'] = function () {
-	            return function (xhr) {
-	                if (!xhr) return;
-	                config.__XHR = xhr;
-	                config.xhrFn && config.xhrFn(xhr);
-	                xhr.upload.addEventListener('progress', function (e) {
-	                    e.config = config;
-	                    deferred.notify ? deferred.notify(e) : promise.progress_fn && $timeout(function () {
-	                        promise.progress_fn(e)
-	                    });
-	                }, false);
-	                //fix for firefox not firing upload progress end, also IE8-9
-	                xhr.upload.addEventListener('load', function (e) {
-	                    if (e.lengthComputable) {
-	                        e.config = config;
-	                        deferred.notify ? deferred.notify(e) : promise.progress_fn && $timeout(function () {
-	                            promise.progress_fn(e)
-	                        });
-	                    }
-	                }, false);
-	            };
-	        };
-	
-	        $http(config).then(function (r) {
-	            deferred.resolve(r)
-	        }, function (e) {
-	            deferred.reject(e)
-	        }, function (n) {
-	            deferred.notify(n)
-	        });
-	
-	        promise.success = function (fn) {
-	            promise.then(function (response) {
-	                fn(response.data, response.status, response.headers, config);
-	            });
-	            return promise;
-	        };
-	
-	        promise.error = function (fn) {
-	            promise.then(null, function (response) {
-	                fn(response.data, response.status, response.headers, config);
-	            });
-	            return promise;
-	        };
-	
-	        promise.progress = function (fn) {
-	            promise.progress_fn = fn;
-	            promise.then(null, null, function (update) {
-	                fn(update);
-	            });
-	            return promise;
-	        };
-	        promise.abort = function () {
-	            if (config.__XHR) {
-	                $timeout(function () {
-	                    config.__XHR.abort();
-	                });
-	            }
-	            return promise;
-	        };
-	        promise.xhr = function (fn) {
-	            config.xhrFn = (function (origXhrFn) {
-	                return function () {
-	                    origXhrFn && origXhrFn.apply(promise, arguments);
-	                    fn.apply(promise, arguments);
-	                }
-	            })(config.xhrFn);
-	            return promise;
-	        };
-	
-	        return promise;
-	    }
-	
-	    this.upload = function (config) {
-	        config.headers = config.headers || {};
-	        config.headers['Content-Type'] = undefined;
-	        config.transformRequest = config.transformRequest ?
-	            (angular.isArray(config.transformRequest) ?
-	                config.transformRequest : [config.transformRequest]) : [];
-	        config.transformRequest.push(function (data) {
-	            var formData = new FormData();
-	            var allFields = {};
-	            for (key in config.fields) {
-	                if (config.fields.hasOwnProperty(key)) {
-	                    allFields[key] = config.fields[key];
-	                }
-	            }
-	            if (data) allFields['data'] = data;
-	
-	            if (config.formDataAppender) {
-	                for (key in allFields) {
-	                    if (allFields.hasOwnProperty(key)) {
-	                        config.formDataAppender(formData, key, allFields[key]);
-	                    }
-	                }
-	            } else {
-	                for (key in allFields) {
-	                    if (allFields.hasOwnProperty(key)) {
-	                        var val = allFields[key];
-	                        if (val !== undefined) {
-	                            if (angular.isDate(val)) {
-	                                val = val.toISOString();
-	                            }
-	                            if (angular.isString(val)) {
-	                                formData.append(key, val);
-	                            } else {
-	                                if (config.sendObjectsAsJsonBlob && angular.isObject(val)) {
-	                                    formData.append(key, new Blob([val], {type: 'application/json'}));
-	                                } else {
-	                                    formData.append(key, JSON.stringify(val));
-	                                }
-	                            }
-	
-	                        }
-	                    }
-	                }
-	            }
-	
-	            if (config.file != null) {
-	                var fileFormName = config.fileFormDataName || 'file';
-	
-	                if (angular.isArray(config.file)) {
-	                    var isFileFormNameString = angular.isString(fileFormName);
-	                    for (var i = 0; i < config.file.length; i++) {
-	                        formData.append(isFileFormNameString ? fileFormName : fileFormName[i], config.file[i],
-	                            (config.fileName && config.fileName[i]) || config.file[i].name);
-	                    }
-	                } else {
-	                    formData.append(fileFormName, config.file, config.fileName || config.file.name);
-	                }
-	            }
-	            return formData;
-	        });
-	
-	        return sendHttp(config);
-	    };
-	
-	    this.http = function (config) {
-	        return sendHttp(config);
-	    };
-	}]);
-	
-	ngFileUpload.directive('ngfSelect', ['$parse', '$timeout', '$compile',
-	    function ($parse, $timeout, $compile) {
-	        return {
-	            restrict: 'AEC',
-	            require: '?ngModel',
-	            link: function (scope, elem, attr, ngModel) {
-	                linkFileSelect(scope, elem, attr, ngModel, $parse, $timeout, $compile);
-	            }
-	        }
-	    }]);
-	
-	function linkFileSelect(scope, elem, attr, ngModel, $parse, $timeout, $compile) {
-		if (elem.attr('__ngf_gen__')) {
-			return;
-		}
-	    function isInputTypeFile() {
-	        return elem[0].tagName.toLowerCase() === 'input' && elem.attr('type') && elem.attr('type').toLowerCase() === 'file';
-	    }
-	    var isUpdating = false;
-	    function changeFn(evt) {
-	        if (!isUpdating) {
-	            isUpdating = true;
-	            try {
-	                var fileList = evt.__files_ || (evt.target && evt.target.files);
-	                var files = [], rejFiles = [];
-	
-	                for (var i = 0; i < fileList.length; i++) {
-	                    var file = fileList.item(i);
-	                    if (validate(scope, $parse, attr, file, evt)) {
-	                        files.push(file);
-	                    } else {
-	                        rejFiles.push(file);
-	                    }
-	                }
-	                updateModel($parse, $timeout, scope, ngModel, attr, attr.ngfChange || attr.ngfSelect, files, rejFiles, evt);
-	                if (files.length == 0) evt.target.value = files;
-	//                if (evt.target && evt.target.getAttribute('__ngf_gen__')) {
-	//                    angular.element(evt.target).remove();
-	//                }
-	            } finally {
-	                isUpdating = false;
-	            }
-	        }
-	    }
-	
-	    function bindAttrToFileInput(fileElem) {
-	        if (attr.ngfMultiple) fileElem.attr('multiple', $parse(attr.ngfMultiple)(scope));
-	        if (!$parse(attr.ngfMultiple)(scope)) fileElem.attr('multiple', undefined);
-	        if (attr['accept']) fileElem.attr('accept', attr['accept']);
-	        if (attr.ngfCapture) fileElem.attr('capture', $parse(attr.ngfCapture)(scope));
-	//        if (attr.ngDisabled) fileElem.attr('disabled', $parse(attr.disabled)(scope));
-	        for (var i = 0; i < elem[0].attributes.length; i++) {
-	            var attribute = elem[0].attributes[i];
-	            if ((isInputTypeFile() && attribute.name !== 'type') 
-	            		|| (attribute.name !== 'type' && attribute.name !== 'class' && 
-	            		attribute.name !== 'id' && attribute.name !== 'style')) {
-	            	fileElem.attr(attribute.name, attribute.value);
-	            }
-	        }
-	    }
-	
-	    function createFileInput(evt) {
-	        if (elem.attr('disabled')) {
-	            return;
-	        }
-	        var fileElem = angular.element('<input type="file">');
-	        bindAttrToFileInput(fileElem);
-	
-	        if (isInputTypeFile()) {
-	            elem.replaceWith(fileElem);
-	            elem = fileElem;
-	            fileElem.attr('__ngf_gen__', true);
-	            $compile(elem)(scope);
-	        } else {
-	            fileElem.css('visibility', 'hidden').css('position', 'absolute')
-	            		.css('width', '1').css('height', '1').css('z-index', '-100000')
-	            		.attr('tabindex', '-1');
-	            if (elem.__ngf_ref_elem__) {elem.__ngf_ref_elem__.remove();}
-	            elem.__ngf_ref_elem__ = fileElem;
-	            document.body.appendChild(fileElem[0]);
-	        }
-	        
-	        return fileElem;
-	    }
-	
-	    function resetModel(evt) {
-	        updateModel($parse, $timeout, scope, ngModel, attr, attr.ngfChange || attr.ngfSelect, [], [], evt, true);
-	    }
-	
-	    function clickHandler(evt) {
-	    	evt.preventDefault();
-	        var fileElem = createFileInput(evt);
-	        if (fileElem) {
-	        	fileElem.bind('change', changeFn);
-	        	resetModel(evt);
-	
-	        	function clickAndAssign() {
-	            	fileElem[0].click();
-	    	        if (isInputTypeFile()) {
-	    	            elem.bind('click touchend', clickHandler);
-	    	            evt.preventDefault()
-	    	        }
-	        	}
-	        	
-	        	// fix for android native browser
-	        	if (navigator.userAgent.toLowerCase().match(/android/)) {
-	                setTimeout(function() {
-	                	clickAndAssign();
-	                }, 0);        		
-	        	} else {
-	        		clickAndAssign();
-	        	}
-	        }
-	    }
-	    if (window.FileAPI && window.FileAPI.ngfFixIE) {
-	        window.FileAPI.ngfFixIE(elem, createFileInput, bindAttrToFileInput, changeFn, resetModel);
-	    } else {
-	        elem.bind('click touchend', clickHandler);
-	    }
-	}
-	
-	ngFileUpload.directive('ngfDrop', ['$parse', '$timeout', '$location', function ($parse, $timeout, $location) {
-	    return {
-	        restrict: 'AEC',
-	        require: '?ngModel',
-	        link: function (scope, elem, attr, ngModel) {
-	            linkDrop(scope, elem, attr, ngModel, $parse, $timeout, $location);
-	        }
-	    }
-	}]);
-	
-	ngFileUpload.directive('ngfNoFileDrop', function () {
-	    return function (scope, elem) {
-	        if (dropAvailable()) elem.css('display', 'none')
-	    }
-	});
-	
-	ngFileUpload.directive('ngfDropAvailable', ['$parse', '$timeout', function ($parse, $timeout) {
-	    return function (scope, elem, attr) {
-	        if (dropAvailable()) {
-	            var fn = $parse(attr.ngfDropAvailable);
-	            $timeout(function () {
-	                fn(scope);
-	                if (fn.assign) {
-	                    fn.assign(scope, true);                	
-	                }
-	            });
-	        }
-	    }
-	}]);
-	
-	function linkDrop(scope, elem, attr, ngModel, $parse, $timeout, $location) {
-	    var available = dropAvailable();
-	    if (attr.dropAvailable) {
-	        $timeout(function () {
-	        	scope[attr.dropAvailable] ? scope[attr.dropAvailable].value = available : scope[attr.dropAvailable] = available;
-	        });
-	    }
-	    if (!available) {
-	        if ($parse(attr.ngfHideOnDropNotAvailable)(scope) == true) {
-	            elem.css('display', 'none');
-	        }
-	        return;
-	    }
-	    var leaveTimeout = null;
-	    var stopPropagation = $parse(attr.ngfStopPropagation);
-	    var dragOverDelay = 1;
-	    var accept = $parse(attr.ngfAccept);
-	    var actualDragOverClass;
-	
-	    elem[0].addEventListener('dragover', function (evt) {
-	        if (elem.attr('disabled')) return;
-	        evt.preventDefault();
-	        if (stopPropagation(scope)) evt.stopPropagation();
-	        // handling dragover events from the Chrome download bar
-	        if (navigator.userAgent.indexOf("Chrome") > -1) {
-	            var b = evt.dataTransfer.effectAllowed;
-	            evt.dataTransfer.dropEffect = ('move' === b || 'linkMove' === b) ? 'move' : 'copy';
-	        }
-	        $timeout.cancel(leaveTimeout);
-	        if (!scope.actualDragOverClass) {
-	            actualDragOverClass = calculateDragOverClass(scope, attr, evt);
-	        }
-	        elem.addClass(actualDragOverClass);
-	    }, false);
-	    elem[0].addEventListener('dragenter', function (evt) {
-	        if (elem.attr('disabled')) return;
-	        evt.preventDefault();
-	        if (stopPropagation(scope)) evt.stopPropagation();
-	    }, false);
-	    elem[0].addEventListener('dragleave', function () {
-	        if (elem.attr('disabled')) return;
-	        leaveTimeout = $timeout(function () {
-	            elem.removeClass(actualDragOverClass);
-	            actualDragOverClass = null;
-	        }, dragOverDelay || 1);
-	    }, false);
-	    elem[0].addEventListener('drop', function (evt) {
-	        if (elem.attr('disabled')) return;
-	        evt.preventDefault();
-	        if (stopPropagation(scope)) evt.stopPropagation();
-	        elem.removeClass(actualDragOverClass);
-	        actualDragOverClass = null;
-	        extractFiles(evt, function (files, rejFiles) {
-	            updateModel($parse, $timeout, scope, ngModel, attr,
-	                attr.ngfChange || attr.ngfDrop, files, rejFiles, evt)
-	        }, $parse(attr.ngfAllowDir)(scope) != false, attr.multiple || $parse(attr.ngfMultiple)(scope));
-	    }, false);
-	
-	    function calculateDragOverClass(scope, attr, evt) {
-	        var accepted = true;
-	        var items = evt.dataTransfer.items;
-	        if (items != null) {
-	            for (var i = 0; i < items.length && accepted; i++) {
-	                accepted = accepted
-	                    && (items[i].kind == 'file' || items[i].kind == '')
-	                    && validate(scope, $parse, attr, items[i], evt);
-	            }
-	        }
-	        var clazz = $parse(attr.ngfDragOverClass)(scope, {$event: evt});
-	        if (clazz) {
-	            if (clazz.delay) dragOverDelay = clazz.delay;
-	            if (clazz.accept) clazz = accepted ? clazz.accept : clazz.reject;
-	        }
-	        return clazz || attr.ngfDragOverClass || 'dragover';
-	    }
-	
-	    function extractFiles(evt, callback, allowDir, multiple) {
-	        var files = [], rejFiles = [], items = evt.dataTransfer.items, processing = 0;
-	
-	        function addFile(file) {
-	            if (validate(scope, $parse, attr, file, evt)) {
-	                files.push(file);
-	            } else {
-	                rejFiles.push(file);
-	            }
-	        }
-	
-	        if (items && items.length > 0 && $location.protocol() != 'file') {
-	            for (var i = 0; i < items.length; i++) {
-	                if (items[i].webkitGetAsEntry && items[i].webkitGetAsEntry() && items[i].webkitGetAsEntry().isDirectory) {
-	                    var entry = items[i].webkitGetAsEntry();
-	                    if (entry.isDirectory && !allowDir) {
-	                        continue;
-	                    }
-	                    if (entry != null) {
-	                        traverseFileTree(files, entry);
-	                    }
-	                } else {
-	                    var f = items[i].getAsFile();
-	                    if (f != null) addFile(f);
-	                }
-	                if (!multiple && files.length > 0) break;
-	            }
-	        } else {
-	            var fileList = evt.dataTransfer.files;
-	            if (fileList != null) {
-	                for (var i = 0; i < fileList.length; i++) {
-	                    addFile(fileList.item(i));
-	                    if (!multiple && files.length > 0) break;
-	                }
-	            }
-	        }
-	        var delays = 0;
-	        (function waitForProcess(delay) {
-	            $timeout(function () {
-	                if (!processing) {
-	                    if (!multiple && files.length > 1) {
-	                        i = 0;
-	                        while (files[i].type == 'directory') i++;
-	                        files = [files[i]];
-	                    }
-	                    callback(files, rejFiles);
-	                } else {
-	                    if (delays++ * 10 < 20 * 1000) {
-	                        waitForProcess(10);
-	                    }
-	                }
-	            }, delay || 0)
-	        })();
-	
-	        function traverseFileTree(files, entry, path) {
-	            if (entry != null) {
-	                if (entry.isDirectory) {
-	                    var filePath = (path || '') + entry.name;
-	                    addFile({name: entry.name, type: 'directory', path: filePath});
-	                    var dirReader = entry.createReader();
-	                    var entries = [];
-	                    processing++;
-	                    var readEntries = function () {
-	                        dirReader.readEntries(function (results) {
-	                            try {
-	                                if (!results.length) {
-	                                    for (var i = 0; i < entries.length; i++) {
-	                                        traverseFileTree(files, entries[i], (path ? path : '') + entry.name + '/');
-	                                    }
-	                                    processing--;
-	                                } else {
-	                                    entries = entries.concat(Array.prototype.slice.call(results || [], 0));
-	                                    readEntries();
-	                                }
-	                            } catch (e) {
-	                                processing--;
-	                                console.error(e);
-	                            }
-	                        }, function () {
-	                            processing--;
-	                        });
-	                    };
-	                    readEntries();
-	                } else {
-	                    processing++;
-	                    entry.file(function (file) {
-	                        try {
-	                            processing--;
-	                            file.path = (path ? path : '') + file.name;
-	                            addFile(file);
-	                        } catch (e) {
-	                            processing--;
-	                            console.error(e);
-	                        }
-	                    }, function () {
-	                        processing--;
-	                    });
-	                }
-	            }
-	        }
-	    }
-	}
-	
-	ngFileUpload.directive('ngfSrc', ['$parse', '$timeout', '$parse', function ($parse, $timeout, $parse) {
-		return {
-			restrict: 'AE',
-			link: function (scope, elem, attr, file) {
-				if (window.FileReader) {
-					scope.$watch(attr.ngfSrc, function(file) {
-						if (file &&
-								validate(scope, $parse, attr, file, null) &&
-								(!window.FileAPI || navigator.userAgent.indexOf('MSIE 8') === -1 || file.size < 20000) && 
-								(!window.FileAPI || navigator.userAgent.indexOf('MSIE 9') === -1 || file.size < 4000000)) {
-							$timeout(function() {
-								var fileReader = new FileReader();
-								fileReader.readAsDataURL(file);
-								fileReader.onload = function(e) {
-									$timeout(function() {
-										elem.attr('src', e.target.result);										
-									});
-								}
-							});
-						} else {
-							elem.attr('src', attr.ngfDefaultSrc || '');
-						}
-					});
-				}
-			}
-		}
-	}]);
-	
-	function dropAvailable() {
-	    var div = document.createElement('div');
-	    return ('draggable' in div) && ('ondrop' in div);
-	}
-	
-	function updateModel($parse, $timeout, scope, ngModel, attr, fileChange, files, rejFiles, evt, noDelay) {
-	    function update() {
-	        if (ngModel) {
-	            $parse(attr.ngModel).assign(scope, files);
-	            $timeout(function () {
-	                ngModel && ngModel.$setViewValue(files != null && files.length == 0 ? null : files);
-	            });
-	        }
-	        if (attr.ngModelRejected) {
-	            $parse(attr.ngModelRejected).assign(scope, rejFiles);
-	        }
-	        if (fileChange) {
-	            $parse(fileChange)(scope, {
-	                $files: files,
-	                $rejectedFiles: rejFiles,
-	                $event: evt
-	            });
-	
-	        }
-	    }
-	    if (noDelay) {
-	        update();
-	    } else {
-	        $timeout(function () {
-	            update();
-	        });
-	    }
-	}
-	
-	function validate(scope, $parse, attr, file, evt) {
-	    var accept = $parse(attr.ngfAccept)(scope, {$file: file, $event: evt});
-	    var fileSizeMax = $parse(attr.ngfMaxSize)(scope, {$file: file, $event: evt}) || 9007199254740991;
-	    var fileSizeMin = $parse(attr.ngfMinSize)(scope, {$file: file, $event: evt}) || -1;
-	    if (accept != null && angular.isString(accept)) {
-	        var regexp = new RegExp(globStringToRegex(accept), 'gi');
-	        accept = (file.type != null && regexp.test(file.type.toLowerCase())) ||
-	        		(file.name != null && regexp.test(file.name.toLowerCase()));
-	    }
-	    return (accept == null || accept) && (file.size == null || (file.size < fileSizeMax && file.size > fileSizeMin));
-	}
-	
-	function globStringToRegex(str) {
-	    if (str.length > 2 && str[0] === '/' && str[str.length - 1] === '/') {
-	        return str.substring(1, str.length - 1);
-	    }
-	    var split = str.split(','), result = '';
-	    if (split.length > 1) {
-	        for (var i = 0; i < split.length; i++) {
-	            result += '(' + globStringToRegex(split[i]) + ')';
-	            if (i < split.length - 1) {
-	                result += '|'
-	            }
-	        }
-	    } else {
-	        if (str.indexOf('.') == 0) {
-	            str = '*' + str;
-	        }
-	        result = '^' + str.replace(new RegExp('[.\\\\+*?\\[\\^\\]$(){}=!<>|:\\' + '-]', 'g'), '\\$&') + '$';
-	        result = result.replace(/\\\*/g, '.*').replace(/\\\?/g, '.');
-	    }
-	    return result;
-	}
-	
-	})();
-	
-	/**!
-	 * AngularJS file upload/drop directive and service with progress and abort
-	 * FileAPI Flash shim for old browsers not supporting FormData 
-	 * @author  Danial  <danial.farid@gmail.com>
-	 * @version 4.2.0
-	 */
-	
-	(function() {
-	
-	var hasFlash = function() {
-		try {
-		  var fo = new ActiveXObject('ShockwaveFlash.ShockwaveFlash');
-		  if (fo) return true;
-		} catch(e) {
-		  if (navigator.mimeTypes['application/x-shockwave-flash'] != undefined) return true;
-		}
-		return false;
-	}
-	
-	function patchXHR(fnName, newFn) {
-		window.XMLHttpRequest.prototype[fnName] = newFn(window.XMLHttpRequest.prototype[fnName]);
-	};
-	
-	if ((window.XMLHttpRequest && !window.FormData) || (window.FileAPI && FileAPI.forceLoad)) {
-		var initializeUploadListener = function(xhr) {
-			if (!xhr.__listeners) {
-				if (!xhr.upload) xhr.upload = {};
-				xhr.__listeners = [];
-				var origAddEventListener = xhr.upload.addEventListener;
-				xhr.upload.addEventListener = function(t, fn, b) {
-					xhr.__listeners[t] = fn;
-					origAddEventListener && origAddEventListener.apply(this, arguments);
-				};
-			}
-		}
-		
-		patchXHR('open', function(orig) {
-			return function(m, url, b) {
-				initializeUploadListener(this);
-				this.__url = url;
-				try {
-					orig.apply(this, [m, url, b]);
-				} catch (e) {
-					if (e.message.indexOf('Access is denied') > -1) {
-						this.__origError = e;
-						orig.apply(this, [m, '_fix_for_ie_crossdomain__', b]);
-					}
-				}
-			}
-		});
-	
-		patchXHR('getResponseHeader', function(orig) {
-			return function(h) {
-				return this.__fileApiXHR && this.__fileApiXHR.getResponseHeader ? this.__fileApiXHR.getResponseHeader(h) : (orig == null ? null : orig.apply(this, [h]));
-			};
-		});
-	
-		patchXHR('getAllResponseHeaders', function(orig) {
-			return function() {
-				return this.__fileApiXHR && this.__fileApiXHR.getAllResponseHeaders ? this.__fileApiXHR.getAllResponseHeaders() : (orig == null ? null : orig.apply(this));
-			}
-		});
-	
-		patchXHR('abort', function(orig) {
-			return function() {
-				return this.__fileApiXHR && this.__fileApiXHR.abort ? this.__fileApiXHR.abort() : (orig == null ? null : orig.apply(this));
-			}
-		});
-	
-		patchXHR('setRequestHeader', function(orig) {
-			return function(header, value) {
-				if (header === '__setXHR_') {
-					initializeUploadListener(this);
-					var val = value(this);
-					// fix for angular < 1.2.0
-					if (val instanceof Function) {
-						val(this);
-					}
-				} else {
-					this.__requestHeaders = this.__requestHeaders || {};
-					this.__requestHeaders[header] = value;
-					orig.apply(this, arguments);
-				}
-			}
-		});
-		
-		function redefineProp(xhr, prop, fn) {
-			try {
-				Object.defineProperty(xhr, prop, {get: fn});
-			} catch (e) {/*ignore*/}
-		}
-	
-		patchXHR('send', function(orig) {
-			return function() {
-				var xhr = this;
-				if (arguments[0] && arguments[0].__isFileAPIShim) {
-					var formData = arguments[0];
-					var config = {
-						url: xhr.__url,
-						jsonp: false, //removes the callback form param
-						cache: true, //removes the ?fileapiXXX in the url
-						complete: function(err, fileApiXHR) {
-							xhr.__completed = true;
-							if (!err && xhr.__listeners['load']) 
-								xhr.__listeners['load']({type: 'load', loaded: xhr.__loaded, total: xhr.__total, target: xhr, lengthComputable: true});
-							if (!err && xhr.__listeners['loadend']) 
-								xhr.__listeners['loadend']({type: 'loadend', loaded: xhr.__loaded, total: xhr.__total, target: xhr, lengthComputable: true});
-							if (err === 'abort' && xhr.__listeners['abort']) 
-								xhr.__listeners['abort']({type: 'abort', loaded: xhr.__loaded, total: xhr.__total, target: xhr, lengthComputable: true});
-							if (fileApiXHR.status !== undefined) redefineProp(xhr, 'status', function() {return (fileApiXHR.status == 0 && err && err !== 'abort') ? 500 : fileApiXHR.status});
-							if (fileApiXHR.statusText !== undefined) redefineProp(xhr, 'statusText', function() {return fileApiXHR.statusText});
-							redefineProp(xhr, 'readyState', function() {return 4});
-							if (fileApiXHR.response !== undefined) redefineProp(xhr, 'response', function() {return fileApiXHR.response});
-							var resp = fileApiXHR.responseText || (err && fileApiXHR.status == 0 && err !== 'abort' ? err : undefined);
-							redefineProp(xhr, 'responseText', function() {return resp});
-							redefineProp(xhr, 'response', function() {return resp});
-							if (err) redefineProp(xhr, 'err', function() {return err});
-							xhr.__fileApiXHR = fileApiXHR;
-							if (xhr.onreadystatechange) xhr.onreadystatechange();
-							if (xhr.onload) xhr.onload();
-						},
-						progress: function(e) {
-							e.target = xhr;
-							xhr.__listeners['progress'] && xhr.__listeners['progress'](e);
-							xhr.__total = e.total;
-							xhr.__loaded = e.loaded;
-							if (e.total === e.loaded) {
-								// fix flash issue that doesn't call complete if there is no response text from the server  
-								var _this = this
-								setTimeout(function() {
-									if (!xhr.__completed) {
-										xhr.getAllResponseHeaders = function(){};
-										_this.complete(null, {status: 204, statusText: 'No Content'});
-									}
-								}, FileAPI.noContentTimeout || 10000);
-							}
-						},
-						headers: xhr.__requestHeaders
-					}
-					config.data = {};
-					config.files = {}
-					for (var i = 0; i < formData.data.length; i++) {
-						var item = formData.data[i];
-						if (item.val != null && item.val.name != null && item.val.size != null && item.val.type != null) {
-							config.files[item.key] = item.val;
-						} else {
-							config.data[item.key] = item.val;
-						}
-					}
-	
-					setTimeout(function() {
-						if (!hasFlash()) {
-							throw 'Adode Flash Player need to be installed. To check ahead use "FileAPI.hasFlash"';
-						}
-						xhr.__fileApiXHR = FileAPI.upload(config);
-					}, 1);
-				} else {
-					if (this.__origError) {
-						throw this.__origError;
-					}
-					orig.apply(xhr, arguments);
-				}
-			}
-		});
-		window.XMLHttpRequest.__isFileAPIShim = true;
-	
-		function isInputTypeFile(elem) {
-			return elem[0].tagName.toLowerCase() === 'input' && elem.attr('type') && elem.attr('type').toLowerCase() === 'file';
-		}
-		
-		window.FormData = FormData = function() {
-			return {
-				append: function(key, val, name) {
-					if (val.__isFileAPIBlobShim) {
-						val = val.data[0];
-					}
-					this.data.push({
-						key: key,
-						val: val,
-						name: name
-					});
-				},
-				data: [],
-				__isFileAPIShim: true
-			};
-		};
-	
-		window.Blob = Blob = function(b) {
-			return {
-				data: b,
-				__isFileAPIBlobShim: true
-			};
-		};
-	
-		(function () {
-			//load FileAPI
-			if (!window.FileAPI) {
-				window.FileAPI = {};
-			}
-			if (FileAPI.forceLoad) {
-				FileAPI.html5 = false;
-			}
-			
-			if (!FileAPI.upload) {
-				var jsUrl, basePath, script = document.createElement('script'), allScripts = document.getElementsByTagName('script'), i, index, src;
-				if (window.FileAPI.jsUrl) {
-					jsUrl = window.FileAPI.jsUrl;
-				} else if (window.FileAPI.jsPath) {
-					basePath = window.FileAPI.jsPath;
-				} else {
-					for (i = 0; i < allScripts.length; i++) {
-						src = allScripts[i].src;
-						index = src.search(/\/ng\-file\-upload[\-a-zA-z0-9\.]*\.js/)
-						if (index > -1) {
-							basePath = src.substring(0, index + 1);
-							break;
-						}
-					}
-				}
-	
-				if (FileAPI.staticPath == null) FileAPI.staticPath = basePath;
-				script.setAttribute('src', jsUrl || basePath + 'FileAPI.min.js');
-				document.getElementsByTagName('head')[0].appendChild(script);
-				FileAPI.hasFlash = hasFlash();
-			}
-		})();
-		
-		FileAPI.ngfFixIE = function(elem, createFileElemFn, bindAttr, changeFn, resetModel) {
-			if (!hasFlash()) {
-				throw 'Adode Flash Player need to be installed. To check ahead use "FileAPI.hasFlash"';
-			}
-			var makeFlashInput = function(evt) {
-				if (elem.attr('disabled')) {
-					elem.__ngf_elem__.removeClass('js-fileapi-wrapper');
-				} else {
-					var fileElem = elem.__ngf_elem__;
-					if (!fileElem) {
-						fileElem = elem.__ngf_elem__ = createFileElemFn();
-						fileElem.addClass('js-fileapi-wrapper');
-						if (!isInputTypeFile(elem)) {
-	//						if (fileElem.parent().css('position') === '' || fileElem.parent().css('position') === 'static') {
-	//							fileElem.parent().css('position', 'relative');
-	//						}
-	//						elem.parent()[0].insertBefore(fileElem[0], elem[0]);
-	//						elem.css('overflow', 'hidden');
-						}
-						setTimeout(function() {
-							fileElem.bind('mouseenter', makeFlashInput);
-						}, 10);
-						fileElem.bind('change', function(evt) {
-					    	fileApiChangeFn.apply(this, [evt]);
-							changeFn.apply(this, [evt]);
-	//						alert('change' +  evt);
-						});
-					} else {
-						bindAttr(elem.__ngf_elem__);
-					}
-					if (!isInputTypeFile(elem)) {
-						fileElem.css('position', 'absolute')
-								.css('top', getOffset(elem[0]).top + 'px').css('left', getOffset(elem[0]).left + 'px')
-								.css('width', elem[0].offsetWidth + 'px').css('height', elem[0].offsetHeight + 'px')
-								.css('filter', 'alpha(opacity=0)').css('display', elem.css('display'))
-								.css('overflow', 'hidden').css('z-index', '900000')
-								.css('visibility', 'visible');
-					}
-				}
-				function getOffset(obj) {
-				    var left, top;
-				    left = top = 0;
-				    if (obj.offsetParent) {
-				        do {
-				            left += obj.offsetLeft;
-				            top  += obj.offsetTop;
-				        } while (obj = obj.offsetParent);
-				    }
-				    return {
-				        left : left,
-				        top : top
-				    };
-				};
-			};
-	
-			elem.bind('mouseenter', makeFlashInput);
-	
-			var fileApiChangeFn = function(evt) {
-				var files = FileAPI.getFiles(evt);
-				//just a double check for #233
-				for (var i = 0; i < files.length; i++) {
-					if (files[i].size === undefined) files[i].size = 0;
-					if (files[i].name === undefined) files[i].name = 'file';
-					if (files[i].type === undefined) files[i].type = 'undefined';
-				}
-				if (!evt.target) {
-					evt.target = {};
-				}
-				evt.target.files = files;
-				// if evt.target.files is not writable use helper field
-				if (evt.target.files != files) {
-					evt.__files_ = files;
-				}
-				(evt.__files_ || evt.target.files).item = function(i) {
-					return (evt.__files_ || evt.target.files)[i] || null;
-				};
-			};
-		};
-	
-		FileAPI.disableFileInput = function(elem, disable) {
-			if (disable) {
-				elem.removeClass('js-fileapi-wrapper')
-			} else {
-				elem.addClass('js-fileapi-wrapper');
-			}
-		};
-	}
-	
-	
-	if (!window.FileReader) {
-		window.FileReader = function() {
-			var _this = this, loadStarted = false;
-			this.listeners = {};
-			this.addEventListener = function(type, fn) {
-				_this.listeners[type] = _this.listeners[type] || [];
-				_this.listeners[type].push(fn);
-			};
-			this.removeEventListener = function(type, fn) {
-				_this.listeners[type] && _this.listeners[type].splice(_this.listeners[type].indexOf(fn), 1);
-			};
-			this.dispatchEvent = function(evt) {
-				var list = _this.listeners[evt.type];
-				if (list) {
-					for (var i = 0; i < list.length; i++) {
-						list[i].call(_this, evt);
-					}
-				}
-			};
-			this.onabort = this.onerror = this.onload = this.onloadstart = this.onloadend = this.onprogress = null;
-	
-			var constructEvent = function(type, evt) {
-				var e = {type: type, target: _this, loaded: evt.loaded, total: evt.total, error: evt.error};
-				if (evt.result != null) e.target.result = evt.result;
-				return e;
-			};
-			var listener = function(evt) {
-				if (!loadStarted) {
-					loadStarted = true;
-					_this.onloadstart && _this.onloadstart(constructEvent('loadstart', evt));
-				}
-				if (evt.type === 'load') {
-					_this.onloadend && _this.onloadend(constructEvent('loadend', evt));
-					var e = constructEvent('load', evt);
-					_this.onload && _this.onload(e);
-					_this.dispatchEvent(e);
-				} else if (evt.type === 'progress') {
-					var e = constructEvent('progress', evt);
-					_this.onprogress && _this.onprogress(e);
-					_this.dispatchEvent(e);
-				} else {
-					var e = constructEvent('error', evt);
-					_this.onerror && _this.onerror(e);
-					_this.dispatchEvent(e);
-				}
-			};
-			this.readAsArrayBuffer = function(file) {
-				FileAPI.readAsBinaryString(file, listener);
-			}
-			this.readAsBinaryString = function(file) {
-				FileAPI.readAsBinaryString(file, listener);
-			}
-			this.readAsDataURL = function(file) {
-				FileAPI.readAsDataURL(file, listener);
-			}
-			this.readAsText = function(file) {
-				FileAPI.readAsText(file, listener);
-			}
-		}
-	}
-	})();
-
-
-/***/ },
-/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -18057,635 +16166,1898 @@
 	})(window, window.angular);
 
 /***/ },
-/* 14 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/**
-	 * @license AngularJS v1.3.15
-	 * (c) 2010-2014 Google, Inc. http://angularjs.org
-	 * License: MIT
-	 */
-	(function(window, angular, undefined) {'use strict';
-	
-	/**
-	 * @ngdoc module
-	 * @name ngTouch
-	 * @description
-	 *
-	 * # ngTouch
-	 *
-	 * The `ngTouch` module provides touch events and other helpers for touch-enabled devices.
-	 * The implementation is based on jQuery Mobile touch event handling
-	 * ([jquerymobile.com](http://jquerymobile.com/)).
-	 *
-	 *
-	 * See {@link ngTouch.$swipe `$swipe`} for usage.
-	 *
-	 * <div doc-module-components="ngTouch"></div>
-	 *
+	/* WEBPACK VAR INJECTION */(function($) {/**
+	 * Main application handling the Expression of Interest form.
+	 * @todo implement form validation according to https://github.com/gbif/gbif-api/blob/master/src/main/java/org/gbif/api/model/registry/Organization.java#L167
 	 */
 	
-	// define ngTouch module
-	/* global -ngTouch */
-	var ngTouch = angular.module('ngTouch', []);
+	'use strict';
 	
-	/* global ngTouch: false */
+	__webpack_require__(2)();
 	
-	    /**
-	     * @ngdoc service
-	     * @name $swipe
-	     *
-	     * @description
-	     * The `$swipe` service is a service that abstracts the messier details of hold-and-drag swipe
-	     * behavior, to make implementing swipe-related directives more convenient.
-	     *
-	     * Requires the {@link ngTouch `ngTouch`} module to be installed.
-	     *
-	     * `$swipe` is used by the `ngSwipeLeft` and `ngSwipeRight` directives in `ngTouch`, and by
-	     * `ngCarousel` in a separate component.
-	     *
-	     * # Usage
-	     * The `$swipe` service is an object with a single method: `bind`. `bind` takes an element
-	     * which is to be watched for swipes, and an object with four handler functions. See the
-	     * documentation for `bind` below.
-	     */
+	// run phase
+	var _ = __webpack_require__(3); // Include the JS library this way because we don't need it in HTML(yet).
+	/*
+	 var underscore = angular.module('underscore', []);
+	 underscore.factory('_', function() {
+	 return window._;
+	 });
+	 */
 	
-	ngTouch.factory('$swipe', [function() {
-	  // The total distance in any direction before we make the call on swipe vs. scroll.
-	  var MOVE_BUFFER_RADIUS = 10;
+	var MD5 = __webpack_require__(4);
 	
-	  var POINTER_EVENTS = {
-	    'mouse': {
-	      start: 'mousedown',
-	      move: 'mousemove',
-	      end: 'mouseup'
-	    },
-	    'touch': {
-	      start: 'touchstart',
-	      move: 'touchmove',
-	      end: 'touchend',
-	      cancel: 'touchcancel'
-	    }
+	// environmental variables, for compatibility with GBIF Drupal environment
+	if (typeof Drupal === 'undefined') {
+	  var basePath = '';
+	  var env = {
+	    'data_portal_base_url': 'http://www.gbif-dev.org'
 	  };
+	}
+	else {
+	  var env = Drupal.settings.environment_settings;
+	  var baseUrl = env.base_url;
+	  var basePath = baseUrl + '/sites/all/modules/custom/gbifs/gbif_registry/ng-app/target';
+	}
 	
-	  function getCoordinates(event) {
-	    var touches = event.touches && event.touches.length ? event.touches : [event];
-	    var e = (event.changedTouches && event.changedTouches[0]) ||
-	        (event.originalEvent && event.originalEvent.changedTouches &&
-	            event.originalEvent.changedTouches[0]) ||
-	        touches[0].originalEvent || touches[0];
+	// Define our module and it's dependency modules.
+	var eoiApp = angular.module('eoiApp', ['ngTouch', 'angucomplete-alt', 'ngAnimate', 'ui.router', 'ncy-angular-breadcrumb', 'reCAPTCHA', 'ngFileUpload']);
 	
-	    return {
-	      x: e.clientX,
-	      y: e.clientY
-	    };
-	  }
-	
-	  function getEvents(pointerTypes, eventType) {
-	    var res = [];
-	    angular.forEach(pointerTypes, function(pointerType) {
-	      var eventName = POINTER_EVENTS[pointerType][eventType];
-	      if (eventName) {
-	        res.push(eventName);
-	      }
+	// configuration phase of the app
+	// @see http://stackoverflow.com/questions/12664787/what-providers-services-are-available-in-module-config
+	eoiApp
+	  // constants
+	  .constant("BASE_URL", baseUrl)
+	  .constant("BASE_PATH", basePath)
+	  .constant("DATA_PORTAL_BASE_URL", env.data_portal_base_url)
+	  // ui-route and breadcrumb
+	  // Prefix intro page in the breadcrumb
+	  .config(function($breadcrumbProvider) {
+	    $breadcrumbProvider.setOptions({
+	      prefixStateName: 'intro'
 	    });
-	    return res.join(' ');
-	  }
-	
-	  return {
-	    /**
-	     * @ngdoc method
-	     * @name $swipe#bind
-	     *
-	     * @description
-	     * The main method of `$swipe`. It takes an element to be watched for swipe motions, and an
-	     * object containing event handlers.
-	     * The pointer types that should be used can be specified via the optional
-	     * third argument, which is an array of strings `'mouse'` and `'touch'`. By default,
-	     * `$swipe` will listen for `mouse` and `touch` events.
-	     *
-	     * The four events are `start`, `move`, `end`, and `cancel`. `start`, `move`, and `end`
-	     * receive as a parameter a coordinates object of the form `{ x: 150, y: 310 }`.
-	     *
-	     * `start` is called on either `mousedown` or `touchstart`. After this event, `$swipe` is
-	     * watching for `touchmove` or `mousemove` events. These events are ignored until the total
-	     * distance moved in either dimension exceeds a small threshold.
-	     *
-	     * Once this threshold is exceeded, either the horizontal or vertical delta is greater.
-	     * - If the horizontal distance is greater, this is a swipe and `move` and `end` events follow.
-	     * - If the vertical distance is greater, this is a scroll, and we let the browser take over.
-	     *   A `cancel` event is sent.
-	     *
-	     * `move` is called on `mousemove` and `touchmove` after the above logic has determined that
-	     * a swipe is in progress.
-	     *
-	     * `end` is called when a swipe is successfully completed with a `touchend` or `mouseup`.
-	     *
-	     * `cancel` is called either on a `touchcancel` from the browser, or when we begin scrolling
-	     * as described above.
-	     *
-	     */
-	    bind: function(element, eventHandlers, pointerTypes) {
-	      // Absolute total movement, used to control swipe vs. scroll.
-	      var totalX, totalY;
-	      // Coordinates of the start position.
-	      var startCoords;
-	      // Last event's position.
-	      var lastPos;
-	      // Whether a swipe is active.
-	      var active = false;
-	
-	      pointerTypes = pointerTypes || ['mouse', 'touch'];
-	      element.on(getEvents(pointerTypes, 'start'), function(event) {
-	        startCoords = getCoordinates(event);
-	        active = true;
-	        totalX = 0;
-	        totalY = 0;
-	        lastPos = startCoords;
-	        eventHandlers['start'] && eventHandlers['start'](startCoords, event);
-	      });
-	      var events = getEvents(pointerTypes, 'cancel');
-	      if (events) {
-	        element.on(events, function(event) {
-	          active = false;
-	          eventHandlers['cancel'] && eventHandlers['cancel'](event);
-	        });
-	      }
-	
-	      element.on(getEvents(pointerTypes, 'move'), function(event) {
-	        if (!active) return;
-	
-	        // Android will send a touchcancel if it thinks we're starting to scroll.
-	        // So when the total distance (+ or - or both) exceeds 10px in either direction,
-	        // we either:
-	        // - On totalX > totalY, we send preventDefault() and treat this as a swipe.
-	        // - On totalY > totalX, we let the browser handle it as a scroll.
-	
-	        if (!startCoords) return;
-	        var coords = getCoordinates(event);
-	
-	        totalX += Math.abs(coords.x - lastPos.x);
-	        totalY += Math.abs(coords.y - lastPos.y);
-	
-	        lastPos = coords;
-	
-	        if (totalX < MOVE_BUFFER_RADIUS && totalY < MOVE_BUFFER_RADIUS) {
-	          return;
+	  })
+	  // Configuring ui routes.
+	  .config(function($stateProvider, $urlRouterProvider, BASE_PATH) {
+	    $stateProvider
+	      // route to show our starting form (/eoi)
+	      .state('form', {
+	        url: '/eoi',
+	        templateUrl: BASE_PATH + '/eoi.html',
+	        controller: 'EOIController'
+	      })
+	      // route to show our starting form (/intro)
+	      .state('intro', {
+	        url: '/intro',
+	        templateUrl: BASE_PATH + '/intro.html',
+	        controller: 'EOIController',
+	        ncyBreadcrumb: {
+	          label: 'Intro'
 	        }
-	
-	        // One of totalX or totalY has exceeded the buffer, so decide on swipe vs. scroll.
-	        if (totalY > totalX) {
-	          // Allow native scrolling to take over.
-	          active = false;
-	          eventHandlers['cancel'] && eventHandlers['cancel'](event);
-	          return;
-	        } else {
-	          // Prevent the browser from scrolling.
-	          event.preventDefault();
-	          eventHandlers['move'] && eventHandlers['move'](coords, event);
+	      })
+	      // route to show lookup form (/eoi/lookup)
+	      .state('form.lookup', {
+	        url: '/lookup',
+	        templateUrl: BASE_PATH + '/eoi-lookup.html',
+	        ncyBreadcrumb: {
+	          label: 'Organization lookup',
+	          parent: 'intro'
+	        }
+	      })
+	      // route to show contacts form (/eoi/contacts)
+	      .state('form.contacts', {
+	        url: '/contacts',
+	        templateUrl: BASE_PATH + '/eoi-contacts.html',
+	        ncyBreadcrumb: {
+	          label: 'Contacts',
+	          parent: 'form.lookup'
+	        }
+	      })
+	      // route to show endorsement form (/eoi/endorsement)
+	      .state('form.endorsement', {
+	        url: '/endorsement',
+	        templateUrl: BASE_PATH + '/eoi-endorsement.html',
+	        ncyBreadcrumb: {
+	          label: 'Endorsement',
+	          parent: 'form.contacts'
+	        }
+	      })
+	      // route to show contacts form (/eoi/data-hosting)
+	      .state('form.dataHosting', {
+	        url: '/data-hosting',
+	        templateUrl: BASE_PATH + '/eoi-dataHosting.html',
+	        ncyBreadcrumb: {
+	          label: 'Data hosting',
+	          parent: 'form.endorsement'
+	        }
+	      })
+	      // route to show terms form (/eoi/terms)
+	      .state('form.terms', {
+	        url: '/terms',
+	        templateUrl: BASE_PATH + '/eoi-terms.html',
+	        ncyBreadcrumb: {
+	          label: 'Terms and conditions',
+	          parent: 'form.dataHosting'
+	        }
+	      })
+	      // route to show terms form (/submitted)
+	      .state('form.completion', {
+	        url: '/submitted',
+	        templateUrl: BASE_PATH + '/eoi-submitted.html',
+	        ncyBreadcrumb: {
+	          label: 'Submission successful',
+	          parent: 'form.terms'
+	        }
+	      })
+	      // route to show terms form (/failed)
+	      .state('form.failed', {
+	        url: '/failed',
+	        templateUrl: BASE_PATH + '/eoi-failed.html',
+	        ncyBreadcrumb: {
+	          label: 'Submission failed',
+	          parent: 'form.terms'
 	        }
 	      });
 	
-	      element.on(getEvents(pointerTypes, 'end'), function(event) {
-	        if (!active) return;
-	        active = false;
-	        eventHandlers['end'] && eventHandlers['end'](getCoordinates(event), event);
-	      });
-	    }
-	  };
-	}]);
-	
-	/* global ngTouch: false */
-	
-	/**
-	 * @ngdoc directive
-	 * @name ngClick
-	 *
-	 * @description
-	 * A more powerful replacement for the default ngClick designed to be used on touchscreen
-	 * devices. Most mobile browsers wait about 300ms after a tap-and-release before sending
-	 * the click event. This version handles them immediately, and then prevents the
-	 * following click event from propagating.
-	 *
-	 * Requires the {@link ngTouch `ngTouch`} module to be installed.
-	 *
-	 * This directive can fall back to using an ordinary click event, and so works on desktop
-	 * browsers as well as mobile.
-	 *
-	 * This directive also sets the CSS class `ng-click-active` while the element is being held
-	 * down (by a mouse click or touch) so you can restyle the depressed element if you wish.
-	 *
-	 * @element ANY
-	 * @param {expression} ngClick {@link guide/expression Expression} to evaluate
-	 * upon tap. (Event object is available as `$event`)
-	 *
-	 * @example
-	    <example module="ngClickExample" deps="angular-touch.js">
-	      <file name="index.html">
-	        <button ng-click="count = count + 1" ng-init="count=0">
-	          Increment
-	        </button>
-	        count: {{ count }}
-	      </file>
-	      <file name="script.js">
-	        angular.module('ngClickExample', ['ngTouch']);
-	      </file>
-	    </example>
-	 */
-	
-	ngTouch.config(['$provide', function($provide) {
-	  $provide.decorator('ngClickDirective', ['$delegate', function($delegate) {
-	    // drop the default ngClick directive
-	    $delegate.shift();
-	    return $delegate;
-	  }]);
-	}]);
-	
-	ngTouch.directive('ngClick', ['$parse', '$timeout', '$rootElement',
-	    function($parse, $timeout, $rootElement) {
-	  var TAP_DURATION = 750; // Shorter than 750ms is a tap, longer is a taphold or drag.
-	  var MOVE_TOLERANCE = 12; // 12px seems to work in most mobile browsers.
-	  var PREVENT_DURATION = 2500; // 2.5 seconds maximum from preventGhostClick call to click
-	  var CLICKBUSTER_THRESHOLD = 25; // 25 pixels in any dimension is the limit for busting clicks.
-	
-	  var ACTIVE_CLASS_NAME = 'ng-click-active';
-	  var lastPreventedTime;
-	  var touchCoordinates;
-	  var lastLabelClickCoordinates;
-	
-	
-	  // TAP EVENTS AND GHOST CLICKS
-	  //
-	  // Why tap events?
-	  // Mobile browsers detect a tap, then wait a moment (usually ~300ms) to see if you're
-	  // double-tapping, and then fire a click event.
-	  //
-	  // This delay sucks and makes mobile apps feel unresponsive.
-	  // So we detect touchstart, touchmove, touchcancel and touchend ourselves and determine when
-	  // the user has tapped on something.
-	  //
-	  // What happens when the browser then generates a click event?
-	  // The browser, of course, also detects the tap and fires a click after a delay. This results in
-	  // tapping/clicking twice. We do "clickbusting" to prevent it.
-	  //
-	  // How does it work?
-	  // We attach global touchstart and click handlers, that run during the capture (early) phase.
-	  // So the sequence for a tap is:
-	  // - global touchstart: Sets an "allowable region" at the point touched.
-	  // - element's touchstart: Starts a touch
-	  // (- touchmove or touchcancel ends the touch, no click follows)
-	  // - element's touchend: Determines if the tap is valid (didn't move too far away, didn't hold
-	  //   too long) and fires the user's tap handler. The touchend also calls preventGhostClick().
-	  // - preventGhostClick() removes the allowable region the global touchstart created.
-	  // - The browser generates a click event.
-	  // - The global click handler catches the click, and checks whether it was in an allowable region.
-	  //     - If preventGhostClick was called, the region will have been removed, the click is busted.
-	  //     - If the region is still there, the click proceeds normally. Therefore clicks on links and
-	  //       other elements without ngTap on them work normally.
-	  //
-	  // This is an ugly, terrible hack!
-	  // Yeah, tell me about it. The alternatives are using the slow click events, or making our users
-	  // deal with the ghost clicks, so I consider this the least of evils. Fortunately Angular
-	  // encapsulates this ugly logic away from the user.
-	  //
-	  // Why not just put click handlers on the element?
-	  // We do that too, just to be sure. If the tap event caused the DOM to change,
-	  // it is possible another element is now in that position. To take account for these possibly
-	  // distinct elements, the handlers are global and care only about coordinates.
-	
-	  // Checks if the coordinates are close enough to be within the region.
-	  function hit(x1, y1, x2, y2) {
-	    return Math.abs(x1 - x2) < CLICKBUSTER_THRESHOLD && Math.abs(y1 - y2) < CLICKBUSTER_THRESHOLD;
-	  }
-	
-	  // Checks a list of allowable regions against a click location.
-	  // Returns true if the click should be allowed.
-	  // Splices out the allowable region from the list after it has been used.
-	  function checkAllowableRegions(touchCoordinates, x, y) {
-	    for (var i = 0; i < touchCoordinates.length; i += 2) {
-	      if (hit(touchCoordinates[i], touchCoordinates[i + 1], x, y)) {
-	        touchCoordinates.splice(i, i + 2);
-	        return true; // allowable region
-	      }
-	    }
-	    return false; // No allowable region; bust it.
-	  }
-	
-	  // Global click handler that prevents the click if it's in a bustable zone and preventGhostClick
-	  // was called recently.
-	  function onClick(event) {
-	    if (Date.now() - lastPreventedTime > PREVENT_DURATION) {
-	      return; // Too old.
-	    }
-	
-	    var touches = event.touches && event.touches.length ? event.touches : [event];
-	    var x = touches[0].clientX;
-	    var y = touches[0].clientY;
-	    // Work around desktop Webkit quirk where clicking a label will fire two clicks (on the label
-	    // and on the input element). Depending on the exact browser, this second click we don't want
-	    // to bust has either (0,0), negative coordinates, or coordinates equal to triggering label
-	    // click event
-	    if (x < 1 && y < 1) {
-	      return; // offscreen
-	    }
-	    if (lastLabelClickCoordinates &&
-	        lastLabelClickCoordinates[0] === x && lastLabelClickCoordinates[1] === y) {
-	      return; // input click triggered by label click
-	    }
-	    // reset label click coordinates on first subsequent click
-	    if (lastLabelClickCoordinates) {
-	      lastLabelClickCoordinates = null;
-	    }
-	    // remember label click coordinates to prevent click busting of trigger click event on input
-	    if (event.target.tagName.toLowerCase() === 'label') {
-	      lastLabelClickCoordinates = [x, y];
-	    }
-	
-	    // Look for an allowable region containing this click.
-	    // If we find one, that means it was created by touchstart and not removed by
-	    // preventGhostClick, so we don't bust it.
-	    if (checkAllowableRegions(touchCoordinates, x, y)) {
-	      return;
-	    }
-	
-	    // If we didn't find an allowable region, bust the click.
-	    event.stopPropagation();
-	    event.preventDefault();
-	
-	    // Blur focused form elements
-	    event.target && event.target.blur();
-	  }
-	
-	
-	  // Global touchstart handler that creates an allowable region for a click event.
-	  // This allowable region can be removed by preventGhostClick if we want to bust it.
-	  function onTouchStart(event) {
-	    var touches = event.touches && event.touches.length ? event.touches : [event];
-	    var x = touches[0].clientX;
-	    var y = touches[0].clientY;
-	    touchCoordinates.push(x, y);
-	
-	    $timeout(function() {
-	      // Remove the allowable region.
-	      for (var i = 0; i < touchCoordinates.length; i += 2) {
-	        if (touchCoordinates[i] == x && touchCoordinates[i + 1] == y) {
-	          touchCoordinates.splice(i, i + 2);
-	          return;
+	    // Catch all routes and send users to the intro page.
+	    $urlRouterProvider.otherwise('/intro');
+	  })
+	  .run(['$state', '$rootScope', function($state, $rootScope) {
+	    // start from intro
+	    $state.transitionTo('intro');
+	    // scroll to top when changing ui-route
+	    $rootScope.$on('$viewContentLoaded', function(){
+	      var interval = setInterval(function(){
+	        if (document.readyState == "complete") {
+	          window.scrollTo(0, 0);
+	          clearInterval(interval);
 	        }
-	      }
-	    }, PREVENT_DURATION, false);
-	  }
-	
-	  // On the first call, attaches some event handlers. Then whenever it gets called, it creates a
-	  // zone around the touchstart where clicks will get busted.
-	  function preventGhostClick(x, y) {
-	    if (!touchCoordinates) {
-	      $rootElement[0].addEventListener('click', onClick, true);
-	      $rootElement[0].addEventListener('touchstart', onTouchStart, true);
-	      touchCoordinates = [];
-	    }
-	
-	    lastPreventedTime = Date.now();
-	
-	    checkAllowableRegions(touchCoordinates, x, y);
-	  }
-	
-	  // Actual linking function.
-	  return function(scope, element, attr) {
-	    var clickHandler = $parse(attr.ngClick),
-	        tapping = false,
-	        tapElement,  // Used to blur the element after a tap.
-	        startTime,   // Used to check if the tap was held too long.
-	        touchStartX,
-	        touchStartY;
-	
-	    function resetState() {
-	      tapping = false;
-	      element.removeClass(ACTIVE_CLASS_NAME);
-	    }
-	
-	    element.on('touchstart', function(event) {
-	      tapping = true;
-	      tapElement = event.target ? event.target : event.srcElement; // IE uses srcElement.
-	      // Hack for Safari, which can target text nodes instead of containers.
-	      if (tapElement.nodeType == 3) {
-	        tapElement = tapElement.parentNode;
-	      }
-	
-	      element.addClass(ACTIVE_CLASS_NAME);
-	
-	      startTime = Date.now();
-	
-	      var touches = event.touches && event.touches.length ? event.touches : [event];
-	      var e = touches[0].originalEvent || touches[0];
-	      touchStartX = e.clientX;
-	      touchStartY = e.clientY;
+	      },200);
 	    });
+	  }])
+	  // A controller that handles the submission of the "expression-of-interest" form.
+	  .controller('EOIController',['$rootScope', '$scope', 'Upload', 'RegistryOrgService', 'RegistryNodeService', 'RegistryEnumService', 'DrupalFormService', '$state', 'reCAPTCHA', 'DATA_PORTAL_BASE_URL',
+	    function($rootScope, $scope, Upload, registryOrgService, registryNodeService, registryEnumService, drupalFormService, $state, reCAPTCHA, DATA_PORTAL_BASE_URL) {
+	      // good practice: to avoid "this" being overwritten by 3rd party codes and confusion at various scopes.
+	      var self = this;
 	
-	    element.on('touchmove', function(event) {
-	      resetState();
-	    });
-	
-	    element.on('touchcancel', function(event) {
-	      resetState();
-	    });
-	
-	    element.on('touchend', function(event) {
-	      var diff = Date.now() - startTime;
-	
-	      var touches = (event.changedTouches && event.changedTouches.length) ? event.changedTouches :
-	          ((event.touches && event.touches.length) ? event.touches : [event]);
-	      var e = touches[0].originalEvent || touches[0];
-	      var x = e.clientX;
-	      var y = e.clientY;
-	      var dist = Math.sqrt(Math.pow(x - touchStartX, 2) + Math.pow(y - touchStartY, 2));
-	
-	      if (tapping && diff < TAP_DURATION && dist < MOVE_TOLERANCE) {
-	        // Call preventGhostClick so the clickbuster will catch the corresponding click.
-	        preventGhostClick(x, y);
-	
-	        // Blur the focused element (the button, probably) before firing the callback.
-	        // This doesn't work perfectly on Android Chrome, but seems to work elsewhere.
-	        // I couldn't get anything to work reliably on Android Chrome.
-	        if (tapElement) {
-	          tapElement.blur();
-	        }
-	
-	        if (!angular.isDefined(attr.disabled) || attr.disabled === false) {
-	          element.triggerHandler('click', [event]);
-	        }
-	      }
-	
-	      resetState();
-	    });
-	
-	    // Hack for iOS Safari's benefit. It goes searching for onclick handlers and is liable to click
-	    // something else nearby.
-	    element.onclick = function(event) { };
-	
-	    // Actual click handler.
-	    // There are three different kinds of clicks, only two of which reach this point.
-	    // - On desktop browsers without touch events, their clicks will always come here.
-	    // - On mobile browsers, the simulated "fast" click will call this.
-	    // - But the browser's follow-up slow click will be "busted" before it reaches this handler.
-	    // Therefore it's safe to use this directive on both mobile and desktop.
-	    element.on('click', function(event, touchend) {
-	      scope.$apply(function() {
-	        clickHandler(scope, {$event: (touchend || event)});
-	      });
-	    });
-	
-	    element.on('mousedown', function(event) {
-	      element.addClass(ACTIVE_CLASS_NAME);
-	    });
-	
-	    element.on('mousemove mouseup', function(event) {
-	      element.removeClass(ACTIVE_CLASS_NAME);
-	    });
-	
-	  };
-	}]);
-	
-	/* global ngTouch: false */
-	
-	/**
-	 * @ngdoc directive
-	 * @name ngSwipeLeft
-	 *
-	 * @description
-	 * Specify custom behavior when an element is swiped to the left on a touchscreen device.
-	 * A leftward swipe is a quick, right-to-left slide of the finger.
-	 * Though ngSwipeLeft is designed for touch-based devices, it will work with a mouse click and drag
-	 * too.
-	 *
-	 * To disable the mouse click and drag functionality, add `ng-swipe-disable-mouse` to
-	 * the `ng-swipe-left` or `ng-swipe-right` DOM Element.
-	 *
-	 * Requires the {@link ngTouch `ngTouch`} module to be installed.
-	 *
-	 * @element ANY
-	 * @param {expression} ngSwipeLeft {@link guide/expression Expression} to evaluate
-	 * upon left swipe. (Event object is available as `$event`)
-	 *
-	 * @example
-	    <example module="ngSwipeLeftExample" deps="angular-touch.js">
-	      <file name="index.html">
-	        <div ng-show="!showActions" ng-swipe-left="showActions = true">
-	          Some list content, like an email in the inbox
-	        </div>
-	        <div ng-show="showActions" ng-swipe-right="showActions = false">
-	          <button ng-click="reply()">Reply</button>
-	          <button ng-click="delete()">Delete</button>
-	        </div>
-	      </file>
-	      <file name="script.js">
-	        angular.module('ngSwipeLeftExample', ['ngTouch']);
-	      </file>
-	    </example>
-	 */
-	
-	/**
-	 * @ngdoc directive
-	 * @name ngSwipeRight
-	 *
-	 * @description
-	 * Specify custom behavior when an element is swiped to the right on a touchscreen device.
-	 * A rightward swipe is a quick, left-to-right slide of the finger.
-	 * Though ngSwipeRight is designed for touch-based devices, it will work with a mouse click and drag
-	 * too.
-	 *
-	 * Requires the {@link ngTouch `ngTouch`} module to be installed.
-	 *
-	 * @element ANY
-	 * @param {expression} ngSwipeRight {@link guide/expression Expression} to evaluate
-	 * upon right swipe. (Event object is available as `$event`)
-	 *
-	 * @example
-	    <example module="ngSwipeRightExample" deps="angular-touch.js">
-	      <file name="index.html">
-	        <div ng-show="!showActions" ng-swipe-left="showActions = true">
-	          Some list content, like an email in the inbox
-	        </div>
-	        <div ng-show="showActions" ng-swipe-right="showActions = false">
-	          <button ng-click="reply()">Reply</button>
-	          <button ng-click="delete()">Delete</button>
-	        </div>
-	      </file>
-	      <file name="script.js">
-	        angular.module('ngSwipeRightExample', ['ngTouch']);
-	      </file>
-	    </example>
-	 */
-	
-	function makeSwipeDirective(directiveName, direction, eventName) {
-	  ngTouch.directive(directiveName, ['$parse', '$swipe', function($parse, $swipe) {
-	    // The maximum vertical delta for a swipe should be less than 75px.
-	    var MAX_VERTICAL_DISTANCE = 75;
-	    // Vertical distance should not be more than a fraction of the horizontal distance.
-	    var MAX_VERTICAL_RATIO = 0.3;
-	    // At least a 30px lateral motion is necessary for a swipe.
-	    var MIN_HORIZONTAL_DISTANCE = 30;
-	
-	    return function(scope, element, attr) {
-	      var swipeHandler = $parse(attr[directiveName]);
-	
-	      var startCoords, valid;
-	
-	      function validSwipe(coords) {
-	        // Check that it's within the coordinates.
-	        // Absolute vertical distance must be within tolerances.
-	        // Horizontal distance, we take the current X - the starting X.
-	        // This is negative for leftward swipes and positive for rightward swipes.
-	        // After multiplying by the direction (-1 for left, +1 for right), legal swipes
-	        // (ie. same direction as the directive wants) will have a positive delta and
-	        // illegal ones a negative delta.
-	        // Therefore this delta must be positive, and larger than the minimum.
-	        if (!startCoords) return false;
-	        var deltaY = Math.abs(coords.y - startCoords.y);
-	        var deltaX = (coords.x - startCoords.x) * direction;
-	        return valid && // Short circuit for already-invalidated swipes.
-	            deltaY < MAX_VERTICAL_DISTANCE &&
-	            deltaX > 0 &&
-	            deltaX > MIN_HORIZONTAL_DISTANCE &&
-	            deltaY / deltaX < MAX_VERTICAL_RATIO;
-	      }
-	
-	      var pointerTypes = ['touch'];
-	      if (!angular.isDefined(attr['ngSwipeDisableMouse'])) {
-	        pointerTypes.push('mouse');
-	      }
-	      $swipe.bind(element, {
-	        'start': function(coords, event) {
-	          startCoords = coords;
-	          valid = true;
+	      // Define the formData object.
+	      self.formData = {
+	        "contact": {
+	          "title": '',
+	          "firstName": '',
+	          "lastName": '',
+	          "email": '',
+	          "phone": ''
 	        },
-	        'cancel': function(event) {
-	          valid = false;
+	        "org": {
+	          "title": '', // GBIF Registry uses 'title' as the property, while for label we use 'name'.
+	          "url": '',
+	          "address": '',
+	          "city": '',
+	          "province": '',
+	          "zip": '',
+	          "country": '',
+	          "desc": '',
+	          "isIntlOrg": 'no',
+	          "isAdminContact": '',
+	          "adminContact": {},
+	          "isTechContact": '',
+	          "techContact": {}
 	        },
-	        'end': function(coords, event) {
-	          if (validSwipe(coords)) {
-	            scope.$apply(function() {
-	              element.triggerHandler(eventName);
-	              swipeHandler(scope, {$event: event});
+	        "endorsement": {
+	          "nationalParticipant": '',
+	          "endorsingParticipant": '',
+	          "beEndorsedByType": ''
+	        }
+	      };
+	
+	      // formControl is only for controlling show/hide of forms.
+	      self.formControl = {
+	        "formNp": '',
+	        "formNoNp": '',
+	        "formIntlOrg": ''
+	      };
+	
+	      // selectedOrg is stored when in the "look up" view.
+	      self.selectedOrg = {};
+	
+	      // initial show state
+	      self.showLookupResult = false;
+	
+	      // Load the list of organizations.
+	      self.organizations = [];
+	      var getOrganizations = function() {
+	        return registryOrgService.list().then(
+	          function (response) {
+	            // On success, set the response as the array of organizations.
+	            self.organizations = response.data.results;
+	          }, function(errResponse) {
+	            console.error('Error while fetching organizations');
+	          }
+	        );
+	      };
+	      getOrganizations();
+	
+	      // Load the list of countries.
+	      self.countries = [];
+	      var getCountries = function() {
+	        return registryEnumService.list('country').then(
+	          function (response) {
+	            // On success, set the response as the array of countries.
+	            self.countries = response.data;
+	          }, function(errResponse) {
+	            console.error('Error while fetching countries')
+	          }
+	        );
+	      };
+	      getCountries();
+	
+	      // Load the list of GBIF Participants.
+	      self.participants = [];
+	      var getParticipants = function() {
+	        return registryNodeService.list().then(
+	          function (response) {
+	            // On success, set the response as the array of participants.
+	            self.participants = response.data.results;
+	          }, function(errResponse) {
+	            console.error('Error while fetching participants')
+	          }
+	        );
+	      };
+	      getParticipants();
+	
+	      // Load the list of GBIF Other Associate Participants.
+	      self.otherAssociateParticipants = [];
+	      var getOtherAssociateParticipants = function() {
+	        return registryNodeService.list().then(
+	          function (response) {
+	            // On success, filter the response to only OAP before appending.
+	            self.otherAssociateParticipants = _.filter(response.data.results, function(node) {
+	              return node.type === 'OTHER';
+	            });
+	          }, function(errResponse) {
+	            console.error('Error while fetching participants')
+	          }
+	        );
+	      };
+	      getOtherAssociateParticipants();
+	
+	      // Default titles for contacts
+	      self.titleItems = [
+	        {value: 'Mr.', title: 'Mr.'},
+	        {value: 'Ms.', title: 'Ms.'},
+	        {value: 'Mrs.', title: 'Mrs.'},
+	        {value: 'Dr.', title: 'Dr.'},
+	        {value: 'Prof.', title: 'Prof.'}
+	      ];
+	
+	      // Set endorsing body to Nodes Committee. Therefore clear relevant values if any.
+	      self.toBeEndorsedByNc = function(id) {
+	        self.formData.endorsement.endorsingParticipant = '';
+	        // clear angucomplete-alt input field
+	        // @see https://github.com/ghiden/angucomplete-alt#clear-input
+	        $scope.$broadcast('angucomplete-alt:clearInput', id);
+	      };
+	
+	      // Set endorsing body to country participant. Clear oap value in angucomplete-alt.
+	      self.toBeEndorsedByCp = function(id) {
+	        self.formData.endorsement.endorsingParticipant = self.formData.endorsement.nationalParticipant;
+	        $scope.$broadcast('angucomplete-alt:clearInput', id);
+	      }
+	
+	      self.toBeEndorsedByOap = function() {
+	        self.formData.endorsement.endorsingParticipant = '';
+	      }
+	
+	      // For angucomplete-alt. For actions when oap is selected in the national participant form.
+	      self.oapSelectedFormNp = function(selected) {
+	        self.formData.endorsement.beEndorsedByType = 'oap';
+	        self.formData.endorsement.endorsingParticipant = selected.originalObject;
+	      };
+	
+	      // For angucomplete-alt. For actions when oap is selected in the no national participant form.
+	      self.oapSelectedFormNoNp = function(selected) {
+	        if (_.isEmpty(selected)) {
+	          self.formData.endorsement.endorsingParticipant = '';
+	        }
+	        else {
+	          self.formData.endorsement.beEndorsedByType = 'oap';
+	          self.formData.endorsement.endorsingParticipant = selected.originalObject;
+	        }
+	      };
+	
+	      // Assist validation for the Endorsement form. True to disable.
+	      self.endorsementValidate = function(form) {
+	        if (self.formData.endorsement.beEndorsedByType === 'nc') {
+	          // if the visitor choose Nodes Committee as endorsing type, then it's fine that
+	          // the endorsingParticipant is empty.
+	          if (form.$invalid == true) {
+	            return true;
+	          }
+	          else {
+	            return false;
+	          }
+	        }
+	        else {
+	          if (_.isEmpty(self.formData.endorsement.endorsingParticipant) || form.$invalid == true) {
+	            return true;
+	          }
+	          else {
+	            return false;
+	          }
+	        }
+	      };
+	
+	      // Remote URL request formatter.
+	      self.remoteUrlRequestFn = function(str) {
+	        return {q: str};
+	      };
+	
+	      // For angucomplete-alt. For actions when a participant is selected in the intlorg form.
+	      self.oapSelectedFormIntlOrg = function(selected) {
+	        self.formData.endorsement.endorsingParticipant = selected.originalObject;
+	        self.formData.endorsement.beEndorsedByType = "p";
+	      };
+	
+	      // For angucompelte-alt. For actions when a country is selected.
+	      self.countrySelected = function(selected) {
+	        if (_.isEmpty(selected)) {
+	          self.formData.org.country = '';
+	          self.formData.org.countrySelected = false;
+	        }
+	        else {
+	          self.formData.org.country = selected.originalObject;
+	          self.formData.org.countrySelected = true;
+	          // Check if the country is a participant.
+	          var verifyCountry = function(iso2) {
+	            return registryNodeService.list().then(
+	              function (response) {
+	                // First tease out all non-country entries.
+	                var initialResults = response.data.results;
+	                var countryParticipants = [];
+	                var validType = ['COUNTRY'];
+	                initialResults.forEach(function (element, index, array) {
+	                  if (validType.indexOf(element.type) !== -1 ) countryParticipants.push(element);
+	                  // Chinese Taipei has a hybrid status so an exception here.
+	                  if (element.participantTitle == 'Chinese Taipei') countryParticipants.push(element);
+	                });
+	
+	                // Determine which form to show according to the status of the selected country.
+	                var isParticipant = $.grep(countryParticipants, function (e) { return e.country == selected.originalObject.iso2});
+	                if (isParticipant.length == 1) {
+	                  self.formData.endorsement.nationalParticipant = isParticipant[0];
+	                  self.formData.endorsement.endorsingParticipant = isParticipant[0];
+	                  // the value of beEndorsedByType determines the default option
+	                  self.formData.endorsement.beEndorsedByType = 'cp';
+	                  self.formControl.formNp = true;
+	                  self.formControl.formNoNp = false;
+	                  self.formControl.formIntlOrg = false;
+	                  self.formControl.toDataHosting = true;
+	                }
+	                else if (isParticipant.length == 0) {
+	                  self.formData.endorsement.nationalParticipant = 'none';
+	                  self.formData.endorsement.endorsingParticipant = '';
+	                  self.formControl.formNp = false;
+	                  self.formControl.formNoNp = true;
+	                  self.formControl.formIntlOrg = false;
+	                  self.formControl.toDataHosting = true;
+	                }
+	                self.formData.org.isIntlOrg = 'no';
+	              }, function (errResponse) {
+	                console.log('Error verifying country participation status.');
+	              }
+	            );
+	          };
+	          verifyCountry(selected.description.iso2);
+	        }
+	      };
+	
+	      // Register form status if it's international organisation.
+	      self.isIntlOrg = function(value) {
+	        if (value == 'yes') {
+	          self.formControl.formNp = false;
+	          self.formControl.formNoNp = false;
+	          self.formControl.formIntlOrg = true;
+	          self.formControl.toDataHosting = true;
+	          self.formData.endorsement.endorsingParticipant = "";
+	        }
+	        else if (value == 'no') {
+	          if (self.formData.org.country.length > 0) {
+	            self.countrySelected();
+	          }
+	          else {
+	            self.formControl.formNp = false;
+	            self.formControl.formNoNp = false;
+	            self.formControl.formIntlOrg = false;
+	            self.formControl.toDataHosting = true;
+	          }
+	        }
+	      };
+	
+	      // Include countrySelected status in the evaluation of $invalid.
+	      self.contactValidate = function(form) {
+	        if (self.formData.org.countrySelected != true || form.$invalid == true) {
+	          return true;
+	        }
+	        else {
+	          return false;
+	        }
+	      };
+	
+	      // Prepare the object of organization details for binding in HTML when selected.
+	      self.organizationSelected = function(selected) {
+	        // Reset all variables.
+	        self.selectedOrg = {
+	          title: selected.title,
+	          url: DATA_PORTAL_BASE_URL + '/publisher/' + selected.originalObject.key,
+	          selected: true,
+	          endorsingNode: {}
+	        };
+	
+	        // Country lookup.
+	        var getCountry = function() {
+	          return registryEnumService.list('country').then(
+	            function (response) {
+	              // On success, find the country name.
+	              function findCountry(element, index, array) {
+	                if (element.iso2 == selected.description.country) {
+	                  self.selectedOrg.country = element.title;
+	                }
+	              }
+	              response.data.forEach(findCountry);
+	            }, function(errResponse) {
+	              console.log('Error getting country enumeration.');
+	            }
+	          );
+	        };
+	
+	        // Node lookup.
+	        var getNode = function() {
+	          return registryNodeService.query(selected.description.endorsingNodeKey).then(
+	            function(response) {
+	              // If it's a country participant, link to participation page. Otherwise node page.
+	              var nodeUrl;
+	              if (response.data.type == 'COUNTRY') {
+	                nodeUrl = DATA_PORTAL_BASE_URL + '/country/' + response.data.country + '/participation';
+	              }
+	              else {
+	                nodeUrl = DATA_PORTAL_BASE_URL + '/node/' + selected.description.endorsingNodeKey;
+	              }
+	              self.selectedOrg.endorsingNode = {
+	                title: response.data.title,
+	                key: response.data.key,
+	                url: nodeUrl
+	              };
+	            }, function(errResponse) {
+	              console.log('Error getting node details.');
+	            }
+	          );
+	        };
+	
+	        // Chaining getCountry() and getNode() calls.
+	        getCountry().then(
+	          function (response) {
+	            // Prepare location string.
+	            var location = (self.selectedOrg.country || selected.description.city) ? 'Located in: ' : '';
+	            location += selected.description.city ? selected.description.city : '';
+	            location += (self.selectedOrg.country && selected.description.city) ? ', ' : '';
+	            location += self.selectedOrg.country ? self.selectedOrg.country : '';
+	            self.selectedOrg.location = location;
+	
+	            // Find administrative contact. If not, technical one.
+	            function findAdminContact(element, index, array) {
+	              if (element.type == 'ADMINISTRATIVE_POINT_OF_CONTACT') {
+	                // Prepare contact string.
+	                var contact = {};
+	                contact.html = 'Administrative contact: ';
+	                contact.html += (element.email[0]) ? '<a href="mailto:' + element.email[0] + '">' + element.firstName + ' ' + element.lastName + '</a>' : element.firstName + ' ' + element.lastName;
+	                contact.email = (element.email[0]) ? element.email[0] : null;
+	                contact.name = element.firstName + ' ' + element.lastName;
+	                self.selectedOrg.contact = contact;
+	              }
+	            }
+	            selected.description.contacts.forEach(findAdminContact);
+	            getNode();
+	          }, function (errResponse) {
+	            console.log('Error processing the chain.');
+	          }
+	        );
+	      };
+	
+	      // Handling file upload.
+	      // For 'controller as' syntax of using $watch, @see http://toddmotto.com/digging-into-angulars-controller-as-syntax/
+	      $scope.$watch(function () {
+	        return self.exampleFiles;
+	      }, function () {
+	        self.upload(self.exampleFiles);
+	      });
+	      self.upload = function (exampleFiles) {
+	        if (exampleFiles && exampleFiles.length) {
+	          for (var i = 0; i < exampleFiles.length; i++) {
+	            var file = exampleFiles[i];
+	            self.hash = MD5(file);
+	            Upload.upload({
+	              url: '/eoi/example-file-upload?XDEBUG_SESSION_START=11182',
+	              fields: {'hash': self.hash},
+	              file: file
+	            }).progress(function (evt) {
+	              var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+	              console.log('progress: ' + progressPercentage + '% ' + evt.config.file.name);
+	            }).success(function (data, status, headers, config) {
+	              self.formData.org.exampleFile = true;
+	              self.formData.org.exampleFileHash = self.hash;
+	              config.file.serverResponse = data.message;
+	              config.file.class = 'file-upload-success';
+	              console.log('file ' + config.file.name + ' uploaded. Response: ' + data.message);
+	            }).error(function (data, status, headers, config) {
+	              config.file.serverResponse = data.message;
+	              config.file.class = 'file-upload-error';
+	              console.log('file ' + config.file.name + ' failed uploading. Response: ' + data.message)
 	            });
 	          }
 	        }
-	      }, pointerTypes);
+	      };
+	
+	      // Handling form upload.
+	      self.submit = function(formData) {
+	        return drupalFormService.submit(formData).then(
+	          function(response) {
+	            $state.transitionTo('form.completion');
+	            // clear form data
+	            self.formData = '';
+	            self.formControl = '';
+	            self.selectedOrg = '';
+	            console.log('Form submission successful. ' + response.data.message);
+	          }, function(errResponse) {
+	            if (errResponse.data.message == "reCAPTCHA validation failed. Please try again.") {
+	              self.formControl.recaptcha_invalid = true;
+	              reCAPTCHA.reload();
+	            }
+	            console.log('Error submitting form. ' + errResponse.data.message);
+	          }
+	        );
+	      };
+	    }]
+	  )
+	  .config(function (reCAPTCHAProvider) {
+	    reCAPTCHAProvider.setPublicKey('6LdWh_gSAAAAAJZ2oUqgpUQJQ0Xv6s3Ppa7uHNs2');
+	    reCAPTCHAProvider.setOptions({
+	      theme: 'clean'
+	    });
+	  })
+	  // A GBIF Registry service that exposes /node access point.
+	  .factory('RegistryNodeService', ['$http', function($http) {
+	    return {
+	      list: function() {
+	        return $http.get('http://api.gbif.org/v1/node', {params: {limit: 300}});
+	      },
+	      query: function(uuid) {
+	        return $http.get('http://api.gbif.org/v1/node/' + uuid);
+	      }
+	    };
+	  }])
+	  // A GBIF Registry service that exposes /organization access point.
+	  .factory('RegistryOrgService', ['$http', function($http) {
+	    return {
+	      list: function() {
+	        return $http.get('http://api.gbif.org/v1/organization', {params: {limit: 900}});
+	      }
+	    };
+	  }])
+	  // A GBIF Registry service that exposes /enumeration access point.
+	  .factory('RegistryEnumService', ['$http', function($http) {
+	    return {
+	      list: function(type) {
+	        return $http.get('http://api.gbif.org/v1/enumeration/' + type);
+	      }
+	    };
+	  }])
+	  // A service that handles form submission to Drupal endpoint.
+	  .factory('DrupalFormService', ['$http', 'BASE_URL', function($http, BASE_URL) {
+	    return {
+	      submit: function(formData) {
+	        return $http({
+	          method: 'POST',
+	          url: BASE_URL + '/eoi/form-data-submit?XDEBUG_SESSION_START=11182',
+	          data: formData
+	        });
+	      }
 	    };
 	  }]);
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
+
+/***/ },
+/* 12 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*! angular-breadcrumb - v0.3.3
+	* http://ncuillery.github.io/angular-breadcrumb
+	* Copyright (c) 2014 Nicolas Cuillery; Licensed MIT */
+	
+	(function (window, angular, undefined) {
+	'use strict';
+	
+	function isAOlderThanB(scopeA, scopeB) {
+	    if(angular.equals(scopeA.length, scopeB.length)) {
+	        return scopeA > scopeB;
+	    } else {
+	        return scopeA.length > scopeB.length;
+	    }
 	}
 	
-	// Left is negative X-coordinate, right is positive.
-	makeSwipeDirective('ngSwipeLeft', -1, 'swipeleft');
-	makeSwipeDirective('ngSwipeRight', 1, 'swiperight');
+	function parseStateRef(ref) {
+	    var parsed = ref.replace(/\n/g, " ").match(/^([^(]+?)\s*(\((.*)\))?$/);
+	    if (!parsed || parsed.length !== 4) { throw new Error("Invalid state ref '" + ref + "'"); }
+	    return { state: parsed[1], paramExpr: parsed[3] || null };
+	}
 	
+	function $Breadcrumb() {
 	
+	    var $$options = {
+	        prefixStateName: null,
+	        template: 'bootstrap3',
+	        templateUrl: null,
+	        includeAbstract : false
+	    };
 	
+	    this.setOptions = function(options) {
+	        angular.extend($$options, options);
+	    };
+	
+	    this.$get = ['$state', '$stateParams', '$rootScope', function($state, $stateParams, $rootScope) {
+	
+	        var $lastViewScope = $rootScope;
+	
+	        // Early catch of $viewContentLoaded event
+	        $rootScope.$on('$viewContentLoaded', function (event) {
+	            // With nested views, the event occur several times, in "wrong" order
+	            if(isAOlderThanB(event.targetScope.$id, $lastViewScope.$id)) {
+	                $lastViewScope = event.targetScope;
+	            }
+	        });
+	
+	        // Get the parent state
+	        var $$parentState = function(state) {
+	            // Check if state has explicit parent OR we try guess parent from its name
+	            var name = state.parent || (/^(.+)\.[^.]+$/.exec(state.name) || [])[1];
+	            // If we were able to figure out parent name then get this state
+	            return name;
+	        };
+	
+	        // Add the state in the chain if not already in and if not abstract
+	        var $$addStateInChain = function(chain, stateRef) {
+	            var conf,
+	                parentParams,
+	                ref = parseStateRef(stateRef);
+	
+	            for(var i=0, l=chain.length; i<l; i+=1) {
+	                if (chain[i].name === ref.state) {
+	                    return;
+	                }
+	            }
+	
+	            conf = $state.get(ref.state);
+	            if((!conf.abstract || $$options.includeAbstract) && !(conf.ncyBreadcrumb && conf.ncyBreadcrumb.skip)) {
+	                if(ref.paramExpr) {
+	                    parentParams = $lastViewScope.$eval(ref.paramExpr);
+	                }
+	
+	                conf.ncyBreadcrumbLink = $state.href(ref.state, parentParams || $stateParams || {});
+	                chain.unshift(conf);
+	            }
+	        };
+	
+	        // Get the state for the parent step in the breadcrumb
+	        var $$breadcrumbParentState = function(stateRef) {
+	            var ref = parseStateRef(stateRef),
+	                conf = $state.get(ref.state);
+	
+	            if(conf.ncyBreadcrumb && conf.ncyBreadcrumb.parent) {
+	                // Handle the "parent" property of the breadcrumb, override the parent/child relation of the state
+	                var isFunction = typeof conf.ncyBreadcrumb.parent === 'function';
+	                var parentStateRef = isFunction ? conf.ncyBreadcrumb.parent($lastViewScope) : conf.ncyBreadcrumb.parent;
+	                if(parentStateRef) {
+	                    return parentStateRef;
+	                }
+	            }
+	
+	            return $$parentState(conf);
+	        };
+	
+	        return {
+	
+	            getTemplate: function(templates) {
+	                if($$options.templateUrl) {
+	                    // templateUrl takes precedence over template
+	                    return null;
+	                } else if(templates[$$options.template]) {
+	                    // Predefined templates (bootstrap, ...)
+	                    return templates[$$options.template];
+	                } else {
+	                    return $$options.template;
+	                }
+	            },
+	
+	            getTemplateUrl: function() {
+	                return $$options.templateUrl;
+	            },
+	
+	            getStatesChain: function(exitOnFirst) { // Deliberately undocumented param, see getLastStep
+	                var chain = [];
+	
+	                // From current state to the root
+	                for(var stateRef = $state.$current.self.name; stateRef; stateRef=$$breadcrumbParentState(stateRef)) {
+	                    $$addStateInChain(chain, stateRef);
+	                    if(exitOnFirst && chain.length) {
+	                        return chain;
+	                    }
+	                }
+	
+	                // Prefix state treatment
+	                if($$options.prefixStateName) {
+	                    $$addStateInChain(chain, $$options.prefixStateName);
+	                }
+	
+	                return chain;
+	            },
+	
+	            getLastStep: function() {
+	                var chain = this.getStatesChain(true);
+	                return chain.length ? chain[0] : undefined;
+	            },
+	
+	            $getLastViewScope: function() {
+	                return $lastViewScope;
+	            }
+	        };
+	    }];
+	}
+	
+	var getExpression = function(interpolationFunction) {
+	    if(interpolationFunction.expressions) {
+	        return interpolationFunction.expressions;
+	    } else {
+	        var expressions = [];
+	        angular.forEach(interpolationFunction.parts, function(part) {
+	            if(angular.isFunction(part)) {
+	                expressions.push(part.exp);
+	            }
+	        });
+	        return expressions;
+	    }
+	};
+	
+	var registerWatchers = function(labelWatcherArray, interpolationFunction, viewScope, step) {
+	    angular.forEach(getExpression(interpolationFunction), function(expression) {
+	        var watcher = viewScope.$watch(expression, function() {
+	            step.ncyBreadcrumbLabel = interpolationFunction(viewScope);
+	        });
+	        labelWatcherArray.push(watcher);
+	    });
+	
+	};
+	
+	var deregisterWatchers = function(labelWatcherArray) {
+	    angular.forEach(labelWatcherArray, function(deregisterWatch) {
+	        deregisterWatch();
+	    });
+	    labelWatcherArray = [];
+	};
+	
+	function BreadcrumbDirective($interpolate, $breadcrumb, $rootScope) {
+	    var $$templates = {
+	        bootstrap2: '<ul class="breadcrumb">' +
+	            '<li ng-repeat="step in steps" ng-switch="$last || !!step.abstract" ng-class="{active: $last}">' +
+	            '<a ng-switch-when="false" href="{{step.ncyBreadcrumbLink}}">{{step.ncyBreadcrumbLabel}}</a> ' +
+	            '<span ng-switch-when="true">{{step.ncyBreadcrumbLabel}}</span>' +
+	            '<span class="divider" ng-hide="$last">/</span>' +
+	            '</li>' +
+	            '</ul>',
+	        bootstrap3: '<ol class="breadcrumb">' +
+	            '<li ng-repeat="step in steps" ng-class="{active: $last}" ng-switch="$last || !!step.abstract">' +
+	            '<a ng-switch-when="false" href="{{step.ncyBreadcrumbLink}}">{{step.ncyBreadcrumbLabel}}</a> ' +
+	            '<span ng-switch-when="true">{{step.ncyBreadcrumbLabel}}</span>' +
+	            '</li>' +
+	            '</ol>'
+	    };
+	
+	    return {
+	        restrict: 'AE',
+	        replace: true,
+	        scope: {},
+	        template: $breadcrumb.getTemplate($$templates),
+	        templateUrl: $breadcrumb.getTemplateUrl(),
+	        link: {
+	            post: function postLink(scope) {
+	                var labelWatchers = [];
+	
+	                var renderBreadcrumb = function() {
+	                    deregisterWatchers(labelWatchers);
+	                    var viewScope = $breadcrumb.$getLastViewScope();
+	                    scope.steps = $breadcrumb.getStatesChain();
+	                    angular.forEach(scope.steps, function (step) {
+	                        if (step.ncyBreadcrumb && step.ncyBreadcrumb.label) {
+	                            var parseLabel = $interpolate(step.ncyBreadcrumb.label);
+	                            step.ncyBreadcrumbLabel = parseLabel(viewScope);
+	                            // Watcher for further viewScope updates
+	                            registerWatchers(labelWatchers, parseLabel, viewScope, step);
+	                        } else {
+	                            step.ncyBreadcrumbLabel = step.name;
+	                        }
+	                    });
+	                };
+	
+	                $rootScope.$on('$viewContentLoaded', function () {
+	                    renderBreadcrumb();
+	                });
+	
+	                // View(s) may be already loaded while the directive's linking
+	                renderBreadcrumb();
+	            }
+	        }
+	    };
+	}
+	BreadcrumbDirective.$inject = ['$interpolate', '$breadcrumb', '$rootScope'];
+	
+	function BreadcrumbLastDirective($interpolate, $breadcrumb, $rootScope) {
+	
+	    return {
+	        restrict: 'A',
+	        scope: {},
+	        template: '{{ncyBreadcrumbLabel}}',
+	        compile: function(cElement, cAttrs) {
+	
+	            // Override the default template if ncyBreadcrumbLast has a value
+	            var template = cElement.attr(cAttrs.$attr.ncyBreadcrumbLast);
+	            if(template) {
+	                cElement.html(template);
+	            }
+	
+	            return {
+	                post: function postLink(scope) {
+	                    var labelWatchers = [];
+	
+	                    var renderLabel = function() {
+	                        deregisterWatchers(labelWatchers);
+	                        var viewScope = $breadcrumb.$getLastViewScope();
+	                        var lastStep = $breadcrumb.getLastStep();
+	                        if(lastStep) {
+	                            scope.ncyBreadcrumbLink = lastStep.ncyBreadcrumbLink;
+	                            if (lastStep.ncyBreadcrumb && lastStep.ncyBreadcrumb.label) {
+	                                var parseLabel = $interpolate(lastStep.ncyBreadcrumb.label);
+	                                scope.ncyBreadcrumbLabel = parseLabel(viewScope);
+	                                // Watcher for further viewScope updates
+	                                // Tricky last arg: the last step is the entire scope of the directive !
+	                                registerWatchers(labelWatchers, parseLabel, viewScope, scope);
+	                            } else {
+	                                scope.ncyBreadcrumbLabel = lastStep.name;
+	                            }
+	                        }
+	                    };
+	
+	                    $rootScope.$on('$viewContentLoaded', function () {
+	                        renderLabel();
+	                    });
+	
+	                    // View(s) may be already loaded while the directive's linking
+	                    renderLabel();
+	                }
+	            };
+	
+	        }
+	    };
+	}
+	BreadcrumbLastDirective.$inject = ['$interpolate', '$breadcrumb', '$rootScope'];
+	
+	angular.module('ncy-angular-breadcrumb', ['ui.router.state'])
+	    .provider('$breadcrumb', $Breadcrumb)
+	    .directive('ncyBreadcrumb', BreadcrumbDirective)
+	    .directive('ncyBreadcrumbLast', BreadcrumbLastDirective);
 	})(window, window.angular);
 
 
 /***/ },
-/* 15 */
+/* 13 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**!
+	 * AngularJS file upload/drop directive and service with progress and abort
+	 * @author  Danial  <danial.farid@gmail.com>
+	 * @version 4.2.0
+	 */
+	(function () {
+	
+	var key, i;
+	function patchXHR(fnName, newFn) {
+	    window.XMLHttpRequest.prototype[fnName] = newFn(window.XMLHttpRequest.prototype[fnName]);
+	}
+	
+	if (window.XMLHttpRequest && !window.XMLHttpRequest.__isFileAPIShim) {
+	    patchXHR('setRequestHeader', function (orig) {
+	        return function (header, value) {
+	            if (header === '__setXHR_') {
+	                var val = value(this);
+	                // fix for angular < 1.2.0
+	                if (val instanceof Function) {
+	                    val(this);
+	                }
+	            } else {
+	                orig.apply(this, arguments);
+	            }
+	        }
+	    });
+	}
+	
+	var ngFileUpload = angular.module('ngFileUpload', []);
+	
+	ngFileUpload.version = '4.2.0';
+	ngFileUpload.service('Upload', ['$http', '$q', '$timeout', function ($http, $q, $timeout) {
+	    function sendHttp(config) {
+	        config.method = config.method || 'POST';
+	        config.headers = config.headers || {};
+	        config.transformRequest = config.transformRequest || function (data, headersGetter) {
+	            if (window.ArrayBuffer && data instanceof window.ArrayBuffer) {
+	                return data;
+	            }
+	            return $http.defaults.transformRequest[0](data, headersGetter);
+	        };
+	        var deferred = $q.defer();
+	        var promise = deferred.promise;
+	
+	        config.headers['__setXHR_'] = function () {
+	            return function (xhr) {
+	                if (!xhr) return;
+	                config.__XHR = xhr;
+	                config.xhrFn && config.xhrFn(xhr);
+	                xhr.upload.addEventListener('progress', function (e) {
+	                    e.config = config;
+	                    deferred.notify ? deferred.notify(e) : promise.progress_fn && $timeout(function () {
+	                        promise.progress_fn(e)
+	                    });
+	                }, false);
+	                //fix for firefox not firing upload progress end, also IE8-9
+	                xhr.upload.addEventListener('load', function (e) {
+	                    if (e.lengthComputable) {
+	                        e.config = config;
+	                        deferred.notify ? deferred.notify(e) : promise.progress_fn && $timeout(function () {
+	                            promise.progress_fn(e)
+	                        });
+	                    }
+	                }, false);
+	            };
+	        };
+	
+	        $http(config).then(function (r) {
+	            deferred.resolve(r)
+	        }, function (e) {
+	            deferred.reject(e)
+	        }, function (n) {
+	            deferred.notify(n)
+	        });
+	
+	        promise.success = function (fn) {
+	            promise.then(function (response) {
+	                fn(response.data, response.status, response.headers, config);
+	            });
+	            return promise;
+	        };
+	
+	        promise.error = function (fn) {
+	            promise.then(null, function (response) {
+	                fn(response.data, response.status, response.headers, config);
+	            });
+	            return promise;
+	        };
+	
+	        promise.progress = function (fn) {
+	            promise.progress_fn = fn;
+	            promise.then(null, null, function (update) {
+	                fn(update);
+	            });
+	            return promise;
+	        };
+	        promise.abort = function () {
+	            if (config.__XHR) {
+	                $timeout(function () {
+	                    config.__XHR.abort();
+	                });
+	            }
+	            return promise;
+	        };
+	        promise.xhr = function (fn) {
+	            config.xhrFn = (function (origXhrFn) {
+	                return function () {
+	                    origXhrFn && origXhrFn.apply(promise, arguments);
+	                    fn.apply(promise, arguments);
+	                }
+	            })(config.xhrFn);
+	            return promise;
+	        };
+	
+	        return promise;
+	    }
+	
+	    this.upload = function (config) {
+	        config.headers = config.headers || {};
+	        config.headers['Content-Type'] = undefined;
+	        config.transformRequest = config.transformRequest ?
+	            (angular.isArray(config.transformRequest) ?
+	                config.transformRequest : [config.transformRequest]) : [];
+	        config.transformRequest.push(function (data) {
+	            var formData = new FormData();
+	            var allFields = {};
+	            for (key in config.fields) {
+	                if (config.fields.hasOwnProperty(key)) {
+	                    allFields[key] = config.fields[key];
+	                }
+	            }
+	            if (data) allFields['data'] = data;
+	
+	            if (config.formDataAppender) {
+	                for (key in allFields) {
+	                    if (allFields.hasOwnProperty(key)) {
+	                        config.formDataAppender(formData, key, allFields[key]);
+	                    }
+	                }
+	            } else {
+	                for (key in allFields) {
+	                    if (allFields.hasOwnProperty(key)) {
+	                        var val = allFields[key];
+	                        if (val !== undefined) {
+	                            if (angular.isDate(val)) {
+	                                val = val.toISOString();
+	                            }
+	                            if (angular.isString(val)) {
+	                                formData.append(key, val);
+	                            } else {
+	                                if (config.sendObjectsAsJsonBlob && angular.isObject(val)) {
+	                                    formData.append(key, new Blob([val], {type: 'application/json'}));
+	                                } else {
+	                                    formData.append(key, JSON.stringify(val));
+	                                }
+	                            }
+	
+	                        }
+	                    }
+	                }
+	            }
+	
+	            if (config.file != null) {
+	                var fileFormName = config.fileFormDataName || 'file';
+	
+	                if (angular.isArray(config.file)) {
+	                    var isFileFormNameString = angular.isString(fileFormName);
+	                    for (var i = 0; i < config.file.length; i++) {
+	                        formData.append(isFileFormNameString ? fileFormName : fileFormName[i], config.file[i],
+	                            (config.fileName && config.fileName[i]) || config.file[i].name);
+	                    }
+	                } else {
+	                    formData.append(fileFormName, config.file, config.fileName || config.file.name);
+	                }
+	            }
+	            return formData;
+	        });
+	
+	        return sendHttp(config);
+	    };
+	
+	    this.http = function (config) {
+	        return sendHttp(config);
+	    };
+	}]);
+	
+	ngFileUpload.directive('ngfSelect', ['$parse', '$timeout', '$compile',
+	    function ($parse, $timeout, $compile) {
+	        return {
+	            restrict: 'AEC',
+	            require: '?ngModel',
+	            link: function (scope, elem, attr, ngModel) {
+	                linkFileSelect(scope, elem, attr, ngModel, $parse, $timeout, $compile);
+	            }
+	        }
+	    }]);
+	
+	function linkFileSelect(scope, elem, attr, ngModel, $parse, $timeout, $compile) {
+		if (elem.attr('__ngf_gen__')) {
+			return;
+		}
+	    function isInputTypeFile() {
+	        return elem[0].tagName.toLowerCase() === 'input' && elem.attr('type') && elem.attr('type').toLowerCase() === 'file';
+	    }
+	    var isUpdating = false;
+	    function changeFn(evt) {
+	        if (!isUpdating) {
+	            isUpdating = true;
+	            try {
+	                var fileList = evt.__files_ || (evt.target && evt.target.files);
+	                var files = [], rejFiles = [];
+	
+	                for (var i = 0; i < fileList.length; i++) {
+	                    var file = fileList.item(i);
+	                    if (validate(scope, $parse, attr, file, evt)) {
+	                        files.push(file);
+	                    } else {
+	                        rejFiles.push(file);
+	                    }
+	                }
+	                updateModel($parse, $timeout, scope, ngModel, attr, attr.ngfChange || attr.ngfSelect, files, rejFiles, evt);
+	                if (files.length == 0) evt.target.value = files;
+	//                if (evt.target && evt.target.getAttribute('__ngf_gen__')) {
+	//                    angular.element(evt.target).remove();
+	//                }
+	            } finally {
+	                isUpdating = false;
+	            }
+	        }
+	    }
+	
+	    function bindAttrToFileInput(fileElem) {
+	        if (attr.ngfMultiple) fileElem.attr('multiple', $parse(attr.ngfMultiple)(scope));
+	        if (!$parse(attr.ngfMultiple)(scope)) fileElem.attr('multiple', undefined);
+	        if (attr['accept']) fileElem.attr('accept', attr['accept']);
+	        if (attr.ngfCapture) fileElem.attr('capture', $parse(attr.ngfCapture)(scope));
+	//        if (attr.ngDisabled) fileElem.attr('disabled', $parse(attr.disabled)(scope));
+	        for (var i = 0; i < elem[0].attributes.length; i++) {
+	            var attribute = elem[0].attributes[i];
+	            if ((isInputTypeFile() && attribute.name !== 'type') 
+	            		|| (attribute.name !== 'type' && attribute.name !== 'class' && 
+	            		attribute.name !== 'id' && attribute.name !== 'style')) {
+	            	fileElem.attr(attribute.name, attribute.value);
+	            }
+	        }
+	    }
+	
+	    function createFileInput(evt) {
+	        if (elem.attr('disabled')) {
+	            return;
+	        }
+	        var fileElem = angular.element('<input type="file">');
+	        bindAttrToFileInput(fileElem);
+	
+	        if (isInputTypeFile()) {
+	            elem.replaceWith(fileElem);
+	            elem = fileElem;
+	            fileElem.attr('__ngf_gen__', true);
+	            $compile(elem)(scope);
+	        } else {
+	            fileElem.css('visibility', 'hidden').css('position', 'absolute')
+	            		.css('width', '1').css('height', '1').css('z-index', '-100000')
+	            		.attr('tabindex', '-1');
+	            if (elem.__ngf_ref_elem__) {elem.__ngf_ref_elem__.remove();}
+	            elem.__ngf_ref_elem__ = fileElem;
+	            document.body.appendChild(fileElem[0]);
+	        }
+	        
+	        return fileElem;
+	    }
+	
+	    function resetModel(evt) {
+	        updateModel($parse, $timeout, scope, ngModel, attr, attr.ngfChange || attr.ngfSelect, [], [], evt, true);
+	    }
+	
+	    function clickHandler(evt) {
+	    	evt.preventDefault();
+	        var fileElem = createFileInput(evt);
+	        if (fileElem) {
+	        	fileElem.bind('change', changeFn);
+	        	resetModel(evt);
+	
+	        	function clickAndAssign() {
+	            	fileElem[0].click();
+	    	        if (isInputTypeFile()) {
+	    	            elem.bind('click touchend', clickHandler);
+	    	            evt.preventDefault()
+	    	        }
+	        	}
+	        	
+	        	// fix for android native browser
+	        	if (navigator.userAgent.toLowerCase().match(/android/)) {
+	                setTimeout(function() {
+	                	clickAndAssign();
+	                }, 0);        		
+	        	} else {
+	        		clickAndAssign();
+	        	}
+	        }
+	    }
+	    if (window.FileAPI && window.FileAPI.ngfFixIE) {
+	        window.FileAPI.ngfFixIE(elem, createFileInput, bindAttrToFileInput, changeFn, resetModel);
+	    } else {
+	        elem.bind('click touchend', clickHandler);
+	    }
+	}
+	
+	ngFileUpload.directive('ngfDrop', ['$parse', '$timeout', '$location', function ($parse, $timeout, $location) {
+	    return {
+	        restrict: 'AEC',
+	        require: '?ngModel',
+	        link: function (scope, elem, attr, ngModel) {
+	            linkDrop(scope, elem, attr, ngModel, $parse, $timeout, $location);
+	        }
+	    }
+	}]);
+	
+	ngFileUpload.directive('ngfNoFileDrop', function () {
+	    return function (scope, elem) {
+	        if (dropAvailable()) elem.css('display', 'none')
+	    }
+	});
+	
+	ngFileUpload.directive('ngfDropAvailable', ['$parse', '$timeout', function ($parse, $timeout) {
+	    return function (scope, elem, attr) {
+	        if (dropAvailable()) {
+	            var fn = $parse(attr.ngfDropAvailable);
+	            $timeout(function () {
+	                fn(scope);
+	                if (fn.assign) {
+	                    fn.assign(scope, true);                	
+	                }
+	            });
+	        }
+	    }
+	}]);
+	
+	function linkDrop(scope, elem, attr, ngModel, $parse, $timeout, $location) {
+	    var available = dropAvailable();
+	    if (attr.dropAvailable) {
+	        $timeout(function () {
+	        	scope[attr.dropAvailable] ? scope[attr.dropAvailable].value = available : scope[attr.dropAvailable] = available;
+	        });
+	    }
+	    if (!available) {
+	        if ($parse(attr.ngfHideOnDropNotAvailable)(scope) == true) {
+	            elem.css('display', 'none');
+	        }
+	        return;
+	    }
+	    var leaveTimeout = null;
+	    var stopPropagation = $parse(attr.ngfStopPropagation);
+	    var dragOverDelay = 1;
+	    var accept = $parse(attr.ngfAccept);
+	    var actualDragOverClass;
+	
+	    elem[0].addEventListener('dragover', function (evt) {
+	        if (elem.attr('disabled')) return;
+	        evt.preventDefault();
+	        if (stopPropagation(scope)) evt.stopPropagation();
+	        // handling dragover events from the Chrome download bar
+	        if (navigator.userAgent.indexOf("Chrome") > -1) {
+	            var b = evt.dataTransfer.effectAllowed;
+	            evt.dataTransfer.dropEffect = ('move' === b || 'linkMove' === b) ? 'move' : 'copy';
+	        }
+	        $timeout.cancel(leaveTimeout);
+	        if (!scope.actualDragOverClass) {
+	            actualDragOverClass = calculateDragOverClass(scope, attr, evt);
+	        }
+	        elem.addClass(actualDragOverClass);
+	    }, false);
+	    elem[0].addEventListener('dragenter', function (evt) {
+	        if (elem.attr('disabled')) return;
+	        evt.preventDefault();
+	        if (stopPropagation(scope)) evt.stopPropagation();
+	    }, false);
+	    elem[0].addEventListener('dragleave', function () {
+	        if (elem.attr('disabled')) return;
+	        leaveTimeout = $timeout(function () {
+	            elem.removeClass(actualDragOverClass);
+	            actualDragOverClass = null;
+	        }, dragOverDelay || 1);
+	    }, false);
+	    elem[0].addEventListener('drop', function (evt) {
+	        if (elem.attr('disabled')) return;
+	        evt.preventDefault();
+	        if (stopPropagation(scope)) evt.stopPropagation();
+	        elem.removeClass(actualDragOverClass);
+	        actualDragOverClass = null;
+	        extractFiles(evt, function (files, rejFiles) {
+	            updateModel($parse, $timeout, scope, ngModel, attr,
+	                attr.ngfChange || attr.ngfDrop, files, rejFiles, evt)
+	        }, $parse(attr.ngfAllowDir)(scope) != false, attr.multiple || $parse(attr.ngfMultiple)(scope));
+	    }, false);
+	
+	    function calculateDragOverClass(scope, attr, evt) {
+	        var accepted = true;
+	        var items = evt.dataTransfer.items;
+	        if (items != null) {
+	            for (var i = 0; i < items.length && accepted; i++) {
+	                accepted = accepted
+	                    && (items[i].kind == 'file' || items[i].kind == '')
+	                    && validate(scope, $parse, attr, items[i], evt);
+	            }
+	        }
+	        var clazz = $parse(attr.ngfDragOverClass)(scope, {$event: evt});
+	        if (clazz) {
+	            if (clazz.delay) dragOverDelay = clazz.delay;
+	            if (clazz.accept) clazz = accepted ? clazz.accept : clazz.reject;
+	        }
+	        return clazz || attr.ngfDragOverClass || 'dragover';
+	    }
+	
+	    function extractFiles(evt, callback, allowDir, multiple) {
+	        var files = [], rejFiles = [], items = evt.dataTransfer.items, processing = 0;
+	
+	        function addFile(file) {
+	            if (validate(scope, $parse, attr, file, evt)) {
+	                files.push(file);
+	            } else {
+	                rejFiles.push(file);
+	            }
+	        }
+	
+	        if (items && items.length > 0 && $location.protocol() != 'file') {
+	            for (var i = 0; i < items.length; i++) {
+	                if (items[i].webkitGetAsEntry && items[i].webkitGetAsEntry() && items[i].webkitGetAsEntry().isDirectory) {
+	                    var entry = items[i].webkitGetAsEntry();
+	                    if (entry.isDirectory && !allowDir) {
+	                        continue;
+	                    }
+	                    if (entry != null) {
+	                        traverseFileTree(files, entry);
+	                    }
+	                } else {
+	                    var f = items[i].getAsFile();
+	                    if (f != null) addFile(f);
+	                }
+	                if (!multiple && files.length > 0) break;
+	            }
+	        } else {
+	            var fileList = evt.dataTransfer.files;
+	            if (fileList != null) {
+	                for (var i = 0; i < fileList.length; i++) {
+	                    addFile(fileList.item(i));
+	                    if (!multiple && files.length > 0) break;
+	                }
+	            }
+	        }
+	        var delays = 0;
+	        (function waitForProcess(delay) {
+	            $timeout(function () {
+	                if (!processing) {
+	                    if (!multiple && files.length > 1) {
+	                        i = 0;
+	                        while (files[i].type == 'directory') i++;
+	                        files = [files[i]];
+	                    }
+	                    callback(files, rejFiles);
+	                } else {
+	                    if (delays++ * 10 < 20 * 1000) {
+	                        waitForProcess(10);
+	                    }
+	                }
+	            }, delay || 0)
+	        })();
+	
+	        function traverseFileTree(files, entry, path) {
+	            if (entry != null) {
+	                if (entry.isDirectory) {
+	                    var filePath = (path || '') + entry.name;
+	                    addFile({name: entry.name, type: 'directory', path: filePath});
+	                    var dirReader = entry.createReader();
+	                    var entries = [];
+	                    processing++;
+	                    var readEntries = function () {
+	                        dirReader.readEntries(function (results) {
+	                            try {
+	                                if (!results.length) {
+	                                    for (var i = 0; i < entries.length; i++) {
+	                                        traverseFileTree(files, entries[i], (path ? path : '') + entry.name + '/');
+	                                    }
+	                                    processing--;
+	                                } else {
+	                                    entries = entries.concat(Array.prototype.slice.call(results || [], 0));
+	                                    readEntries();
+	                                }
+	                            } catch (e) {
+	                                processing--;
+	                                console.error(e);
+	                            }
+	                        }, function () {
+	                            processing--;
+	                        });
+	                    };
+	                    readEntries();
+	                } else {
+	                    processing++;
+	                    entry.file(function (file) {
+	                        try {
+	                            processing--;
+	                            file.path = (path ? path : '') + file.name;
+	                            addFile(file);
+	                        } catch (e) {
+	                            processing--;
+	                            console.error(e);
+	                        }
+	                    }, function () {
+	                        processing--;
+	                    });
+	                }
+	            }
+	        }
+	    }
+	}
+	
+	ngFileUpload.directive('ngfSrc', ['$parse', '$timeout', '$parse', function ($parse, $timeout, $parse) {
+		return {
+			restrict: 'AE',
+			link: function (scope, elem, attr, file) {
+				if (window.FileReader) {
+					scope.$watch(attr.ngfSrc, function(file) {
+						if (file &&
+								validate(scope, $parse, attr, file, null) &&
+								(!window.FileAPI || navigator.userAgent.indexOf('MSIE 8') === -1 || file.size < 20000) && 
+								(!window.FileAPI || navigator.userAgent.indexOf('MSIE 9') === -1 || file.size < 4000000)) {
+							$timeout(function() {
+								var fileReader = new FileReader();
+								fileReader.readAsDataURL(file);
+								fileReader.onload = function(e) {
+									$timeout(function() {
+										elem.attr('src', e.target.result);										
+									});
+								}
+							});
+						} else {
+							elem.attr('src', attr.ngfDefaultSrc || '');
+						}
+					});
+				}
+			}
+		}
+	}]);
+	
+	function dropAvailable() {
+	    var div = document.createElement('div');
+	    return ('draggable' in div) && ('ondrop' in div);
+	}
+	
+	function updateModel($parse, $timeout, scope, ngModel, attr, fileChange, files, rejFiles, evt, noDelay) {
+	    function update() {
+	        if (ngModel) {
+	            $parse(attr.ngModel).assign(scope, files);
+	            $timeout(function () {
+	                ngModel && ngModel.$setViewValue(files != null && files.length == 0 ? null : files);
+	            });
+	        }
+	        if (attr.ngModelRejected) {
+	            $parse(attr.ngModelRejected).assign(scope, rejFiles);
+	        }
+	        if (fileChange) {
+	            $parse(fileChange)(scope, {
+	                $files: files,
+	                $rejectedFiles: rejFiles,
+	                $event: evt
+	            });
+	
+	        }
+	    }
+	    if (noDelay) {
+	        update();
+	    } else {
+	        $timeout(function () {
+	            update();
+	        });
+	    }
+	}
+	
+	function validate(scope, $parse, attr, file, evt) {
+	    var accept = $parse(attr.ngfAccept)(scope, {$file: file, $event: evt});
+	    var fileSizeMax = $parse(attr.ngfMaxSize)(scope, {$file: file, $event: evt}) || 9007199254740991;
+	    var fileSizeMin = $parse(attr.ngfMinSize)(scope, {$file: file, $event: evt}) || -1;
+	    if (accept != null && angular.isString(accept)) {
+	        var regexp = new RegExp(globStringToRegex(accept), 'gi');
+	        accept = (file.type != null && regexp.test(file.type.toLowerCase())) ||
+	        		(file.name != null && regexp.test(file.name.toLowerCase()));
+	    }
+	    return (accept == null || accept) && (file.size == null || (file.size < fileSizeMax && file.size > fileSizeMin));
+	}
+	
+	function globStringToRegex(str) {
+	    if (str.length > 2 && str[0] === '/' && str[str.length - 1] === '/') {
+	        return str.substring(1, str.length - 1);
+	    }
+	    var split = str.split(','), result = '';
+	    if (split.length > 1) {
+	        for (var i = 0; i < split.length; i++) {
+	            result += '(' + globStringToRegex(split[i]) + ')';
+	            if (i < split.length - 1) {
+	                result += '|'
+	            }
+	        }
+	    } else {
+	        if (str.indexOf('.') == 0) {
+	            str = '*' + str;
+	        }
+	        result = '^' + str.replace(new RegExp('[.\\\\+*?\\[\\^\\]$(){}=!<>|:\\' + '-]', 'g'), '\\$&') + '$';
+	        result = result.replace(/\\\*/g, '.*').replace(/\\\?/g, '.');
+	    }
+	    return result;
+	}
+	
+	})();
+	
+	/**!
+	 * AngularJS file upload/drop directive and service with progress and abort
+	 * FileAPI Flash shim for old browsers not supporting FormData 
+	 * @author  Danial  <danial.farid@gmail.com>
+	 * @version 4.2.0
+	 */
+	
+	(function() {
+	
+	var hasFlash = function() {
+		try {
+		  var fo = new ActiveXObject('ShockwaveFlash.ShockwaveFlash');
+		  if (fo) return true;
+		} catch(e) {
+		  if (navigator.mimeTypes['application/x-shockwave-flash'] != undefined) return true;
+		}
+		return false;
+	}
+	
+	function patchXHR(fnName, newFn) {
+		window.XMLHttpRequest.prototype[fnName] = newFn(window.XMLHttpRequest.prototype[fnName]);
+	};
+	
+	if ((window.XMLHttpRequest && !window.FormData) || (window.FileAPI && FileAPI.forceLoad)) {
+		var initializeUploadListener = function(xhr) {
+			if (!xhr.__listeners) {
+				if (!xhr.upload) xhr.upload = {};
+				xhr.__listeners = [];
+				var origAddEventListener = xhr.upload.addEventListener;
+				xhr.upload.addEventListener = function(t, fn, b) {
+					xhr.__listeners[t] = fn;
+					origAddEventListener && origAddEventListener.apply(this, arguments);
+				};
+			}
+		}
+		
+		patchXHR('open', function(orig) {
+			return function(m, url, b) {
+				initializeUploadListener(this);
+				this.__url = url;
+				try {
+					orig.apply(this, [m, url, b]);
+				} catch (e) {
+					if (e.message.indexOf('Access is denied') > -1) {
+						this.__origError = e;
+						orig.apply(this, [m, '_fix_for_ie_crossdomain__', b]);
+					}
+				}
+			}
+		});
+	
+		patchXHR('getResponseHeader', function(orig) {
+			return function(h) {
+				return this.__fileApiXHR && this.__fileApiXHR.getResponseHeader ? this.__fileApiXHR.getResponseHeader(h) : (orig == null ? null : orig.apply(this, [h]));
+			};
+		});
+	
+		patchXHR('getAllResponseHeaders', function(orig) {
+			return function() {
+				return this.__fileApiXHR && this.__fileApiXHR.getAllResponseHeaders ? this.__fileApiXHR.getAllResponseHeaders() : (orig == null ? null : orig.apply(this));
+			}
+		});
+	
+		patchXHR('abort', function(orig) {
+			return function() {
+				return this.__fileApiXHR && this.__fileApiXHR.abort ? this.__fileApiXHR.abort() : (orig == null ? null : orig.apply(this));
+			}
+		});
+	
+		patchXHR('setRequestHeader', function(orig) {
+			return function(header, value) {
+				if (header === '__setXHR_') {
+					initializeUploadListener(this);
+					var val = value(this);
+					// fix for angular < 1.2.0
+					if (val instanceof Function) {
+						val(this);
+					}
+				} else {
+					this.__requestHeaders = this.__requestHeaders || {};
+					this.__requestHeaders[header] = value;
+					orig.apply(this, arguments);
+				}
+			}
+		});
+		
+		function redefineProp(xhr, prop, fn) {
+			try {
+				Object.defineProperty(xhr, prop, {get: fn});
+			} catch (e) {/*ignore*/}
+		}
+	
+		patchXHR('send', function(orig) {
+			return function() {
+				var xhr = this;
+				if (arguments[0] && arguments[0].__isFileAPIShim) {
+					var formData = arguments[0];
+					var config = {
+						url: xhr.__url,
+						jsonp: false, //removes the callback form param
+						cache: true, //removes the ?fileapiXXX in the url
+						complete: function(err, fileApiXHR) {
+							xhr.__completed = true;
+							if (!err && xhr.__listeners['load']) 
+								xhr.__listeners['load']({type: 'load', loaded: xhr.__loaded, total: xhr.__total, target: xhr, lengthComputable: true});
+							if (!err && xhr.__listeners['loadend']) 
+								xhr.__listeners['loadend']({type: 'loadend', loaded: xhr.__loaded, total: xhr.__total, target: xhr, lengthComputable: true});
+							if (err === 'abort' && xhr.__listeners['abort']) 
+								xhr.__listeners['abort']({type: 'abort', loaded: xhr.__loaded, total: xhr.__total, target: xhr, lengthComputable: true});
+							if (fileApiXHR.status !== undefined) redefineProp(xhr, 'status', function() {return (fileApiXHR.status == 0 && err && err !== 'abort') ? 500 : fileApiXHR.status});
+							if (fileApiXHR.statusText !== undefined) redefineProp(xhr, 'statusText', function() {return fileApiXHR.statusText});
+							redefineProp(xhr, 'readyState', function() {return 4});
+							if (fileApiXHR.response !== undefined) redefineProp(xhr, 'response', function() {return fileApiXHR.response});
+							var resp = fileApiXHR.responseText || (err && fileApiXHR.status == 0 && err !== 'abort' ? err : undefined);
+							redefineProp(xhr, 'responseText', function() {return resp});
+							redefineProp(xhr, 'response', function() {return resp});
+							if (err) redefineProp(xhr, 'err', function() {return err});
+							xhr.__fileApiXHR = fileApiXHR;
+							if (xhr.onreadystatechange) xhr.onreadystatechange();
+							if (xhr.onload) xhr.onload();
+						},
+						progress: function(e) {
+							e.target = xhr;
+							xhr.__listeners['progress'] && xhr.__listeners['progress'](e);
+							xhr.__total = e.total;
+							xhr.__loaded = e.loaded;
+							if (e.total === e.loaded) {
+								// fix flash issue that doesn't call complete if there is no response text from the server  
+								var _this = this
+								setTimeout(function() {
+									if (!xhr.__completed) {
+										xhr.getAllResponseHeaders = function(){};
+										_this.complete(null, {status: 204, statusText: 'No Content'});
+									}
+								}, FileAPI.noContentTimeout || 10000);
+							}
+						},
+						headers: xhr.__requestHeaders
+					}
+					config.data = {};
+					config.files = {}
+					for (var i = 0; i < formData.data.length; i++) {
+						var item = formData.data[i];
+						if (item.val != null && item.val.name != null && item.val.size != null && item.val.type != null) {
+							config.files[item.key] = item.val;
+						} else {
+							config.data[item.key] = item.val;
+						}
+					}
+	
+					setTimeout(function() {
+						if (!hasFlash()) {
+							throw 'Adode Flash Player need to be installed. To check ahead use "FileAPI.hasFlash"';
+						}
+						xhr.__fileApiXHR = FileAPI.upload(config);
+					}, 1);
+				} else {
+					if (this.__origError) {
+						throw this.__origError;
+					}
+					orig.apply(xhr, arguments);
+				}
+			}
+		});
+		window.XMLHttpRequest.__isFileAPIShim = true;
+	
+		function isInputTypeFile(elem) {
+			return elem[0].tagName.toLowerCase() === 'input' && elem.attr('type') && elem.attr('type').toLowerCase() === 'file';
+		}
+		
+		window.FormData = FormData = function() {
+			return {
+				append: function(key, val, name) {
+					if (val.__isFileAPIBlobShim) {
+						val = val.data[0];
+					}
+					this.data.push({
+						key: key,
+						val: val,
+						name: name
+					});
+				},
+				data: [],
+				__isFileAPIShim: true
+			};
+		};
+	
+		window.Blob = Blob = function(b) {
+			return {
+				data: b,
+				__isFileAPIBlobShim: true
+			};
+		};
+	
+		(function () {
+			//load FileAPI
+			if (!window.FileAPI) {
+				window.FileAPI = {};
+			}
+			if (FileAPI.forceLoad) {
+				FileAPI.html5 = false;
+			}
+			
+			if (!FileAPI.upload) {
+				var jsUrl, basePath, script = document.createElement('script'), allScripts = document.getElementsByTagName('script'), i, index, src;
+				if (window.FileAPI.jsUrl) {
+					jsUrl = window.FileAPI.jsUrl;
+				} else if (window.FileAPI.jsPath) {
+					basePath = window.FileAPI.jsPath;
+				} else {
+					for (i = 0; i < allScripts.length; i++) {
+						src = allScripts[i].src;
+						index = src.search(/\/ng\-file\-upload[\-a-zA-z0-9\.]*\.js/)
+						if (index > -1) {
+							basePath = src.substring(0, index + 1);
+							break;
+						}
+					}
+				}
+	
+				if (FileAPI.staticPath == null) FileAPI.staticPath = basePath;
+				script.setAttribute('src', jsUrl || basePath + 'FileAPI.min.js');
+				document.getElementsByTagName('head')[0].appendChild(script);
+				FileAPI.hasFlash = hasFlash();
+			}
+		})();
+		
+		FileAPI.ngfFixIE = function(elem, createFileElemFn, bindAttr, changeFn, resetModel) {
+			if (!hasFlash()) {
+				throw 'Adode Flash Player need to be installed. To check ahead use "FileAPI.hasFlash"';
+			}
+			var makeFlashInput = function(evt) {
+				if (elem.attr('disabled')) {
+					elem.__ngf_elem__.removeClass('js-fileapi-wrapper');
+				} else {
+					var fileElem = elem.__ngf_elem__;
+					if (!fileElem) {
+						fileElem = elem.__ngf_elem__ = createFileElemFn();
+						fileElem.addClass('js-fileapi-wrapper');
+						if (!isInputTypeFile(elem)) {
+	//						if (fileElem.parent().css('position') === '' || fileElem.parent().css('position') === 'static') {
+	//							fileElem.parent().css('position', 'relative');
+	//						}
+	//						elem.parent()[0].insertBefore(fileElem[0], elem[0]);
+	//						elem.css('overflow', 'hidden');
+						}
+						setTimeout(function() {
+							fileElem.bind('mouseenter', makeFlashInput);
+						}, 10);
+						fileElem.bind('change', function(evt) {
+					    	fileApiChangeFn.apply(this, [evt]);
+							changeFn.apply(this, [evt]);
+	//						alert('change' +  evt);
+						});
+					} else {
+						bindAttr(elem.__ngf_elem__);
+					}
+					if (!isInputTypeFile(elem)) {
+						fileElem.css('position', 'absolute')
+								.css('top', getOffset(elem[0]).top + 'px').css('left', getOffset(elem[0]).left + 'px')
+								.css('width', elem[0].offsetWidth + 'px').css('height', elem[0].offsetHeight + 'px')
+								.css('filter', 'alpha(opacity=0)').css('display', elem.css('display'))
+								.css('overflow', 'hidden').css('z-index', '900000')
+								.css('visibility', 'visible');
+					}
+				}
+				function getOffset(obj) {
+				    var left, top;
+				    left = top = 0;
+				    if (obj.offsetParent) {
+				        do {
+				            left += obj.offsetLeft;
+				            top  += obj.offsetTop;
+				        } while (obj = obj.offsetParent);
+				    }
+				    return {
+				        left : left,
+				        top : top
+				    };
+				};
+			};
+	
+			elem.bind('mouseenter', makeFlashInput);
+	
+			var fileApiChangeFn = function(evt) {
+				var files = FileAPI.getFiles(evt);
+				//just a double check for #233
+				for (var i = 0; i < files.length; i++) {
+					if (files[i].size === undefined) files[i].size = 0;
+					if (files[i].name === undefined) files[i].name = 'file';
+					if (files[i].type === undefined) files[i].type = 'undefined';
+				}
+				if (!evt.target) {
+					evt.target = {};
+				}
+				evt.target.files = files;
+				// if evt.target.files is not writable use helper field
+				if (evt.target.files != files) {
+					evt.__files_ = files;
+				}
+				(evt.__files_ || evt.target.files).item = function(i) {
+					return (evt.__files_ || evt.target.files)[i] || null;
+				};
+			};
+		};
+	
+		FileAPI.disableFileInput = function(elem, disable) {
+			if (disable) {
+				elem.removeClass('js-fileapi-wrapper')
+			} else {
+				elem.addClass('js-fileapi-wrapper');
+			}
+		};
+	}
+	
+	
+	if (!window.FileReader) {
+		window.FileReader = function() {
+			var _this = this, loadStarted = false;
+			this.listeners = {};
+			this.addEventListener = function(type, fn) {
+				_this.listeners[type] = _this.listeners[type] || [];
+				_this.listeners[type].push(fn);
+			};
+			this.removeEventListener = function(type, fn) {
+				_this.listeners[type] && _this.listeners[type].splice(_this.listeners[type].indexOf(fn), 1);
+			};
+			this.dispatchEvent = function(evt) {
+				var list = _this.listeners[evt.type];
+				if (list) {
+					for (var i = 0; i < list.length; i++) {
+						list[i].call(_this, evt);
+					}
+				}
+			};
+			this.onabort = this.onerror = this.onload = this.onloadstart = this.onloadend = this.onprogress = null;
+	
+			var constructEvent = function(type, evt) {
+				var e = {type: type, target: _this, loaded: evt.loaded, total: evt.total, error: evt.error};
+				if (evt.result != null) e.target.result = evt.result;
+				return e;
+			};
+			var listener = function(evt) {
+				if (!loadStarted) {
+					loadStarted = true;
+					_this.onloadstart && _this.onloadstart(constructEvent('loadstart', evt));
+				}
+				if (evt.type === 'load') {
+					_this.onloadend && _this.onloadend(constructEvent('loadend', evt));
+					var e = constructEvent('load', evt);
+					_this.onload && _this.onload(e);
+					_this.dispatchEvent(e);
+				} else if (evt.type === 'progress') {
+					var e = constructEvent('progress', evt);
+					_this.onprogress && _this.onprogress(e);
+					_this.dispatchEvent(e);
+				} else {
+					var e = constructEvent('error', evt);
+					_this.onerror && _this.onerror(e);
+					_this.dispatchEvent(e);
+				}
+			};
+			this.readAsArrayBuffer = function(file) {
+				FileAPI.readAsBinaryString(file, listener);
+			}
+			this.readAsBinaryString = function(file) {
+				FileAPI.readAsBinaryString(file, listener);
+			}
+			this.readAsDataURL = function(file) {
+				FileAPI.readAsDataURL(file, listener);
+			}
+			this.readAsText = function(file) {
+				FileAPI.readAsText(file, listener);
+			}
+		}
+	}
+	})();
+
+
+/***/ },
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -20828,7 +20200,7 @@
 
 
 /***/ },
-/* 16 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var require;/**
@@ -47140,6 +46512,634 @@
 	})(window, document);
 	
 	!window.angular.$$csp() && window.angular.element(document).find('head').prepend('<style type="text/css">@charset "UTF-8";[ng\\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide:not(.ng-hide-animate){display:none !important;}ng\\:form{display:block;}</style>');
+
+/***/ },
+/* 16 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * @license AngularJS v1.3.15
+	 * (c) 2010-2014 Google, Inc. http://angularjs.org
+	 * License: MIT
+	 */
+	(function(window, angular, undefined) {'use strict';
+	
+	/**
+	 * @ngdoc module
+	 * @name ngTouch
+	 * @description
+	 *
+	 * # ngTouch
+	 *
+	 * The `ngTouch` module provides touch events and other helpers for touch-enabled devices.
+	 * The implementation is based on jQuery Mobile touch event handling
+	 * ([jquerymobile.com](http://jquerymobile.com/)).
+	 *
+	 *
+	 * See {@link ngTouch.$swipe `$swipe`} for usage.
+	 *
+	 * <div doc-module-components="ngTouch"></div>
+	 *
+	 */
+	
+	// define ngTouch module
+	/* global -ngTouch */
+	var ngTouch = angular.module('ngTouch', []);
+	
+	/* global ngTouch: false */
+	
+	    /**
+	     * @ngdoc service
+	     * @name $swipe
+	     *
+	     * @description
+	     * The `$swipe` service is a service that abstracts the messier details of hold-and-drag swipe
+	     * behavior, to make implementing swipe-related directives more convenient.
+	     *
+	     * Requires the {@link ngTouch `ngTouch`} module to be installed.
+	     *
+	     * `$swipe` is used by the `ngSwipeLeft` and `ngSwipeRight` directives in `ngTouch`, and by
+	     * `ngCarousel` in a separate component.
+	     *
+	     * # Usage
+	     * The `$swipe` service is an object with a single method: `bind`. `bind` takes an element
+	     * which is to be watched for swipes, and an object with four handler functions. See the
+	     * documentation for `bind` below.
+	     */
+	
+	ngTouch.factory('$swipe', [function() {
+	  // The total distance in any direction before we make the call on swipe vs. scroll.
+	  var MOVE_BUFFER_RADIUS = 10;
+	
+	  var POINTER_EVENTS = {
+	    'mouse': {
+	      start: 'mousedown',
+	      move: 'mousemove',
+	      end: 'mouseup'
+	    },
+	    'touch': {
+	      start: 'touchstart',
+	      move: 'touchmove',
+	      end: 'touchend',
+	      cancel: 'touchcancel'
+	    }
+	  };
+	
+	  function getCoordinates(event) {
+	    var touches = event.touches && event.touches.length ? event.touches : [event];
+	    var e = (event.changedTouches && event.changedTouches[0]) ||
+	        (event.originalEvent && event.originalEvent.changedTouches &&
+	            event.originalEvent.changedTouches[0]) ||
+	        touches[0].originalEvent || touches[0];
+	
+	    return {
+	      x: e.clientX,
+	      y: e.clientY
+	    };
+	  }
+	
+	  function getEvents(pointerTypes, eventType) {
+	    var res = [];
+	    angular.forEach(pointerTypes, function(pointerType) {
+	      var eventName = POINTER_EVENTS[pointerType][eventType];
+	      if (eventName) {
+	        res.push(eventName);
+	      }
+	    });
+	    return res.join(' ');
+	  }
+	
+	  return {
+	    /**
+	     * @ngdoc method
+	     * @name $swipe#bind
+	     *
+	     * @description
+	     * The main method of `$swipe`. It takes an element to be watched for swipe motions, and an
+	     * object containing event handlers.
+	     * The pointer types that should be used can be specified via the optional
+	     * third argument, which is an array of strings `'mouse'` and `'touch'`. By default,
+	     * `$swipe` will listen for `mouse` and `touch` events.
+	     *
+	     * The four events are `start`, `move`, `end`, and `cancel`. `start`, `move`, and `end`
+	     * receive as a parameter a coordinates object of the form `{ x: 150, y: 310 }`.
+	     *
+	     * `start` is called on either `mousedown` or `touchstart`. After this event, `$swipe` is
+	     * watching for `touchmove` or `mousemove` events. These events are ignored until the total
+	     * distance moved in either dimension exceeds a small threshold.
+	     *
+	     * Once this threshold is exceeded, either the horizontal or vertical delta is greater.
+	     * - If the horizontal distance is greater, this is a swipe and `move` and `end` events follow.
+	     * - If the vertical distance is greater, this is a scroll, and we let the browser take over.
+	     *   A `cancel` event is sent.
+	     *
+	     * `move` is called on `mousemove` and `touchmove` after the above logic has determined that
+	     * a swipe is in progress.
+	     *
+	     * `end` is called when a swipe is successfully completed with a `touchend` or `mouseup`.
+	     *
+	     * `cancel` is called either on a `touchcancel` from the browser, or when we begin scrolling
+	     * as described above.
+	     *
+	     */
+	    bind: function(element, eventHandlers, pointerTypes) {
+	      // Absolute total movement, used to control swipe vs. scroll.
+	      var totalX, totalY;
+	      // Coordinates of the start position.
+	      var startCoords;
+	      // Last event's position.
+	      var lastPos;
+	      // Whether a swipe is active.
+	      var active = false;
+	
+	      pointerTypes = pointerTypes || ['mouse', 'touch'];
+	      element.on(getEvents(pointerTypes, 'start'), function(event) {
+	        startCoords = getCoordinates(event);
+	        active = true;
+	        totalX = 0;
+	        totalY = 0;
+	        lastPos = startCoords;
+	        eventHandlers['start'] && eventHandlers['start'](startCoords, event);
+	      });
+	      var events = getEvents(pointerTypes, 'cancel');
+	      if (events) {
+	        element.on(events, function(event) {
+	          active = false;
+	          eventHandlers['cancel'] && eventHandlers['cancel'](event);
+	        });
+	      }
+	
+	      element.on(getEvents(pointerTypes, 'move'), function(event) {
+	        if (!active) return;
+	
+	        // Android will send a touchcancel if it thinks we're starting to scroll.
+	        // So when the total distance (+ or - or both) exceeds 10px in either direction,
+	        // we either:
+	        // - On totalX > totalY, we send preventDefault() and treat this as a swipe.
+	        // - On totalY > totalX, we let the browser handle it as a scroll.
+	
+	        if (!startCoords) return;
+	        var coords = getCoordinates(event);
+	
+	        totalX += Math.abs(coords.x - lastPos.x);
+	        totalY += Math.abs(coords.y - lastPos.y);
+	
+	        lastPos = coords;
+	
+	        if (totalX < MOVE_BUFFER_RADIUS && totalY < MOVE_BUFFER_RADIUS) {
+	          return;
+	        }
+	
+	        // One of totalX or totalY has exceeded the buffer, so decide on swipe vs. scroll.
+	        if (totalY > totalX) {
+	          // Allow native scrolling to take over.
+	          active = false;
+	          eventHandlers['cancel'] && eventHandlers['cancel'](event);
+	          return;
+	        } else {
+	          // Prevent the browser from scrolling.
+	          event.preventDefault();
+	          eventHandlers['move'] && eventHandlers['move'](coords, event);
+	        }
+	      });
+	
+	      element.on(getEvents(pointerTypes, 'end'), function(event) {
+	        if (!active) return;
+	        active = false;
+	        eventHandlers['end'] && eventHandlers['end'](getCoordinates(event), event);
+	      });
+	    }
+	  };
+	}]);
+	
+	/* global ngTouch: false */
+	
+	/**
+	 * @ngdoc directive
+	 * @name ngClick
+	 *
+	 * @description
+	 * A more powerful replacement for the default ngClick designed to be used on touchscreen
+	 * devices. Most mobile browsers wait about 300ms after a tap-and-release before sending
+	 * the click event. This version handles them immediately, and then prevents the
+	 * following click event from propagating.
+	 *
+	 * Requires the {@link ngTouch `ngTouch`} module to be installed.
+	 *
+	 * This directive can fall back to using an ordinary click event, and so works on desktop
+	 * browsers as well as mobile.
+	 *
+	 * This directive also sets the CSS class `ng-click-active` while the element is being held
+	 * down (by a mouse click or touch) so you can restyle the depressed element if you wish.
+	 *
+	 * @element ANY
+	 * @param {expression} ngClick {@link guide/expression Expression} to evaluate
+	 * upon tap. (Event object is available as `$event`)
+	 *
+	 * @example
+	    <example module="ngClickExample" deps="angular-touch.js">
+	      <file name="index.html">
+	        <button ng-click="count = count + 1" ng-init="count=0">
+	          Increment
+	        </button>
+	        count: {{ count }}
+	      </file>
+	      <file name="script.js">
+	        angular.module('ngClickExample', ['ngTouch']);
+	      </file>
+	    </example>
+	 */
+	
+	ngTouch.config(['$provide', function($provide) {
+	  $provide.decorator('ngClickDirective', ['$delegate', function($delegate) {
+	    // drop the default ngClick directive
+	    $delegate.shift();
+	    return $delegate;
+	  }]);
+	}]);
+	
+	ngTouch.directive('ngClick', ['$parse', '$timeout', '$rootElement',
+	    function($parse, $timeout, $rootElement) {
+	  var TAP_DURATION = 750; // Shorter than 750ms is a tap, longer is a taphold or drag.
+	  var MOVE_TOLERANCE = 12; // 12px seems to work in most mobile browsers.
+	  var PREVENT_DURATION = 2500; // 2.5 seconds maximum from preventGhostClick call to click
+	  var CLICKBUSTER_THRESHOLD = 25; // 25 pixels in any dimension is the limit for busting clicks.
+	
+	  var ACTIVE_CLASS_NAME = 'ng-click-active';
+	  var lastPreventedTime;
+	  var touchCoordinates;
+	  var lastLabelClickCoordinates;
+	
+	
+	  // TAP EVENTS AND GHOST CLICKS
+	  //
+	  // Why tap events?
+	  // Mobile browsers detect a tap, then wait a moment (usually ~300ms) to see if you're
+	  // double-tapping, and then fire a click event.
+	  //
+	  // This delay sucks and makes mobile apps feel unresponsive.
+	  // So we detect touchstart, touchmove, touchcancel and touchend ourselves and determine when
+	  // the user has tapped on something.
+	  //
+	  // What happens when the browser then generates a click event?
+	  // The browser, of course, also detects the tap and fires a click after a delay. This results in
+	  // tapping/clicking twice. We do "clickbusting" to prevent it.
+	  //
+	  // How does it work?
+	  // We attach global touchstart and click handlers, that run during the capture (early) phase.
+	  // So the sequence for a tap is:
+	  // - global touchstart: Sets an "allowable region" at the point touched.
+	  // - element's touchstart: Starts a touch
+	  // (- touchmove or touchcancel ends the touch, no click follows)
+	  // - element's touchend: Determines if the tap is valid (didn't move too far away, didn't hold
+	  //   too long) and fires the user's tap handler. The touchend also calls preventGhostClick().
+	  // - preventGhostClick() removes the allowable region the global touchstart created.
+	  // - The browser generates a click event.
+	  // - The global click handler catches the click, and checks whether it was in an allowable region.
+	  //     - If preventGhostClick was called, the region will have been removed, the click is busted.
+	  //     - If the region is still there, the click proceeds normally. Therefore clicks on links and
+	  //       other elements without ngTap on them work normally.
+	  //
+	  // This is an ugly, terrible hack!
+	  // Yeah, tell me about it. The alternatives are using the slow click events, or making our users
+	  // deal with the ghost clicks, so I consider this the least of evils. Fortunately Angular
+	  // encapsulates this ugly logic away from the user.
+	  //
+	  // Why not just put click handlers on the element?
+	  // We do that too, just to be sure. If the tap event caused the DOM to change,
+	  // it is possible another element is now in that position. To take account for these possibly
+	  // distinct elements, the handlers are global and care only about coordinates.
+	
+	  // Checks if the coordinates are close enough to be within the region.
+	  function hit(x1, y1, x2, y2) {
+	    return Math.abs(x1 - x2) < CLICKBUSTER_THRESHOLD && Math.abs(y1 - y2) < CLICKBUSTER_THRESHOLD;
+	  }
+	
+	  // Checks a list of allowable regions against a click location.
+	  // Returns true if the click should be allowed.
+	  // Splices out the allowable region from the list after it has been used.
+	  function checkAllowableRegions(touchCoordinates, x, y) {
+	    for (var i = 0; i < touchCoordinates.length; i += 2) {
+	      if (hit(touchCoordinates[i], touchCoordinates[i + 1], x, y)) {
+	        touchCoordinates.splice(i, i + 2);
+	        return true; // allowable region
+	      }
+	    }
+	    return false; // No allowable region; bust it.
+	  }
+	
+	  // Global click handler that prevents the click if it's in a bustable zone and preventGhostClick
+	  // was called recently.
+	  function onClick(event) {
+	    if (Date.now() - lastPreventedTime > PREVENT_DURATION) {
+	      return; // Too old.
+	    }
+	
+	    var touches = event.touches && event.touches.length ? event.touches : [event];
+	    var x = touches[0].clientX;
+	    var y = touches[0].clientY;
+	    // Work around desktop Webkit quirk where clicking a label will fire two clicks (on the label
+	    // and on the input element). Depending on the exact browser, this second click we don't want
+	    // to bust has either (0,0), negative coordinates, or coordinates equal to triggering label
+	    // click event
+	    if (x < 1 && y < 1) {
+	      return; // offscreen
+	    }
+	    if (lastLabelClickCoordinates &&
+	        lastLabelClickCoordinates[0] === x && lastLabelClickCoordinates[1] === y) {
+	      return; // input click triggered by label click
+	    }
+	    // reset label click coordinates on first subsequent click
+	    if (lastLabelClickCoordinates) {
+	      lastLabelClickCoordinates = null;
+	    }
+	    // remember label click coordinates to prevent click busting of trigger click event on input
+	    if (event.target.tagName.toLowerCase() === 'label') {
+	      lastLabelClickCoordinates = [x, y];
+	    }
+	
+	    // Look for an allowable region containing this click.
+	    // If we find one, that means it was created by touchstart and not removed by
+	    // preventGhostClick, so we don't bust it.
+	    if (checkAllowableRegions(touchCoordinates, x, y)) {
+	      return;
+	    }
+	
+	    // If we didn't find an allowable region, bust the click.
+	    event.stopPropagation();
+	    event.preventDefault();
+	
+	    // Blur focused form elements
+	    event.target && event.target.blur();
+	  }
+	
+	
+	  // Global touchstart handler that creates an allowable region for a click event.
+	  // This allowable region can be removed by preventGhostClick if we want to bust it.
+	  function onTouchStart(event) {
+	    var touches = event.touches && event.touches.length ? event.touches : [event];
+	    var x = touches[0].clientX;
+	    var y = touches[0].clientY;
+	    touchCoordinates.push(x, y);
+	
+	    $timeout(function() {
+	      // Remove the allowable region.
+	      for (var i = 0; i < touchCoordinates.length; i += 2) {
+	        if (touchCoordinates[i] == x && touchCoordinates[i + 1] == y) {
+	          touchCoordinates.splice(i, i + 2);
+	          return;
+	        }
+	      }
+	    }, PREVENT_DURATION, false);
+	  }
+	
+	  // On the first call, attaches some event handlers. Then whenever it gets called, it creates a
+	  // zone around the touchstart where clicks will get busted.
+	  function preventGhostClick(x, y) {
+	    if (!touchCoordinates) {
+	      $rootElement[0].addEventListener('click', onClick, true);
+	      $rootElement[0].addEventListener('touchstart', onTouchStart, true);
+	      touchCoordinates = [];
+	    }
+	
+	    lastPreventedTime = Date.now();
+	
+	    checkAllowableRegions(touchCoordinates, x, y);
+	  }
+	
+	  // Actual linking function.
+	  return function(scope, element, attr) {
+	    var clickHandler = $parse(attr.ngClick),
+	        tapping = false,
+	        tapElement,  // Used to blur the element after a tap.
+	        startTime,   // Used to check if the tap was held too long.
+	        touchStartX,
+	        touchStartY;
+	
+	    function resetState() {
+	      tapping = false;
+	      element.removeClass(ACTIVE_CLASS_NAME);
+	    }
+	
+	    element.on('touchstart', function(event) {
+	      tapping = true;
+	      tapElement = event.target ? event.target : event.srcElement; // IE uses srcElement.
+	      // Hack for Safari, which can target text nodes instead of containers.
+	      if (tapElement.nodeType == 3) {
+	        tapElement = tapElement.parentNode;
+	      }
+	
+	      element.addClass(ACTIVE_CLASS_NAME);
+	
+	      startTime = Date.now();
+	
+	      var touches = event.touches && event.touches.length ? event.touches : [event];
+	      var e = touches[0].originalEvent || touches[0];
+	      touchStartX = e.clientX;
+	      touchStartY = e.clientY;
+	    });
+	
+	    element.on('touchmove', function(event) {
+	      resetState();
+	    });
+	
+	    element.on('touchcancel', function(event) {
+	      resetState();
+	    });
+	
+	    element.on('touchend', function(event) {
+	      var diff = Date.now() - startTime;
+	
+	      var touches = (event.changedTouches && event.changedTouches.length) ? event.changedTouches :
+	          ((event.touches && event.touches.length) ? event.touches : [event]);
+	      var e = touches[0].originalEvent || touches[0];
+	      var x = e.clientX;
+	      var y = e.clientY;
+	      var dist = Math.sqrt(Math.pow(x - touchStartX, 2) + Math.pow(y - touchStartY, 2));
+	
+	      if (tapping && diff < TAP_DURATION && dist < MOVE_TOLERANCE) {
+	        // Call preventGhostClick so the clickbuster will catch the corresponding click.
+	        preventGhostClick(x, y);
+	
+	        // Blur the focused element (the button, probably) before firing the callback.
+	        // This doesn't work perfectly on Android Chrome, but seems to work elsewhere.
+	        // I couldn't get anything to work reliably on Android Chrome.
+	        if (tapElement) {
+	          tapElement.blur();
+	        }
+	
+	        if (!angular.isDefined(attr.disabled) || attr.disabled === false) {
+	          element.triggerHandler('click', [event]);
+	        }
+	      }
+	
+	      resetState();
+	    });
+	
+	    // Hack for iOS Safari's benefit. It goes searching for onclick handlers and is liable to click
+	    // something else nearby.
+	    element.onclick = function(event) { };
+	
+	    // Actual click handler.
+	    // There are three different kinds of clicks, only two of which reach this point.
+	    // - On desktop browsers without touch events, their clicks will always come here.
+	    // - On mobile browsers, the simulated "fast" click will call this.
+	    // - But the browser's follow-up slow click will be "busted" before it reaches this handler.
+	    // Therefore it's safe to use this directive on both mobile and desktop.
+	    element.on('click', function(event, touchend) {
+	      scope.$apply(function() {
+	        clickHandler(scope, {$event: (touchend || event)});
+	      });
+	    });
+	
+	    element.on('mousedown', function(event) {
+	      element.addClass(ACTIVE_CLASS_NAME);
+	    });
+	
+	    element.on('mousemove mouseup', function(event) {
+	      element.removeClass(ACTIVE_CLASS_NAME);
+	    });
+	
+	  };
+	}]);
+	
+	/* global ngTouch: false */
+	
+	/**
+	 * @ngdoc directive
+	 * @name ngSwipeLeft
+	 *
+	 * @description
+	 * Specify custom behavior when an element is swiped to the left on a touchscreen device.
+	 * A leftward swipe is a quick, right-to-left slide of the finger.
+	 * Though ngSwipeLeft is designed for touch-based devices, it will work with a mouse click and drag
+	 * too.
+	 *
+	 * To disable the mouse click and drag functionality, add `ng-swipe-disable-mouse` to
+	 * the `ng-swipe-left` or `ng-swipe-right` DOM Element.
+	 *
+	 * Requires the {@link ngTouch `ngTouch`} module to be installed.
+	 *
+	 * @element ANY
+	 * @param {expression} ngSwipeLeft {@link guide/expression Expression} to evaluate
+	 * upon left swipe. (Event object is available as `$event`)
+	 *
+	 * @example
+	    <example module="ngSwipeLeftExample" deps="angular-touch.js">
+	      <file name="index.html">
+	        <div ng-show="!showActions" ng-swipe-left="showActions = true">
+	          Some list content, like an email in the inbox
+	        </div>
+	        <div ng-show="showActions" ng-swipe-right="showActions = false">
+	          <button ng-click="reply()">Reply</button>
+	          <button ng-click="delete()">Delete</button>
+	        </div>
+	      </file>
+	      <file name="script.js">
+	        angular.module('ngSwipeLeftExample', ['ngTouch']);
+	      </file>
+	    </example>
+	 */
+	
+	/**
+	 * @ngdoc directive
+	 * @name ngSwipeRight
+	 *
+	 * @description
+	 * Specify custom behavior when an element is swiped to the right on a touchscreen device.
+	 * A rightward swipe is a quick, left-to-right slide of the finger.
+	 * Though ngSwipeRight is designed for touch-based devices, it will work with a mouse click and drag
+	 * too.
+	 *
+	 * Requires the {@link ngTouch `ngTouch`} module to be installed.
+	 *
+	 * @element ANY
+	 * @param {expression} ngSwipeRight {@link guide/expression Expression} to evaluate
+	 * upon right swipe. (Event object is available as `$event`)
+	 *
+	 * @example
+	    <example module="ngSwipeRightExample" deps="angular-touch.js">
+	      <file name="index.html">
+	        <div ng-show="!showActions" ng-swipe-left="showActions = true">
+	          Some list content, like an email in the inbox
+	        </div>
+	        <div ng-show="showActions" ng-swipe-right="showActions = false">
+	          <button ng-click="reply()">Reply</button>
+	          <button ng-click="delete()">Delete</button>
+	        </div>
+	      </file>
+	      <file name="script.js">
+	        angular.module('ngSwipeRightExample', ['ngTouch']);
+	      </file>
+	    </example>
+	 */
+	
+	function makeSwipeDirective(directiveName, direction, eventName) {
+	  ngTouch.directive(directiveName, ['$parse', '$swipe', function($parse, $swipe) {
+	    // The maximum vertical delta for a swipe should be less than 75px.
+	    var MAX_VERTICAL_DISTANCE = 75;
+	    // Vertical distance should not be more than a fraction of the horizontal distance.
+	    var MAX_VERTICAL_RATIO = 0.3;
+	    // At least a 30px lateral motion is necessary for a swipe.
+	    var MIN_HORIZONTAL_DISTANCE = 30;
+	
+	    return function(scope, element, attr) {
+	      var swipeHandler = $parse(attr[directiveName]);
+	
+	      var startCoords, valid;
+	
+	      function validSwipe(coords) {
+	        // Check that it's within the coordinates.
+	        // Absolute vertical distance must be within tolerances.
+	        // Horizontal distance, we take the current X - the starting X.
+	        // This is negative for leftward swipes and positive for rightward swipes.
+	        // After multiplying by the direction (-1 for left, +1 for right), legal swipes
+	        // (ie. same direction as the directive wants) will have a positive delta and
+	        // illegal ones a negative delta.
+	        // Therefore this delta must be positive, and larger than the minimum.
+	        if (!startCoords) return false;
+	        var deltaY = Math.abs(coords.y - startCoords.y);
+	        var deltaX = (coords.x - startCoords.x) * direction;
+	        return valid && // Short circuit for already-invalidated swipes.
+	            deltaY < MAX_VERTICAL_DISTANCE &&
+	            deltaX > 0 &&
+	            deltaX > MIN_HORIZONTAL_DISTANCE &&
+	            deltaY / deltaX < MAX_VERTICAL_RATIO;
+	      }
+	
+	      var pointerTypes = ['touch'];
+	      if (!angular.isDefined(attr['ngSwipeDisableMouse'])) {
+	        pointerTypes.push('mouse');
+	      }
+	      $swipe.bind(element, {
+	        'start': function(coords, event) {
+	          startCoords = coords;
+	          valid = true;
+	        },
+	        'cancel': function(event) {
+	          valid = false;
+	        },
+	        'end': function(coords, event) {
+	          if (validSwipe(coords)) {
+	            scope.$apply(function() {
+	              element.triggerHandler(eventName);
+	              swipeHandler(scope, {$event: event});
+	            });
+	          }
+	        }
+	      }, pointerTypes);
+	    };
+	  }]);
+	}
+	
+	// Left is negative X-coordinate, right is positive.
+	makeSwipeDirective('ngSwipeLeft', -1, 'swipeleft');
+	makeSwipeDirective('ngSwipeRight', 1, 'swiperight');
+	
+	
+	
+	})(window, window.angular);
+
 
 /***/ },
 /* 17 */

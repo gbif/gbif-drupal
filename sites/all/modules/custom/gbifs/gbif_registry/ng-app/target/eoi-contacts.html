@@ -36,9 +36,9 @@
     </div>
     <div class="form-group">
       <label for="orgUrl">URL</label>
-      <input type="url" class="form-control org-url" ng-model="eoiCtrl.formData.org.url" name="ourl" id="orgUrl">
+      <input type="url" class="form-control org-url" ng-model="eoiCtrl.formData.org.url" name="ourl" id="orgUrl" placeholder="http:// or https:// + xxx.xx.xx">
       <div ng-show="eoiForm.ourl.$dirty">
-        <span ng-show="eoiForm.ourl.$invalid">Incorrect URL</span>
+        <span class="highlight" ng-show="eoiForm.ourl.$invalid">Incorrect URL. Please include protocol http:// or https://.</span>
       </div>
     </div>
     <div class="form-group">

@@ -187,7 +187,8 @@ function gbif_registry_eoi_form_data() {
 						else {
 							$message = t('Failed to send notifications for EOI case !file.', array('!file' => $file_destination));
 							watchdog('gbif_registry', $message, NULL, WATCHDOG_ERROR);
-							// @todo send alert to admin.
+							$params = $json;
+							drupal_mail('gbif_registry', 'alert', EMAIL_ADMIN, language_default(), $params, EMAIL_HELPDESK, TRUE);
 							header('HTTP/1.1 202 Accepted');
 							drupal_json_output(array('message' => 'The submitted data is queued. You will be contacted shortly via email.'));
 						}
@@ -582,6 +583,10 @@ function gbif_registry_mail($key, &$message, $params) {
 		case 'reminder':
 			$message = _gbif_registry_weekly_reminder($message, $params, $options);
 			break;
+		// Alert to admin.
+		case 'alert':
+			$message = _gbif_registry_alert($message, $params, $options);
+			break;
 	}
 }
 
@@ -621,8 +626,7 @@ function gbif_registry_eoi_notifications($json) {
 	$node_manager = _gbif_registry_find_contact($params['endorsement']['endorsingParticipant'], 'NODE_MANAGER');
 
 	$notifications = array(
-		//'notify_endorsing_node_manager' => $node_manager['email'][0], @todo uncomment when releasing.
-		'notify_endorsing_node_manager' => EMAIL_ADMIN,
+		'notify_endorsing_node_manager' => $node_manager['email'][0],
 		'notify_eoi_contact' => $params['contact']['email'],
 		'notify_helpdesk' => EMAIL_HELPDESK,
 	);

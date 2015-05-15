@@ -168,6 +168,17 @@ function _gbif_registry_weekly_reminder(&$message, $params, $options) {
 	return $message;
 }
 
+function _gbif_registry_alert(&$message, $params, $options) {
+	$message['subject'] = t('Failed notification detected', array(), $options);
+
+	// Note that the message body is an array, not a string.
+	$message['body'][] = t('Hi Drupal admin,', array(), $options);
+	$message['body'][] = t('A failed attempt to send a notification for an endorsement case of @org-title has been recorded. Please log on to follow.', array('@org-title' => $params['org']['title']), $options);
+	$message['body'][] = t('Cheers,');
+	$message['body'][] = t('Portal Drupal');
+	return $message;
+}
+
 function _gbif_registry_add_attachments(&$message, $params, $options) {
   // if attachments are available
   if (isset($params['attachment'])) {

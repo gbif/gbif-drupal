@@ -83,9 +83,11 @@
 ?>
 <article id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?> clearfix"<?php print $attributes; ?>>
   <div class="node-featured">
-    <?php if (!empty($field_featured)) {
-      print render(field_view_field('node', $node, 'field_featured', array('settings' => array('image_style' => 'featured'))));
-    } ?>
+    <?php
+      if (!empty($field_featured)) {
+        print render(field_view_field('node', $node, 'field_featured', array('settings' => array('image_style' => 'featured'))));
+      }
+    ?>
     <?php if (!empty($title)): ?>
       <h2<?php print $title_attributes; ?>><a href="<?php print $node_url; ?>"><?php print $title; ?></a></h2>
     <?php endif; ?>

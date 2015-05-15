@@ -349,7 +349,7 @@ function gbif_registry_create_organisation($json, $user) {
 			'numPublishedDatasets' => ''
 		);
     if (!empty($json['org']['url'])) $data['homepage'] = array($json['org']['url']);
-    if (!empty($json['org']['province'])) $data['province'] = array($json['org']['province']);
+    if (!empty($json['org']['province'])) $data['province'] = $json['org']['province'];
 		$data_json = json_encode($data);
 
 		// MD5 Digest $data to be posted.

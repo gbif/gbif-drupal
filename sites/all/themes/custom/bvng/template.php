@@ -190,7 +190,7 @@ function bvng_preprocess_page(&$variables) {
   }
 
 	if (!isset($variables['page']['highlighted_title'])) {
-		$variables['page']['highlighted_title'] = _bvng_get_title_data($node_count, $variables['user'], $req_path, $variables['node']);
+		$variables['page']['highlighted_title'] = _bvng_get_title_data($node_count, $variables['user'], $req_path, isset($variables['node']) ? $variables['node'] : NULL);
 	}
 
   // Manually set page title.
@@ -365,15 +365,21 @@ function bvng_preprocess_node(&$variables) {
    */
   if ($variables['node']) {
     switch ($variables['node']->type) {
-      default:
+      case 'newsarticle':
+      case 'usesofdata':
         $next_node = node_load(prev_next_nid($variables['node']->nid, 'prev'));
+        break;
+      default:
+        $next_node = false;
     }
-    $next_node = ($next_node->status == 1) ? $next_node : NULL; // Only refer to published node.
-		// Check whether an URL alias is available.
-		$url_alias = drupal_get_path_alias('node/' . $next_node->nid);
-		$next_node_url = (!empty($url_alias)) ? $url_alias : 'page/' . $next_node->nid;
-		$variables['next_node_link'] = l($next_node->title, $next_node_url);
-    $variables['next_node'] = $next_node;
+    if ($next_node !== false) {
+      $next_node = ($next_node->status == 1) ? $next_node : NULL; // Only refer to published node.
+      // Check whether an URL alias is available.
+      $url_alias = drupal_get_path_alias('node/' . $next_node->nid);
+      $next_node_url = (!empty($url_alias)) ? $url_alias : 'page/' . $next_node->nid;
+      $variables['next_node_link'] = l($next_node->title, $next_node_url);
+      $variables['next_node'] = $next_node;
+    }
   }
 
   /* Prepare $cchunks, $anchors and $elinks for type "generictemplate"
@@ -406,9 +412,11 @@ function bvng_preprocess_node(&$variables) {
     	  $field_links = array();
         $field_links[] = field_get_items('field_collection_item', $cchunk, $sidebar_field);
         foreach ($field_links as $i => $field_link) {
-          foreach ($field_link as $f_link) {
-            $cat_var = &$$var;
-          	$cat_var[$k][] = field_collection_item_load($f_link['value']);
+          if ($field_link != false) {
+            foreach ($field_link as $f_link) {
+              $cat_var = &$$var;
+              $cat_var[$k][] = field_collection_item_load($f_link['value']);
+            }
           }
         }
       }
@@ -1216,32 +1224,34 @@ function _bvng_get_also_tag_links($node) {
   $term_sources = _bvng_get_sidebar_tags_definition($node->type);
 
   // Get all the terms.
-  foreach ($term_sources as $term_source) {
-    $items = field_get_items('node', $node, $term_source);
-    if (is_array($items)) {
-    	foreach ($items as $item) {
-    		$terms[] = $item['tid'];
-    	}
+  if (isset($term_sources)) {
+    foreach ($term_sources as $term_source) {
+      $items = field_get_items('node', $node, $term_source);
+      if (is_array($items)) {
+        foreach ($items as $item) {
+          $terms[] = $item['tid'];
+        }
+      }
     }
+    $item_list = array(
+      'items' => array(),
+    );
+
+    _bvng_get_tag_links($terms, $item_list);
+
+    $term_links = '';
+
+    if (!empty($item_list['items'])) {
+      $term_links = t('Also tagged') . ':' . '<ul class="also-tagged">';
+      foreach ($item_list['items'] as $tag_link) {
+        $term_links .= '<li>' . $tag_link['data'] . '</li>';
+      }
+      $term_links .= '</ul>';
+    }
+    return $term_links;
   }
 
-	$item_list = array(
-	 'items' => array(),
-	);
-
-	_bvng_get_tag_links($terms, $item_list);
-
-	$term_links = '';
-
-	if (!empty($item_list['items'])) {
-		$term_links = t('Also tagged') . ':' . '<ul class="also-tagged">';
-		foreach ($item_list['items'] as $tag_link) {
-			$term_links .= '<li>' . $tag_link['data'] . '</li>';
-		}
-		$term_links .= '</ul>';
-	}
-
-	return $term_links;
+  return '';
 }
 
 /**

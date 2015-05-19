@@ -602,7 +602,10 @@ function gbif_registry_eoi_notifications($json) {
   $params = $json;
 	$params['mgt_url'] = $drupal_edit_base_url . '/admin/config/gbif/registry/eoi';
 
-	// determine the node url
+  // messaging behaviour will adjust according to the environment.
+  $params['test_environment'] = ($env['data_portal_base_url'] == 'http://www.gbif-dev.org' || $env['data_portal_base_url'] == 'http://www.gbif-uat.org' ) ? TRUE : FALSE;
+
+  // determine the node url
 	if ($params['endorsement']['endorsingParticipant']['type'] == 'COUNTRY' || $params['endorsement']['endorsingParticipant']['participantTitle'] == 'Chinese Taipei') {
 		$params['node_url'] = $env['data_portal_base_url'] . '/country/' . $params['endorsement']['endorsingParticipant']['country'];
 	}
@@ -625,10 +628,11 @@ function gbif_registry_eoi_notifications($json) {
 
 	$node_manager = _gbif_registry_find_contact($params['endorsement']['endorsingParticipant'], 'NODE_MANAGER');
 
+  // if this is test instance, then don't send emails to Node managers
 	$notifications = array(
-		'notify_endorsing_node_manager' => $node_manager['email'][0],
+		'notify_endorsing_node_manager' => ($params['test_environment'] == FALSE) ? $node_manager['email'][0] : EMAIL_ADMIN,
 		'notify_eoi_contact' => $params['contact']['email'],
-		'notify_helpdesk' => EMAIL_HELPDESK,
+		'notify_helpdesk' => ($params['test_environment'] == FALSE) ? EMAIL_HELPDESK : EMAIL_ADMIN,
 	);
 
 	$sent = array();
@@ -637,11 +641,14 @@ function gbif_registry_eoi_notifications($json) {
     // if the request is addressed to the Nodes Committee, then no message to
     // a Node manager.
     if ($params['endorsement']['beEndorsedByType'] == 'nc' && $key == 'notify_endorsing_node_manager') {
-			// do nothing
+      watchdog('gbif_registry', 'Seek arrangement from the Nodes Committee, no notification sent.', NULL, WATCHDOG_INFO);
     }
 		else {
 			$result = drupal_mail($module, $key, $to, $language, $params, $from, $send);
 			$params[$key_result] = $result['result'];
+      if ($result['result'] == TRUE) {
+        watchdog('gbif_registry', 'Notification sent to !receiver.', array('!receiver' => $to), WATCHDOG_INFO);
+      }
 			$sent[] = $result;
 		}
 	}
@@ -653,7 +660,7 @@ function gbif_registry_eoi_notifications($json) {
 	}
 
   if ($sent_result == TRUE) {
-		watchdog('gbif_registry', 'Your message has been sent.', NULL, WATCHDOG_INFO);
+		watchdog('gbif_registry', 'Your messages have been sent.', NULL, WATCHDOG_INFO);
 		return TRUE;
   }
   else {

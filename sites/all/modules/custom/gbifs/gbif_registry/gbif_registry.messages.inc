@@ -4,9 +4,16 @@
  */
 
 function _gbif_registry_notify_endorsing_node_manager($message, $params, $options) {
-  $message['subject'] = t('Endorsement request from @organisation-title', array('@organisation-title' => $params['org']['title']), $options);
+
+  $message['subject'] = t('@test_envEndorsement request from @organisation-title', array(
+    '@test_env' => ($params['test_environment'] == TRUE) ? '[TEST] ' : '',
+    '@organisation-title' => $params['org']['title']
+  ), $options);
 
   // Note that the message body is an array, not a string.
+  if ($params['test_environment'] == TRUE) {
+    $message['body'][] = t("====================================\nThis is test message. Please ignore.\nWe are sorry for interrupting.\n====================================", array(), $options);
+  }
   $message['body'][] = t('Dear Node Manager,', array(), $options);
   $message['body'][] = t("The organization '@organization-title' has submitted an expression of interest in registering as a new publisher in the GBIF network and has requested endorsement by the @node-name.", array('@organization-title' => $params['org']['title'], '@node-name' => $params['endorsement']['endorsingParticipant']['title']), $options);
   $message['body'][] = t('We ask you to review this request — the full text of which is included below — and consider this request for endorsement. If you approve it, the publisher "@organization-title" will be listed in the GBIF registry under your Participant node here: !node-url.', array('@organization-title' => $params['org']['title'], '!node-url' => $params['node_url']), $options);
@@ -23,9 +30,15 @@ function _gbif_registry_notify_endorsing_node_manager($message, $params, $option
 }
 
 function _gbif_registry_notify_eoi_contact($message, $params, $options) {
-  $message['subject'] = t('Expression of Interest from @org-title received', array('@org-title' => $params['org']['title']), $options);
+  $message['subject'] = t('@test_envExpression of Interest from @org-title received', array(
+    '@test_env' => ($params['test_environment'] == TRUE) ? '[TEST] ' : '',
+    '@org-title' => $params['org']['title']
+  ), $options);
 
   // Note that the message body is an array, not a string.
+  if ($params['test_environment'] == TRUE) {
+    $message['body'][] = t("====================================\nThis is test message. Please ignore.\nWe are sorry for interrupting.\n====================================", array(), $options);
+  }
   $message['body'][] = t('Dear @title @firstName @lastName,', array('@title' => $params['contact']['title'], '@firstName' => $params['contact']['firstName'], '@lastName' => $params['contact']['lastName']), $options);
   $message['body'][] = t('This email acknowledges receipt of your Expression of interest in publishing biodiversity data on GBIF.org on behalf of @org-title.', array('@org-title' => $params['org']['title']), $options);
   if ($params['endorsement']['beEndorsedByType'] == 'nc') {
@@ -42,9 +55,14 @@ function _gbif_registry_notify_eoi_contact($message, $params, $options) {
 }
 
 function _gbif_registry_notify_helpdesk($message, $params, $options) {
-  $message['subject'] = t('New expression of interest', array(), $options);
+  $message['subject'] = t('@test_envNew expression of interest', array(
+    '@test_env' => ($params['test_environment'] == TRUE) ? '[TEST] ' : '',
+  ), $options);
 
   // message body
+  if ($params['test_environment'] == TRUE) {
+    $message['body'][] = t("====================================\nThis is test message. Please ignore.\nWe are sorry for interrupting.\n====================================", array(), $options);
+  }
   $message['body'][] = t('Hi Helpdesk manager,', array(), $options);
   $message['body'][] = t('We have just received an Expression of interest from a potential new data publisher, @organization-title.', array('@organization-title' => $params['org']['title']), $options);
 

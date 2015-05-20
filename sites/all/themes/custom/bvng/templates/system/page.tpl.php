@@ -128,7 +128,9 @@
     <div class="row">
       <div id="region-highlighted" class="col-xs-12">
         <h1><?php print $page['highlighted_title']['name']; ?></h1>
+        <?php if (isset($page['highlighted_title']['description'])): ?>
         <h5><?php print $page['highlighted_title']['description']; ?></h5>
+        <?php endif; ?>
   			<?php if (!empty($page['highlighted'])): ?>
   			<?php print render($page['highlighted']); ?>
   			<?php endif; ?>

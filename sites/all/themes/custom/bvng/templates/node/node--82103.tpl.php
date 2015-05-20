@@ -130,9 +130,6 @@
 						<?php if (isset($content['service_links'])): ?>
 							<?php print render($content['service_links']); ?>
 						<?php endif; ?>
-            <?php
-              print $sidebar;
-            ?>
 						<p>If you wish to receive the latest newsletter, please <a href="/newsroom/summary#sign-up">subscribe here</a>.</p>
           </div>
         </div>
@@ -140,17 +137,3 @@
     </div>
   </div>
 </div>
-<?php if (!empty($next_node) && in_array($type, array('newsarticle', 'featurreddataset', 'useofdata'))): ?>
-<div class="container well well-lg well-margin-bottom">
-  <div class="row">
-    <article class="col-xs-12 node-next">
-      <div class="row">
-      	<header class="next-header col-xs-12">
-      		<h3>Next <?php print render($type_title); ?> Story</h3>
-      		<h2><?php print $next_node_link; ?></h2>
-      	</header>
-      </div>
-    </article>
-  </div>
-</div>
-<?php endif; ?>

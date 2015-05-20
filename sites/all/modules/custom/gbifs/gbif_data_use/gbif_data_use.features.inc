@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * gbif_legacy_news.features.inc
+ * gbif_data_use.features.inc
  */
 
 /**
  * Implements hook_ctools_plugin_api().
  */
-function gbif_legacy_news_ctools_plugin_api($module = NULL, $api = NULL) {
+function gbif_data_use_ctools_plugin_api($module = NULL, $api = NULL) {
   if ($module == "context" && $api == "context") {
     return array("version" => "3");
   }
@@ -19,19 +19,19 @@ function gbif_legacy_news_ctools_plugin_api($module = NULL, $api = NULL) {
 /**
  * Implements hook_views_api().
  */
-function gbif_legacy_news_views_api($module = NULL, $api = NULL) {
+function gbif_data_use_views_api($module = NULL, $api = NULL) {
   return array("api" => "3.0");
 }
 
 /**
  * Implements hook_node_info().
  */
-function gbif_legacy_news_node_info() {
+function gbif_data_use_node_info() {
   $items = array(
-    'newsarticle' => array(
-      'name' => t('News item'),
+    'usesofdata' => array(
+      'name' => t('Featured data use'),
       'base' => 'node_content',
-      'description' => t('Legacy news content type.'),
+      'description' => t('<em>Uses of Data articles</em> is for content pages featured under "Uses of Data menu" '),
       'has_title' => '1',
       'title_label' => t('Title'),
       'help' => '',

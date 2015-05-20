@@ -181,8 +181,8 @@ $env = variable_get('environment_settings');
 				</div>
 			</div>
 			<div class="row">
-				<?php print views_embed_view('newsarticles', 'latest1_fp'); ?>
-				<?php print views_embed_view('newsarticles', 'latest4_fp'); ?>
+				<?php print views_embed_view('news', 'latest1_fp'); ?>
+				<?php print views_embed_view('news', 'latest4_fp'); ?>
 				<?php print views_embed_view('events', 'latest4_fp'); ?>
 			</div>
 		</div>
@@ -199,7 +199,7 @@ $env = variable_get('environment_settings');
 				</div>
 			</div>
 			<div class="row">
-				<?php print views_embed_view('usesofdatafeaturedarticles', 'latest3_fp'); ?>
+				<?php print views_embed_view('data_use', 'latest3_fp'); ?>
 			</div>
 			
 			<div class="row row-staticlnx-bottom-fp">

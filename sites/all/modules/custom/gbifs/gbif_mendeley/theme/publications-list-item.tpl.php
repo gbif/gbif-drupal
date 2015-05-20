@@ -1,13 +1,13 @@
 <ul class="publication-list">
 	<?php foreach ($publications as $k => $p): ?>
 	<?php
-		$title_link = l($p['title'], $p['websites'][0], array('attributes' => array('target' => '_blank')));
+		$title_link = (isset($p['websites'])) ? l($p['title'], $p['websites'][0], array('attributes' => array('target' => '_blank'))) : $p['title'];
 
 		// Authors
 		$authors = '';
 		for ($i = 0; $i < count($p['authors']); $i++) {
 			$authors .= $p['authors'][$i]['last_name'] . ', ';
-			$authors .= strtoupper(substr($p['authors'][$i]['first_name'], 0, 1)) . '.';
+			$authors .= (isset($p['authors'][$i]['first_name'])) ? strtoupper(substr($p['authors'][$i]['first_name'], 0, 1)) . '.' : '';
 			if ($i < count($p['authors']) - 1) {
 				$authors .= ', ';
 			}
@@ -21,7 +21,7 @@
 		$journal .= (!empty($journal)) ? '.' : '';
 
 		// Keywords
-		if (count($p['keywords']) > 0) {
+		if (isset($p['keywords']) && count($p['keywords']) > 0) {
 			$keywords = format_plural(count($p['keywords']),
 			'Keyword', 'Keywords', array()) . ': ';
 			for ($i = 0; $i < count($p['keywords']); $i++) {
@@ -40,7 +40,7 @@
 		<h4><?php print $title_link; ?></h4>
 		<p><?php print $journal; ?></p>
 		<p><?php print views_trim_text(array('max_length' => 600, 'word_boundary' => TRUE, 'ellipsis' => TRUE), $p['abstract']); ?></p>
-		<p class="keywords"><?php print $keywords; ?></p>
+		<p class="keywords"><?php if (isset($keywords)) print $keywords; ?></p>
 		<?php if ($k % $per_page < count($publications) - 1): ?>
 			<hr>
 		<?php endif; ?>

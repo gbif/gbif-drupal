@@ -63,3 +63,6 @@ Thumbs.db
 .classpath
 .sass-cache/
 sites/all/themes/custom/bvng/less/node_modules
+
+# some tweaks
+!.htaccess

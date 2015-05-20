@@ -2,6 +2,7 @@
 
 function gbifgreen_theme() {
 	$items = array();
+  /*
 	$items['newsarticle_node_form'] = array(
 		'render element' => 'form',
 		'template' => 'templates/newsarticle-node-form',
@@ -9,6 +10,7 @@ function gbifgreen_theme() {
 			'gbifgreen_preprocess_newsarticle_node_form'
 		),
 	);
+  */
 	return $items;
 }
 

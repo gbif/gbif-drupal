@@ -4,14 +4,16 @@
  */
 
 $env = variable_get('environment_settings');
+$block_docs = module_invoke('views','block_view','resources-block_docs');
+$block_tools = module_invoke('views','block_view','resources-block_tools');
 
 ?>
 <div class="block-publishing-data-resources">
-  <?php print render(module_invoke('views','block_view','resources-block_docs')); ?>
+  <?php print render($block_docs['content']); ?>
 </div>
 
 <div class="block-publishing-data-resources">
-  <?php print render(module_invoke('views','block_view','resources-block_tools')); ?>
+  <?php print render($block_docs['content']); ?>
 </div>
 
 <div ng-app="lpApp" class="block-publishing-data-resources" >
@@ -26,7 +28,7 @@ $env = variable_get('environment_settings');
 					<p class="field-content">{{org.summary}}</p>
 					<p ng-bind-html="org.endorsedText"></p>
 				</div>
-				<div class="views-field"><img class="org-logo" src="{{org.logoUrl}}"></div>
+				<div class="views-field"><img class="org-logo" src="/{{org.logoUrl}}" ng-hide="{{org.noLogo}}"></div>
 			</div>
       <p class="more text-right"><a href="<?php print $env['data_portal_base_url']; ?>/publisher/search">more data publishers</a></p>
     </section>

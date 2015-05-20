@@ -1,0 +1,15 @@
+name = GBIF Data Use
+description = Content management for data use articles
+core = 7.x
+package = GBIFS
+version = 7.x-0.3
+project = gbif_data_use
+dependencies[] = views
+features[context][] = data_use_node_menu
+features[context][] = data_use_view_menu
+features[ctools][] = context:context:3
+features[ctools][] = strongarm:strongarm:1
+features[ctools][] = views:views_default:3.0
+features[features_api][] = api:2
+features[node][] = usesofdata
+features[views_view][] = data_use

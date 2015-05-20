@@ -14,14 +14,7 @@
 				<div style="display: none;">
 					<div class="contactPosition"><?php print $job_or_role; ?></div>
 					<div class="contactInstitution"></div>
-					<div class="address">
-						<span><?php print $row->address; ?></span>
-						<span class="city"><?php print $row->city; ?></span>
-						<span class="country"><?php print $row->contact_country; ?></span>
-						<span class="email"><a href="mailto:<?php print $row->email_address; ?>" title="email"><?php print $row->email_address; ?></a></span>
-						<span class="phone"><?php print $row->phone_office; ?></span>
-						<span class="fax"><?php print $row->fax; ?></span>
-					</div>
+					<div class="address"><span><?php print $row->address; ?></span><span class="city"><?php print $row->city; ?></span><?php if (!empty($row->contact_country)): ?><span class="country"><?php print $row->contact_country; ?></span><?php endif; ?><span class="email"><a href="mailto:<?php print $row->email_address; ?>" title="email"><?php print $row->email_address; ?></a></span><span class="phone"><?php print $row->phone_office; ?></span><span class="fax"><?php print $row->fax; ?></span></div>
 				</div>
 			</div>
 			</td>

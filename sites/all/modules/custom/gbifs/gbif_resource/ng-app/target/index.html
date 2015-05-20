@@ -15,7 +15,7 @@
           <p class="field-content">{{org.summary}}</p>
           <p ng-bind-html="org.endorsedText"></p>
         </div>
-        <div class="views-field views-field-gr-image"><img class="org-logo" src="{{org.logoUrl}}"></div>
+        <div class="views-field views-field-gr-image" ng-hide="{{org.noLogo}}"><img class="org-logo" src="{{org.logoUrl}}"></div>
       </div>
     </div>
   </div>

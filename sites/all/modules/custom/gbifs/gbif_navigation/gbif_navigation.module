@@ -172,29 +172,6 @@ function gbif_navigation_menu_block_blocks() {
 }
 
 /**
- * Implements hook_node_view().
- *
- * We use this hook to set the active menu item so visitors would have
- * a clearer idea about where they are.
- *
- * Note that use menu_set_active_item() at the node view level will render
- * menu_local_tasks pointing to the item being set. We use theme_preprocess_page()
- * instead.
- *
- * @see bvng_preprocess_page().
- */
-function gbif_navigation_node_view($node, $view_mode, $langcode) {
-	switch ($node->type) {
-		case 'newsarticle':
-		menu_tree_set_path('gbif-menu', 'taxonomy/term/566'); // newsroom/news
-			break;
-		case 'usesofdata':
-		menu_tree_set_path('gbif-menu', 'taxonomy/term/567'); // newsroom/uses
-			break;
-	}
-}
-
-/**
  * Implements hook_form_FORM_ID_alter().
  *
  * Provides a checkbox to indicate that the menu item points to a portal URL that

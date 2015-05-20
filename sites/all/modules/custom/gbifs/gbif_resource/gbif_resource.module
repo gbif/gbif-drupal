@@ -88,6 +88,7 @@ function gbif_resource_library() {
   $path = drupal_get_path('module', 'gbif_resource');
   $libraries['lp'] = array(
     'title' => 'Latest resource block',
+    'version' => '1.0',
     'js' => array(
       $path . '/ng-app/target/js/main.bundle.js' => array(
         'type' => 'file',
@@ -247,59 +248,76 @@ function gbif_resource_preprocess_page(&$variables) {
  */
 function gbif_resource_preprocess_node(&$variables) {
 	if ($variables['type'] == 'resource') {
-		$resource_type = $variables['gr_resource_type'][0]['taxonomy_term']->name;
-		switch ($resource_type) {
-			case 'Document':
-			case 'Presentation':
-				// For these two types, we alter the gr_file field to say "Download" and make the image the download link, too.
-				$lang_code = gbif_tweaks_get_language_code('node', 'gr_file', $variables['node']->language);
-				$variables['node']->gr_file[$lang_code][0]['description'] = t('Download');
-				break;
-			case 'Link':
-			case 'Tool':
-				// For these two types, we alter the gr_url field to say "Go to website" and make the image the external link.
-				$lang_code = gbif_tweaks_get_language_code('node', 'gr_url', $variables['node']->language);
-				$url = $variables['node']->gr_url[$lang_code][0]['value'];
-				$url_html = t('<a href="@url">Go to resource</a>', array('@url' => url($url)));
-				//$variables['node']->gr_url[$lang_code][0]['format'] = 'full_html';
-				//$variables['gr_url'][0]['format'] = 'full_html';
-				//$variables['node']->gr_url[$lang_code][0]['safe_value'] = $url_html;
-				//$variables['gr_url'][0]['safe_value'] = $url_html;
-				$variables['content']['gr_url'][0]['#markup'] = $url_html;
-				break;
-		}
-		// Show gr_url field only for "Link" and "Tool".
-		$variables['show_gr_url'] = ( $resource_type == 'Link' || $resource_type == 'Tool') ? TRUE : FALSE;
-		// Set referer URL and text for guiding user back to the previous page.
-		if (empty($_SERVER['HTTP_REFERER'])) {
-			$variables['referer_url'] = '/resources';
-			$variables['referer_link_text'] = t('Go to resource library');
-		}
-		elseif (strpos($_SERVER['HTTP_REFERER'], 'resources') !== FALSE) {
-			$variables['referer_url'] = $_SERVER['HTTP_REFERER'];
-			$variables['referer_link_text'] = t('Back to resource library');
-		}
-		else {
-			$variables['referer_url'] = $_SERVER['HTTP_REFERER'];
-			$variables['referer_link_text'] = t('Back to previous page');
-		}
-		// Prepare the image thumbnail with colorbox link.
-		if (!empty($variables['gr_image']) && !isset($variables['view'])) {
-			$image_url = file_create_url($variables['gr_image'][0]['uri']);
-			$url = parse_url($image_url);
-			$path = $url['path'];
-			$width = (int)$variables['gr_image'][0]['width'];
-			$width = ($width >= 240) ? 240 : $width;
-			$img_html = theme_image(array(
-				'path' => $path,
-				'width' => $width,
-				'alt' => $variables['title'],
-				'title' => $variables['title'],
-				'attributes' => array(),
-			));
-			$variables['resource_image'] = '<p>' . l($img_html, $image_url, array('html' => TRUE, 'attributes' => array('class' => array('colorbox')))) . '</p>';
-		}
+    if (!empty($variables['gr_resource_type'])) {
+      $resource_type = $variables['gr_resource_type'][0]['taxonomy_term']->name;
+      switch ($resource_type) {
+        case 'Document':
+        case 'Presentation':
+          // For these two types, we alter the gr_file field to say "Download" and make the image the download link, too.
+          $lang_code = gbif_tweaks_get_language_code('node', 'gr_file', $variables['node']->language);
+          $variables['node']->gr_file[$lang_code][0]['description'] = t('Download');
+          break;
+        case 'Link':
+        case 'Tool':
+          // For these two types, we alter the gr_url field to say "Go to website" and make the image the external link.
+          $lang_code = gbif_tweaks_get_language_code('node', 'gr_url', $variables['node']->language);
+          $url = $variables['node']->gr_url[$lang_code][0]['value'];
+          $url_html = t('<a href="@url">Go to resource</a>', array('@url' => url($url)));
+          //$variables['node']->gr_url[$lang_code][0]['format'] = 'full_html';
+          //$variables['gr_url'][0]['format'] = 'full_html';
+          //$variables['node']->gr_url[$lang_code][0]['safe_value'] = $url_html;
+          //$variables['gr_url'][0]['safe_value'] = $url_html;
+          $variables['content']['gr_url'][0]['#markup'] = $url_html;
+          break;
+      }
+      // Show gr_url field only for "Link" and "Tool".
+      $variables['show_gr_url'] = ( $resource_type == 'Link' || $resource_type == 'Tool') ? TRUE : FALSE;
+      // Set referer URL and text for guiding user back to the previous page.
+      if (empty($_SERVER['HTTP_REFERER'])) {
+        $variables['referer_url'] = '/resources';
+        $variables['referer_link_text'] = t('Go to resource library');
+      }
+      elseif (strpos($_SERVER['HTTP_REFERER'], 'resources') !== FALSE) {
+        $variables['referer_url'] = $_SERVER['HTTP_REFERER'];
+        $variables['referer_link_text'] = t('Back to resource library');
+      }
+      else {
+        $variables['referer_url'] = $_SERVER['HTTP_REFERER'];
+        $variables['referer_link_text'] = t('Back to previous page');
+      }
+      // Prepare the image thumbnail with colorbox link.
+      if (!empty($variables['gr_image']) && !isset($variables['view'])) {
+        $image_url = file_create_url($variables['gr_image'][0]['uri']);
+        $url = parse_url($image_url);
+        $path = $url['path'];
+        $width = (int)$variables['gr_image'][0]['width'];
+        $width = ($width >= 240) ? 240 : $width;
+        $img_html = theme_image(array(
+          'path' => $path,
+          'width' => $width,
+          'alt' => $variables['title'],
+          'title' => $variables['title'],
+          'attributes' => array(),
+        ));
+        $variables['resource_image'] = '<p>' . l($img_html, $image_url, array('html' => TRUE, 'attributes' => array('class' => array('colorbox')))) . '</p>';
+      }
+    }
 	}
+
+  // @todo Build a combo value consisting of publisher and publishing date
+  /*
+  if ($variables['node']->type == 'resource_ims' && !empty($variables['field_publishing_date']) && !empty($variables['field_publisher']) ) {
+    $publishing_date = _bvng_get_field_value ('node', $variables['node'], 'field_publishing_date');
+    $publisher = _bvng_get_field_value ('node', $variables['node'], 'field_publisher');
+    // Friday, April 11, 2014
+    $publishing_date =  date( 'l, M d, Y', $publishing_date);
+    $publisher_w_date = $publisher . ', ' . $publishing_date;
+    $variables['publisher_w_date'] = '<div class="field field-name-field-publisher-w-date field-type-text-long field-label-above">
+		<div class="field-label">Publisher&nbsp;</div>
+		<div class="field-items">
+		<div class="field-item even">' . $publisher_w_date . '</div></div></div>';
+  }
+  */
 }
 
 /**
@@ -429,13 +447,23 @@ function gbif_resource_preprocess_views_view(&$variables) {
 		);
 
 		// Render blocks.
-		$variables['facet_resource_type'] = render(_block_get_renderable_array(_block_render_blocks(array(block_load('facetapi', 'xvKA0HJVTNwngnlCE9lJP4T0CXA1Gn27')))));
-		$variables['facet_purpose'] = render(_block_get_renderable_array(_block_render_blocks(array(block_load('facetapi', '731qYYP4XLCpEqbjDPEBHvO3Ms6QiFhq')))));
-		$variables['facet_language'] = render(_block_get_renderable_array(_block_render_blocks(array(block_load('facetapi', '91UEW2NE4L9KDBz5SLgpe0fiDQZM19OU')))));
-		$variables['facet_data_type'] = render(_block_get_renderable_array(_block_render_blocks(array(block_load('facetapi', 'HeCqQSNM4pCh581hH4Aq8jlEIwdyvby7')))));
-		$variables['facet_tags'] = render(_block_get_renderable_array(_block_render_blocks(array(block_load('facetapi', 'pzzwZNEBzrHCFGRYawMltoa8YO8JmT3n')))));
-		$variables['exp_widgets'] = render(module_invoke('views', 'block_view','-exp-resources_search-page'));
-		$variables['featured_block'] = render(module_invoke('views', 'block_view','resources-featured_block'));
+    $facet_resource_type = _block_get_renderable_array(_block_render_blocks(array(block_load('facetapi', 'xvKA0HJVTNwngnlCE9lJP4T0CXA1Gn27'))));
+		$variables['facet_resource_type'] = render($facet_resource_type);
+    $facet_purpose = _block_get_renderable_array(_block_render_blocks(array(block_load('facetapi', '731qYYP4XLCpEqbjDPEBHvO3Ms6QiFhq'))));
+		$variables['facet_purpose'] = render($facet_purpose);
+    $facet_language = _block_get_renderable_array(_block_render_blocks(array(block_load('facetapi', '91UEW2NE4L9KDBz5SLgpe0fiDQZM19OU'))));
+		$variables['facet_language'] = render($facet_language);
+    $facet_data_type = _block_get_renderable_array(_block_render_blocks(array(block_load('facetapi', 'HeCqQSNM4pCh581hH4Aq8jlEIwdyvby7'))));
+		$variables['facet_data_type'] = render($facet_data_type);
+    $facet_tags = _block_get_renderable_array(_block_render_blocks(array(block_load('facetapi', 'pzzwZNEBzrHCFGRYawMltoa8YO8JmT3n'))));
+		$variables['facet_tags'] = render($facet_tags);
+
+    // the 'content' subarray is the renderable array which will be fed into
+    // children rendering at line 6517 in /includes/common.inc
+    $exp_widgets = module_invoke('views', 'block_view','-exp-resources_search-page');
+		$variables['exp_widgets'] = render($exp_widgets['content']);
+    $featured_block = module_invoke('views', 'block_view','resources-featured_block');
+		$variables['featured_block'] = render($featured_block['content']);
 	}
 }
 
@@ -547,7 +575,7 @@ function gbif_resource_show_featured_resources() {
 	if (count($query) > 0 && !isset($query['XDEBUG_SESSION_START'])) {
 		return FALSE;
 	}
-	elseif ($_GET['searched'] == 1 || $_GET['hideFeatured'] == 1) {
+	elseif ((isset($_GET['searched']) && $_GET['searched'] == 1 ) || (isset($_GET['hideFeatured']) && $_GET['hideFeatured'] == 1)) {
 		return FALSE;
 	}
 	else {

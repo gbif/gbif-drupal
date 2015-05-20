@@ -1587,7 +1587,7 @@ function gbif_resource_field_default_field_instances() {
     'entity_type' => 'node',
     'field_name' => 'gr_resource_type',
     'label' => 'Resource type',
-    'required' => 0,
+    'required' => 1,
     'settings' => array(
       'mediafront' => array(
         'custom' => '',

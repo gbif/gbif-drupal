@@ -138,40 +138,45 @@ function gbif_event_node_form_value_processing(&$form, &$form_state) {
 
 /**
  * Implements hook_preprocess_page().
- * @todo We want to properly combine these two menu setting blocks of code.
  */
 function gbif_event_preprocess_page(&$variables) {
-	// Detect the URLs that needs "Events" highlighted
+  $path_to_highlight = 'newsroom/events/upcoming';
+  $current_path = current_path();
+  $args = arg();
+
+	// Detect the URLs that needs "Events" highlighted.
+  // Note that for the block to be available, "event_node_menu" context is required.
 	if (isset($variables['page']['menu']['menu_block_gbif_navigation_menu_tabs'])) {
-		$targeting_paths = array('newsroom/events/past');
-		$highlighted_path = 'newsroom/events/upcoming';
-		$current_path = current_path();
-		if (in_array($current_path, $targeting_paths)) {
-			// find the registered menu item and add the "active" CSS class to the attributes
-			foreach ($variables['page']['menu']['menu_block_gbif_navigation_menu_tabs']['#content'] as $k => $tab) {
-				if (gettype($k) == 'integer') {
-					if ($tab['#href'] == $highlighted_path) {
-						// make it active
-						array_push($variables['page']['menu']['menu_block_gbif_navigation_menu_tabs']['#content'][$k]['#attributes']['class'], 'active');
-						watchdog('gbif_event', 'Active menu item set.', NULL, WATCHDOG_DEBUG);
-					}
-				}
-			}
-		}
-	}
-	// Detect individual node page and node type is "event"
-	if (isset($variables['node']) && $variables['node']->type == 'event' && isset($variables['page']['menu']['menu_block_gbif_navigation_menu_tabs'])) {
-		// Currently we set active on the menu item that has the path as "newsroom/events/upcoming"
-		// find the registered menu item and add the "active" CSS class to the attributes
-		foreach ($variables['page']['menu']['menu_block_gbif_navigation_menu_tabs']['#content'] as $k => $tab) {
-			if (gettype($k) == 'integer') {
-				if ($tab['#href'] == $highlighted_path) {
-					// make it active
-					array_push($variables['page']['menu']['menu_block_gbif_navigation_menu_tabs']['#content'][$k]['#attributes']['class'], 'active');
-					watchdog('gbif_event', 'Active menu item set for node.', NULL, WATCHDOG_DEBUG);
-				}
-			}
-		}
+    // for individual content node that is typed "event"
+    if (isset($variables['node']) && $variables['node']->type == 'event') {
+      // Currently we set active on the menu item that has the path as $path_to_highlight
+      // find the registered menu item and add the "active" CSS class to the attributes
+      foreach ($variables['page']['menu']['menu_block_gbif_navigation_menu_tabs']['#content'] as $k => $tab) {
+        if (gettype($k) == 'integer') {
+          if ($tab['#href'] == $path_to_highlight) {
+            // make it active
+            array_push($variables['page']['menu']['menu_block_gbif_navigation_menu_tabs']['#content'][$k]['#attributes']['class'], 'active');
+            watchdog('gbif_event', 'Active menu item set for event node.', NULL, WATCHDOG_DEBUG);
+          }
+        }
+      }
+    }
+    // for event views
+    elseif ($args[0] == 'newsroom' && $args[1] == 'events' && !empty($args[2])) {
+      $targeting_paths = array('newsroom/events/past');
+      if (in_array($current_path, $targeting_paths)) {
+        // find the registered menu item and add the "active" CSS class to the attributes
+        foreach ($variables['page']['menu']['menu_block_gbif_navigation_menu_tabs']['#content'] as $k => $tab) {
+          if (gettype($k) == 'integer') {
+            if ($tab['#href'] == $path_to_highlight) {
+              // make it active
+              array_push($variables['page']['menu']['menu_block_gbif_navigation_menu_tabs']['#content'][$k]['#attributes']['class'], 'active');
+              watchdog('gbif_event', 'Active menu item set for event views.', NULL, WATCHDOG_DEBUG);
+            }
+          }
+        }
+      }
+    }
 	}
 }
 

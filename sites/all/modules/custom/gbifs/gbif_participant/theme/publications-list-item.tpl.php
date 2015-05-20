@@ -21,7 +21,7 @@
 		$journal .= (!empty($journal)) ? '.' : '';
 
 		// Keywords
-			if (count($p['keywords']) > 0) {
+			if (isset($p['keywords']) && count($p['keywords']) > 0) {
 				$keywords = format_plural(count($p['keywords']),
 				'Keyword', 'Keywords', array()) . ': ';
 				for ($i = 0; $i < count($p['keywords']); $i++) {

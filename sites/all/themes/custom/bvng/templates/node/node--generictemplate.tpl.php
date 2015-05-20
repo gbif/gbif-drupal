@@ -129,6 +129,7 @@
 <?php endif; ?>
 </article>
 
+<?php if (isset($cchunks)): ?>
 <?php $cchunks_count = count($cchunks); ?>
 <?php foreach ($cchunks as $k => $cchunk): ?>
   <?php $top_well = (empty($body) && $k == 0) ? ' well-margin-top': ''; ?>
@@ -175,3 +176,4 @@
     hide($content['field_tags']);
   ?>
 <?php endforeach; ?>
+<?php endif; ?>

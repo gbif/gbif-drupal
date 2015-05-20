@@ -5,3 +5,271 @@
  */
 
 include_once 'gbif_legacy_news.features.inc';
+
+/**
+ * Implements hook_menu().
+ */
+function gbif_legacy_news_menu() {
+  $items = array();
+  // Menu link for full list browsing.
+  $items['newsroom/summary'] = array(
+    'type' => MENU_NORMAL_ITEM,
+    'title' => 'GBIF News',
+    'page callback' => 'gbif_legacy_news_page_summary',
+    'access callback' => TRUE,
+    'weight' => -30,
+  );
+  return $items;
+}
+
+function gbif_legacy_news_page_summary() {
+  // build newsroom/summary
+  $markup = '';
+  $markup .= views_embed_view('featurednewsarticles', 'default');
+  $markup .= views_embed_view('data_use', 'latest3');
+  $markup .= views_embed_view('news', 'latest3');
+  return $markup;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function gbif_legacy_news_theme($existing, $type, $theme, $path) {
+  $path = drupal_get_path('module', 'gbif_legacy_news');
+  return array(
+    'node__view__news__latest1_fp' => array(
+      'template' => 'node--view--news--latest1-fp',
+      'path' => $path . '/theme'
+    ),
+    'node__view__news__latest3' => array(
+      'template' => 'node--view--news--latest3',
+      'path' => $path . '/theme'
+    ),
+    'node__view__news' => array(
+      'template' => 'node--view--news',
+      'path' => $path . '/theme'
+    )
+  );
+}
+
+/**
+ * Implements hook_theme_registry_alter().
+ */
+function gbif_legacy_news_theme_registry_alter(&$theme_registry) {
+  $path = drupal_get_path('module', 'gbif_legacy_news');
+  $theme_registry['views_view__news__latest1_fp']['template'] = 'views-view--news--latest1-fp';
+  $theme_registry['views_view__news__latest1_fp']['path'] = $path . '/theme';
+  $theme_registry['views_view__news__latest3']['template'] = 'views-view--news--latest3';
+  $theme_registry['views_view__news__latest3']['path'] = $path . '/theme';
+  $theme_registry['views_view__news__latest4_fp']['template'] = 'views-view--news--latest4-fp';
+  $theme_registry['views_view__news__latest4_fp']['path'] = $path . '/theme';
+  $theme_registry['views_view__news__page']['template'] = 'views-view--news--page';
+  $theme_registry['views_view__news__page']['preprocess functions'][] = 'gbif_legacy_news_preprocess_views_view';
+  $theme_registry['views_view__news__page']['path'] = $path . '/theme';
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function gbif_legacy_news_preprocess_page(&$variables) {
+  $path_to_highlight = 'newsroom/news';
+  $args = arg();
+
+  // Detect the URLs that needs "News" highlighted.
+  // Note that for the block to be available, "news_node_menu" context is required.
+  if (isset($variables['page']['menu']['menu_block_gbif_navigation_menu_tabs'])) {
+    // for individual content node that is typed "news"
+    if (isset($variables['node']) && $variables['node']->type == 'newsarticle') {
+      // Currently we set active on the menu item that has the path as $path_to_highlight
+      // find the registered menu item and add the "active" CSS class to the attributes
+      foreach ($variables['page']['menu']['menu_block_gbif_navigation_menu_tabs']['#content'] as $k => $tab) {
+        if (gettype($k) == 'integer') {
+          if ($tab['#href'] == $path_to_highlight) {
+            // make it active
+            array_push($variables['page']['menu']['menu_block_gbif_navigation_menu_tabs']['#content'][$k]['#attributes']['class'], 'active');
+            watchdog('gbif_legacy_news', 'Active menu item set for news node.', NULL, WATCHDOG_DEBUG);
+          }
+        }
+      }
+    }
+    // for news views
+    elseif ($args[0] == 'newsroom' && $args[1] == 'news' && !empty($args[2])) {
+        // find the registered menu item and add the "active" CSS class to the attributes
+        foreach ($variables['page']['menu']['menu_block_gbif_navigation_menu_tabs']['#content'] as $k => $tab) {
+          if (gettype($k) == 'integer') {
+            if ($tab['#href'] == $path_to_highlight) {
+              // make it active
+              array_push($variables['page']['menu']['menu_block_gbif_navigation_menu_tabs']['#content'][$k]['#attributes']['class'], 'active');
+              watchdog('gbif_legacy_news', 'Active menu item set for news views.', NULL, WATCHDOG_DEBUG);
+            }
+          }
+        }
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_node().
+ */
+function gbif_legacy_news_preprocess_node(&$variables) {
+  if (isset($variables['node']) && $variables['node']->type == 'newsarticle') {
+    // Get also tagged
+    $variables['also_tagged'] = _gbif_legacy_news_get_also_tag_links($variables['node']);
+
+    // No need to render sidebar if this is a node in a view.
+    if (!isset($variables['view'])) {
+      $sidebar = _gbif_legacy_news_sidebar_content($variables['node']);
+      $variables['sidebar'] = $sidebar;
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_views_view().
+ */
+function gbif_legacy_news_preprocess_views_view(&$variables) {
+  switch ($variables['view']->name) {
+    case 'news':
+      $region = arg(2);
+      $feed_url = (!empty($region)) ? '/newsroom/news/rss/' . $region : '/newsroom/news/rss';
+      // Add RSS feed icon.
+      $alt = $variables['view']->get_title();
+      $icon = theme_image(array(
+        'path' => drupal_get_path('theme', 'bvng') . '/images/rss-feed.gif',
+        'width' => 28,
+        'height' => 28,
+        'alt' => $alt,
+        'title' => t('Subscribe to this list'),
+        'attributes' => array(),
+      ));
+      $icon = l($icon, $feed_url . '/feed', array('html' => TRUE));
+      $variables['feed_icon'] = $icon;
+
+      break;
+  }
+}
+
+function _gbif_legacy_news_sidebar_content($node = NULL) {
+  $markup = '';
+  if (is_object($node)) {
+
+    // fields that we get contents from
+    $fields = _gbif_legacy_news_sidebar_fields();
+    foreach ($fields as $idx => $field) {
+      $variable_name = str_replace('-', '_', $idx);
+      $$variable_name = array(
+        'title' => $field['title'],
+        'type' => 'ul',
+        'items' => array(),
+        'attributes' => array(
+          'id' => $idx,
+          'class' => $node->type . '-sidebar' . ' ' . $idx,
+        ),
+      );
+      $item_list = &$$variable_name;
+
+      if ($idx <> 'tags') {
+        switch ($field['field_type']) {
+          case 'node_date':
+            array_push($item_list['items'], array('data' => format_date($node->$field['machine_name'], 'custom', 'F jS, Y ')));
+            break;
+        }
+        $markup .= theme_item_list($item_list);
+      }
+      elseif ($idx == 'tags') {
+        $terms = array();
+        $term_sources = $field['fields'];
+        // Get all terms.
+        foreach ($term_sources as $term_source) {
+          $items = field_get_items('node', $node, $term_source);
+          if (is_array($items)) {
+            foreach ($items as $item) {
+              $terms[] = $item['tid'];
+            }
+          }
+        }
+        if (count($terms) > 0) {
+          _bvng_get_tag_links($terms, $item_list);
+          $markup .= theme_item_list($item_list);
+        }
+      }
+    }
+  }
+  return $markup;
+}
+
+function _gbif_legacy_news_sidebar_fields() {
+  return array(
+    'publication-date' => array(
+      'title' => t('Publication date'),
+      'machine_name' => 'created',
+      'field_type' => 'node_date',
+    ),
+    'last-updated' => array(
+      'title' => t('Last updated'),
+      'machine_name' => 'changed',
+      'field_type' => 'node_date',
+    ),
+    'tags' => array(
+      'title' => t('Tags'),
+      'machine_name' => 'tags',
+      'fields' => _gbif_legacy_news_sidebar_tags_definition(),
+    ),
+  );
+}
+
+function _gbif_legacy_news_sidebar_tags_definition() {
+  return array(
+    'field_capacity',
+    'field_country',
+    'field_informatics',
+    'field_organizations',
+    'field_regions',
+  );
+}
+
+/**
+ * Helper function to get "also tagged" tag links.
+ */
+function _gbif_legacy_news_get_also_tag_links($node) {
+  $term_sources = _gbif_legacy_news_sidebar_tags_definition();
+
+  // Get all the terms.
+  if (isset($term_sources)) {
+    foreach ($term_sources as $term_source) {
+      $items = field_get_items('node', $node, $term_source);
+      if (is_array($items)) {
+        foreach ($items as $item) {
+          $terms[] = $item['tid'];
+        }
+      }
+    }
+    $item_list = array(
+      'items' => array(),
+    );
+
+    _gbif_legacy_news_get_tag_links($terms, $item_list);
+
+    $term_links = '';
+
+    if (!empty($item_list['items'])) {
+      $term_links = t('Also tagged') . ':' . '<ul class="also-tagged">';
+      foreach ($item_list['items'] as $tag_link) {
+        $term_links .= '<li>' . $tag_link['data'] . '</li>';
+      }
+      $term_links .= '</ul>';
+    }
+    return $term_links;
+  }
+
+  return '';
+}
+
+function _gbif_legacy_news_get_tag_links(&$field_items, &$item_list) {
+  $terms = taxonomy_term_load_multiple($field_items);
+  foreach ($terms as $term) {
+    $uri = taxonomy_term_uri($term);
+    $tag_link = l($term->name, $uri['path']);
+    array_push($item_list['items'], array('data' => $tag_link));
+  }
+}

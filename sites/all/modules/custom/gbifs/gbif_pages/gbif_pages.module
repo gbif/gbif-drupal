@@ -59,9 +59,6 @@ function gbif_pages_views_api() {
 
 function gbif_pages_views_register() {
 	$views = array(
-		'newsarticles',
-		'usesofdatafeaturedarticles',
-		'datausearticles',
 		'featurednewsarticles',
 		'taxonomy_term_json',
 	);
@@ -76,44 +73,7 @@ function gbif_pages_views_register() {
  * another custom function which should return $build.
  */
 function gbif_pages_taxonomy_term_page($term) {
-  $relation = gbif_pages_term_view_relation();
-  if (array_key_exists($term->tid, $relation)) {
-
-    $uri = entity_uri('taxonomy_term', $term);
-
-    // Set the term path as the canonical URL to prevent duplicate content.
-    drupal_add_html_head_link(array('rel' => 'canonical', 'href' => url($uri['path'], $uri['options'])), TRUE);
-    // Set the non-aliased path as a default shortlink.
-    drupal_add_html_head_link(array('rel' => 'shortlink', 'href' => url($uri['path'], array_merge($uri['options'], array('alias' => TRUE)))), TRUE);
-
-    // Every term page has a chance to show the description in taxaNavigation.
-    $build = taxonomy_term_show($term);
-
-    // Attach view(s) depending on term-view relations.
-    $markup = '';
-    $view_count = 0;
-    array_walk_recursive($relation[$term->tid], function($value, $key) use (&$view_count) {
-    	if ($key == 'view') $view_count++;
-    });
-
-    if ($view_count > 1) {
-      foreach ($relation[$term->tid] as $view_block) {
-        $markup .= "\n";
-        $markup .= views_embed_view($view_block['view'], $view_block['display']);
-      }
-    }
-    elseif ($view_count === 1) {
-      $markup = views_embed_view($relation[$term->tid]['view'], $relation[$term->tid]['display']);
-    }
-
-    // Attach the final result to the page build.
-    $build['members'] = array('#markup' => $markup);
-
-  }
-  else {
-    $build = taxonomy_term_page($term);
-  }
-  return $build;
+  return taxonomy_term_page($term);
 }
 
 /**
@@ -121,13 +81,13 @@ function gbif_pages_taxonomy_term_page($term) {
  */
 function gbif_pages_preprocess_page(&$variables) {
 	$capacity_pages = array(
-		'node/226', // capacityenhancement/summary
-		'node/3669', // capacityenhancement/support-programme
-		'node/230', // capacityenhancement/regionalcollaboration
-		'node/227', // capacityenhancement/training
-		'node/229', // capacityenhancement/capacityprogrammes
-		'node/10270', // capacityenhancement/current-projects
-		'node/3672', // capacityenhancement/past-projects
+		'node/226', // capacity-enhancement/summary
+		'node/3669', // capacity-enhancement/support-programme
+		'node/230', // capacity-enhancement/regional-collaboration
+		'node/227', // capacity-enhancement/training
+		'node/229', // capacity-enhancement/capacity-programmes
+		'node/10270', // capacity-enhancement/current-projects
+		'node/3672', // capacity-enhancement/past-projects
 	);
 	if (in_array(current_path(), $capacity_pages)) {
 		if (isset($variables['page']['menu']['menu_block_gbif_navigation_menu_tabs'])) {
@@ -204,34 +164,6 @@ function gbif_pages_search_view($module = NULL, $keys = '') {
   return $build;	
 }
 
-function gbif_pages_term_view_relation() {
-  $relation = array(
-    '565' => array( // newsroom/summary
-      array(
-        'view' => 'featurednewsarticles',
-        'display' => 'default',
-      ),
-      array(
-        'view' => 'usesofdatafeaturedarticles',
-        'display' => 'latest3',
-      ),
-      array(
-        'view' => 'newsarticles',
-        'display' => 'latest3',
-      ),
-    ),
-    '566' => array( // newsroom/news
-      'view' => 'newsarticles',
-      'display' => 'page',
-    ),
-    '567' => array( // newsroom/uses
-      'view' => 'usesofdatafeaturedarticles',
-      'display' => 'latest6',
-    ),
-  );
-  return $relation;
-}
-
 function gbif_pages_form_alter(&$form, &$form_state, $form_id) {
   switch ($form_id) {
     case 'generictemplate_node_form':
@@ -259,6 +191,7 @@ function gbif_pages_image_default_styles() {
 				'name' => 'image_scale',
 				'data' => array(
 					'width' => 628,
+          'height' => 426,
 					'upscale' => 1,
 				),
 				'weight' => 0,

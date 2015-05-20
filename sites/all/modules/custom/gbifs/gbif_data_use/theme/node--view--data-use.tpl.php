@@ -85,7 +85,8 @@
   <div class="node-featured">
     <?php
       if (!empty($field_featured)) {
-        print render(field_view_field('node', $node, 'field_featured', array('settings' => array('image_style' => 'featured'))));
+        $view_field = field_view_field('node', $node, 'field_featured', array('settings' => array('image_style' => 'featured')));
+        print render($view_field);
       }
     ?>
     <?php if (!empty($title)): ?>

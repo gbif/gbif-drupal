@@ -13,6 +13,10 @@ function gbif_navigation_drush_command() {
 		'callback' => 'drush_gbif_navigation_refresh_gbif_menus',
 		'description' => 'Refresh all GBIF menus.',
 	);
+  $items['batch-url-style'] = array(
+    'callback' => 'drush_gbif_navigation_batch_url_style',
+    'description' => 'Batch update url style.',
+  );
 	return $items;
 }
 
@@ -71,4 +75,119 @@ function drush_gbif_navigation_refresh_gbif_menus() {
 		watchdog('gbif_navigation', $message, NULL, WATCHDOG_INFO);
     drupal_set_message($message, 'error');
 	}
+}
+
+function drush_gbif_navigation_batch_url_style() {
+  $batchs = array(
+    array(
+      'from' => 'usingdata/summary',
+      'to' => 'using-data/summary'
+    ),
+    array(
+      'from' => 'usingdata/sciencerelevance',
+      'to' => 'using-data/science-relevance'
+    ),
+    array(
+      'from' => 'usingdata/methods',
+      'to' => 'using-data/methods'
+    ),
+    array(
+      'from' => 'usingdata/dataapplications',
+      'to' => 'using-data/data-applications'
+    ),
+    array(
+      'from' => 'usingdata/policyrelevance',
+      'to' => 'using-data/policy-relevance'
+    ),
+    array(
+      'from' => 'participation/howtojoin',
+      'to' => 'participation/how-to-join'
+    ),
+    array(
+      'from' => 'capacityenhancement/summary',
+      'to' => 'capacity-enhancement/summary'
+    ),
+    array(
+      'from' => 'capacityenhancement/support-programme',
+      'to' => 'capacity-enhancement/support-programme'
+    ),
+    array(
+      'from' => 'capacityenhancement/regionalcollaboration',
+      'to' => 'capacity-enhancement/regional-collaboration'
+    ),
+    array(
+      'from' => 'capacityenhancement/training',
+      'to' => 'capacity-enhancement/training'
+    ),
+    array(
+      'from' => 'capacityenhancement/capacityprogrammes',
+      'to' => 'capacity-enhancement/capacity-programmes'
+    ),
+    array(
+      'from' => 'capacityenhancement/current-projects',
+      'to' => 'capacity-enhancement/current-projects'
+    ),
+    array(
+      'from' => 'capacityenhancement/past-projects',
+      'to' => 'capacity-enhancement/past-projects'
+    ),
+    array(
+      'from' => 'resources/keyinformation',
+      'to' => 'resources/key-information'
+    ),
+    array(
+      'from' => 'whatisgbif',
+      'to' => 'what-is-gbif'
+    ),
+    array(
+      'from' => 'governance/standingcommittees',
+      'to' => 'governance/standing-committees'
+    ),
+    array(
+      'from' => 'whoweworkwith',
+      'to' => 'who-we-work-with'
+    ),
+    array(
+      'from' => 'contact/contactus',
+      'to' => 'contact/contact-us'
+    ),
+    array(
+      'from' => 'contact/directoryofcontacts',
+      'to' => 'contact/directory-of-contacts'
+    ),
+    array(
+      'from' => 'faq/datause',
+      'to' => 'faq/data-use'
+    ),
+  );
+
+  foreach ($batchs as $batch) {
+    // update the node URL alias
+    $node = menu_get_object('node', 1, drupal_lookup_path('source', $batch['from']));
+    if (is_object($node)) {
+      $path = array();
+      $path = path_load('node/' . $node->nid);
+      if (isset($path['pid'])) {
+        $node->path = array(
+          'alias' => $batch['to'],
+          'language' => 'und',
+          'pathauto' => 0,
+          'pid' => $path['pid'],
+          'source' => $path['source'],
+          'original' => $path,
+        );
+        try {
+          node_save($node);
+        }
+        catch (Exception $e) {
+          watchdog('gbif_navigation', $e, array(), WATCHDOG_ERROR);
+        }
+      }
+      else {
+        watchdog('gbif_navigation', 'Path !path not retrieved correctly.', array('!path' => 'node/' . $node->nid), WATCHDOG_ERROR);
+      }
+    }
+  }
+  $message = t('Batch processing finished.');
+  watchdog('gbif_navigation', $message , NULL, WATCHDOG_NOTICE);
 }

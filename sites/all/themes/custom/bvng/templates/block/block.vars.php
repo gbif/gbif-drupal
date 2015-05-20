@@ -13,12 +13,6 @@ function bvng_preprocess_block(&$variables) {
     $variables['theme_hook_suggestions'][] = 'block__no_wrapper';
   }
   $variables['title_attributes_array']['class'][] = 'block-title';
-
-  if ($variables) {
-  	return $block;
-  }
-  
-
 }
 
 /**

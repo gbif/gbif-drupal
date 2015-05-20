@@ -1,7 +1,7 @@
 <ul class="publication-list">
 	<?php foreach ($publications as $k => $p): ?>
 	<?php
-		$title_link = l($p['title'], $p['websites'][0], array('attributes' => array('target' => '_blank')));
+		$title_link = (isset($p['websites']) && is_array($p['websites'])) ? l($p['title'], $p['websites'][0], array('attributes' => array('target' => '_blank'))) : $p['title'];
 
 		$title_link .= (substr($p['title'], -1) <> '?' || substr($p['title'], -1) <> '.') ? '. ' : '' ;
 

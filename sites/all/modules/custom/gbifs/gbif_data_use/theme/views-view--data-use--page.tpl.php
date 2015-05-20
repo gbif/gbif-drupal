@@ -29,13 +29,7 @@
 ?>
 <div class="row">
   <header class="content-header col-xs-8">
-    <h2>
-    <?php
-      $view_title = $view->get_title();
-      print $view_title;
-      drupal_set_title($view_title);
-    ?>
-    </h2>
+    <h2><?php print $view->get_title(); ?></h2>
   </header>
   <div class="content-header sidebar-header col-xs-3">
     <h2>Filter by subject</h2>

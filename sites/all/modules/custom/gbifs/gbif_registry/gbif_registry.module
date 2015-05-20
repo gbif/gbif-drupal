@@ -697,6 +697,7 @@ function gbif_registry_library() {
 	$path = drupal_get_path('module', 'gbif_registry');
 	$libraries['eoi'] = array(
 		'title' => 'AngularJS app for EOI',
+    'version' => '1.0',
 		'js' => array(
 			$path . '/ng-app/target/js/main.bundle.js' => array(
 				'type' => 'file',

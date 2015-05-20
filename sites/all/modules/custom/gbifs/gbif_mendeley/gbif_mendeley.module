@@ -54,6 +54,44 @@ function gbif_mendeley_menu() {
 }
 
 /**
+ * Implements hook_page_build().
+ */
+function gbif_mendeley_page_build(&$page) {
+  // determine title and slogan in banner
+  $current_path = current_path();
+  if (drupal_match_path($current_path, 'mendeley*') !== FALSE) {
+    $page['highlighted_title'] = array(
+      'name' => t('Peer-reviewed publications'),
+      'description' => t('(via <a href="@url">Mendeley</a>)', array('@url' => 'http://www.mendeley.com/groups/1068301/gbif-public-library/')),
+    );
+  }
+
+}
+
+/**
+ * Implements hook_preprocess_page().
+ * @param $variables
+ */
+function gbif_mendeley_preprocess_page(&$variables) {
+  $path_to_highlight = 'mendeley';
+  // Detect the URLs that needs "Mendeley" highlighted.
+  if (isset($variables['page']['menu']['menu_block_gbif_navigation_menu_tabs'])) {
+    if (drupal_match_path(current_path(), 'mendeley/*')) {
+      // find the registered menu item and add the "active" CSS class to the attributes
+      foreach ($variables['page']['menu']['menu_block_gbif_navigation_menu_tabs']['#content'] as $k => $tab) {
+        if (gettype($k) == 'integer') {
+          if ($tab['#href'] == $path_to_highlight) {
+            // make it active
+            array_push($variables['page']['menu']['menu_block_gbif_navigation_menu_tabs']['#content'][$k]['#attributes']['class'], 'active');
+            watchdog('gbif_mendeley', 'Active menu item set for data use node.', NULL, WATCHDOG_DEBUG);
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
  * This is the start of the document retrieval from Mendeley. It first check
  * whether there is a valid token by implementing the Authorization code flow
  * provided by Mendeley API.
@@ -470,7 +508,7 @@ function gbif_mendeley_page_router() {
 	// When $args[1] is defined.
 	elseif (count($args) == 2 && gbif_mendeley_defined_url($args[1])) {
 		foreach ($tag_sets as $tag_set) {
-			if ($tag_set['url'] == $args[1]) $machine_name = $tag_set['machine_name'];
+			if (isset($tag_set['url']) && $tag_set['url'] == $args[1]) $machine_name = $tag_set['machine_name'];
 		}
 		$documents_to_export = json_decode(file_get_contents(file_build_uri('gbif_mendeley/' . $machine_name . '.json')), TRUE);
 		$html = _mendeley_print_publications($documents_to_export, $machine_name);
@@ -529,7 +567,7 @@ function gbif_mendeley_defined_url($arg) {
 	$defined = FALSE;
 	if (isset($arg)) {
 		foreach ($tag_sets as $tag_set) {
-			if ($tag_set['url'] == $arg) $defined = TRUE;
+			if (isset($tag_set['url']) && $tag_set['url'] == $arg) $defined = TRUE;
 		}
 	}
 	return $defined;
@@ -809,10 +847,6 @@ function _mendeley_print_recent_publications($machine_name, $number) {
 			$html .= theme('mendeley_publications_digest_list_item', array('publications' => $documents));
 			$html .= l('see more...', 'mendeley/' . $machine_name);
 			return $html;
-		}
-		else {
-			$message = t('Invalid token used.');
-			watchdog('mendeley', $message, NULL, WATCHDOG_WARNING);
 		}
 	}
 }

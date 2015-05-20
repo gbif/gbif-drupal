@@ -50,7 +50,7 @@ function gbif_analytics_menu() {
  * @param $type one of global, about or published
  * @param $iso2 the country of interest (optional)
  */
-function _gbif_analytics_detail_view($type, $iso2, $extra_args) {
+function _gbif_analytics_detail_view($type, $iso2 = NULL, $extra_args = NULL) {
 	// safeguard against bad URLs
 	if (is_null($type) || !is_null($extra_args) || ($type == 'global' && !is_null($iso2))) {
 		drupal_goto('analytics/global'); // redirect
@@ -70,9 +70,8 @@ function _gbif_analytics_detail_view($type, $iso2, $extra_args) {
 		drupal_goto('analytics/global'); // redirect
 	}
 
-
 	if ($type == 'global') {
-		watchdog('analytics', 'ISO: ' . $iso2, NULL, WATCHDOG_DEBUG);
+		if (!is_null($iso2)) watchdog('analytics', 'ISO: !iso', array('!iso' => $iso2), WATCHDOG_DEBUG);
 		$base_images_url = $base_images_url . "global/figure";
 		$data_sharing =
 			'This chart shows the total number of records published through GBIF over time, with separate colours for '

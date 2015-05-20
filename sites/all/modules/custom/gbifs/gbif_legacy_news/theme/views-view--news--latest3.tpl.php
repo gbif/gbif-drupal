@@ -120,11 +120,6 @@ $redirection_on_success = url('http://www.jangomail.com/OptIn.aspx', array(
           <?php print $footer; ?>
         </div>
       <?php endif; ?>
-      <?php if ($feed_icon): ?>
-        <div class="feed-icon">
-          <?php print $feed_icon; ?>
-        </div>
-      <?php endif; ?>
     </div>
   </div>
   <?php /* class view */ ?>

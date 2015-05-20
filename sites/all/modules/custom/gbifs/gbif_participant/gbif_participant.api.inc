@@ -18,7 +18,7 @@ function _gbif_participant_get_registry_participant($pid) {
 function _gbif_participant_get_uuid($participantID) {
 	$api_call = _gbif_participant_api_registry_node() . '?identifier=' . $participantID . '&identifierType=GBIF_PARTICIPANT';
 	$json = json_decode(file_get_contents($api_call));
-	$uuid = $json->results[0]->key;
+	$uuid = (!empty($json->results)) ? $json->results[0]->key : NULL;
 	return $uuid;
 }
 

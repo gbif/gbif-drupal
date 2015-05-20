@@ -29,11 +29,8 @@
 ?>
 <div class="row">
   <header class="content-header col-xs-8">
-    <h2>
-			<?php print $view_title; ?>
-			<a href="<?php print $feed_url; ?>"><img class="rss-icon" src="/sites/all/themes/custom/bvng/images/rss-feed.gif"/></a>
-    </h2>
-
+    <div class="feed"><?php print $feed_icon; ?></div>
+    <h2><?php print $view->get_title(); ?></h2>
   </header>
   <div class="content-header sidebar-header col-xs-3">
     <h2>Filter by region</h2>
@@ -95,12 +92,6 @@
     <?php if ($footer): ?>
       <div class="view-footer">
         <?php print $footer; ?>
-      </div>
-    <?php endif; ?>
-
-    <?php if ($feed_icon): ?>
-      <div class="feed-icon">
-        <?php print $feed_icon; ?>
       </div>
     <?php endif; ?>
 

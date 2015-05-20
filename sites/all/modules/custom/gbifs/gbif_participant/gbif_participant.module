@@ -116,6 +116,7 @@ function gbif_participant_library() {
 	$path = drupal_get_path('module', 'gbif_participant');
 	$libraries['metrics'] = array(
 		'title' => 'Occurrence metrics',
+    'version' => '0.1.0', // we actually don't have a version policy.
 		'js' => array(
 			$path . '/js/loadMetrics.js' => array(
 				'type' => 'file',
@@ -132,6 +133,7 @@ function gbif_participant_library() {
 	);
 	$libraries['map-events'] = array(
 		'title' => 'Map events',
+    'version' => '0.1.0', // we actually don't have a version policy.
 		'js' => array(
 			$path . '/js/map-events.js' => array(
 				'type' => 'file',
@@ -142,6 +144,7 @@ function gbif_participant_library() {
 	);
 	$libraries['subscribe-map-events'] = array(
 		'title' => 'Subscribe map events',
+    'version' => '0.1.0', // we actually don't have a version policy.
 		'js' => array(
 			$path . '/js/subscribeMapEvents.js' => array(
 				'type' => 'file',
@@ -385,7 +388,7 @@ function gbif_participant_preprocess_page(&$variables) {
 
 	// Add JS libraries to provide a link to "View occurrences on Map".
 	$args = arg();
-	if ($args[0] == 'country' && !isset($args[3])) {
+	if ($args[0] == 'country' && isset($args[2]) && !isset($args[3])) {
 		switch ($args[2]) {
 			case 'about':
 			case 'summary':
@@ -406,11 +409,7 @@ function gbif_participant_preprocess_node(&$variables) {
 		$gp_id = field_get_items('node', $variables['node'], 'gp_id');
 		$participantID = $gp_id[0]['value'];
 		$participant = _gbif_participant_participant_query($participantID);
-		$participant = $participant[0];
-
-		$country = gbif_participant_country_lookup($participant->iso2, 'iso2', 'title');
-		$participant->country = $country->name;
-		$variables['participant_ims'] = $participant;
+		$variables['participant_ims'] = $participant[0];
 		$variables['participant_node'] = array();
 
 		// Format the date to only show year.
@@ -432,11 +431,11 @@ function gbif_participant_preprocess_node(&$variables) {
 
 		// Contacts
 		$contacts = _gp_get_participant_contacts($participantID);
-		$variables['participant_ims']->contact_participation = _gbif_participant_print_contacts('participation', $contacts, $participant->iso2);
-		$variables['participant_ims']->contact_contacts = _gbif_participant_print_contacts('contacts', $contacts, $participant->iso2);
+		$variables['participant_ims']->contact_participation = _gbif_participant_print_contacts('participation', $contacts, $variables['participant_ims']->iso2);
+		$variables['participant_ims']->contact_contacts = _gbif_participant_print_contacts('contacts', $contacts, $variables['participant_ims']->iso2);
 
 		// Endorsed publishers
-		$variables['participant_ims']->endorsed_publishers = _gbif_participant_print_endorsed_publishers($participantID, $participant->iso2, 'digest');
+		$variables['participant_ims']->endorsed_publishers = _gbif_participant_print_endorsed_publishers($participantID, $variables['participant_ims']->iso2, 'digest');
 
 		// Social media
 		if (count($variables['gp_comm_social']) != 0) {
@@ -511,7 +510,7 @@ function gbif_participant_page_build(&$page) {
  * @param $chapter
  * @return int|null|string
  */
-function gbif_participant_page_router($iso2, $chapter, $sub_chapter) {
+function gbif_participant_page_router($iso2 = NULL, $chapter = NULL, $sub_chapter = NULL) {
 
 	// Make sure ISO code arrives in UPPERCASE.
 	$iso2 = (isset($iso2)) ? strtoupper($iso2) : NULL;
@@ -874,8 +873,13 @@ function _gbif_participant_participant_query($participantID = NULL, $iso2 = NULL
 		$query->condition('c.iso2', $iso2, '=');
 		$query->condition('p.gbif_membership', array('Other Associate Participant'), 'IN');
 	}
-	$result = $query->execute()->fetchAll();
-	return $result;
+	$results = $query->execute()->fetchAll();
+
+  // insert "country" name in the result
+  foreach ($results as &$result) {
+    $result->country = gbif_participant_country_lookup($result->iso2, 'iso2', 'title');
+  }
+	return $results;
 }
 
 /**
@@ -1531,6 +1535,7 @@ function _gp_participant_list_page() {
 	}
 	$vars = array(
 		'items' => $lists,
+    'title' => '', // Empty title.
 		'type' => 'ul',
 		'attributes' => array(),
 	);
@@ -1821,10 +1826,10 @@ function _gbif_participant_columular_countries($json, $cols) {
 }
 
 /**
- * Looking up in GBIF defined countries.
- * @param $value the value as the key to lookup
- * @param $query_type 'title', 'enumName', 'official', 'isNumerical', 'iso3', 'iso2'
- * @param $return_type 'title', 'enumName', 'official', 'isNumerical', 'iso3', 'iso2'
+ * Utility function for looking up values in GBIF defined countries.
+ * @param $value: value as the key to lookup
+ * @param $query_type: 'title', 'enumName', 'official', 'isNumerical', 'iso3', 'iso2'
+ * @param $return_type: 'title', 'enumName', 'official', 'isNumerical', 'iso3', 'iso2'
  */
 function gbif_participant_country_lookup($value, $query_type, $return_type) {
 	$result = '';

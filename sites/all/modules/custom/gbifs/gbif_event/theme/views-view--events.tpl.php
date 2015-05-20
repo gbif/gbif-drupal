@@ -31,12 +31,12 @@
   <header class="content-header col-xs-8">
     <h2>
 			<?php print $view->get_title(); ?>
-			<?php if ($feed_rss_icon): ?>
+			<?php if (isset($feed_rss_icon)): ?>
 				<div class="feed-icon">
 					<?php print $feed_rss_icon; ?>
 				</div>
 			<?php endif; ?>
-			<?php if ($feed_ical_icon): ?>
+			<?php if (isset($feed_ical_icon)): ?>
 				<div class="feed-ical-icon">
 					<?php print $feed_ical_icon; ?>
 				</div>

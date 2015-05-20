@@ -139,7 +139,7 @@
     </div>
   </div>
 </div>
-<?php if (!empty($next_node) && in_array($type, array('newsarticle', 'featurreddataset', 'useofdata'))): ?>
+<?php if (!empty($next_node) && in_array($type, array('newsarticle', 'featurreddataset', 'usesofdata'))): ?>
 <div class="container well well-lg well-margin-bottom">
   <div class="row">
     <article class="col-xs-12 node-next">

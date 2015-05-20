@@ -1,21 +1,21 @@
 Join the community {"url":"<nolink>"}
 -Join GBIF Community Site {"url":"http:\/\/community.gbif.org\/"}
 -Sign up to GBits newsletter {"url":"newsroom\/summary#signup"}
--GBIF Online Resource Centre {"url":"resources\/summary"}
+-GBIF Online Resource Centre {"url":"resources"}
 Who's participating {"url":"<nolink>"}
--Countries {"url":"participation\/list#voting", "non_drupal_url":true}
--Organizations {"url":"participation/list#other", "non_drupal_url":true}
+-Countries {"url":"participation\/participant-list#voting"}
+-Organizations {"url":"participation/participant-list#other"}
 -Data publishers {"url":"publisher\/search", "non_drupal_url":true}
 Key documents {"url":"<nolink>"}
 -Disclaimer {"url":"terms\/disclaimer"}
 -Data use agreement {"url":"terms/licences\/data-use"}
--Data sharing agreement  {"url":"terms\/licences\/data-sharing"}
--Memorandum of Understanding  {"url":"resources\/2605"}
--Annual Report  {"url":"resources\/9221"}
--GBIF Strategic Plan  {"url":"resources\/2569"}
--GBIF Work Programme  {"url":"resources\/2970"}
--GBIF Travel guidelines  {"url":"http://links.gbif.org\/travel_guidelines.pdf"}
+-Data sharing agreement {"url":"terms\/licences\/data-sharing"}
+-Memorandum of Understanding {"url":"resource\/80661"}
+-Annual Report {"url":"resource\/80930"}
+-GBIF Strategic Plan {"url":"resource\/80632"}
+-GBIF Work Programme {"url":"resource\/80876"}
+-GBIF Travel guidelines {"url":"http://links.gbif.org\/travel_guidelines.pdf"}
 For developers {"url":"<nolink>"}
--Portal API  {"url":"developer", "non_drupal_url":true}
--Developer blog  {"url":"http:\/\/gbif.blogspot.com\/"}
--Tools  {"url":"infrastructure\/tools", "non_drupal_url":true}
+-Portal API {"url":"developer", "non_drupal_url":true}
+-Developer blog {"url":"http:\/\/gbif.blogspot.com\/"}
+-Tools {"url":"infrastructure\/tools", "non_drupal_url":true}

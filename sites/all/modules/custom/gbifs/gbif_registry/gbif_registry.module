@@ -343,13 +343,13 @@ function gbif_registry_create_organisation($json, $user) {
 			'language' => 'eng',
 			'address' => array($json['org']['address']),
 			'city' => $json['org']['city'],
-			'postalCode' => $json['org']['zip'],
-			'latitude' => '',
-			'longitude' => '',
-			'numPublishedDatasets' => ''
+			//'latitude' => '',
+			//'longitude' => '',
+			//'numPublishedDatasets' => ''
 		);
     if (!empty($json['org']['url'])) $data['homepage'] = array($json['org']['url']);
     if (!empty($json['org']['province'])) $data['province'] = $json['org']['province'];
+    if (!empty($json['org']['zip'])) $data['postalCode'] = $json['org']['zip'];
 		$data_json = json_encode($data);
 
 		// MD5 Digest $data to be posted.

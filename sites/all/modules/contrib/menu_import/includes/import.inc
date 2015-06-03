@@ -160,6 +160,7 @@ function menu_import_parse_line($line, $prev_level, array $weights, array $paren
     'external' => FALSE,
     'level' => 0,
     'options' => array(),
+    'non_drupal_url' => FALSE,
   );
 
   // Set default language
@@ -193,6 +194,7 @@ function menu_import_parse_line($line, $prev_level, array $weights, array $paren
                     ? $details['lang'] : NULL;
       $weight = isset($details['weight']) ? intval($details['weight']) : NULL;
       $link_options = empty($details['options']) ? array() : $details['options'];
+      $non_drupal_url = !empty($details['non_drupal_url']) ? $details['non_drupal_url'] : NULL;
     }
     else {
       return _menu_import_mark_error_item($menuitem, t('malformed item details'), $line);
@@ -236,6 +238,7 @@ function menu_import_parse_line($line, $prev_level, array $weights, array $paren
   $menuitem['link_title'] = $title;
   $menuitem['level'] = $level;
   $menuitem['path'] = $path;
+  $menuitem['non_drupal_url'] = $non_drupal_url;
 
   if (!empty($link_options)) {
     $menuitem['options'] = $link_options;
@@ -244,6 +247,11 @@ function menu_import_parse_line($line, $prev_level, array $weights, array $paren
   if (url_is_external($path)) {
     $menuitem['external'] = TRUE;
     $menuitem['link_path'] = $path;
+  }
+  elseif ($non_drupal_url == TRUE) {
+		$env = variable_get('environment_settings');
+    $menuitem['external'] = TRUE;
+    $menuitem['link_path'] = $env['data_portal_base_url'] . '/' . $path;
   }
   elseif (!empty($node_uuid)) {
     $result = entity_get_id_by_uuid('node', array($node_uuid));
@@ -505,6 +513,15 @@ function menu_import_save_menu($menu, $options) {
 
       // Save menuitem and set mlid.
       $mlid = menu_link_save($menuitem);
+
+      // Save non_drupal_url value.
+      if (isset($menuitem['non_drupal_url']) && isset($mlid)) {
+        db_update('menu_links')
+        ->fields(array('non_drupal_url' => $menuitem['non_drupal_url']))
+        ->condition('mlid', $mlid)
+        ->execute();
+      }
+
       if (!$mlid) {
         $failed_cnt++;
       }

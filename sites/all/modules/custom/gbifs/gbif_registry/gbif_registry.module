@@ -71,31 +71,35 @@ function gbif_registry_menu() {
  * Implements hook_cron()
  */
 function gbif_registry_cron() {
-	// send notification to helpdesk if any request is older than 1 week.
-	module_load_include('inc', 'gbif_registry', 'gbif_registry.admin');
-	$queue_items = _gbif_registry_list_queue('queue');
-	foreach ($queue_items as $item) {
-		if (time() - $item['raw_json']['workflow_control']['timestamp'] > 604800) { // 1 week is 604800 seconds.
-			$env = variable_get('environment_settings');
-			$drupal_edit_base_url = str_replace('www', 'drupaledit', $env['data_portal_base_url']);
+  // send notification to helpdesk if any request is older than 1 week.
+  // for UAT and DEV instances we don't send notification.
+  $env = variable_get('environment_settings');
+  $last_reminder = variable_get('gbif_registry_last_reminder');
+  module_load_include('inc', 'gbif_registry', 'gbif_registry.admin');
+  $queue_items = _gbif_registry_list_queue('queue');
+  foreach ($queue_items as $item) {
+    if (time() - $item['raw_json']['workflow_control']['timestamp'] > 604800 && ($last_reminder == NULL || time() - $last_reminder > 259200)) { // 1 week is 604800 seconds.
+      $drupal_edit_base_url = str_replace('www', 'drupaledit', $env['data_portal_base_url']);
 
-			$module = 'gbif_registry';
-			$key = 'reminder';
-			$to = 'helpdesk@gbif.org';
-			$language = language_default();
-			$params = $item['raw_json'];
-			$params['mgt_url'] = $drupal_edit_base_url . '/admin/config/gbif/registry/eoi';
-			$from = 'helpdesk@gbif.org';
-			$send = TRUE;
-			$result = drupal_mail($module, $key, $to, $language, $params, $from, $send);
-			if ($result['result'] == TRUE) {
-				watchdog('gbif_registry', 'Weekly reminder sent for the eoi request from @org-title', array('@org-title' => $item['raw_json']['org']['title']), WATCHDOG_INFO);
-			}
-			else {
-				watchdog('gbif_registry', 'Weekly reminder failed to send for the eoi request from @org-title', array('@org-title' => $item['raw_json']['org']['title']), WATCHDOG_INFO);
-			}
-		}
-	}
+      $module = 'gbif_registry';
+      $key = 'reminder';
+      $to = (is_int(strpos($env['data_portal_base_url'], 'gbif-dev')) !== TRUE && is_int(strpos($env['data_portal_base_url'], 'gbif-uat')) !== TRUE) ? EMAIL_HELPDESK : EMAIL_ADMIN;
+      $language = language_default();
+      $params = $item['raw_json'];
+      $params['mgt_url'] = $drupal_edit_base_url . '/admin/config/gbif/registry/eoi';
+      $params['test_environment'] = TRUE;
+      $from = 'helpdesk@gbif.org';
+      $send = TRUE;
+      $result = drupal_mail($module, $key, $to, $language, $params, $from, $send);
+      if ($result['result'] == TRUE) {
+        variable_set('gbif_registry_last_reminder', time());
+        watchdog('gbif_registry', 'Weekly reminder sent for the eoi request from @org-title', array('@org-title' => $item['raw_json']['org']['title']), WATCHDOG_INFO);
+      }
+      else {
+        watchdog('gbif_registry', 'Weekly reminder failed to send for the eoi request from @org-title', array('@org-title' => $item['raw_json']['org']['title']), WATCHDOG_INFO);
+      }
+    }
+  }
 }
 
 /**

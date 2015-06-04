@@ -172,7 +172,9 @@ function _gbif_registry_detail_of_submission(&$message, $params, $options) {
 }
 
 function _gbif_registry_weekly_reminder(&$message, $params, $options) {
-	$message['subject'] = t('Weekly reminder for the pending endorsement request', array(), $options);
+	$message['subject'] = t('@test_envWeekly reminder for the pending endorsement request', array(
+    '@test_env' => ($params['test_environment'] == TRUE) ? '[TEST] ' : '',
+  ), $options);
 
 	// Note that the message body is an array, not a string.
 	$message['body'][] = t('Hi Helpdesk master,', array(), $options);

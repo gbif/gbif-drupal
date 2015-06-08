@@ -1,0 +1,15 @@
+name = "Service container test"
+core = 7.x
+
+dependencies[] = service_container
+dependencies[] = registry_autoload
+
+registry_autoload[] = PSR-0
+registry_autoload[] = PSR-4
+
+; Information added by Drupal.org packaging script on 2015-06-05
+version = "7.x-1.x-dev"
+core = "7.x"
+project = "service_container"
+datestamp = "1433508787"
+

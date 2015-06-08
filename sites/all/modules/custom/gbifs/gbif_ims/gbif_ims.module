@@ -114,7 +114,7 @@ function gbif_ims_token_info() {
 	return array(
 		'types' => $types,
 		'tokens' => array(
-			'gbif_ims' => $gbif_ims,
+			'member' => $gbif_ims,
 		),
 	);
 }

@@ -808,7 +808,7 @@ function gbif_mendeley_token_info() {
   return array(
     'types' => $types,
     'tokens' => array(
-      'gbif_mendeley' => $gbif_mendeley,
+      'mendeley' => $gbif_mendeley,
     ),
   );
 }

@@ -147,7 +147,7 @@ function bvng_preprocess_page(&$variables) {
 			case 'generictemplate':
         if (drupal_match_path($req_path, 'node/241')) $altered_path = 'user';
 
-				$jobs_adverts = array('node/82115', 'node/82116', 'node/82117');
+				$jobs_adverts = array('node/82115', 'node/82116', 'node/82117', 'node/82162');
 				if (in_array($req_path, $jobs_adverts)) {
 					$altered_path = drupal_get_normal_path('newsroom/opportunities'); // node/242
 				}

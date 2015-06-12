@@ -1,0 +1,46 @@
+<?php
+
+/**
+ * Implements hook_install().
+ */
+function gbif_project_install() {
+  // Create a directory for storing relevant files for IMS events.
+  $uris = array(
+    'public://gbif_project/images/projects',
+    'public://gbif_project/files',
+    'public://gbif_project/images/organizations'
+  );
+  foreach ($uris as $uri) {
+    $dir_exists = file_prepare_directory($uri);
+    if (!$dir_exists) {
+      $dir_created = drupal_mkdir($uri, NULL, TRUE);
+      if ($dir_created == TRUE) {
+        watchdog('gbif_project', '!directory created.', array('!directory' => $uri), WATCHDOG_NOTICE);
+      }
+      else {
+        watchdog('gbif_project', '!directory creation failed.', array('!directory' => $uri), WATCHDOG_ERROR);
+      }
+    }
+    else {
+      watchdog('gbif_project', '!directory already exists.', array('!directory' => $uri), WATCHDOG_WARNING);
+    }
+  }
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function gbif_project_uninstall() {
+  // Delete the directory and generated data from this module
+  $uri = 'public://gbif_project';
+  $dir_exists = file_prepare_directory($uri);
+  if ($dir_exists) {
+    $deleted = file_unmanaged_delete_recursive($uri);
+    if ($deleted == TRUE) {
+      drupal_set_message('Project files are successfully deleted.');
+    }
+  }
+  gbif_tweaks_delete_all(array('project'));
+  node_type_delete('project');
+  field_purge_batch(500);
+}

@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the GBIF Project feature.
+ */
+
+include_once 'gbif_project.features.inc';

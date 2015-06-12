@@ -34,7 +34,7 @@ function gbif_event_install() {
  * Implements hook_uninstall().
  */
 function gbif_event_uninstall() {
-	// Detele the directory and generated data from this module
+	// Delete the directory and generated data from this module
 	$uri = 'public://gbif_event';
 	$dir_exists = file_prepare_directory($uri);
 	if ($dir_exists) {

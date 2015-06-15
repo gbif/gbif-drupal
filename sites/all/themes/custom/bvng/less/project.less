@@ -1,0 +1,145 @@
+.lead-partner {
+  display: inline-block;
+}
+
+.field-name-field-partners,
+.field-name-field-related-news,
+.field-name-field-related-events,
+.field-name-field-related-resources,
+.field-name-gr-file,
+.field-name-field-programme,
+.field-name-pj-call,
+.field-name-field-status,
+.field-name-field-duration,
+.field-name-field-pj-funding-allocated,
+.field-name-field-pj-matching-fund,
+.field-name-field-related-projects,
+.field-name-field-co-funder {
+  clear: both;
+  margin-bottom: 20px;
+  
+  .field-label {
+    margin-bottom: 5px;
+    margin-top: 0px;
+    font-size: 13px;
+    font-weight: normal;
+    text-transform: uppercase;
+    text-shadow: 0 1px white;
+  }
+  
+  .field-item {
+    clear: both;
+    color: @cGray2;
+  }
+}
+
+.field-name-field-related-resources {
+  padding-top: 20px;
+  border-top: 1px solid @page-header-border-color;
+}
+
+.sidebar {
+  padding-right: 20px;
+
+  .field-items {
+    margin-left: 10px;
+  }
+  
+  .field-item {
+    display: list-item;
+    padding-left: 0px;
+    list-style: square;
+    list-style-position: outside;
+    list-style-image: url("../images/bullet.png");
+  }
+
+  .sticky-bottom {
+    position: absolute;
+    bottom: -10px;
+  }
+}
+
+.programme-content + .sidebar {
+  .field-items {
+    margin-left: 0px;
+  }
+  
+  .field-item {
+    display: normal;
+    list-style: none;
+  }
+}
+
+.block-top {
+  border-top: 1px solid @page-header-border-color;
+  padding-top: 20px;
+}
+
+.programme-content {
+  border-top: none;
+  padding-top: 0px;
+}
+
+.image-field-caption {
+  font-size: 11px;
+}
+
+.height-wrapper {
+  min-height: 100%;
+  width: 100%;
+  position: relative;
+  display: inline-block;
+}
+
+.funder-image-link {
+  display: block;
+}
+
+.field-style-teaser {
+  .field-item {
+    margin-bottom: 10px;
+    img {
+      float: left;
+      margin-right: 10px;
+    }
+  }
+}
+
+.block-views {
+  border-top: 1px solid @page-header-border-color;
+  padding-top: 20px;
+  margin-bottom: 20px;
+  
+  h2 {
+    margin-bottom: 5px;
+    margin-top: 0px;
+    font-size: 13px;
+    font-weight: normal;
+    text-transform: uppercase;
+    text-shadow: 0 1px white;
+  }
+  .view-content {
+    .views-row {
+      min-height: 72px;
+    }
+    
+    .views-field-field-image {
+      float: right;
+    }
+    
+    .views-field-body {
+      font-size: 14px;
+    }
+  }
+}
+
+.node-project,
+.node-programme {
+  .field-name-field-partners,
+  .field-name-field-related-events,
+  .field-name-field-related-projects,
+  .field-name-field-related-resources {
+    border-top: 1px solid @page-header-border-color;
+    padding-top: 20px;
+  }
+}

@@ -1,0 +1,114 @@
+Data {"url":"<front>"}
+-Explore occurrences {"url":"occurrence", "non_drupal_url":true}
+-Explore species {"url":"species", "non_drupal_url":true}
+-Explore dataset {"url":"dataset", "non_drupal_url":true}
+-Explore by country {"url":"country"}
+-Explore data trends {"url":"analytics\/global"}
+-Separator {"url":"<separator>"}        
+-Publishing data {"url":"publishing-data\/summary", "description": "How and why you should make biodiversity datasets accessible through GBIF"}
+--Summary {"url":"publishing-data\/summary", "description": "How and why you should make biodiversity datasets accessible through GBIF"}
+--Benefits {"url":"publishing-data\/benefits"}
+--How to publish {"url":"publishing-data\/how-to-publish"}
+--Guidelines {"url":"publishing-data\/guidelines"}
+--Data papers {"url":"publishing-data\/data-papers"}
+--Resources {"url":"publishing-data\/resources"}
+-Using Data {"url":"using-data\/summary", "description": "How data accessed through GBIF are used in research and policy"}
+--Summary {"url":"using-data\/summary", "description": "How data accessed through GBIF are used in research and policy"}
+--Science relevance {"url":"using-data\/science-relevance"}
+--Methods {"url":"using-data\/methods"}
+--Data applications {"url":"using-data\/data-applications"}
+--Policy relevance {"url":"using-data\/policy-relevance"}
+-Infrastructure {"url":"infrastructure\/summary", "description": "How GBIF works as a global informatics infrastructure", "non_drupal_url":true}
+--Summary {"url":"infrastructure\/summary", "non_drupal_url":true}
+--Registry {"url":"infrastructure\/registry", "non_drupal_url":true}
+--Occurrences {"url":"infrastructure\/occurrences", "non_drupal_url":true}
+--Data processing {"url":"infrastructure\/data-processing","hidden":true, "non_drupal_url":true}
+--Tools {"url":"infrastructure\/tools", "non_drupal_url":true}
+--Species {"url":"<front>","hidden":true, "non_drupal_url":true}
+--Maps {"url":"<front>","hidden":true, "non_drupal_url":true}
+--FAQ {"url":"<front>","hidden":true}
+-GBIF IPT {"url":"ipt","hidden":true, "non_drupal_url":true}
+--Summary {"url":"ipt","hidden":true, "non_drupal_url":true}
+--Stats {"url":"ipt\/stats","hidden":true, "non_drupal_url":true}
+--Releases {"url":"ipt\/releases","hidden":true, "non_drupal_url":true}
+News {"url":"<front>"}
+-GBIF News {"url":"newsroom\/summary", "description": "News and events from around the GBIF community"}
+--Summary {"url":"newsroom\/summary"}
+--News {"url":"newsroom\/news"}
+--Uses of data {"url":"newsroom\/uses"}
+---Featured uses of data accessed through GBIF {"url":"page\/82148"}
+--Opportunities {"url":"newsroom\/opportunities"}
+--Events {"url":"newsroom\/events\/upcoming"}
+---Past events {"url":"newsroom\/events\/past"}
+--Newsletter {"url":"newsroom\/newsletter"}
+--Consultations {"url":"newsroom\/consultations"}
+-Featured data use {"url":"newsroom\/uses"}
+-Opportunities {"url":"newsroom\/opportunities"}
+-Events {"url":"newsroom\/events\/upcoming"}
+-Newsletter {"url":"newsroom\/newsletter"}
+-Consultations {"url":"newsroom\/consultations"}
+Community {"url":"<front>"}
+-Participation {"url":"participation\/summary", "description": "Being part of the GBIF community"}
+--Summary {"url":"participation\/summary"}
+--Membership {"url":"participation\/membership"}
+--Regional collaboration {"url":"participation\/regional-collaboration"}
+--Participant list {"url":"participation\/participant-list"}
+--How to join {"url":"participation\/how-to-join"}
+-Capacity enhancement {"url":"capacity-enhancement\/summary", "description": "Sharing expertise, experience and technology around the GBIF community"}
+--Summary {"url":"capacity-enhancement\/summary"}
+--Support programme {"url":"programme"}
+--BID {"url":"programme\/bid"}
+--BIFA {"url":"programme\/bifa"}
+--GBIF support {"url":"programme\/gbif-support"}
+--Training {"url":"capacity-enhancement\/training"}
+-Resources {"url":"resources", "description": "Library of documents, tools and and other information to support the GBIF community (look template.php for changing this particular item.)"}
+--Resources {"url":"resources"}
+--Literature {"url":"mendeley"}
+--Key information {"url":"resources\/key-information"}
+--For publishers {"url":"resources\/for-publishers"}
+--For users {"url":"resources\/for-users"}
+--For GBIF delegations {"url":"resources\/for-delegations"}
+--For nodes {"url":"resources\/for-nodes"}
+About {"url":"<front>"}
+-What is GBIF {"url":"what-is-gbif", "description": "A short description of the Global Biodiversity Information Facility"}
+--What is GBIF? {"url":"what-is-gbif"}
+-Key information {"url":"resources\/key-information"}
+--Resources {"url":"resources"}
+--Literature {"url":"mendeley"}
+--Key information {"url":"resources\/key-information"}
+--For publishers {"url":"resources\/for-publishers"}
+--For users {"url":"resources\/for-users"}
+--For GBIF delegations {"url":"resources\/for-delegations"}
+--For nodes {"url":"resources\/for-nodes"}
+-Awards {"url":"about\/awards", "description": "Bringing biodiversity information to life"}
+--Awards {"url":"about\/awards"}
+-Governance {"url":"governance\/governing-board", "description": "How decisions, advice, management and funding are organized in GBIF"}
+--Governing Board {"url":"governance\/governing-board"}
+--Standing committees {"url":"governance\/standing-committees"}
+--Task groups {"url":"governance\/task-groups"}
+--Finance {"url":"governance\/finance"}
+--Secretariat {"url":"governance\/secretariat"}
+-Who we work with {"url":"who-we-work-with", "description": "GBIF's key collaborations, partnerships and affiliations"}
+--Who we work with {"url":"who-we-work-with"}
+-Contact {"url":"contact\/contact-us", "description": "Finding people and information around the GBIF community"}
+--Contact us {"url":"contact\/contact-us"}
+--Directory of contacts {"url":"contact\/directory-of-contacts"}
+Search {"url":"<nolink>", "description":"This is the placeholder for the search form that aligns with the navigation."}
+Home {"url":"<front>","hidden":true}
+-Frequently Asked Questions {"url":"<front>","hidden":true, "description": "Contact us on <a href=\"mailto:helpdesk@gbif.org\">helpdesk@gbif.org<\/a> for more assistance"}
+--Data use {"url":"faq\/data-use"}
+-Terms of use {"url":"<front>","hidden":true, "description": "Licensing agreements and disclaimers relating to access and use of GBIF-mediated data"}
+--Licences {"url":"terms\/licences"}
+--Data sharing {"url":"terms\/licences\/data-sharing"}
+--Data use {"url":"terms\/licences\/data-use"}
+--Disclaimer {"url":"terms\/disclaimer"}
+-Biodiversity Information for Development {"url":"<front>","hidden":true, "description": "Enhancing capacity, availability and use of biodiversity information for policy and human well-being"}
+--BID {"url":"bid"}
+-Login to GBIF {"url":"<front>"}
+--Account {"url":"user\/login"}
+-Register new GBIF account {"url":"<front>", "description": "Please, register to the GBIF data portal for downloading data, or login if you already have an account"}
+--Account {"url":"user\/register"}
+-Request a new password {"url":"<front>", "description": "Please enter your username or the registered email address in order to reset your password"}
+--Account {"url":"user\/password"}
+-Misc {"url": "<front>", "hidden":true}
+--Contact {"url": "newsroom\/contact", "hidden":true}

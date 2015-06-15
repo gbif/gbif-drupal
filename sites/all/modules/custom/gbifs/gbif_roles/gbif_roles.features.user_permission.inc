@@ -91,15 +91,6 @@ function gbif_roles_user_default_permissions() {
     'module' => 'dashboard',
   );
 
-  // Exported permission: 'access devel information'.
-  $permissions['access devel information'] = array(
-    'name' => 'access devel information',
-    'roles' => array(
-      'administrator' => 'administrator',
-    ),
-    'module' => 'devel',
-  );
-
   // Exported permission: 'access rules debug'.
   $permissions['access rules debug'] = array(
     'name' => 'access rules debug',
@@ -532,6 +523,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['administer search_api'] = array(
     'name' => 'administer search_api',
     'roles' => array(
+      'Editors' => 'Editors',
       'administrator' => 'administrator',
     ),
     'module' => 'search_api',
@@ -1126,15 +1118,6 @@ function gbif_roles_user_default_permissions() {
     'module' => 'taxonomy',
   );
 
-  // Exported permission: 'delete terms in taxanavigation'.
-  $permissions['delete terms in taxanavigation'] = array(
-    'name' => 'delete terms in taxanavigation',
-    'roles' => array(
-      'administrator' => 'administrator',
-    ),
-    'module' => 'taxonomy',
-  );
-
   // Exported permission: 'delete terms in term_attribute'.
   $permissions['delete terms in term_attribute'] = array(
     'name' => 'delete terms in term_attribute',
@@ -1490,15 +1473,6 @@ function gbif_roles_user_default_permissions() {
     'module' => 'taxonomy',
   );
 
-  // Exported permission: 'edit terms in taxanavigation'.
-  $permissions['edit terms in taxanavigation'] = array(
-    'name' => 'edit terms in taxanavigation',
-    'roles' => array(
-      'administrator' => 'administrator',
-    ),
-    'module' => 'taxonomy',
-  );
-
   // Exported permission: 'edit terms in term_attribute'.
   $permissions['edit terms in term_attribute'] = array(
     'name' => 'edit terms in term_attribute',
@@ -1522,15 +1496,6 @@ function gbif_roles_user_default_permissions() {
       'Editors' => 'Editors',
     ),
     'module' => 'taxonomy',
-  );
-
-  // Exported permission: 'execute php code'.
-  $permissions['execute php code'] = array(
-    'name' => 'execute php code',
-    'roles' => array(
-      'administrator' => 'administrator',
-    ),
-    'module' => 'devel',
   );
 
   // Exported permission: 'flush caches'.
@@ -1674,15 +1639,6 @@ function gbif_roles_user_default_permissions() {
       'administrator' => 'administrator',
     ),
     'module' => 'shortcut',
-  );
-
-  // Exported permission: 'switch users'.
-  $permissions['switch users'] = array(
-    'name' => 'switch users',
-    'roles' => array(
-      'administrator' => 'administrator',
-    ),
-    'module' => 'devel',
   );
 
   // Exported permission: 'toggle nicemessages'.

@@ -43,6 +43,19 @@ function gbif_tweaks_task_wrapper($task) {
 	return $result['message'] . ' ' . $time_spent;
 }
 
+function gbif_tweaks_theme_registry_alter(&$theme_registry) {
+  if (isset($theme_registry)) {
+    unset($theme_registry['image_field_caption']['template']);
+    unset($theme_registry['image_field_caption']['theme path']);
+    $theme_registry['image_field_caption']['function'] = 'gbif_tweaks_image_caption_format';
+  }
+}
+
+function gbif_tweaks_image_caption_format($variables) {
+  $output = $variables['image'];
+  $output .= '<div class="' . $variables['classes'] . '">' . $variables['caption'] . '</div>';
+  return $output;
+}
 /**
  * Create or remove redirects.
  * @param $module
@@ -255,4 +268,12 @@ function gbif_tweaks_to_byte_size($p_sFormatted) {
 		return false;
 	}
   return $iUnits * pow(1024, $aUnits[$sUnit]);
+}
+
+/**
+ * Helper function to get the GBIF base URL that reflects deployment environment.
+ */
+function gbif_portal_base_url() {
+  $env = variable_get('environment_settings');
+  return $env['data_portal_base_url'];
 }

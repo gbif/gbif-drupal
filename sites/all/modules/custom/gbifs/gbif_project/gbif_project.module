@@ -5,3 +5,599 @@
  */
 
 include_once 'gbif_project.features.inc';
+
+/**
+ * Implements hook_menu().
+ */
+function gbif_project_menu() {
+  $items = array();
+  // Menu link for full list browsing.
+  $items['programme'] = array(
+    'type' => MENU_NORMAL_ITEM,
+    'title' => 'Programme',
+    'page callback' => 'gbif_project_programme_page',
+    'access callback' => TRUE,
+    'weight' => 30,
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function gbif_project_theme($existing, $type, $theme, $path) {
+  $path = drupal_get_path('module', 'gbif_project');
+  return array(
+    'node__project' => array(
+      'template' => 'node--project',
+      'path' => $path . '/theme',
+    ),
+    'node__programme' => array(
+      'template' => 'node--programme',
+      'path' => $path . '/theme',
+    ),
+  );
+}
+
+/**
+ * Implements hook_theme_registry_alter().
+ */
+function gbif_project_theme_registry_alter(&$theme_registry) {
+  if (isset($theme_registry)) {
+    $theme_registry['field_multiple_value_form']['function'] = 'gbif_project_field_multiple_value_form';
+    $theme_registry['file_link']['function'] = 'gbif_project_file_link';
+  }
+}
+
+/**
+ * Override the default theme_file_link() so we have a chance to modify according
+ * to field type.
+ * @todo There should be a better way.
+ * @see theme_file_link()
+ */
+function gbif_project_file_link($variables) {
+  $file = $variables['file'];
+  $icon_directory = $variables['icon_directory'];
+
+  $url = file_create_url($file->uri);
+  $icon = theme('file_icon', array('file' => $file, 'icon_directory' => $icon_directory));
+
+  // Set options as per anchor format described at
+  // http://microformats.org/wiki/file-format-examples
+  $options = array(
+    'attributes' => array(
+      'type' => $file->filemime . '; length=' . $file->filesize,
+    ),
+  );
+
+  // Use the description as the link text if available.
+  if (empty($file->description)) {
+    $link_text = $file->filename;
+  }
+  else {
+    $link_text = $file->description;
+    $options['attributes']['title'] = check_plain($file->filename);
+  }
+
+  // File size
+  $file_size = (!empty($file->filesize)) ? ' (' . format_bytes($file->filesize) . ')' : NULL;
+
+  return '<span class="file">' . $icon . ' ' . l($link_text, $url, $options) . $file_size . '</span>';
+}
+
+/**
+ * Implements hook_field_widget_form_alter().
+ */
+function gbif_project_field_widget_form_alter(&$element, &$form_state, $context) {
+  if (isset($context['field']) && ($context['field']['field_name'] == 'field_pj_participants' || $context['field']['field_name'] == 'field_pj_partners')) {
+    if (isset($element) && isset($context)) {
+      // capture the 'lead' attribute when available
+      $lead_attribute = '';
+      foreach ($context['items'] as $item) {
+        // make sure the 'lead' attribute comes from the right entityreference.
+        $target_id = explode("(", $element['target_id']['#default_value']);
+        $target_id = explode(")", $target_id[1]);
+        if ($item['target_id'] == $target_id[0]) {
+          $lead_attribute = $item['lead'];
+        }
+      }
+      $element['lead'] = array(
+        '#type' => 'checkbox',
+        '#default_value' => $lead_attribute
+      );
+    }
+  }
+}
+
+function gbif_project_programme_page(&$variables) {
+
+}
+
+/**
+ * Implements hook_field_schema_alter().
+ */
+function gbif_project_field_schema_alter(&$schema, $field) {
+  // for the field table that we store referenced organization, we add a column to
+  // indicate the lead.
+  if ($field['module'] == 'entityreference') {
+    if ($field['field_name'] == 'field_pj_participants' || $field['field_name'] == 'field_pj_partners') {
+      $schema['columns']['lead'] = array(
+        'description' => 'The attribute for the lead.',
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => FALSE,
+        'unsigned' => TRUE
+      );
+      $schema['indexes']['lead'] = array('lead');
+    }
+  }
+}
+
+/**
+ * Override theme_field_multiple_value_form()
+ * Altered in gbif_project_theme_registry_alter()
+ * @see modules/field/field.form.inc
+ */
+function gbif_project_field_multiple_value_form($variables) {
+  $element = $variables['element'];
+  $output = '';
+
+  if ($element['#cardinality'] > 1 || $element['#cardinality'] == FIELD_CARDINALITY_UNLIMITED) {
+    $table_id = drupal_html_id($element['#field_name'] . '_values');
+    $order_class = $element['#field_name'] . '-delta-order';
+    $required = !empty($element['#required']) ? theme('form_required_marker', $variables) : '';
+
+    // for participants and partners, we add an extra column to the header.
+    if ($variables['element']['#field_name'] == 'field_pj_participants' || $variables['element']['#field_name'] == 'field_pj_partners') {
+      $header = array(
+        array(
+          'data' => '<label>' . t('!title !required', array('!title' => $element['#title'], '!required' => $required)) . "</label>",
+          'colspan' => 2,
+          'class' => array('field-label'),
+        ),
+        t('Lead'),
+        t('Order'),
+      );
+    }
+    else {
+      $header = array(
+        array(
+          'data' => '<label>' . t('!title !required', array('!title' => $element['#title'], '!required' => $required)) . "</label>",
+          'colspan' => 2,
+          'class' => array('field-label'),
+        ),
+        t('Order'),
+      );
+    }
+    $rows = array();
+
+    // Sort items according to '_weight' (needed when the form comes back after
+    // preview or failed validation)
+    $items = array();
+    foreach (element_children($element) as $key) {
+      if ($key === 'add_more') {
+        $add_more_button = &$element[$key];
+      }
+      else {
+        $items[] = &$element[$key];
+      }
+    }
+    usort($items, '_field_sort_items_value_helper');
+
+    // Add the items as table rows.
+    foreach ($items as $key => $item) {
+      $item['_weight']['#attributes']['class'] = array($order_class);
+      $delta_element = drupal_render($item['_weight']);
+      if ($variables['element']['#field_name'] == 'field_pj_participants' || $variables['element']['#field_name'] == 'field_pj_partners') {
+        // prepare a render array for checkbox
+        $lead = $item;
+        unset($lead['_weight']);
+        unset($lead['target_id']);
+        unset($item['lead']);
+        $cells = array(
+          array('data' => '', 'class' => array('field-multiple-drag')),
+          drupal_render($item),
+          drupal_render($lead),
+          array('data' => $delta_element, 'class' => array('delta-order')),
+        );
+      }
+      else {
+        $cells = array(
+          array('data' => '', 'class' => array('field-multiple-drag')),
+          drupal_render($item),
+          array('data' => $delta_element, 'class' => array('delta-order')),
+        );
+      }
+      $rows[] = array(
+        'data' => $cells,
+        'class' => array('draggable'),
+      );
+    }
+
+    $output = '<div class="form-item">';
+    $output .= theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => $table_id, 'class' => array('field-multiple-table'))));
+    $output .= $element['#description'] ? '<div class="description">' . $element['#description'] . '</div>' : '';
+    $output .= '<div class="clearfix">' . drupal_render($add_more_button) . '</div>';
+    $output .= '</div>';
+
+    drupal_add_tabledrag($table_id, 'order', 'sibling', $order_class);
+  }
+  else {
+    foreach (element_children($element) as $key) {
+      $output .= drupal_render($element[$key]);
+    }
+  }
+
+  return $output;
+}
+
+/**
+ * Implements hook_preprocess_page().
+ */
+function gbif_project_page_build(&$page) {
+  if (isset($page['content']['system_main']['nodes'])) {
+    $element_child = element_children($page['content']['system_main']['nodes']);
+    if (count($element_child) == 1) {
+      foreach ($element_child as $nid) {
+        $node = $page['content']['system_main']['nodes'][$nid]['#node'];
+      }
+      if (isset($node)) {
+        $node_wrapper = entity_metadata_wrapper('node', $node);
+        switch ($node->type) {
+          case 'programme':
+            $page['highlighted_title'] = array(
+              'name' => $node_wrapper->title->value(),
+              'description' => $node_wrapper->field_subtitle->value(),
+            );
+            break;
+          case 'project':
+            // look for referenced programme
+            $entity = $node_wrapper->field_programme->value();
+            $entity_wrapper = entity_metadata_wrapper('node', $entity);
+            $page['highlighted_title'] = array(
+              'name' => $entity_wrapper->title->value(),
+              'description' => $entity_wrapper->field_subtitle->value()
+            );
+            break;
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_node().
+ * @param $variables
+ */
+function gbif_project_preprocess_node(&$variables) {
+  $node_type = (isset($variables)) ? $variables['node']->type : NULL;
+  $content = $variables['content'];
+  $node_wrapper = entity_metadata_wrapper('node', $variables['node']);
+
+  switch ($node_type) {
+    case 'project':
+      // Partners block, a merge of field_pj_participants and field_pj_partners values
+      if (count($variables['field_pj_participants']) > 0 || count($variables['field_pj_partners']) > 0) {
+        $mixed_partners = array_merge($variables['field_pj_participants'], $variables['field_pj_partners']);
+        $lead_partners = array();
+        $partners = array();
+        // First pick participants with 'lead'
+        foreach ($mixed_partners as &$mixed_partner) {
+          if ($mixed_partner['lead'] == '1') $lead_partners[] = $mixed_partner;
+          unset($mixed_partner);
+        }
+        $count_lead_partners = count($lead_partners);
+        // then other normal ones
+        foreach ($mixed_partners as &$mixed_partner) {
+          if ($mixed_partner['lead'] == '0') $partners[] = $mixed_partner;
+        }
+        $count_partners = count($partners);
+
+        // iterate through $partners and produce HTML
+        if ($count_lead_partners > 0 || $count_partners > 0) {
+          $partners_html = '<div class="field field-name-field-partners field-type-entityreference field-label-above">';
+          $partners_html .= '<div class="field-label">' . format_plural(count($partners), 'Partner', 'Partners', array()) . '</div>';
+          $partners_html .= '<div class="field-items">';
+          $count_lead_partners = count($lead_partners);
+          if ($count_lead_partners > 0) {
+            $partners_html .= '<span class="partners-lead">' . t('Lead') . ': ' . '</span>';
+            foreach ($lead_partners as $k => $lp) {
+              $partners_html .= '<div class="field-item lead-partner">';
+              $partners_html .= _gbif_project_get_partner_link($lp['entity']);;
+              if ($k + 1 < $count_lead_partners) {
+                $partners_html .= ', ';
+              }
+              $partners_html .= '</div>';
+            }
+          }
+          if (count($partners) > 0) {
+            foreach ($partners as $k => $p) {
+              $partners_html .= '<div class="field-item">';
+              $partners_html .= _gbif_project_get_partner_link($p['entity']);
+              $partners_html .= '</div>';
+            }
+          }
+          $partners_html .= '</div>'; // closing field-items
+          $partners_html .= '</div>'; // closing field-name-field-partners
+        }
+
+        if (isset($partners_html)) $variables['partners_html'] = $partners_html;
+      }
+
+      // resource block
+      $variables['resources_html'] = _gbif_project_merge_resources($content);
+
+      break;
+
+    case 'programme':
+      // resource block
+      $variables['resources_html'] = _gbif_project_merge_resources($content);
+
+      // related projects
+      // look up all projects that refer to this programme
+      $query = new EntityFieldQuery();
+      $entities = $query->entityCondition('entity_type', 'node')
+        ->propertyCondition('type', 'project')
+        ->propertyCondition('status', 1)
+        ->fieldCondition('field_programme', 'target_id', $variables['nid'], '=')
+        ->execute();
+
+      // loop through and print
+      if (isset($entities['node'])) {
+        $projects_html = '<div class="field field-name-field-related-projects field-type-entityreference field-label-above">';
+        $projects_html .= '<div class="field-label">' . format_plural(count($entities['node']), 'Project', 'Projects', array()) . '</div>';
+        $projects_html .= '<div class="field-items">';
+
+        foreach ($entities['node'] as $nid => $ref) {
+          $classes = 'field-item';
+          $projects_html .= '<div class="' . $classes . '">';
+          $entity = node_load($nid);
+          $projects_html .= l($entity->title, drupal_get_path_alias('node/' . $entity->nid));
+          $projects_html .= '</div>'; // closing field-item
+        }
+
+        $projects_html .= '</div>'; // closing field-items
+        $projects_html .= '</div>'; // closing field
+        $variables['projects_html'] = $projects_html;
+      }
+
+      break;
+  }
+}
+
+/**
+ * Altering field output based on various conditions.
+ * @param $variables
+ */
+function gbif_project_preprocess_field(&$variables) {
+  $field_name = $variables['element']['#field_name'];
+
+  switch ($field_name) {
+    case 'field_programme':
+      $entity_wrapper = entity_metadata_wrapper('node', $variables['element']['#items'][0]['entity']);
+      $acronym = $entity_wrapper->field_acronym->value();
+      $url_alias = drupal_get_path_alias('node/' . $variables['element']['#items'][0]['entity']->nid);
+      $variables['items'][0]['#markup'] = l($acronym, $url_alias);
+      break;
+    case 'pj_call':
+      // call won't be click-able until it's ready to be exposed in public
+      // by configuration there is only one value in pj_call
+      $entity_wrapper = entity_metadata_wrapper('node', $variables['element']['#items'][0]['entity']);
+      $acronym = $entity_wrapper->field_acronym->value();
+      $variables['items'][0]['#markup'] = $acronym;
+      break;
+    case 'field_duration':
+      // Precision only to month
+      $start_timestamp = $variables['element']['#items'][0]['value'];
+      $end_timestamp = $variables['element']['#items'][0]['value2'];
+      $duration = date('M, Y', $start_timestamp) . ' - ' . date('M, Y', $end_timestamp);
+      $variables['items'][0]['#markup'] = $duration;
+      break;
+    case 'field_pj_funding_allocated':
+    case 'field_pj_matching_fund':
+      // Add currency and thousand delimiter
+      $current_markup = str_replace(' ', ',', $variables['element'][0]['#markup']);
+      $currency = ' EUR';
+      $variables['items'][0]['#markup'] = $current_markup . $currency;
+      break;
+    case 'field_co_funder':
+      // make funder a link if an URL is provided
+      foreach ($variables['element']['#items'] as $i => $item) {
+        $entity_wrapper = entity_metadata_wrapper('node', $item['entity']);
+        $org_url = $entity_wrapper->field_url->value();
+
+        // In the programme type, the field_co_funder is rendered differently
+        // with funder image and statement, execpt GBIF funded ones.
+        // For other content types, we only render it as a link.
+        if ($variables['element']['#object']->type == 'programme' && $item['entity']->title !== 'Global Biodiversity Information Facility') {
+          // Make the name of the funder a link if it's mentioned in the statement.
+          if (count($org_url) > 0) { // First check if an URL is available.
+            $funding_statement = $entity_wrapper->field_funding_statement->value();
+            $funder_mentioned = strpos($funding_statement, $item['entity']->title);
+            if ($funder_mentioned !== FALSE && !empty($org_url[0]['url'])) {
+              $funder_link = l($org_url[0]['title'], $org_url[0]['url']);
+              $funding_statement = str_replace($item['entity']->title, $funder_link, $funding_statement);
+            }
+          }
+
+          // Produce linkable funder image.
+          $field_image = $entity_wrapper->field_image->value();
+          $image_array = field_view_value('node', $item['entity'], 'field_image', $field_image, array(
+            'type' => 'image',
+            'settings' => array(
+              'image_style' => 'funder_image'
+            )
+          ));
+          $image = render($image_array);
+          $image_link = l($image, $org_url[0]['url'], array(
+            'html' => TRUE,
+            'attributes' => array(
+              'title' => $org_url[0]['title'],
+              'class' => 'funder-image-link'
+            )
+          ));
+
+          $variables['items'][$i]['#markup'] = '<p>' . $funding_statement . '</p>'. $image_link;
+        }
+        else {
+          // we always use the first one for URL
+          if (count($org_url) > 0) {
+            $link = $variables['items'][$i]['#markup'];
+            if (!empty($org_url[0]['url'])) {
+              $link = l($org_url[0]['title'], $org_url[0]['url']);
+            }
+            $variables['items'][$i]['#markup'] = $link;
+          }
+        }
+
+        unset($org_url);
+      }
+      break;
+    case 'field_related_news':
+      $entity_type = $variables['element']['#object']->type;
+      // For now we only render referenced news this way for programmes and projects.
+      if ($entity_type == 'programme' || $entity_type == 'project') {
+        $variables['classes_array'][] = 'field-style-teaser';
+        foreach ($variables['element']['#items'] as $i => $item) {
+          $entity_wrapper = entity_metadata_wrapper('node', $item['entity']);
+          // news image
+          $field_image = $entity_wrapper->field_image->value();
+          if (!empty($field_image)) {
+            $image_array = field_view_value('node', $item['entity'], 'field_image', $field_image, array(
+              'type' => 'image',
+              'settings' => array(
+                'image_style' => 'teaser_thumbmail'
+              )
+            ));
+            $image = render($image_array);
+          }
+          // if no image attached, use GBIF teaser thumbnail from the theme.
+          else {
+            $image_vars = array(
+              'path' => drupal_get_path('theme', 'bvng') . '/images/GBIF-2015_teaser_thumbnail.png',
+              'width' => 72,
+              'height' => 72,
+              'alt' => '',
+              'title' => '',
+              'attributes' => array()
+            );
+            $image = theme_image($image_vars);
+          }
+          $link = $variables['items'][$i]['#markup'];
+
+          // summary
+          $field_body = $entity_wrapper->body->value();
+          $body_array = field_view_field('node', $item['entity'], 'body', array(
+            'label' => 'hidden',
+            'type' => 'smart_trim_format',
+            'settings' => array(
+              'trim_length' => 300,
+              'trim_type' => 'chars',
+              'trim_suffix' => '...',
+              'trim_link' => FALSE,
+              'more_link' => FALSE,
+              'more_text' => 'Read more',
+              'summary_handler' => 'full',
+              'trim_options' => array(),
+              'trim_preserve_tags' => '',
+            ),
+            'weight' => 0
+          ));
+          $body_teaser = render($body_array);
+
+          $variables['items'][$i]['#markup'] = $image . '<p>' . $link . '</p>' . $body_teaser;
+          unset($image, $image_array, $field_image, $field_body, $body_teaser);
+        }
+      }
+      break;
+    case 'body':
+      //
+      $temp = '';
+      break;
+  }
+}
+
+/**
+ * Helper function to merge related resources links and locally attached files
+ * for related resources block
+ * @see theme_field()
+ */
+function _gbif_project_merge_resources($content) {
+  $mixed_resources = array();
+  $fields_to_merge = array('field_related_resources', 'gr_file');
+  foreach ($fields_to_merge as $field_to_merge) {
+    if (isset($content[$field_to_merge])) {
+      // identify render-able arrays and attached to $mixed_resources variables
+      $children = element_children($content[$field_to_merge]);
+      foreach ($children as $child) {
+        $mixed_resources[] = $content[$field_to_merge][$child];
+      }
+    }
+  }
+
+  // start to print if '$mixed_resources' has contents.
+  if (count($mixed_resources) > 0) {
+    $resources_html = '<div class="field field-name-field-related-resources field-type-entityreference field-label-above">';
+    $resources_html .= '<div class="field-label">' . format_plural(count($mixed_resources), 'Related document and information', 'Related documents and information', array()) . '</div>';
+    $resources_html .= '<div class="field-items">';
+
+    foreach ($mixed_resources as $delta => $mixed_resource) {
+      $classes = 'field-item ' . ($delta % 2 ? 'odd' : 'even');
+      $resources_html .= '<div class="' . $classes . '">';
+      $resources_html .= render($mixed_resource);
+      $resources_html .= '</div>';
+    }
+
+    $resources_html .= "</div>"; // closing field items
+    $resources_html .= "</div>"; // closing field
+
+  }
+
+  if (isset($resources_html)) {
+    return $resources_html;
+  }
+  else {
+    return NULL;
+  }
+}
+
+/**
+ * Helper function to determine the URL for referenced GBIF participants or organizations
+ * @param $entity
+ * @return string
+ */
+function _gbif_project_get_partner_link($entity) {
+  // decide URL according to the membership type and the availability of its country page.
+  if ($entity->type == 'gbif_participant') {
+    // @todo the gbif_participant type can't be fully utilised by entity wrapper. To investigate.
+    $iso2 = $entity->gp_iso2[LANGUAGE_NONE][0]['value'];
+    $participant_id = $entity->gp_id[LANGUAGE_NONE][0]['value'];
+    $participants = _gbif_participant_participant_query($participant_id, $iso2, 'ALL');
+    $participant = array_shift($participants);
+    $gbif_membership = $participant->gbif_membership;
+    if ($gbif_membership == 'Voting Participant' || $gbif_membership == 'Associate Country Participant' || $iso2 == 'TW') {
+      $partner_url = '/country/' . $iso2 . '/participation';
+    }
+    elseif ($gbif_membership == 'Other Associate Participant') {
+      // get the UUID and link to Struts portal
+      $uuid = _gbif_participant_get_uuid($participant_id, 'UUID');
+      $partner_url = gbif_portal_base_url() . '/node/' . $uuid;
+    }
+    else {
+      $partner_url = gbif_portal_base_url();
+      watchdog('gbif_project', 'Failed to parse partner URL.', array(), WATCHDOG_ERROR);
+    }
+    $link = l($entity->title, $partner_url);
+
+  }
+  // if the organisation is not a GBIF participant, we link to the organisational URL, if available.
+  elseif ($entity->type == 'dir_organization') {
+    if (count($entity->field_url) > 0) {
+      $link = l($entity->field_url[LANGUAGE_NONE][0]['title'], $entity->field_url[LANGUAGE_NONE][0]['url']);
+    }
+    else {
+      $link = $entity->field_url[LANGUAGE_NONE][0]['title'];
+    }
+  }
+  return $link;
+}

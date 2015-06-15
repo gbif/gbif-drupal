@@ -15,11 +15,19 @@ function _gbif_participant_get_registry_participant($pid) {
 /**
  * Helper function for getting the UUID of the participant.
  */
-function _gbif_participant_get_uuid($participantID) {
+function _gbif_participant_get_uuid($participantID, $mode = 'UUID') {
 	$api_call = _gbif_participant_api_registry_node() . '?identifier=' . $participantID . '&identifierType=GBIF_PARTICIPANT';
 	$json = json_decode(file_get_contents($api_call));
 	$uuid = (!empty($json->results)) ? $json->results[0]->key : NULL;
-	return $uuid;
+
+  switch ($mode) {
+    case 'UUID':
+      return $uuid;
+    case 'WEB_URL':
+      return gbif_portal_base_url() . '/node/' . $uuid;
+    case 'API_URL':
+      return _gbif_participant_api_registry_node() . '/' . $uuid;
+  }
 }
 
 /**

@@ -840,7 +840,13 @@ function gbif_participant_country_query() {
 	return $result;
 }
 
-function _gbif_participant_participant_query($participantID = NULL, $iso2 = NULL) {
+/**
+ * @param null $participantID
+ * @param null $iso2
+ * @param string $mode determine types of participant to include in the result.
+ * @return mixed
+ */
+function _gbif_participant_participant_query($participantID = NULL, $iso2 = NULL, $mode = 'COUNTRY') {
 	$query = db_select('gbif_ims_participant', 'p');
 	$query->join('gbif_ims_node', 'n', 'n.participantID = p.participantID');
 	$query->leftjoin('gbif_ims_country', 'c', 'p.countryID = c.countryID');
@@ -864,15 +870,22 @@ function _gbif_participant_participant_query($participantID = NULL, $iso2 = NULL
 	if (isset($participantID)) {
 		$query->condition('p.participantID', $participantID, '=');
 	}
-	// For country pages, we only query country participants plus Chinese Taipei.
-	if (isset($iso2) && $iso2 <> 'TW') {
-		$query->condition('c.iso2', $iso2, '=');
-		$query->condition(db_or()->condition('p.gbif_membership', array('Associate Country Participant', 'Voting Participant'), 'IN'));
-	}
-	elseif (isset($iso2) && $iso2 == 'TW') {
-		$query->condition('c.iso2', $iso2, '=');
-		$query->condition('p.gbif_membership', array('Other Associate Participant'), 'IN');
-	}
+  if ($mode == 'COUNTRY') {
+    // For country pages, we only query country participants plus Chinese Taipei.
+    if (isset($iso2) && $iso2 <> 'TW') {
+      $query->condition('c.iso2', $iso2, '=');
+      $query->condition(db_or()->condition('p.gbif_membership', array('Associate Country Participant', 'Voting Participant'), 'IN'));
+    }
+    elseif (isset($iso2) && $iso2 == 'TW') {
+      $query->condition('c.iso2', $iso2, '=');
+      $query->condition('p.gbif_membership', array('Other Associate Participant'), 'IN');
+    }
+  }
+  else {
+    if (isset($iso2)) {
+      $query->condition('c.iso2', $iso2, '=');
+    }
+  }
 	$results = $query->execute()->fetchAll();
 
   // insert "country" name in the result

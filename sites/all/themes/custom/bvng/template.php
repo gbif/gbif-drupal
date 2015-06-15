@@ -86,7 +86,7 @@ function bvng_preprocess_page(&$variables) {
 	if (!empty($variables['node']->type)) {
 		switch ($variables['node']->type) {
 			case 'generictemplate':
-				$jobs_adverts = array('node/82115', 'node/82116', 'node/82117');
+				$jobs_adverts = array('node/82115', 'node/82116', 'node/82117', 'node/82162');
 				if (in_array($current_path, $jobs_adverts)) {
 					$altered_path = drupal_get_normal_path('newsroom/opportunities'); // node/242
 				}

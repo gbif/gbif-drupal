@@ -217,7 +217,7 @@ function gbif_pages_image_default_styles() {
  */
 function gbif_pages_page_build(&$page) {
 	$status = drupal_get_http_header("status");
-	$jobs_adverts = array('node/82115', 'node/82116', 'node/82117');
+	$jobs_adverts = array('node/82115', 'node/82116', 'node/82117', 'node/82162');
 	if ($status == '404 Not Found') {
 		// Do nothing.
 	}

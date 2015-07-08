@@ -135,6 +135,9 @@ function gbif_ims_tokens($type, $tokens, array $data = array(), array $options =
 				case 'sc':
 				case 'nc':
 				case 'nsg':
+        case 'tg_adbd':
+        case 'tg_dfua':
+        case 'tg_dfudm':
 					$replacements[$original] = _gi_print_committee_list(_gi_groups($name));
 					break;
 				case 'gbifs':
@@ -145,7 +148,7 @@ function gbif_ims_tokens($type, $tokens, array $data = array(), array $options =
 				case 'oap':
 					$replacements[$original] = _gi_print_participant_list(_gi_groups($name));
 					break;
-			}
+      }
 		}
 	}
 
@@ -404,6 +407,9 @@ function _gi_groups($key) {
 		'vp' => t('Voting Participant'),
 		'acp' => t('Associate Country Participant'),
 		'oap' => t('Other Associate Participant'),
+    'tg_adbd' => t('Accelerating the Discovery of Bio-collections Data Task Force'),
+    'tg_dfua' => t('DFFU-A - Task Group on Fitness for Use in Agrobiodiversity'),
+    'tg_dfudm' => t('DFFU-DM - Task Group on Data Fitness for Use in Distribution Modelling'),
 	);
 	if (!empty($key)) {
 		return $groups[$key];

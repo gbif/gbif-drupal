@@ -73,6 +73,14 @@ function gbif_vocabularies_taxonomy_default_vocabularies() {
       'module' => 'taxonomy',
       'weight' => -4,
     ),
+    'programme' => array(
+      'name' => 'Programme',
+      'machine_name' => 'programme',
+      'description' => 'Tags for grouping contents under capacity enhancement programmes',
+      'hierarchy' => 0,
+      'module' => 'taxonomy',
+      'weight' => 0,
+    ),
     'purpose' => array(
       'name' => 'Purpose',
       'machine_name' => 'purpose',

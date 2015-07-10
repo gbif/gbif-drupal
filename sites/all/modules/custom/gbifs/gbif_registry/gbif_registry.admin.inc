@@ -89,7 +89,7 @@ function gbif_registry_eoi_settings_form($form, &$form_state) {
         '#type' => 'tableselect',
         '#header' => $header,
         '#options' => $options,
-        '#empty' => t('No registration request in queue')
+        '#empty' => t('No registration request in queue.')
       );
       $form['actions']['#type'] = 'actions';
       $form['actions']['approve'] = array(
@@ -140,11 +140,13 @@ function gbif_registry_eoi_settings_form_submit($form, &$form_state) {
   if (isset($form_state['values'])) {
     $endorsing_body = $form_state['values']['endorsing_body'];
     $eoi_queue = $form_state['values']['eoi_queue'];
+    $item_checked = FALSE;
     foreach ($eoi_queue as $token => $checked) {
       if ($checked == $token) {
         // find out if the endorsing body of the submission is empty.
         // if so, retrieve the Node object from the Registry and save it into the submission,
         // before posting to the Registry for a new organisation.
+        $item_checked = TRUE;
         global $user;
         $case = explode('_', $checked);
         $directory = drupal_realpath('public://gbif_registry/eoi/queue');
@@ -174,6 +176,11 @@ function gbif_registry_eoi_settings_form_submit($form, &$form_state) {
         $post_url = url('admin/config/gbif/registry/eoi/process/' . $op . '/' . $checked);
         drupal_goto($post_url);
       }
+    }
+    if ($item_checked == FALSE) {
+      $message = t('None has been selected.', array());
+      watchdog('gbif_registry', $message, NULL, WATCHDOG_NOTICE);
+      drupal_set_message($message, 'warning');
     }
   }
 }

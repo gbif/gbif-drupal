@@ -616,8 +616,8 @@ function gbif_project_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-programme-field_programme_image'
-  $field_instances['node-programme-field_programme_image'] = array(
+  // Exported field_instance: 'node-programme-field_programme_ef_image'
+  $field_instances['node-programme-field_programme_ef_image'] = array(
     'bundle' => 'programme',
     'default_value' => array(),
     'deleted' => 0,
@@ -641,7 +641,7 @@ function gbif_project_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'node',
-    'field_name' => 'field_programme_image',
+    'field_name' => 'field_programme_ef_image',
     'label' => 'Image',
     'required' => 0,
     'settings' => array(
@@ -1597,8 +1597,8 @@ function gbif_project_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-project-field_programme'
-  $field_instances['node-project-field_programme'] = array(
+  // Exported field_instance: 'node-project-field_programme_ef'
+  $field_instances['node-project-field_programme_ef'] = array(
     'bundle' => 'project',
     'default_value' => NULL,
     'deleted' => 0,
@@ -1621,7 +1621,7 @@ function gbif_project_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'node',
-    'field_name' => 'field_programme',
+    'field_name' => 'field_programme_ef',
     'label' => 'Programme',
     'required' => 0,
     'settings' => array(

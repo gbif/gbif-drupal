@@ -252,7 +252,7 @@ function gbif_project_page_build(&$page) {
             break;
           case 'project':
             // look for referenced programme
-            $entity = $node_wrapper->field_programme->value();
+            $entity = $node_wrapper->field_programme_ef->value();
             $entity_wrapper = entity_metadata_wrapper('node', $entity);
             $page['highlighted_title'] = array(
               'name' => $entity_wrapper->title->value(),
@@ -339,7 +339,7 @@ function gbif_project_preprocess_node(&$variables) {
       $entities = $query->entityCondition('entity_type', 'node')
         ->propertyCondition('type', 'project')
         ->propertyCondition('status', 1)
-        ->fieldCondition('field_programme', 'target_id', $variables['nid'], '=')
+        ->fieldCondition('field_programme_ef', 'target_id', $variables['nid'], '=')
         ->execute();
 
       // loop through and print
@@ -373,7 +373,7 @@ function gbif_project_preprocess_field(&$variables) {
   $field_name = $variables['element']['#field_name'];
 
   switch ($field_name) {
-    case 'field_programme':
+    case 'field_programme_ef':
       $entity_wrapper = entity_metadata_wrapper('node', $variables['element']['#items'][0]['entity']);
       $acronym = $entity_wrapper->field_acronym->value();
       $url_alias = drupal_get_path_alias('node/' . $variables['element']['#items'][0]['entity']->nid);

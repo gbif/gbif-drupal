@@ -404,13 +404,13 @@ function gbif_project_field_default_field_bases() {
     'type' => 'entityreference',
   );
 
-  // Exported field_base: 'field_programme'
-  $field_bases['field_programme'] = array(
+  // Exported field_base: 'field_programme_ef'
+  $field_bases['field_programme_ef'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
-    'field_name' => 'field_programme',
+    'field_name' => 'field_programme_ef',
     'indexes' => array(
       'target_id' => array(
         0 => 'target_id',
@@ -441,13 +441,13 @@ function gbif_project_field_default_field_bases() {
     'type' => 'entityreference',
   );
 
-  // Exported field_base: 'field_programme_image'
-  $field_bases['field_programme_image'] = array(
+  // Exported field_base: 'field_programme_ef_image'
+  $field_bases['field_programme_ef_image'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
-    'field_name' => 'field_programme_image',
+    'field_name' => 'field_programme_ef_image',
     'indexes' => array(
       'fid' => array(
         0 => 'fid',

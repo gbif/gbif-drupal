@@ -161,8 +161,8 @@
           </div>
           <div class="node-sidebar sidebar col-xs-3">
 
-            <?php if (isset($content['field_programme'])): ?>
-              <?php print render($content['field_programme']); ?>
+            <?php if (isset($content['field_programme_ef'])): ?>
+              <?php print render($content['field_programme_ef']); ?>
             <?php endif; ?>
 
             <?php if (isset($content['pj_call'])): ?>

@@ -98,10 +98,6 @@ DirectoryIndex index.php index.html index.htm
   # uncomment the following:
   # RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
   # RewriteRule ^ http%{ENV:protossl}://%1%{REQUEST_URI} [L,R=301]
-  
-  # Fix 404s for favicons and touch icons.
-  # @see http://www.jessepinho.com/blog/post/how-get-rid-404-errors-favicons-and-apple-touch-icons/
-  RewriteRule ^(favicon\.ico|favicon.*\.png|android-chrome.*\.png|mstile.*\.png|apple-touch-icon.*\.png)$ icons/$1
 
   # Modify the RewriteBase if you are using Drupal in a subdirectory or in a
   # VirtualDocumentRoot and the rewrite rules are not working properly.

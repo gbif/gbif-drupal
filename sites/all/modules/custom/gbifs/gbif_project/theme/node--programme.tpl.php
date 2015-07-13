@@ -103,8 +103,8 @@
               hide($content['field_tags']);
             ?>
 
-            <?php if (isset($content['field_programme_image'])): ?>
-              <?php print render($content['field_programme_image']); ?>
+            <?php if (isset($content['field_programme_ef_image'])): ?>
+              <?php print render($content['field_programme_ef_image']); ?>
             <?php endif; ?>
 
             <?php if (isset($content['service_links'])): ?>

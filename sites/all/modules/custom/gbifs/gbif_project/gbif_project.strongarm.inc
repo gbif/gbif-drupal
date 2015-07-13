@@ -195,9 +195,9 @@ function gbif_project_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'comment_subject_field_programme';
+  $strongarm->name = 'comment_subject_field_programme_ef';
   $strongarm->value = 1;
-  $export['comment_subject_field_programme'] = $strongarm;
+  $export['comment_subject_field_programme_ef'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */

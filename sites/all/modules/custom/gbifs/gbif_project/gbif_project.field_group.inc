@@ -194,7 +194,7 @@ function gbif_project_field_group_info() {
     'weight' => '29',
     'children' => array(
       0 => 'field_duration',
-      1 => 'field_programme',
+      1 => 'field_programme_ef',
       2 => 'field_status',
       3 => 'pj_call',
       4 => 'pj_image',

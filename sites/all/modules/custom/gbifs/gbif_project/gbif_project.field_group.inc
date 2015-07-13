@@ -139,8 +139,8 @@ function gbif_project_field_group_info() {
       2 => 'group_participant_partner',
       3 => 'group_programme',
       4 => 'group_related_activities',
-      5 => 'group_related_docs_and_info',
-      6 => 'group_tags',
+      5 => 'group_tags',
+      6 => 'group_related_docs_and_info',
     ),
     'format_type' => 'tabs',
     'format_settings' => array(
@@ -305,7 +305,7 @@ function gbif_project_field_group_info() {
   $field_group->mode = 'form';
   $field_group->parent_name = 'group_node_details';
   $field_group->data = array(
-    'label' => 'Related resouces',
+    'label' => 'Related documents and information',
     'weight' => '33',
     'children' => array(
       0 => 'field_related_resources',
@@ -322,6 +322,34 @@ function gbif_project_field_group_info() {
     ),
   );
   $export['group_related_docs_and_info|node|project|form'] = $field_group;
+
+  $field_group = new stdClass();
+  $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
+  $field_group->api_version = 1;
+  $field_group->identifier = 'group_related_docs_and_info|node|programme|form';
+  $field_group->group_name = 'group_related_docs_and_info';
+  $field_group->entity_type = 'node';
+  $field_group->bundle = 'programme';
+  $field_group->mode = 'form';
+  $field_group->parent_name = 'group_node_details';
+  $field_group->data = array(
+    'label' => 'Related documents and information',
+    'weight' => '10',
+    'children' => array(
+      0 => 'field_related_resources',
+      1 => 'gr_file',
+    ),
+    'format_type' => 'tab',
+    'format_settings' => array(
+      'formatter' => 'closed',
+      'instance_settings' => array(
+        'description' => '',
+        'classes' => 'group-related-resources field-group-tab',
+        'required_fields' => 1,
+      ),
+    ),
+  );
+  $export['group_related_docs_and_info|node|programme|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */

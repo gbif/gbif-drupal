@@ -877,7 +877,7 @@ function gbif_project_field_default_field_instances() {
     'bundle' => 'programme',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'Slogan-like sentence placed under the title in the banner.',
+    'description' => 'Max 135 characters. Won\'t wrap if longer. This is the slogan-like sentence placed under the title in the banner.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -929,7 +929,7 @@ function gbif_project_field_default_field_instances() {
     'bundle' => 'programme',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'The slightly short version of the title that is used primarily us headings.',
+    'description' => 'Max 49 characters. Wont\' wrap if longer. This is the slightly short version of the title that is used primarily as the heading in the banner area.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -948,7 +948,7 @@ function gbif_project_field_default_field_instances() {
     'entity_type' => 'node',
     'field_name' => 'field_title_for_display',
     'label' => 'Title for display',
-    'required' => 0,
+    'required' => 1,
     'settings' => array(
       'linkit' => array(
         'button_text' => 'Search',
@@ -969,7 +969,7 @@ function gbif_project_field_default_field_instances() {
       'active' => 1,
       'module' => 'text',
       'settings' => array(
-        'size' => 90,
+        'size' => 50,
       ),
       'type' => 'text_textfield',
       'weight' => 1,
@@ -1109,7 +1109,7 @@ function gbif_project_field_default_field_instances() {
       ),
     ),
     'deleted' => 0,
-    'description' => '',
+    'description' => 'For \'teaser\' view like <a href="newsroom/news">news list</a> for each of the news, please provide content in "summary", otherwise the first 300 words will be digested from this \'description\' field.',
     'display' => array(
       'default' => array(
         'label' => 'hidden',
@@ -1166,7 +1166,7 @@ function gbif_project_field_default_field_instances() {
     'bundle' => 'project',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'Source of matching fund. Refers to an organization.',
+    'description' => 'Source of matching fund. Refers to an organization, which may or may not repeat what is referred under \'Partners\' field. It\'s up to the editor to decide how to avoid confusion for organisations that are listed under \'partners\' and \'funders\' fields.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -1335,7 +1335,7 @@ function gbif_project_field_default_field_instances() {
     'bundle' => 'project',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => '\'Core funds delivered\' in IMS. Currency in EUR.',
+    'description' => '\'Core funds delivered\' in IMS. Currency in EUR. No thousand separator needed.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -1388,7 +1388,7 @@ function gbif_project_field_default_field_instances() {
     'bundle' => 'project',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => '\'Core funds delivered\' in IMS. This field won\'t show in public. Currency in EUR.',
+    'description' => '\'Core funds delivered\' in IMS. This field won\'t show in public. Currency in EUR. No thousand separator needed.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -1441,7 +1441,7 @@ function gbif_project_field_default_field_instances() {
     'bundle' => 'project',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => '\'Core funds delivered\' in IMS. Currency in EUR.',
+    'description' => '\'Core funds delivered\' in IMS. Currency in EUR. No thousand separator needed.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -1548,7 +1548,7 @@ function gbif_project_field_default_field_instances() {
     'bundle' => 'project',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => '',
+    'description' => 'For organisations that are not GBIF participant, we create a new organisation and refer to it here.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -1910,9 +1910,9 @@ function gbif_project_field_default_field_instances() {
         'thumbnail' => 0,
       ),
       'rel_remove' => 'default',
-      'title' => 'optional',
+      'title' => 'required',
       'title_label_use_field_label' => 0,
-      'title_maxlength' => 128,
+      'title_maxlength' => 255,
       'title_value' => '',
       'url' => 'optional',
       'user_register_form' => FALSE,
@@ -1982,7 +1982,7 @@ function gbif_project_field_default_field_instances() {
     'bundle' => 'project',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => '',
+    'description' => 'Max 90 characters. If provided, this field will be used to replace the normal title for a neat layout.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -2032,6 +2032,7 @@ function gbif_project_field_default_field_instances() {
   // Exported field_instance: 'node-project-gr_file'
   $field_instances['node-project-gr_file'] = array(
     'bundle' => 'project',
+    'default_value' => array(),
     'deleted' => 0,
     'description' => 'Files that are attached to only this programme. For those that should be available via the resource library, they need to be created as a resource first, and then \'linked\' with the \'internal or external links\' field.',
     'display' => array(
@@ -2090,15 +2091,21 @@ function gbif_project_field_default_field_instances() {
       'active' => 1,
       'module' => 'file',
       'settings' => array(
+        'allowed_schemes' => array(
+          'public' => 'public',
+          'vimeo' => 0,
+          'youtube' => 0,
+        ),
+        'allowed_types' => array(
+          'audio' => 0,
+          'default' => 'default',
+          'image' => 0,
+          'video' => 0,
+        ),
+        'file_entity_inline' => 1,
+        'file_entity_inline_fields' => array(),
         'filefield_sources' => array(
-          'filefield_sources' => array(
-            'attach' => 0,
-            'clipboard' => 0,
-            'imce' => 0,
-            'reference' => 0,
-            'remote' => 0,
-            'upload' => 'upload',
-          ),
+          'filefield_sources' => array(),
           'source_attach' => array(
             'absolute' => 0,
             'attach_mode' => 'move',
@@ -2113,34 +2120,13 @@ function gbif_project_field_default_field_instances() {
         ),
         'imce_filefield_on' => 0,
         'insert' => 0,
-        'insert_absolute' => 0,
+        'insert_absolute' => FALSE,
         'insert_class' => '',
-        'insert_default' => 'auto',
+        'insert_default' => array(
+          0 => 'auto',
+        ),
         'insert_styles' => array(
-          'auto' => 'auto',
-          'colorbox__featured' => 0,
-          'colorbox__featured_news_slideshow_image' => 0,
-          'colorbox__large' => 0,
-          'colorbox__linkit_thumb' => 0,
-          'colorbox__mainimage' => 0,
-          'colorbox__medium' => 0,
-          'colorbox__rhimage' => 0,
-          'colorbox__square_thumbnail' => 0,
-          'colorbox__thumbnail' => 0,
-          'colorbox__uses_of_data___main' => 0,
-          'icon_link' => 0,
-          'image' => 0,
-          'image_featured' => 0,
-          'image_featured_news_slideshow_image' => 0,
-          'image_large' => 0,
-          'image_linkit_thumb' => 0,
-          'image_mainimage' => 0,
-          'image_medium' => 0,
-          'image_rhimage' => 0,
-          'image_square_thumbnail' => 0,
-          'image_thumbnail' => 0,
-          'image_uses_of_data___main' => 0,
-          'link' => 0,
+          0 => 'auto',
         ),
         'insert_width' => '',
         'progress_indicator' => 'throbber',
@@ -2694,8 +2680,8 @@ function gbif_project_field_default_field_instances() {
 
   // Translatables
   // Included for use with string extractors like potx.
-  t('\'Core funds delivered\' in IMS. Currency in EUR.');
-  t('\'Core funds delivered\' in IMS. This field won\'t show in public. Currency in EUR.');
+  t('\'Core funds delivered\' in IMS. Currency in EUR. No thousand separator needed.');
+  t('\'Core funds delivered\' in IMS. This field won\'t show in public. Currency in EUR. No thousand separator needed.');
   t('Acronym');
   t('Body');
   t('Call');
@@ -2705,6 +2691,8 @@ function gbif_project_field_default_field_instances() {
   t('File');
   t('Files');
   t('Files that are attached to only this programme. For those that should be available via the resource library, they need to be created as a resource first, and then \'linked\' with the \'internal or external links\' field.');
+  t('For \'teaser\' view like <a href="newsroom/news">news list</a> for each of the news, please provide content in "summary", otherwise the first 300 words will be digested from this \'description\' field.');
+  t('For organisations that are not GBIF participant, we create a new organisation and refer to it here.');
   t('Funder');
   t('Funding statement');
   t('GBIF Membership');
@@ -2719,6 +2707,9 @@ function gbif_project_field_default_field_instances() {
   t('Links to the curated GBIF resources/pages or external ones.');
   t('MOU 2012 date');
   t('Matching fund');
+  t('Max 135 characters. Won\'t wrap if longer. This is the slogan-like sentence placed under the title in the banner.');
+  t('Max 49 characters. Wont\' wrap if longer. This is the slightly short version of the title that is used primarily as the heading in the banner area.');
+  t('Max 90 characters. If provided, this field will be used to replace the normal title for a neat layout.');
   t('Member as of');
   t('Organization image');
   t('Participant ID');
@@ -2730,12 +2721,10 @@ function gbif_project_field_default_field_instances() {
   t('Related news');
   t('Related projects');
   t('Short name');
-  t('Slogan-like sentence placed under the title in the banner.');
-  t('Source of matching fund. Refers to an organization.');
+  t('Source of matching fund. Refers to an organization, which may or may not repeat what is referred under \'Partners\' field. It\'s up to the editor to decide how to avoid confusion for organisations that are listed under \'partners\' and \'funders\' fields.');
   t('Status');
   t('Subtitle');
   t('The date will show only to month, not day.');
-  t('The slightly short version of the title that is used primarily us headings.');
   t('The text string as an attribute in the sidebar. E.g., CE2015.');
   t('The title used as a subtitle in a project page. E.g., Capacity enhancement 2015.');
   t('This field will show when the organization is referenced as a funding body.');

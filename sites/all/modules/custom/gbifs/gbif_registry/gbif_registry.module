@@ -240,9 +240,11 @@ function gbif_registry_permission() {
 function gbif_registry_theme($existing, $type, $theme, $path) {
 	$path = drupal_get_path('module', 'gbif_registry');
 	return array(
+    /*
 		'eoi_queue_form' => array(
 			'render element' => 'form',
 		),
+    */
 		'eoi_form_landing' => array(
 		'template' => 'eoi-form-landing',
 		'path' => $path . '/theme',
@@ -267,6 +269,7 @@ function theme_eoi_queue_form($variables) {
 			$item = &$form[$key];
 			$row = array();
 
+			$row[] = drupal_render($item['checked']);
 			$row[] = drupal_render($item['date']);
 			$row[] = drupal_render($item['institution']);
 			$row[] = drupal_render($item['contact']);
@@ -282,6 +285,7 @@ function theme_eoi_queue_form($variables) {
 	}
 
 	$header = array(
+		'',
 		array(
 			'data' => t('Date'),
 			'colspan' => 1
@@ -556,8 +560,7 @@ function gbif_registry_eoi_operation($action = NULL, $case = NULL) {
 			drupal_set_message($message, 'error');
 		}
 	}
-
-	drupal_goto($_GET['destination']);
+	drupal_goto('admin/config/gbif/registry/eoi');
 }
 
 /**
@@ -692,6 +695,11 @@ function _gbif_registry_find_contact($org_object, $role) {
 	}
 }
 
+/**
+ * Prepare the HTML for the registration form app.
+ * @return string
+ * @throws Exception
+ */
 function gbif_registry_eoi_form() {
 	drupal_add_library('gbif_registry', 'eoi');
 	return theme('eoi_form_landing', array());

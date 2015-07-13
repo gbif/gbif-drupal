@@ -20,7 +20,7 @@
           this.each(function() {
             var baseAddress = $(this).attr("data-address");
             //console.debug(baseAddress);
-            $(this).find('td.totalgeo div').each(function() {
+            $(this).find('td.total div').each(function() {
               _refresh(baseAddress, $(this), true);
             });
           });
@@ -49,7 +49,7 @@
 
             if ($target.closest("td").attr("data-bor") === "OBSERVATION") {
               var observationTypes = ["OBSERVATION", "HUMAN_OBSERVATION", "MACHINE_OBSERVATION"];
-              for (var i in observationTypes) {
+              for (var i = 0; i < observationTypes.length; i++) {
                 // Proxy query variable to avoid concatenating more basisOfRecord.
                 var queryMod = query + "&basisOfRecord=" + observationTypes[i];
                 $.getJSON(ws + queryMod + '&callback=?', function (data) {

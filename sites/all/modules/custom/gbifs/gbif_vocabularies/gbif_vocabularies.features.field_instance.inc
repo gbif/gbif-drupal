@@ -151,7 +151,8 @@ function gbif_vocabularies_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-internal_tags-field_term_attributes'
+  // Exported field_instance:
+  // 'taxonomy_term-internal_tags-field_term_attributes'
   $field_instances['taxonomy_term-internal_tags-field_term_attributes'] = array(
     'bundle' => 'internal_tags',
     'default_value' => NULL,
@@ -210,8 +211,9 @@ function gbif_vocabularies_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'linkit' => array(
+        'button_text' => 'Search',
         'enable' => 0,
-        'insert_plugin' => '',
+        'profile' => '',
       ),
       'mediafront' => array(
         'custom' => '',
@@ -255,8 +257,9 @@ function gbif_vocabularies_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'linkit' => array(
+        'button_text' => 'Search',
         'enable' => 0,
-        'insert_plugin' => '',
+        'profile' => '',
       ),
       'mediafront' => array(
         'custom' => '',
@@ -432,8 +435,9 @@ function gbif_vocabularies_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'linkit' => array(
+        'button_text' => 'Search',
         'enable' => 0,
-        'insert_plugin' => '',
+        'profile' => '',
       ),
       'mediafront' => array(
         'custom' => '',

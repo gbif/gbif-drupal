@@ -410,7 +410,6 @@ function gbif_legacy_news_views_default_views() {
     t('Feed'),
     t('GBIF news feed'),
   );
-
   $export['news'] = $view;
 
   return $export;

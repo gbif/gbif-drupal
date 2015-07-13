@@ -35,7 +35,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Kwanyama',
@@ -54,7 +53,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Data mobilization',
@@ -65,7 +63,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'vocabulary_machine_name' => 'tags',
     'field_ims_keyword_id' => array(),
     'field_term_attributes' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Occitan',
@@ -84,7 +81,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Abkhazian',
@@ -111,7 +107,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Indonesian',
@@ -138,7 +133,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Tsonga',
@@ -157,7 +151,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'GBIF governance',
@@ -166,7 +159,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 1,
     'uuid' => '0a0f9d71-6a2f-469f-85d9-0abf4caa68d6',
     'vocabulary_machine_name' => 'about_gbif',
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Kinyarwanda',
@@ -185,7 +177,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Xhosa',
@@ -212,7 +203,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Lolspeak',
@@ -231,7 +221,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Species information',
@@ -247,7 +236,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Conservation',
@@ -256,7 +244,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => '0cd3e04c-35ee-4a1e-ba08-e405c0d8437a',
     'vocabulary_machine_name' => 'topic',
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Kanuri',
@@ -275,7 +262,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Chuvash',
@@ -294,7 +280,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Sardinian',
@@ -313,7 +298,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Malayalam',
@@ -340,16 +324,14 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
-    'name' => 'Policymakers',
+    'name' => 'Decision makers',
     'description' => '',
     'format' => 'plain_text',
-    'weight' => 3,
+    'weight' => 4,
     'uuid' => '11bf4254-06bd-403e-81e2-6bd09ea785ce',
     'vocabulary_machine_name' => 'audience',
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Operating system',
@@ -367,7 +349,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Ecological data',
@@ -383,7 +364,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Occurrence data',
@@ -399,7 +379,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Mountain biodiversity',
@@ -408,7 +387,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => '19370e22-9273-42a9-9aac-685a69e84706',
     'vocabulary_machine_name' => 'topic',
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Ecology',
@@ -417,7 +395,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => '198e0ac7-478b-40ab-866c-6579f09b0801',
     'vocabulary_machine_name' => 'topic',
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Portuguese, Brazil',
@@ -444,7 +421,15 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
+  );
+  $terms[] = array(
+    'name' => 'CE-Support',
+    'description' => '<p>GBIF Capacity Enhancement Support programme</p>
+',
+    'format' => 'full_html',
+    'weight' => 0,
+    'uuid' => '1bf8227d-50cf-4b88-83d7-5cef276134a5',
+    'vocabulary_machine_name' => 'programme',
   );
   $terms[] = array(
     'name' => 'Cree',
@@ -463,7 +448,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Amharic',
@@ -490,7 +474,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Old Slavonic',
@@ -509,7 +492,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Mentoring',
@@ -518,7 +500,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => '2432beff-4c85-4410-807a-e7610681d6a4',
     'vocabulary_machine_name' => 'capacity_enhancement',
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Hiri Motu',
@@ -537,7 +518,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Chinese, Simplified',
@@ -564,7 +544,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Quechua',
@@ -583,7 +562,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Cornish',
@@ -602,7 +580,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Cambodian',
@@ -621,7 +598,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Darwin Core Archive',
@@ -638,7 +614,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_attributes' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Marathi',
@@ -657,7 +632,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Marshallese',
@@ -676,7 +650,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'National/thematic portals',
@@ -693,7 +666,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_attributes' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Sample-based data',
@@ -709,16 +681,14 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
-    'name' => 'Species data users',
+    'name' => 'Data users',
     'description' => '',
     'format' => 'plain_text',
-    'weight' => 1,
+    'weight' => 3,
     'uuid' => '3064bab9-8d9c-44ef-a8b1-3c6e4bb5523a',
     'vocabulary_machine_name' => 'audience',
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Italian',
@@ -745,7 +715,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Norwegian Bokmål',
@@ -772,7 +741,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Irish',
@@ -799,7 +767,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Academic publishing',
@@ -810,7 +777,15 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'vocabulary_machine_name' => 'tags',
     'field_ims_keyword_id' => array(),
     'field_term_attributes' => array(),
-    'metatags' => array(),
+  );
+  $terms[] = array(
+    'name' => 'BIFA',
+    'description' => '<p>Biodiversity Information Fund for Asia.</p>
+',
+    'format' => 'full_html',
+    'weight' => 0,
+    'uuid' => '36070db2-fca2-44a2-96d3-db82dabea1b5',
+    'vocabulary_machine_name' => 'programme',
   );
   $terms[] = array(
     'name' => 'Persian',
@@ -837,7 +812,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Welsh',
@@ -864,7 +838,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Igbo',
@@ -883,7 +856,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Ndonga',
@@ -902,7 +874,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Marine',
@@ -911,7 +882,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => '391559e6-aee8-450c-a9af-a208e557e13f',
     'vocabulary_machine_name' => 'topic',
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Guarani',
@@ -930,7 +900,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Audubon Core',
@@ -947,7 +916,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_attributes' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Catalan',
@@ -974,7 +942,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Georgian',
@@ -993,7 +960,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Capacity project',
@@ -1002,7 +968,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => '3cf692f4-bd0f-46b9-8292-d649b85f7b7e',
     'vocabulary_machine_name' => 'capacity_enhancement',
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Serbian',
@@ -1029,7 +994,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Plinian core',
@@ -1046,7 +1010,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_attributes' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Avar',
@@ -1065,7 +1028,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Kongo',
@@ -1084,7 +1046,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Data digitization',
@@ -1100,7 +1061,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Azerbaijani',
@@ -1127,7 +1087,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Mac OS X',
@@ -1150,7 +1109,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Filipino',
@@ -1169,7 +1127,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Data papers',
@@ -1186,7 +1143,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_attributes' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Komi',
@@ -1205,7 +1161,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Biodiversity informatics standard',
@@ -1223,7 +1178,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Human health',
@@ -1232,7 +1186,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => '45a6ee69-d310-4355-8c37-b0e9b5ab5bc9',
     'vocabulary_machine_name' => 'topic',
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Kannada',
@@ -1259,7 +1212,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Setswana',
@@ -1278,7 +1230,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Faeroese',
@@ -1297,7 +1248,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Norwegian Nynorsk',
@@ -1324,7 +1274,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Interlingue',
@@ -1343,7 +1292,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Breton',
@@ -1362,7 +1310,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Afrikaans',
@@ -1381,7 +1328,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Galician',
@@ -1408,7 +1354,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'GBIF history/overview',
@@ -1417,7 +1362,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => '4b277a51-25ae-4104-bccd-2ffd9df65631',
     'vocabulary_machine_name' => 'about_gbif',
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Freshwater',
@@ -1426,7 +1370,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => '4d24bab1-5d5f-4d4c-bde4-b63a7e694b36',
     'vocabulary_machine_name' => 'topic',
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Venda',
@@ -1445,7 +1388,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Ukrainian',
@@ -1472,7 +1414,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Luganda',
@@ -1491,7 +1432,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Agriculture',
@@ -1500,7 +1440,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => '51828ec4-03a1-49d4-81fb-f6c010915c32',
     'vocabulary_machine_name' => 'topic',
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Tagalog',
@@ -1519,7 +1458,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'node portals',
@@ -1528,7 +1466,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => '51d64971-f17e-4cbe-b4a1-aa9a47169b16',
     'vocabulary_machine_name' => 'informatics',
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'GBIF nodes',
@@ -1537,7 +1474,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 3,
     'uuid' => '53185ea2-bba9-46e0-813b-2cf141e86353',
     'vocabulary_machine_name' => 'about_gbif',
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Web services',
@@ -1547,7 +1483,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'uuid' => '53d6f09f-413f-41cd-bf68-02d66741080b',
     'vocabulary_machine_name' => 'data_use',
     'field_ims_keyword_id' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Document',
@@ -1556,7 +1491,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => '540a0101-2bbd-4c08-b91c-ad3e6fdb4c55',
     'vocabulary_machine_name' => 'resource_type',
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Oromo',
@@ -1575,7 +1509,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Corsican',
@@ -1594,7 +1527,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Policy use',
@@ -1604,7 +1536,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'uuid' => '54ee46b6-95e4-4c9f-bba4-3d1abec226a6',
     'vocabulary_machine_name' => 'data_use',
     'field_ims_keyword_id' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Sindhi',
@@ -1623,7 +1554,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Bengali',
@@ -1642,7 +1572,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Inuktitut',
@@ -1661,7 +1590,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Ecosystem services',
@@ -1670,7 +1598,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => '58d2aee9-cb5a-4574-b9a4-2a77e292a3fc',
     'vocabulary_machine_name' => 'topic',
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'GBIF partnerships',
@@ -1679,7 +1606,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 4,
     'uuid' => '597a8eb6-d33d-4bda-8d5e-6540bc67f116',
     'vocabulary_machine_name' => 'about_gbif',
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Siswati',
@@ -1698,7 +1624,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'IPT',
@@ -1707,7 +1632,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => '5c306b78-0c21-40af-aecb-a03267b49c96',
     'vocabulary_machine_name' => 'informatics',
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Twi',
@@ -1726,7 +1650,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Darwin Core',
@@ -1743,7 +1666,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_attributes' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Asturian',
@@ -1762,7 +1684,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Somali',
@@ -1781,7 +1702,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Lingala',
@@ -1800,7 +1720,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Punjabi',
@@ -1819,7 +1738,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Bihari',
@@ -1838,7 +1756,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Rhaeto-Romance',
@@ -1857,7 +1774,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Data analysis',
@@ -1873,7 +1789,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Manx',
@@ -1892,7 +1807,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Urdu',
@@ -1919,7 +1833,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Javanese',
@@ -1938,7 +1851,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Kurdish',
@@ -1965,7 +1877,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'MS Windows',
@@ -1988,7 +1899,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Multimedia data',
@@ -2004,7 +1914,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Navajo',
@@ -2023,7 +1932,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Swedish',
@@ -2050,7 +1958,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Pali',
@@ -2069,7 +1976,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Kyrgyz',
@@ -2096,7 +2002,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Kashmiri',
@@ -2115,7 +2020,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Tigrinya',
@@ -2134,7 +2038,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Kazakh',
@@ -2161,7 +2064,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Scots Gaelic',
@@ -2180,7 +2082,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Taxonomic research',
@@ -2189,7 +2090,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => '6f20d102-38ba-48e7-8c0d-aaf5f2cda263',
     'vocabulary_machine_name' => 'topic',
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Chinese, Traditional',
@@ -2216,7 +2116,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Armenian',
@@ -2243,7 +2142,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Estonian',
@@ -2270,7 +2168,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Wolof',
@@ -2289,7 +2186,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Māori',
@@ -2308,7 +2204,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Bashkir',
@@ -2327,7 +2222,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Zhuang',
@@ -2346,7 +2240,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'GBIF regions',
@@ -2355,7 +2248,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 2,
     'uuid' => '7392baa3-9929-4691-81e4-b7efc2959aaf',
     'vocabulary_machine_name' => 'about_gbif',
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Uzbek',
@@ -2382,7 +2274,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'North Ndebele',
@@ -2401,7 +2292,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Data curation & quality',
@@ -2420,7 +2310,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Fiji',
@@ -2439,7 +2328,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Samoan',
@@ -2458,7 +2346,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Dutch',
@@ -2485,7 +2372,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Japanese',
@@ -2512,7 +2398,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Slovak',
@@ -2539,7 +2424,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'German',
@@ -2566,7 +2450,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Afar',
@@ -2585,7 +2468,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Icelandic',
@@ -2612,7 +2494,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Greek',
@@ -2639,7 +2520,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Macedonian',
@@ -2666,7 +2546,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Slovenian',
@@ -2693,7 +2572,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Moldavian',
@@ -2712,7 +2590,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Evolution',
@@ -2721,7 +2598,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => '8320fbb4-0a78-47b4-a050-2b1fb63ed6d3',
     'vocabulary_machine_name' => 'topic',
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Genetic data',
@@ -2737,7 +2613,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Sudanese',
@@ -2756,7 +2631,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Danish',
@@ -2783,7 +2657,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Data publishing',
@@ -2799,7 +2672,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Modellers',
@@ -2816,7 +2688,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_attributes' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Turkish',
@@ -2843,7 +2714,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Data quality',
@@ -2852,7 +2722,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => '8903de7e-fe81-4359-9485-b0260f364059',
     'vocabulary_machine_name' => 'informatics',
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Czech',
@@ -2879,7 +2748,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Bhutani',
@@ -2898,7 +2766,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Data citation',
@@ -2909,16 +2776,14 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'vocabulary_machine_name' => 'tags',
     'field_ims_keyword_id' => array(),
     'field_term_attributes' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
-    'name' => 'Biodiversity experts',
+    'name' => 'Biodiversity knowledge experts',
     'description' => '',
     'format' => 'plain_text',
     'weight' => 2,
     'uuid' => '8b4a9a45-6a80-438a-a95e-7ccf3abab872',
     'vocabulary_machine_name' => 'audience',
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Video',
@@ -2927,7 +2792,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 3,
     'uuid' => '8c5bb93a-5623-4323-9d08-07a0ab7ab0be',
     'vocabulary_machine_name' => 'resource_type',
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Chichewa',
@@ -2946,7 +2810,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Finnish',
@@ -2973,7 +2836,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Bulgarian',
@@ -3000,7 +2862,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Yiddish',
@@ -3019,7 +2880,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Invasives',
@@ -3028,7 +2888,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => '9321fe73-3bc0-453e-aea0-9ca1b56828d0',
     'vocabulary_machine_name' => 'topic',
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Tool type',
@@ -3046,7 +2905,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Climate change',
@@ -3055,7 +2913,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => '94391d7e-1ffe-474b-89f5-243d2d89675b',
     'vocabulary_machine_name' => 'topic',
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'English',
@@ -3074,7 +2931,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Ossetian',
@@ -3093,7 +2949,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Turkmen',
@@ -3112,7 +2967,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Maldivian',
@@ -3131,7 +2985,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Citizen science',
@@ -3140,7 +2993,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => '9cc37535-d63d-4360-9b5e-de71bc1ad823',
     'vocabulary_machine_name' => 'topic',
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Malagasy',
@@ -3159,7 +3011,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Gujarati',
@@ -3178,7 +3029,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Esperanto',
@@ -3197,7 +3047,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Scots',
@@ -3216,7 +3065,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Thai',
@@ -3243,7 +3091,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Tonga',
@@ -3262,7 +3109,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Greenlandic',
@@ -3281,7 +3127,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Avestan',
@@ -3300,7 +3145,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Names and checklists',
@@ -3316,7 +3160,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Serbo-Croatian',
@@ -3335,7 +3178,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Luxembourgish',
@@ -3354,7 +3196,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Presentation',
@@ -3363,7 +3204,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 1,
     'uuid' => 'a561dc09-8fbb-4216-98c3-9bc223ffb17d',
     'vocabulary_machine_name' => 'resource_type',
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Sinhala',
@@ -3390,7 +3230,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Portuguese, International',
@@ -3409,7 +3248,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Hindi',
@@ -3436,7 +3274,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Data access',
@@ -3452,7 +3289,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Akan',
@@ -3471,7 +3307,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Sesotho',
@@ -3490,7 +3325,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Kikuyu',
@@ -3509,7 +3343,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Vietnamese',
@@ -3536,7 +3369,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Oriya',
@@ -3555,16 +3387,14 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
-    'name' => 'GBIF family',
+    'name' => 'GBIF network',
     'description' => 'GBIF family is potentially an extended vocabulary that includes the following terms: Node managers,&nbsp;Heads of delegation, Node staff, Affiliates, Governance, Partners.',
     'format' => 'plain_text',
-    'weight' => 4,
+    'weight' => 0,
     'uuid' => 'b3b32a4d-208d-4ba8-b204-621ab587e73f',
     'vocabulary_machine_name' => 'audience',
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'South Ndebele',
@@ -3583,7 +3413,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Standards & protocols',
@@ -3592,7 +3421,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => 'b79e124c-6356-4a4f-8a52-3412fa26a64f',
     'vocabulary_machine_name' => 'informatics',
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Intellectual property rights',
@@ -3609,7 +3437,15 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_attributes' => array(),
-    'metatags' => array(),
+  );
+  $terms[] = array(
+    'name' => 'BID',
+    'description' => '<p>Biodiversity information for development. EU funded.</p>
+',
+    'format' => 'full_html',
+    'weight' => 0,
+    'uuid' => 'ba1e6ed3-b1b0-444a-83a5-3b721c2d5210',
+    'vocabulary_machine_name' => 'programme',
   );
   $terms[] = array(
     'name' => 'Inupiak',
@@ -3628,7 +3464,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Metadata',
@@ -3644,7 +3479,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Shona',
@@ -3663,7 +3497,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Strategic application',
@@ -3673,7 +3506,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'uuid' => 'bd34be41-9192-4840-a714-790ed0b3e100',
     'vocabulary_machine_name' => 'data_use',
     'field_ims_keyword_id' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Tahitian',
@@ -3692,7 +3524,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Tajik',
@@ -3711,7 +3542,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Swiss German',
@@ -3730,7 +3560,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Data publishers',
@@ -3747,7 +3576,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_attributes' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Polish',
@@ -3774,7 +3602,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Tool',
@@ -3783,7 +3610,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 2,
     'uuid' => 'c6782d43-9d2e-422f-a566-dd4fdc61913d',
     'vocabulary_machine_name' => 'resource_type',
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Romanian',
@@ -3810,7 +3636,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Mongolian',
@@ -3829,7 +3654,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Belarusian',
@@ -3856,7 +3680,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Burmese',
@@ -3875,7 +3698,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Swahili',
@@ -3902,7 +3724,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'French',
@@ -3929,7 +3750,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Croatian',
@@ -3956,7 +3776,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Sango',
@@ -3975,7 +3794,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Telugu',
@@ -4002,7 +3820,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Tibetan',
@@ -4021,7 +3838,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Nepali',
@@ -4040,7 +3856,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Android',
@@ -4063,7 +3878,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Tatar',
@@ -4090,7 +3904,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'English, British',
@@ -4109,7 +3922,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Laothian',
@@ -4128,7 +3940,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Haitian Creole',
@@ -4147,7 +3958,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Fulah',
@@ -4174,7 +3984,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Basque',
@@ -4201,7 +4010,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Georeferencing',
@@ -4218,7 +4026,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_attributes' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Sanskrit',
@@ -4237,7 +4044,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'GBIF awards',
@@ -4246,7 +4052,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 5,
     'uuid' => 'd51ad957-256f-4e7a-acbf-285cd6b0e783',
     'vocabulary_machine_name' => 'about_gbif',
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Russian',
@@ -4273,7 +4078,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Development status',
@@ -4291,7 +4095,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Uyghur',
@@ -4310,7 +4113,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Northern Sami',
@@ -4329,7 +4131,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'GBIF.org',
@@ -4339,7 +4140,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'uuid' => 'd65b547b-6241-4edc-996f-e2dd9a6e3b6a',
     'vocabulary_machine_name' => 'data_use',
     'field_ims_keyword_id' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Assamese',
@@ -4358,7 +4158,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Interlingua',
@@ -4377,7 +4176,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Species distributions',
@@ -4386,7 +4184,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => 'd7ae36c3-a398-445a-b78f-23315ea04f7e',
     'vocabulary_machine_name' => 'topic',
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Data resource',
@@ -4395,7 +4192,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 5,
     'uuid' => 'd9212fee-33af-4fc9-99f6-af45c4ff07e6',
     'vocabulary_machine_name' => 'resource_type',
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Nauru',
@@ -4414,7 +4210,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Aymara',
@@ -4433,7 +4228,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Korean',
@@ -4460,7 +4254,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Portuguese, Portugal',
@@ -4487,7 +4280,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Naturalists',
@@ -4504,7 +4296,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_attributes' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Latvian',
@@ -4531,7 +4322,16 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
+  );
+  $terms[] = array(
+    'name' => 'iOS',
+    'description' => NULL,
+    'format' => NULL,
+    'weight' => 0,
+    'uuid' => 'df5d9500-cc6c-433c-9c12-ce05fdcfb4bf',
+    'vocabulary_machine_name' => 'tags',
+    'field_ims_keyword_id' => array(),
+    'field_term_attributes' => array(),
   );
   $terms[] = array(
     'name' => 'Data provenance & citation',
@@ -4540,7 +4340,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => 'df68044d-094c-4263-adee-2ec1c06e32f7',
     'vocabulary_machine_name' => 'informatics',
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Lithuanian',
@@ -4567,7 +4366,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Biogeography',
@@ -4576,7 +4374,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => 'e069cdd8-cf1e-470d-9ef0-c3917db87c1c',
     'vocabulary_machine_name' => 'topic',
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Malay',
@@ -4603,7 +4400,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Architecture',
@@ -4612,7 +4408,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => 'e26d4e52-a037-43ce-a68f-1ca5c59a6562',
     'vocabulary_machine_name' => 'informatics',
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Bislama',
@@ -4631,7 +4426,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Hungarian',
@@ -4658,7 +4452,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Chamorro',
@@ -4677,16 +4470,14 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Data holders',
     'description' => '',
     'format' => 'plain_text',
-    'weight' => 0,
+    'weight' => 1,
     'uuid' => 'e7dadb3e-13de-4bdc-a01a-3add4b8a64c9',
     'vocabulary_machine_name' => 'audience',
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Latin',
@@ -4713,7 +4504,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Ewe',
@@ -4740,7 +4530,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Hausa',
@@ -4759,7 +4548,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Training',
@@ -4768,7 +4556,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 0,
     'uuid' => 'ea8d1a9c-240f-49c1-9847-21b6e19e3b61',
     'vocabulary_machine_name' => 'capacity_enhancement',
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Arabic',
@@ -4795,7 +4582,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Tamil',
@@ -4822,7 +4608,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Albanian',
@@ -4849,7 +4634,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Science use',
@@ -4859,7 +4643,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'uuid' => 'ee225a07-2f39-4801-9c2a-2a8ff1fdfeb4',
     'vocabulary_machine_name' => 'data_use',
     'field_ims_keyword_id' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Group',
@@ -4877,7 +4660,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Pashto',
@@ -4904,7 +4686,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Frisian',
@@ -4931,7 +4712,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Zulu',
@@ -4958,7 +4738,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Kirundi',
@@ -4977,7 +4756,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Herero',
@@ -4996,7 +4774,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Maltese',
@@ -5023,7 +4800,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Bosnian',
@@ -5050,7 +4826,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Field biologists',
@@ -5067,7 +4842,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_attributes' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Hebrew',
@@ -5094,7 +4868,14 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
+  );
+  $terms[] = array(
+    'name' => 'Public stakeholders',
+    'description' => '',
+    'format' => 'full_html',
+    'weight' => 5,
+    'uuid' => 'fa004904-7bac-4c44-93b6-3232c80533cf',
+    'vocabulary_machine_name' => 'audience',
   );
   $terms[] = array(
     'name' => 'Yoruba',
@@ -5121,7 +4902,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Spanish',
@@ -5148,7 +4928,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Chechen',
@@ -5167,7 +4946,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
-    'metatags' => array(),
   );
   $terms[] = array(
     'name' => 'Link',
@@ -5176,7 +4954,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 4,
     'uuid' => 'ff25fe1c-d969-474d-bf36-fc3ff8dbcc7f',
     'vocabulary_machine_name' => 'resource_type',
-    'metatags' => array(),
   );
   return $terms;
 }

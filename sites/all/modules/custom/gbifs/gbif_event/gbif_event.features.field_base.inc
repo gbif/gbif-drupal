@@ -406,7 +406,7 @@ function gbif_event_field_default_field_bases() {
   // Exported field_base: 'ge_resources'
   $field_bases['ge_resources'] = array(
     'active' => 1,
-    'cardinality' => 2,
+    'cardinality' => -1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'ge_resources',

@@ -80,6 +80,7 @@ function gbif_pages_taxonomy_term_page($term) {
  * Implements hook_preprocess_page().
  */
 function gbif_pages_preprocess_page(&$variables) {
+  // Changing the width of menu tabs in capacity enhancement to fit more.
 	$capacity_pages = array(
 		'node/226', // capacity-enhancement/summary
 		'node/3669', // capacity-enhancement/support-programme
@@ -99,6 +100,24 @@ function gbif_pages_preprocess_page(&$variables) {
 			}
 		}
 	}
+
+  // Highlighting the menu tab for BID updates.
+  $bid_updates = array(
+    'node/82183', // bid/actualites-sur-le-programme-BID-1
+    'node/82184', // bid/atualizacao-sobre-o-programa-BID-1
+    'node/82185', // bid/update-on-the-BID-programme-1
+  );
+  if (in_array(current_path(), $bid_updates)) {
+    if (isset($variables['page']['menu']['menu_block_gbif_navigation_menu_tabs'])) {
+      foreach ($variables['page']['menu']['menu_block_gbif_navigation_menu_tabs']['#content'] as $k => $tab) {
+        if (gettype($k) == 'integer') {
+          array_push($variables['page']['menu']['menu_block_gbif_navigation_menu_tabs']['#content'][$k]['#attributes']['class'], 'active');
+          watchdog('gbif_pages', 'Setting tab for BID updates', NULL, WATCHDOG_DEBUG);
+        }
+      }
+    }
+  }
+
 }
 
 /**
@@ -211,13 +230,15 @@ function gbif_pages_image_default_styles() {
 }
 
 /**
- * Manually set the highlighted_title here instead of in the theme. This reduces
- * dependency on the theme.
+ * Manually set the highlighted_title here instead of in the theme for orphaned
+ * pages.
+ * This reduces dependency on the theme.
  * @param $page
  */
 function gbif_pages_page_build(&$page) {
 	$status = drupal_get_http_header("status");
 	$jobs_adverts = array('node/82115', 'node/82116', 'node/82117', 'node/82162');
+  $bid_updates = array('node/82183', 'node/82184', 'node/82185');
 	if ($status == '404 Not Found') {
 		// Do nothing.
 	}
@@ -227,4 +248,10 @@ function gbif_pages_page_build(&$page) {
 			'description' => t('News and events from around the GBIF community'),
 		);
 	}
+  elseif (in_array(current_path(), $bid_updates)) {
+    $page['highlighted_title'] = array(
+      'name' => t('Biodiversity Information for Development'),
+      'description' => t('Enhancing capacity, availability and use of biodiversity information for policy and human well-being'),
+    );
+  }
 }

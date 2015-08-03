@@ -1080,9 +1080,9 @@ function _gbif_participant_print_largest_datasets($iso2, $mode) {
 			// Get country name
 			$d['country'] = $country_title;
 
-			$d['title'] = $d_json['title'];
-			$d['description'] = $d_json['description'];
-			$d['modified'] = $d_json['modified'];
+			$d['title'] = (isset($d_json['title'])) ? $d_json['title'] : NULL;
+			$d['description'] = (isset($d_json['description'])) ? $d_json['description'] : NULL;
+			$d['modified'] = (isset($d_json['modified'])) ? $d_json['modified'] : NULL;
 			$d['type_formatted'] = _gbif_participant_format_datatype($d_json['type']);
 
 			// Get dataset counts

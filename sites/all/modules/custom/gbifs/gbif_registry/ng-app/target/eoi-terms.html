@@ -1,5 +1,4 @@
 <!-- eoi-terms.html -->
-
 <section id="step_terms">
   <h2>Terms and conditions</h2>
   <div class="checkbox">
@@ -14,13 +13,14 @@
   </div>
   <div class="checkbox">
     <label for="made_public">
-      <input type="checkbox" ng-model="eoiCtrl.formData.terms.madePublic" id="made_public" required> I understand that my organizational information, including the contact details provided, will be made publicly available through GBIF.org.
+      <input type="checkbox" theme="light" ng-model="eoiCtrl.formData.terms.madePublic" id="made_public" required> I understand that my organizational information, including the contact details provided, will be made publicly available through GBIF.org.
     </label>
   </div>
   <label>Prove you are human</label>
-  <div id="#captcha-box" re-captcha ng-model="eoiCtrl.formData.recaptcha"></div>
+  <script src="https://www.google.com/recaptcha/api.js?onload=vcRecaptchaApiLoaded&render=explicit" async defer></script>
+  <div vc-recaptcha theme="'light'" key="eoiCtrl.model.key" on-create="eoiCtrl.setWidgetId(widgetId)" on-success="eoiCtrl.setResponse(response)" on-expire="eoiCtrl.cbExpiration()"></div>
   <div class="recaptcha-invalid" ng-show="eoiCtrl.formControl.recaptcha_invalid">reCaptcha challenge failed. Please try again.</div>
   <div class="bottom-button">
-    <input type="submit" value="submit" class="btn btn-primary next-step" ng-disabled="eoiForm.$invalid"><span class="hint-2lines" ng-show="eoiForm.$invalid">This button will be activated once all terms are ageed and a CAPTCHA challenge is answered.</span>
+    <input type="submit" value="submit" class="btn btn-primary next-step" ng-disabled="eoiForm.$invalid"><span class="hint-2lines" ng-show="eoiForm.$invalid">This button will be activated once all terms are agreed and human verification is passed.</span>
   </div>
 </section>

@@ -158,11 +158,10 @@ function gbif_registry_eoi_form_data() {
 
 			// validate the json
 			if (gbif_registry_form_data_validation($json)) {
-				// Verify the reCAPTCHA challenge.
-				_recaptcha_load_library();
-				$challenge = $json['recaptcha']['challenge'];
+				// Verify the reCAPTCHA response.
 				$response = $json['recaptcha']['response'];
-				$recaptcha_valid = gbif_registry_captcha_validation($challenge, $response);
+				$widgetId = $json['recaptcha']['widgetId'];
+				$recaptcha_valid = gbif_registry_captcha_validation($response, $widgetId);
 
 				if ($recaptcha_valid == TRUE) {
 					// File the POST request into queue.
@@ -731,17 +730,14 @@ function gbif_registry_library() {
  * CAPTCHA Callback; Validates the reCAPTCHA code.
  * Modified from the recaptcha module.
  */
-function gbif_registry_captcha_validation($challenge, $response) {
-	$recaptcha_private_key = variable_get('recaptcha_private_key', FALSE);
+function gbif_registry_captcha_validation($response, $widgetId) {
+	$recaptcha_secret_key = variable_get('recaptcha_secret_key', FALSE);
 	$ip_address = ip_address();
-	if ($recaptcha_private_key && $ip_address && !empty($challenge) && !empty($response)) {
-		$resp = recaptcha_check_answer(
-			$recaptcha_private_key,
-			$ip_address,
-			check_plain($challenge),
-			check_plain($response)
-		);
-		return $resp->is_valid;
+
+	if ($recaptcha_secret_key && $ip_address && !empty($response) && isset($widgetId)) {
+    $recaptcha = new \ReCaptcha\ReCaptcha($recaptcha_secret_key);
+    $resp = $recaptcha->verify($response, $ip_address);
+		return $resp->isSuccess();
 	}
 	return FALSE;
 }

@@ -666,6 +666,8 @@ function gbif_participant_page_router($iso2 = NULL, $chapter = NULL, $sub_chapte
 						return MENU_NOT_FOUND;
 					}
 					else {
+            // @see gbif_participant_preprocess_node() for how additional wells
+            // are added.
 						$page = node_page_view($node);
 					}
 					return print drupal_render_page($page);

@@ -107,7 +107,8 @@ function _gbif_participant_print_contacts($position, $contacts, $iso2) {
 				$html .= '<div class="address">';
 
 				$html .= '<span>' . $contact->contact_institution . '</span>';
-				$html .= '<span>' . $contact->address . '</span>';
+        $line_broken_address = nl2br($contact->address);
+				$html .= '<span>' . $line_broken_address . '</span>';
 				$html .= '<span class="city">' . $contact->zip_code . ' ' . $contact->city . '</span>';
 				$country = countries_country_lookup($contact->iso2, 'iso2');
 				$html .= '<span class="country">' . $country->name . '</span>';

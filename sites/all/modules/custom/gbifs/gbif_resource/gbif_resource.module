@@ -140,6 +140,7 @@ function gbif_resource_orc_redirect() {
 function gbif_resource_form_resource_node_form_alter(&$form, &$form_state) {
 	$form['gr_kp_id']['#disabled'] = TRUE;
 	$form['gr_number_of_downloads']['#disabled'] = TRUE;
+  $form['gr_old_resource_nid']['#disabled'] = TRUE;
 }
 
 function _gr_required_tables() {

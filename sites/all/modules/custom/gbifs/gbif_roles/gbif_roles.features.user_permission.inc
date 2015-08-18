@@ -14,8 +14,10 @@ function gbif_roles_user_default_permissions() {
   $permissions['access administration menu'] = array(
     'name' => 'access administration menu',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
+      'TDWG DQIG' => 'TDWG DQIG',
     ),
     'module' => 'admin_menu',
   );
@@ -24,8 +26,10 @@ function gbif_roles_user_default_permissions() {
   $permissions['access administration pages'] = array(
     'name' => 'access administration pages',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
+      'TDWG DQIG' => 'TDWG DQIG',
     ),
     'module' => 'system',
   );
@@ -34,8 +38,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['access all views'] = array(
     'name' => 'access all views',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'views',
   );
@@ -44,8 +48,9 @@ function gbif_roles_user_default_permissions() {
   $permissions['access comments'] = array(
     'name' => 'access comments',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'comment',
   );
@@ -54,8 +59,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['access content'] = array(
     'name' => 'access content',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
+      'Editor' => 'Editor',
       'anonymous user' => 'anonymous user',
       'authenticated user' => 'authenticated user',
     ),
@@ -66,8 +71,9 @@ function gbif_roles_user_default_permissions() {
   $permissions['access content overview'] = array(
     'name' => 'access content overview',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'node',
   );
@@ -76,7 +82,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['access contextual links'] = array(
     'name' => 'access contextual links',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'contextual',
   );
@@ -85,17 +91,29 @@ function gbif_roles_user_default_permissions() {
   $permissions['access dashboard'] = array(
     'name' => 'access dashboard',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'dashboard',
+  );
+
+  // Exported permission: 'access registry console'.
+  $permissions['access registry console'] = array(
+    'name' => 'access registry console',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'REGISTRY_ADMIN' => 'REGISTRY_ADMIN',
+      'REGISTRY_EDITOR' => 'REGISTRY_EDITOR',
+    ),
+    'module' => 'gbif_registry',
   );
 
   // Exported permission: 'access rules debug'.
   $permissions['access rules debug'] = array(
     'name' => 'access rules debug',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'rules',
   );
@@ -104,10 +122,11 @@ function gbif_roles_user_default_permissions() {
   $permissions['access site in maintenance mode'] = array(
     'name' => 'access site in maintenance mode',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Administrator' => 'Administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
       'REGISTRY_ADMIN' => 'REGISTRY_ADMIN',
       'REGISTRY_EDITOR' => 'REGISTRY_EDITOR',
-      'administrator' => 'administrator',
     ),
     'module' => 'system',
   );
@@ -116,8 +135,9 @@ function gbif_roles_user_default_permissions() {
   $permissions['access site reports'] = array(
     'name' => 'access site reports',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'system',
   );
@@ -126,8 +146,9 @@ function gbif_roles_user_default_permissions() {
   $permissions['access site-wide contact form'] = array(
     'name' => 'access site-wide contact form',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'contact',
   );
@@ -136,8 +157,9 @@ function gbif_roles_user_default_permissions() {
   $permissions['access user contact forms'] = array(
     'name' => 'access user contact forms',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'contact',
   );
@@ -146,18 +168,32 @@ function gbif_roles_user_default_permissions() {
   $permissions['access user profiles'] = array(
     'name' => 'access user profiles',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'user',
+  );
+
+  // Exported permission: 'access workbench'.
+  $permissions['access workbench'] = array(
+    'name' => 'access workbench',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
+      'TDWG DQIG' => 'TDWG DQIG',
+    ),
+    'module' => 'workbench',
   );
 
   // Exported permission: 'add media from remote sources'.
   $permissions['add media from remote sources'] = array(
     'name' => 'add media from remote sources',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'media_internet',
   );
@@ -166,7 +202,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['admin_display_suite'] = array(
     'name' => 'admin_display_suite',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'ds',
   );
@@ -175,7 +211,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['administer CAPTCHA settings'] = array(
     'name' => 'administer CAPTCHA settings',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'captcha',
   );
@@ -184,7 +220,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['administer actions'] = array(
     'name' => 'administer actions',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'system',
   );
@@ -193,7 +229,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['administer advanced pane settings'] = array(
     'name' => 'administer advanced pane settings',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'panels',
   );
@@ -202,7 +238,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['administer better countries'] = array(
     'name' => 'administer better countries',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'better_countries',
   );
@@ -211,7 +247,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['administer blocks'] = array(
     'name' => 'administer blocks',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'block',
   );
@@ -220,7 +256,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['administer ckeditor'] = array(
     'name' => 'administer ckeditor',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'ckeditor',
   );
@@ -229,8 +265,9 @@ function gbif_roles_user_default_permissions() {
   $permissions['administer comments'] = array(
     'name' => 'administer comments',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'comment',
   );
@@ -239,8 +276,9 @@ function gbif_roles_user_default_permissions() {
   $permissions['administer contact forms'] = array(
     'name' => 'administer contact forms',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'contact',
   );
@@ -249,7 +287,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['administer content types'] = array(
     'name' => 'administer content types',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'node',
   );
@@ -258,7 +296,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['administer contexts'] = array(
     'name' => 'administer contexts',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'context_ui',
   );
@@ -267,7 +305,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['administer countries'] = array(
     'name' => 'administer countries',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'better_countries',
   );
@@ -276,7 +314,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['administer custom username validation'] = array(
     'name' => 'administer custom username validation',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'custom_username_validation',
   );
@@ -285,7 +323,9 @@ function gbif_roles_user_default_permissions() {
   $permissions['administer date tools'] = array(
     'name' => 'administer date tools',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'date_tools',
   );
@@ -294,7 +334,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['administer facets'] = array(
     'name' => 'administer facets',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'facetapi',
   );
@@ -303,7 +343,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['administer features'] = array(
     'name' => 'administer features',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'features',
   );
@@ -312,16 +352,25 @@ function gbif_roles_user_default_permissions() {
   $permissions['administer field collections'] = array(
     'name' => 'administer field collections',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'field_collection',
+  );
+
+  // Exported permission: 'administer fieldgroups'.
+  $permissions['administer fieldgroups'] = array(
+    'name' => 'administer fieldgroups',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'field_group',
   );
 
   // Exported permission: 'administer filters'.
   $permissions['administer filters'] = array(
     'name' => 'administer filters',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'filter',
   );
@@ -330,8 +379,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['administer image styles'] = array(
     'name' => 'administer image styles',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'image',
   );
@@ -340,7 +388,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['administer imce'] = array(
     'name' => 'administer imce',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'imce',
   );
@@ -349,7 +397,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['administer languages'] = array(
     'name' => 'administer languages',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'locale',
   );
@@ -358,17 +406,26 @@ function gbif_roles_user_default_permissions() {
   $permissions['administer linkit'] = array(
     'name' => 'administer linkit',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'linkit',
+  );
+
+  // Exported permission: 'administer mailsystem'.
+  $permissions['administer mailsystem'] = array(
+    'name' => 'administer mailsystem',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'mailsystem',
   );
 
   // Exported permission: 'administer media'.
   $permissions['administer media'] = array(
     'name' => 'administer media',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'media',
   );
@@ -377,7 +434,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['administer mediafront'] = array(
     'name' => 'administer mediafront',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'mediafront',
   );
@@ -386,7 +443,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['administer mediafront presets'] = array(
     'name' => 'administer mediafront presets',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'mediafront',
   );
@@ -395,8 +452,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['administer menu'] = array(
     'name' => 'administer menu',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'menu',
   );
@@ -405,7 +462,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['administer meta tags'] = array(
     'name' => 'administer meta tags',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'metatag',
   );
@@ -414,7 +472,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['administer modules'] = array(
     'name' => 'administer modules',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'system',
   );
@@ -423,7 +481,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['administer nicemessages'] = array(
     'name' => 'administer nicemessages',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'nicemessages',
   );
@@ -432,8 +490,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['administer nodes'] = array(
     'name' => 'administer nodes',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'node',
   );
@@ -442,7 +500,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['administer pane access'] = array(
     'name' => 'administer pane access',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'panels',
   );
@@ -451,7 +509,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['administer panels layouts'] = array(
     'name' => 'administer panels layouts',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'panels',
   );
@@ -460,7 +518,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['administer panels styles'] = array(
     'name' => 'administer panels styles',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'panels',
   );
@@ -469,7 +527,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['administer pathauto'] = array(
     'name' => 'administer pathauto',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'pathauto',
   );
@@ -478,7 +536,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['administer permissions'] = array(
     'name' => 'administer permissions',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'user',
   );
@@ -487,7 +545,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['administer recaptcha'] = array(
     'name' => 'administer recaptcha',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'recaptcha',
   );
@@ -496,7 +554,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['administer redirects'] = array(
     'name' => 'administer redirects',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'redirect',
   );
@@ -505,7 +564,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['administer rules'] = array(
     'name' => 'administer rules',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'rules',
   );
@@ -514,7 +573,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['administer search'] = array(
     'name' => 'administer search',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'search',
   );
@@ -523,8 +582,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['administer search_api'] = array(
     'name' => 'administer search_api',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'search_api',
   );
@@ -533,8 +591,9 @@ function gbif_roles_user_default_permissions() {
   $permissions['administer shortcuts'] = array(
     'name' => 'administer shortcuts',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'shortcut',
   );
@@ -543,7 +602,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['administer site configuration'] = array(
     'name' => 'administer site configuration',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'system',
   );
@@ -552,7 +611,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['administer site verify'] = array(
     'name' => 'administer site verify',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'site_verify',
   );
@@ -561,7 +621,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['administer software updates'] = array(
     'name' => 'administer software updates',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'system',
   );
@@ -570,8 +630,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['administer taxonomy'] = array(
     'name' => 'administer taxonomy',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'taxonomy',
   );
@@ -580,7 +640,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['administer theme assignments'] = array(
     'name' => 'administer theme assignments',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'themekey',
   );
@@ -589,7 +649,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['administer themekey settings'] = array(
     'name' => 'administer themekey settings',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'themekey',
   );
@@ -598,7 +658,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['administer themes'] = array(
     'name' => 'administer themes',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'system',
   );
@@ -607,7 +667,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['administer token insert settings'] = array(
     'name' => 'administer token insert settings',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'token_insert',
   );
@@ -616,7 +676,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['administer url aliases'] = array(
     'name' => 'administer url aliases',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'path',
   );
@@ -625,8 +685,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['administer users'] = array(
     'name' => 'administer users',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'user',
   );
@@ -635,7 +695,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['administer uuid'] = array(
     'name' => 'administer uuid',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'uuid',
   );
@@ -644,17 +704,39 @@ function gbif_roles_user_default_permissions() {
   $permissions['administer views'] = array(
     'name' => 'administer views',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'views',
+  );
+
+  // Exported permission: 'administer workbench'.
+  $permissions['administer workbench'] = array(
+    'name' => 'administer workbench',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
+    ),
+    'module' => 'workbench',
+  );
+
+  // Exported permission: 'administer workbench moderation'.
+  $permissions['administer workbench moderation'] = array(
+    'name' => 'administer workbench moderation',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
+    ),
+    'module' => 'workbench_moderation',
   );
 
   // Exported permission: 'block IP addresses'.
   $permissions['block IP addresses'] = array(
     'name' => 'block IP addresses',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'system',
   );
@@ -663,8 +745,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['bypass node access'] = array(
     'name' => 'bypass node access',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'node',
   );
@@ -673,16 +755,28 @@ function gbif_roles_user_default_permissions() {
   $permissions['bypass rules access'] = array(
     'name' => 'bypass rules access',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'rules',
+  );
+
+  // Exported permission: 'bypass workbench moderation'.
+  $permissions['bypass workbench moderation'] = array(
+    'name' => 'bypass workbench moderation',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
+    ),
+    'module' => 'workbench_moderation',
   );
 
   // Exported permission: 'cancel account'.
   $permissions['cancel account'] = array(
     'name' => 'cancel account',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'user',
   );
@@ -691,7 +785,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['change layouts in place editing'] = array(
     'name' => 'change layouts in place editing',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'panels',
   );
@@ -700,7 +794,9 @@ function gbif_roles_user_default_permissions() {
   $permissions['change own username'] = array(
     'name' => 'change own username',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'user',
   );
@@ -709,17 +805,37 @@ function gbif_roles_user_default_permissions() {
   $permissions['context ajax block access'] = array(
     'name' => 'context ajax block access',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'context_ui',
+  );
+
+  // Exported permission: 'create call content'.
+  $permissions['create call content'] = array(
+    'name' => 'create call content',
+    'roles' => array(
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'create dir_organization content'.
+  $permissions['create dir_organization content'] = array(
+    'name' => 'create dir_organization content',
+    'roles' => array(
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
+    ),
+    'module' => 'node',
   );
 
   // Exported permission: 'create event content'.
   $permissions['create event content'] = array(
     'name' => 'create event content',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'node',
   );
@@ -728,7 +844,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['create featureddataset content'] = array(
     'name' => 'create featureddataset content',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'node',
   );
@@ -737,8 +854,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['create gbif_participant content'] = array(
     'name' => 'create gbif_participant content',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'node',
   );
@@ -747,7 +864,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['create generictemplate content'] = array(
     'name' => 'create generictemplate content',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'node',
   );
@@ -756,7 +874,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['create newsarticle content'] = array(
     'name' => 'create newsarticle content',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'node',
   );
@@ -765,7 +884,28 @@ function gbif_roles_user_default_permissions() {
   $permissions['create page content'] = array(
     'name' => 'create page content',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'create programme content'.
+  $permissions['create programme content'] = array(
+    'name' => 'create programme content',
+    'roles' => array(
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'create project content'.
+  $permissions['create project content'] = array(
+    'name' => 'create project content',
+    'roles' => array(
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'node',
   );
@@ -774,8 +914,9 @@ function gbif_roles_user_default_permissions() {
   $permissions['create resource content'] = array(
     'name' => 'create resource content',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
+      'TDWG DQIG' => 'TDWG DQIG',
     ),
     'module' => 'node',
   );
@@ -784,8 +925,9 @@ function gbif_roles_user_default_permissions() {
   $permissions['create url aliases'] = array(
     'name' => 'create url aliases',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'path',
   );
@@ -794,7 +936,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['create usesofdata content'] = array(
     'name' => 'create usesofdata content',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'node',
   );
@@ -803,7 +946,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['customize ckeditor'] = array(
     'name' => 'customize ckeditor',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'ckeditor',
   );
@@ -812,18 +955,36 @@ function gbif_roles_user_default_permissions() {
   $permissions['customize shortcut links'] = array(
     'name' => 'customize shortcut links',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'shortcut',
+  );
+
+  // Exported permission: 'delete any call content'.
+  $permissions['delete any call content'] = array(
+    'name' => 'delete any call content',
+    'roles' => array(
+      'Editor-in-chief' => 'Editor-in-chief',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'delete any dir_organization content'.
+  $permissions['delete any dir_organization content'] = array(
+    'name' => 'delete any dir_organization content',
+    'roles' => array(
+      'Editor-in-chief' => 'Editor-in-chief',
+    ),
+    'module' => 'node',
   );
 
   // Exported permission: 'delete any event content'.
   $permissions['delete any event content'] = array(
     'name' => 'delete any event content',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'node',
   );
@@ -832,7 +993,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['delete any featureddataset content'] = array(
     'name' => 'delete any featureddataset content',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'node',
   );
@@ -841,8 +1002,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['delete any gbif_participant content'] = array(
     'name' => 'delete any gbif_participant content',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'node',
   );
@@ -851,7 +1011,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['delete any generictemplate content'] = array(
     'name' => 'delete any generictemplate content',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'node',
   );
@@ -860,7 +1020,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['delete any newsarticle content'] = array(
     'name' => 'delete any newsarticle content',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'node',
   );
@@ -869,7 +1029,25 @@ function gbif_roles_user_default_permissions() {
   $permissions['delete any page content'] = array(
     'name' => 'delete any page content',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Editor-in-chief' => 'Editor-in-chief',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'delete any programme content'.
+  $permissions['delete any programme content'] = array(
+    'name' => 'delete any programme content',
+    'roles' => array(
+      'Editor-in-chief' => 'Editor-in-chief',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'delete any project content'.
+  $permissions['delete any project content'] = array(
+    'name' => 'delete any project content',
+    'roles' => array(
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'node',
   );
@@ -878,8 +1056,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['delete any resource content'] = array(
     'name' => 'delete any resource content',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'node',
   );
@@ -888,7 +1065,27 @@ function gbif_roles_user_default_permissions() {
   $permissions['delete any usesofdata content'] = array(
     'name' => 'delete any usesofdata content',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Editor-in-chief' => 'Editor-in-chief',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'delete own call content'.
+  $permissions['delete own call content'] = array(
+    'name' => 'delete own call content',
+    'roles' => array(
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'delete own dir_organization content'.
+  $permissions['delete own dir_organization content'] = array(
+    'name' => 'delete own dir_organization content',
+    'roles' => array(
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'node',
   );
@@ -897,8 +1094,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['delete own event content'] = array(
     'name' => 'delete own event content',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'node',
   );
@@ -907,7 +1104,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['delete own featureddataset content'] = array(
     'name' => 'delete own featureddataset content',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'node',
   );
@@ -916,8 +1114,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['delete own gbif_participant content'] = array(
     'name' => 'delete own gbif_participant content',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'node',
   );
@@ -926,7 +1124,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['delete own generictemplate content'] = array(
     'name' => 'delete own generictemplate content',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'node',
   );
@@ -935,7 +1134,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['delete own newsarticle content'] = array(
     'name' => 'delete own newsarticle content',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'node',
   );
@@ -944,7 +1144,28 @@ function gbif_roles_user_default_permissions() {
   $permissions['delete own page content'] = array(
     'name' => 'delete own page content',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'delete own programme content'.
+  $permissions['delete own programme content'] = array(
+    'name' => 'delete own programme content',
+    'roles' => array(
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'delete own project content'.
+  $permissions['delete own project content'] = array(
+    'name' => 'delete own project content',
+    'roles' => array(
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'node',
   );
@@ -953,8 +1174,9 @@ function gbif_roles_user_default_permissions() {
   $permissions['delete own resource content'] = array(
     'name' => 'delete own resource content',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
+      'TDWG DQIG' => 'TDWG DQIG',
     ),
     'module' => 'node',
   );
@@ -963,7 +1185,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['delete own usesofdata content'] = array(
     'name' => 'delete own usesofdata content',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'node',
   );
@@ -972,8 +1195,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['delete revisions'] = array(
     'name' => 'delete revisions',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'node',
   );
@@ -982,7 +1205,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['delete terms in about_gbif'] = array(
     'name' => 'delete terms in about_gbif',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'taxonomy',
   );
@@ -991,7 +1215,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['delete terms in audience'] = array(
     'name' => 'delete terms in audience',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'taxonomy',
   );
@@ -1000,7 +1225,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['delete terms in capacity_enhancement'] = array(
     'name' => 'delete terms in capacity_enhancement',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'taxonomy',
   );
@@ -1016,7 +1242,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['delete terms in countries'] = array(
     'name' => 'delete terms in countries',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'taxonomy',
   );
@@ -1024,7 +1251,10 @@ function gbif_roles_user_default_permissions() {
   // Exported permission: 'delete terms in data_analysis_and_use'.
   $permissions['delete terms in data_analysis_and_use'] = array(
     'name' => 'delete terms in data_analysis_and_use',
-    'roles' => array(),
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
+    ),
     'module' => 'taxonomy',
   );
 
@@ -1032,7 +1262,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['delete terms in data_type'] = array(
     'name' => 'delete terms in data_type',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'taxonomy',
   );
@@ -1041,7 +1272,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['delete terms in data_use'] = array(
     'name' => 'delete terms in data_use',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'taxonomy',
   );
@@ -1050,7 +1282,19 @@ function gbif_roles_user_default_permissions() {
   $permissions['delete terms in informatics'] = array(
     'name' => 'delete terms in informatics',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
+    ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'delete terms in internal_tags'.
+  $permissions['delete terms in internal_tags'] = array(
+    'name' => 'delete terms in internal_tags',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'taxonomy',
   );
@@ -1059,7 +1303,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['delete terms in language'] = array(
     'name' => 'delete terms in language',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'taxonomy',
   );
@@ -1068,7 +1313,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['delete terms in opportunities'] = array(
     'name' => 'delete terms in opportunities',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'taxonomy',
   );
@@ -1077,7 +1323,18 @@ function gbif_roles_user_default_permissions() {
   $permissions['delete terms in organizations'] = array(
     'name' => 'delete terms in organizations',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
+    ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'delete terms in programme'.
+  $permissions['delete terms in programme'] = array(
+    'name' => 'delete terms in programme',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'taxonomy',
   );
@@ -1086,7 +1343,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['delete terms in purpose'] = array(
     'name' => 'delete terms in purpose',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'taxonomy',
   );
@@ -1095,7 +1353,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['delete terms in regions'] = array(
     'name' => 'delete terms in regions',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'taxonomy',
   );
@@ -1104,7 +1363,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['delete terms in resource_type'] = array(
     'name' => 'delete terms in resource_type',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'taxonomy',
   );
@@ -1113,7 +1373,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['delete terms in tags'] = array(
     'name' => 'delete terms in tags',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'taxonomy',
   );
@@ -1122,7 +1383,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['delete terms in term_attribute'] = array(
     'name' => 'delete terms in term_attribute',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'taxonomy',
   );
@@ -1130,7 +1392,10 @@ function gbif_roles_user_default_permissions() {
   // Exported permission: 'delete terms in thematic_tags'.
   $permissions['delete terms in thematic_tags'] = array(
     'name' => 'delete terms in thematic_tags',
-    'roles' => array(),
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
+    ),
     'module' => 'taxonomy',
   );
 
@@ -1138,7 +1403,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['delete terms in topic'] = array(
     'name' => 'delete terms in topic',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'taxonomy',
   );
@@ -1147,18 +1413,38 @@ function gbif_roles_user_default_permissions() {
   $permissions['display drupal links'] = array(
     'name' => 'display drupal links',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'admin_menu',
+  );
+
+  // Exported permission: 'edit any call content'.
+  $permissions['edit any call content'] = array(
+    'name' => 'edit any call content',
+    'roles' => array(
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'edit any dir_organization content'.
+  $permissions['edit any dir_organization content'] = array(
+    'name' => 'edit any dir_organization content',
+    'roles' => array(
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
+    ),
+    'module' => 'node',
   );
 
   // Exported permission: 'edit any event content'.
   $permissions['edit any event content'] = array(
     'name' => 'edit any event content',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'node',
   );
@@ -1167,7 +1453,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['edit any featureddataset content'] = array(
     'name' => 'edit any featureddataset content',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'node',
   );
@@ -1176,8 +1463,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['edit any gbif_participant content'] = array(
     'name' => 'edit any gbif_participant content',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'node',
   );
@@ -1186,7 +1473,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['edit any generictemplate content'] = array(
     'name' => 'edit any generictemplate content',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'node',
   );
@@ -1195,7 +1483,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['edit any newsarticle content'] = array(
     'name' => 'edit any newsarticle content',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'node',
   );
@@ -1204,7 +1493,28 @@ function gbif_roles_user_default_permissions() {
   $permissions['edit any page content'] = array(
     'name' => 'edit any page content',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'edit any programme content'.
+  $permissions['edit any programme content'] = array(
+    'name' => 'edit any programme content',
+    'roles' => array(
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'edit any project content'.
+  $permissions['edit any project content'] = array(
+    'name' => 'edit any project content',
+    'roles' => array(
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'node',
   );
@@ -1213,8 +1523,9 @@ function gbif_roles_user_default_permissions() {
   $permissions['edit any resource content'] = array(
     'name' => 'edit any resource content',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
+      'TDWG DQIG' => 'TDWG DQIG',
     ),
     'module' => 'node',
   );
@@ -1223,7 +1534,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['edit any usesofdata content'] = array(
     'name' => 'edit any usesofdata content',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'node',
   );
@@ -1232,8 +1544,10 @@ function gbif_roles_user_default_permissions() {
   $permissions['edit media'] = array(
     'name' => 'edit media',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
+      'TDWG DQIG' => 'TDWG DQIG',
     ),
     'module' => 'media',
   );
@@ -1242,28 +1556,59 @@ function gbif_roles_user_default_permissions() {
   $permissions['edit meta tags'] = array(
     'name' => 'edit meta tags',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'metatag',
+  );
+
+  // Exported permission: 'edit mimemail user settings'.
+  $permissions['edit mimemail user settings'] = array(
+    'name' => 'edit mimemail user settings',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'authenticated user' => 'authenticated user',
+    ),
+    'module' => 'mimemail',
+  );
+
+  // Exported permission: 'edit own call content'.
+  $permissions['edit own call content'] = array(
+    'name' => 'edit own call content',
+    'roles' => array(
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
+    ),
+    'module' => 'node',
   );
 
   // Exported permission: 'edit own comments'.
   $permissions['edit own comments'] = array(
     'name' => 'edit own comments',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'comment',
+  );
+
+  // Exported permission: 'edit own dir_organization content'.
+  $permissions['edit own dir_organization content'] = array(
+    'name' => 'edit own dir_organization content',
+    'roles' => array(
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
+    ),
+    'module' => 'node',
   );
 
   // Exported permission: 'edit own event content'.
   $permissions['edit own event content'] = array(
     'name' => 'edit own event content',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'node',
   );
@@ -1272,7 +1617,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['edit own featureddataset content'] = array(
     'name' => 'edit own featureddataset content',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'node',
   );
@@ -1281,8 +1627,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['edit own gbif_participant content'] = array(
     'name' => 'edit own gbif_participant content',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'node',
   );
@@ -1291,7 +1637,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['edit own generictemplate content'] = array(
     'name' => 'edit own generictemplate content',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'node',
   );
@@ -1300,7 +1647,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['edit own newsarticle content'] = array(
     'name' => 'edit own newsarticle content',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'node',
   );
@@ -1309,7 +1657,28 @@ function gbif_roles_user_default_permissions() {
   $permissions['edit own page content'] = array(
     'name' => 'edit own page content',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'edit own programme content'.
+  $permissions['edit own programme content'] = array(
+    'name' => 'edit own programme content',
+    'roles' => array(
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'edit own project content'.
+  $permissions['edit own project content'] = array(
+    'name' => 'edit own project content',
+    'roles' => array(
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'node',
   );
@@ -1318,8 +1687,9 @@ function gbif_roles_user_default_permissions() {
   $permissions['edit own resource content'] = array(
     'name' => 'edit own resource content',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
+      'TDWG DQIG' => 'TDWG DQIG',
     ),
     'module' => 'node',
   );
@@ -1328,7 +1698,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['edit own usesofdata content'] = array(
     'name' => 'edit own usesofdata content',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'node',
   );
@@ -1337,7 +1708,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['edit terms in about_gbif'] = array(
     'name' => 'edit terms in about_gbif',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'taxonomy',
   );
@@ -1346,7 +1718,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['edit terms in audience'] = array(
     'name' => 'edit terms in audience',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'taxonomy',
   );
@@ -1355,7 +1728,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['edit terms in capacity_enhancement'] = array(
     'name' => 'edit terms in capacity_enhancement',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'taxonomy',
   );
@@ -1371,7 +1745,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['edit terms in countries'] = array(
     'name' => 'edit terms in countries',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'taxonomy',
   );
@@ -1379,7 +1754,10 @@ function gbif_roles_user_default_permissions() {
   // Exported permission: 'edit terms in data_analysis_and_use'.
   $permissions['edit terms in data_analysis_and_use'] = array(
     'name' => 'edit terms in data_analysis_and_use',
-    'roles' => array(),
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
+    ),
     'module' => 'taxonomy',
   );
 
@@ -1387,7 +1765,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['edit terms in data_type'] = array(
     'name' => 'edit terms in data_type',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'taxonomy',
   );
@@ -1396,7 +1775,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['edit terms in data_use'] = array(
     'name' => 'edit terms in data_use',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'taxonomy',
   );
@@ -1405,7 +1785,19 @@ function gbif_roles_user_default_permissions() {
   $permissions['edit terms in informatics'] = array(
     'name' => 'edit terms in informatics',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
+    ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'edit terms in internal_tags'.
+  $permissions['edit terms in internal_tags'] = array(
+    'name' => 'edit terms in internal_tags',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'taxonomy',
   );
@@ -1414,7 +1806,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['edit terms in language'] = array(
     'name' => 'edit terms in language',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'taxonomy',
   );
@@ -1423,7 +1816,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['edit terms in opportunities'] = array(
     'name' => 'edit terms in opportunities',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'taxonomy',
   );
@@ -1432,7 +1826,18 @@ function gbif_roles_user_default_permissions() {
   $permissions['edit terms in organizations'] = array(
     'name' => 'edit terms in organizations',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
+    ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'edit terms in programme'.
+  $permissions['edit terms in programme'] = array(
+    'name' => 'edit terms in programme',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'taxonomy',
   );
@@ -1441,7 +1846,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['edit terms in purpose'] = array(
     'name' => 'edit terms in purpose',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'taxonomy',
   );
@@ -1450,7 +1856,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['edit terms in regions'] = array(
     'name' => 'edit terms in regions',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'taxonomy',
   );
@@ -1459,7 +1866,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['edit terms in resource_type'] = array(
     'name' => 'edit terms in resource_type',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'taxonomy',
   );
@@ -1468,7 +1876,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['edit terms in tags'] = array(
     'name' => 'edit terms in tags',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'taxonomy',
   );
@@ -1477,7 +1886,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['edit terms in term_attribute'] = array(
     'name' => 'edit terms in term_attribute',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'taxonomy',
   );
@@ -1485,7 +1895,10 @@ function gbif_roles_user_default_permissions() {
   // Exported permission: 'edit terms in thematic_tags'.
   $permissions['edit terms in thematic_tags'] = array(
     'name' => 'edit terms in thematic_tags',
-    'roles' => array(),
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
+    ),
     'module' => 'taxonomy',
   );
 
@@ -1493,7 +1906,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['edit terms in topic'] = array(
     'name' => 'edit terms in topic',
     'roles' => array(
-      'Editors' => 'Editors',
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'taxonomy',
   );
@@ -1502,8 +1916,10 @@ function gbif_roles_user_default_permissions() {
   $permissions['flush caches'] = array(
     'name' => 'flush caches',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
+      'TDWG DQIG' => 'TDWG DQIG',
     ),
     'module' => 'admin_menu',
   );
@@ -1512,7 +1928,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['generate features'] = array(
     'name' => 'generate features',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'features',
   );
@@ -1521,8 +1937,9 @@ function gbif_roles_user_default_permissions() {
   $permissions['import media'] = array(
     'name' => 'import media',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'media',
   );
@@ -1531,7 +1948,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['import or export menu'] = array(
     'name' => 'import or export menu',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'menu_import',
   );
@@ -1540,16 +1957,50 @@ function gbif_roles_user_default_permissions() {
   $permissions['manage features'] = array(
     'name' => 'manage features',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'features',
+  );
+
+  // Exported permission: 'moderate content from draft to needs_review'.
+  $permissions['moderate content from draft to needs_review'] = array(
+    'name' => 'moderate content from draft to needs_review',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
+      'TDWG DQIG' => 'TDWG DQIG',
+    ),
+    'module' => 'workbench_moderation',
+  );
+
+  // Exported permission: 'moderate content from needs_review to draft'.
+  $permissions['moderate content from needs_review to draft'] = array(
+    'name' => 'moderate content from needs_review to draft',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
+      'TDWG DQIG' => 'TDWG DQIG',
+    ),
+    'module' => 'workbench_moderation',
+  );
+
+  // Exported permission: 'moderate content from needs_review to published'.
+  $permissions['moderate content from needs_review to published'] = array(
+    'name' => 'moderate content from needs_review to published',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
+    ),
+    'module' => 'workbench_moderation',
   );
 
   // Exported permission: 'notify of path changes'.
   $permissions['notify of path changes'] = array(
     'name' => 'notify of path changes',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'pathauto',
   );
@@ -1558,7 +2009,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['override custom username validation'] = array(
     'name' => 'override custom username validation',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'custom_username_validation',
   );
@@ -1567,8 +2018,9 @@ function gbif_roles_user_default_permissions() {
   $permissions['post comments'] = array(
     'name' => 'post comments',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'comment',
   );
@@ -1577,7 +2029,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['rename features'] = array(
     'name' => 'rename features',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'features',
   );
@@ -1586,8 +2038,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['revert revisions'] = array(
     'name' => 'revert revisions',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'node',
   );
@@ -1596,7 +2048,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['search content'] = array(
     'name' => 'search content',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
       'anonymous user' => 'anonymous user',
       'authenticated user' => 'authenticated user',
     ),
@@ -1607,16 +2059,26 @@ function gbif_roles_user_default_permissions() {
   $permissions['select account cancellation method'] = array(
     'name' => 'select account cancellation method',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'user',
+  );
+
+  // Exported permission: 'send arbitrary files'.
+  $permissions['send arbitrary files'] = array(
+    'name' => 'send arbitrary files',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'mimemail',
   );
 
   // Exported permission: 'skip CAPTCHA'.
   $permissions['skip CAPTCHA'] = array(
     'name' => 'skip CAPTCHA',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'captcha',
   );
@@ -1625,8 +2087,9 @@ function gbif_roles_user_default_permissions() {
   $permissions['skip comment approval'] = array(
     'name' => 'skip comment approval',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'comment',
   );
@@ -1635,8 +2098,9 @@ function gbif_roles_user_default_permissions() {
   $permissions['switch shortcut sets'] = array(
     'name' => 'switch shortcut sets',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'shortcut',
   );
@@ -1645,8 +2109,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['toggle nicemessages'] = array(
     'name' => 'toggle nicemessages',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'nicemessages',
   );
@@ -1655,7 +2118,9 @@ function gbif_roles_user_default_permissions() {
   $permissions['translate interface'] = array(
     'name' => 'translate interface',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'locale',
   );
@@ -1664,7 +2129,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['use PHP for settings'] = array(
     'name' => 'use PHP for settings',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'php',
   );
@@ -1673,18 +2138,27 @@ function gbif_roles_user_default_permissions() {
   $permissions['use advanced search'] = array(
     'name' => 'use advanced search',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
       'anonymous user' => 'anonymous user',
       'authenticated user' => 'authenticated user',
     ),
     'module' => 'search',
   );
 
+  // Exported permission: 'use ctools import'.
+  $permissions['use ctools import'] = array(
+    'name' => 'use ctools import',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'ctools',
+  );
+
   // Exported permission: 'use ipe with page manager'.
   $permissions['use ipe with page manager'] = array(
     'name' => 'use ipe with page manager',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'panels',
   );
@@ -1693,7 +2167,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['use panels caching features'] = array(
     'name' => 'use panels caching features',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'panels',
   );
@@ -1702,7 +2176,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['use panels dashboard'] = array(
     'name' => 'use panels dashboard',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'panels',
   );
@@ -1711,7 +2185,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['use panels in place editing'] = array(
     'name' => 'use panels in place editing',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'panels',
   );
@@ -1720,7 +2194,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['use panels locks'] = array(
     'name' => 'use panels locks',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'panels',
   );
@@ -1729,8 +2203,10 @@ function gbif_roles_user_default_permissions() {
   $permissions['use text format filtered_html'] = array(
     'name' => 'use text format filtered_html',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
+      'TDWG DQIG' => 'TDWG DQIG',
     ),
     'module' => 'filter',
   );
@@ -1739,8 +2215,8 @@ function gbif_roles_user_default_permissions() {
   $permissions['use text format full_html'] = array(
     'name' => 'use text format full_html',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'filter',
   );
@@ -1749,7 +2225,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['use text format php_code'] = array(
     'name' => 'use text format php_code',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'filter',
   );
@@ -1758,8 +2234,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['use text format raw_html'] = array(
     'name' => 'use text format raw_html',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'filter',
   );
@@ -1768,16 +2243,64 @@ function gbif_roles_user_default_permissions() {
   $permissions['use token insert'] = array(
     'name' => 'use token insert',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'token_insert',
+  );
+
+  // Exported permission: 'use workbench_media add form'.
+  $permissions['use workbench_media add form'] = array(
+    'name' => 'use workbench_media add form',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
+      'TDWG DQIG' => 'TDWG DQIG',
+    ),
+    'module' => 'workbench_media',
+  );
+
+  // Exported permission: 'use workbench_moderation my drafts tab'.
+  $permissions['use workbench_moderation my drafts tab'] = array(
+    'name' => 'use workbench_moderation my drafts tab',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
+      'TDWG DQIG' => 'TDWG DQIG',
+    ),
+    'module' => 'workbench_moderation',
+  );
+
+  // Exported permission: 'use workbench_moderation needs review tab'.
+  $permissions['use workbench_moderation needs review tab'] = array(
+    'name' => 'use workbench_moderation needs review tab',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
+      'TDWG DQIG' => 'TDWG DQIG',
+    ),
+    'module' => 'workbench_moderation',
+  );
+
+  // Exported permission: 'view all unpublished content'.
+  $permissions['view all unpublished content'] = array(
+    'name' => 'view all unpublished content',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'Editor-in-chief' => 'Editor-in-chief',
+    ),
+    'module' => 'workbench_moderation',
   );
 
   // Exported permission: 'view date repeats'.
   $permissions['view date repeats'] = array(
     'name' => 'view date repeats',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
     ),
     'module' => 'date_repeat_field',
   );
@@ -1786,20 +2309,46 @@ function gbif_roles_user_default_permissions() {
   $permissions['view media'] = array(
     'name' => 'view media',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
+      'Editor' => 'Editor',
       'anonymous user' => 'anonymous user',
       'authenticated user' => 'authenticated user',
     ),
     'module' => 'media',
   );
 
+  // Exported permission: 'view moderation history'.
+  $permissions['view moderation history'] = array(
+    'name' => 'view moderation history',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
+      'TDWG DQIG' => 'TDWG DQIG',
+    ),
+    'module' => 'workbench_moderation',
+  );
+
+  // Exported permission: 'view moderation messages'.
+  $permissions['view moderation messages'] = array(
+    'name' => 'view moderation messages',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
+      'TDWG DQIG' => 'TDWG DQIG',
+    ),
+    'module' => 'workbench_moderation',
+  );
+
   // Exported permission: 'view own unpublished content'.
   $permissions['view own unpublished content'] = array(
     'name' => 'view own unpublished content',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
+      'TDWG DQIG' => 'TDWG DQIG',
     ),
     'module' => 'node',
   );
@@ -1808,7 +2357,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['view pane admin links'] = array(
     'name' => 'view pane admin links',
     'roles' => array(
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
     ),
     'module' => 'panels',
   );
@@ -1817,8 +2366,10 @@ function gbif_roles_user_default_permissions() {
   $permissions['view revisions'] = array(
     'name' => 'view revisions',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
+      'TDWG DQIG' => 'TDWG DQIG',
     ),
     'module' => 'node',
   );
@@ -1827,8 +2378,10 @@ function gbif_roles_user_default_permissions() {
   $permissions['view the administration theme'] = array(
     'name' => 'view the administration theme',
     'roles' => array(
-      'Editors' => 'Editors',
-      'administrator' => 'administrator',
+      'Administrator' => 'Administrator',
+      'Editor' => 'Editor',
+      'Editor-in-chief' => 'Editor-in-chief',
+      'TDWG DQIG' => 'TDWG DQIG',
     ),
     'module' => 'system',
   );

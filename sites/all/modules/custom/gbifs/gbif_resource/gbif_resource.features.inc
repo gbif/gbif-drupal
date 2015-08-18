@@ -23,10 +23,7 @@ function gbif_resource_ctools_plugin_api($module = NULL, $api = NULL) {
  * Implements hook_views_api().
  */
 function gbif_resource_views_api($module = NULL, $api = NULL) {
-  return array(
-    'api' => '3.0',
-    'template path' => drupal_get_path('module', 'gbif_resource' . '/theme'),
-  );
+  return array("api" => "3.0");
 }
 
 /**
@@ -290,18 +287,6 @@ function gbif_resource_default_search_api_server() {
             "type" : "integer",
             "boost" : "1.0"
           },
-          "tx_internal_tags" : {
-            "table" : "search_api_db_resource_index_tx_internal_tags",
-            "column" : "value",
-            "type" : "list\\u003Cinteger\\u003E",
-            "boost" : "1.0"
-          },
-          "tx_tags" : {
-            "table" : "search_api_db_resource_index_tx_tags",
-            "column" : "value",
-            "type" : "list\\u003Cinteger\\u003E",
-            "boost" : "1.0"
-          },
           "tx_about_gbif" : {
             "table" : "search_api_db_resource_index_tx_about_gbif",
             "column" : "value",
@@ -328,6 +313,18 @@ function gbif_resource_default_search_api_server() {
           },
           "tx_informatics" : {
             "table" : "search_api_db_resource_index_tx_informatics",
+            "column" : "value",
+            "type" : "list\\u003Cinteger\\u003E",
+            "boost" : "1.0"
+          },
+          "tx_internal_tags" : {
+            "table" : "search_api_db_resource_index_tx_internal_tags",
+            "column" : "value",
+            "type" : "list\\u003Cinteger\\u003E",
+            "boost" : "1.0"
+          },
+          "tx_tags" : {
+            "table" : "search_api_db_resource_index_tx_tags",
             "column" : "value",
             "type" : "list\\u003Cinteger\\u003E",
             "boost" : "1.0"

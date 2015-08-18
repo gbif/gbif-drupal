@@ -17,14 +17,6 @@ function gbif_resource_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'gr_abstract',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -44,14 +36,6 @@ function gbif_resource_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'gr_alternative_title',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -73,14 +57,6 @@ function gbif_resource_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'gr_audience',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -100,14 +76,6 @@ function gbif_resource_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'gr_author',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -127,14 +95,6 @@ function gbif_resource_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'gr_citation',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -154,14 +114,6 @@ function gbif_resource_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'gr_contributor',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -181,14 +133,6 @@ function gbif_resource_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'gr_data_type',
-    'foreign keys' => array(
-      'tid' => array(
-        'columns' => array(
-          'tid' => 'tid',
-        ),
-        'table' => 'taxonomy_term_data',
-      ),
-    ),
     'indexes' => array(
       'tid' => array(
         0 => 'tid',
@@ -215,7 +159,6 @@ function gbif_resource_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'gr_date_of_publication',
-    'foreign keys' => array(),
     'indexes' => array(),
     'locked' => 0,
     'module' => 'date',
@@ -246,14 +189,6 @@ function gbif_resource_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'gr_file',
-    'foreign keys' => array(
-      'fid' => array(
-        'columns' => array(
-          'fid' => 'fid',
-        ),
-        'table' => 'file_managed',
-      ),
-    ),
     'indexes' => array(
       'fid' => array(
         0 => 'fid',
@@ -277,14 +212,6 @@ function gbif_resource_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'gr_image',
-    'foreign keys' => array(
-      'fid' => array(
-        'columns' => array(
-          'fid' => 'fid',
-        ),
-        'table' => 'file_managed',
-      ),
-    ),
     'indexes' => array(
       'fid' => array(
         0 => 'fid',
@@ -307,7 +234,6 @@ function gbif_resource_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'gr_kp_id',
-    'foreign keys' => array(),
     'indexes' => array(),
     'label' => 'Primary ID for each IMS table.',
     'locked' => 1,
@@ -324,14 +250,6 @@ function gbif_resource_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'gr_language',
-    'foreign keys' => array(
-      'tid' => array(
-        'columns' => array(
-          'tid' => 'tid',
-        ),
-        'table' => 'taxonomy_term_data',
-      ),
-    ),
     'indexes' => array(
       'tid' => array(
         0 => 'tid',
@@ -358,7 +276,6 @@ function gbif_resource_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'gr_number_of_downloads',
-    'foreign keys' => array(),
     'indexes' => array(),
     'locked' => 0,
     'module' => 'number',
@@ -374,7 +291,6 @@ function gbif_resource_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'gr_old_resource_nid',
-    'foreign keys' => array(),
     'indexes' => array(),
     'locked' => 0,
     'module' => 'number',
@@ -390,14 +306,6 @@ function gbif_resource_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'gr_publisher',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -417,14 +325,6 @@ function gbif_resource_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'gr_purpose',
-    'foreign keys' => array(
-      'tid' => array(
-        'columns' => array(
-          'tid' => 'tid',
-        ),
-        'table' => 'taxonomy_term_data',
-      ),
-    ),
     'indexes' => array(
       'tid' => array(
         0 => 'tid',
@@ -451,14 +351,6 @@ function gbif_resource_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'gr_resource_type',
-    'foreign keys' => array(
-      'tid' => array(
-        'columns' => array(
-          'tid' => 'tid',
-        ),
-        'table' => 'taxonomy_term_data',
-      ),
-    ),
     'indexes' => array(
       'tid' => array(
         0 => 'tid',
@@ -485,14 +377,6 @@ function gbif_resource_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'gr_rights',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -512,14 +396,6 @@ function gbif_resource_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'gr_rights_holder',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -539,14 +415,6 @@ function gbif_resource_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'gr_short_title',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -568,14 +436,6 @@ function gbif_resource_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'gr_url',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -597,14 +457,6 @@ function gbif_resource_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'tx_about_gbif',
-    'foreign keys' => array(
-      'tid' => array(
-        'columns' => array(
-          'tid' => 'tid',
-        ),
-        'table' => 'taxonomy_term_data',
-      ),
-    ),
     'indexes' => array(
       'tid' => array(
         0 => 'tid',
@@ -631,14 +483,6 @@ function gbif_resource_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'tx_audience',
-    'foreign keys' => array(
-      'tid' => array(
-        'columns' => array(
-          'tid' => 'tid',
-        ),
-        'table' => 'taxonomy_term_data',
-      ),
-    ),
     'indexes' => array(
       'tid' => array(
         0 => 'tid',
@@ -665,14 +509,6 @@ function gbif_resource_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'tx_capacity_enhancement',
-    'foreign keys' => array(
-      'tid' => array(
-        'columns' => array(
-          'tid' => 'tid',
-        ),
-        'table' => 'taxonomy_term_data',
-      ),
-    ),
     'indexes' => array(
       'tid' => array(
         0 => 'tid',
@@ -699,14 +535,6 @@ function gbif_resource_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'tx_data_use',
-    'foreign keys' => array(
-      'tid' => array(
-        'columns' => array(
-          'tid' => 'tid',
-        ),
-        'table' => 'taxonomy_term_data',
-      ),
-    ),
     'indexes' => array(
       'tid' => array(
         0 => 'tid',
@@ -733,14 +561,6 @@ function gbif_resource_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'tx_informatics',
-    'foreign keys' => array(
-      'tid' => array(
-        'columns' => array(
-          'tid' => 'tid',
-        ),
-        'table' => 'taxonomy_term_data',
-      ),
-    ),
     'indexes' => array(
       'tid' => array(
         0 => 'tid',
@@ -767,14 +587,6 @@ function gbif_resource_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'tx_internal_tags',
-    'foreign keys' => array(
-      'tid' => array(
-        'columns' => array(
-          'tid' => 'tid',
-        ),
-        'table' => 'taxonomy_term_data',
-      ),
-    ),
     'indexes' => array(
       'tid' => array(
         0 => 'tid',
@@ -801,14 +613,6 @@ function gbif_resource_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'tx_tags',
-    'foreign keys' => array(
-      'tid' => array(
-        'columns' => array(
-          'tid' => 'tid',
-        ),
-        'table' => 'taxonomy_term_data',
-      ),
-    ),
     'indexes' => array(
       'tid' => array(
         0 => 'tid',
@@ -835,14 +639,6 @@ function gbif_resource_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'tx_topic',
-    'foreign keys' => array(
-      'tid' => array(
-        'columns' => array(
-          'tid' => 'tid',
-        ),
-        'table' => 'taxonomy_term_data',
-      ),
-    ),
     'indexes' => array(
       'tid' => array(
         0 => 'tid',

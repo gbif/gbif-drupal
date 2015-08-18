@@ -13,6 +13,13 @@ function gbif_resource_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'additional_settings__active_tab_resource';
+  $strongarm->value = 'edit-workflow';
+  $export['additional_settings__active_tab_resource'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'comment_anonymous_resource';
   $strongarm->value = 0;
   $export['comment_anonymous_resource'] = $strongarm;
@@ -117,7 +124,7 @@ function gbif_resource_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'language_content_type_resource';
-  $strongarm->value = '1';
+  $strongarm->value = '0';
   $export['language_content_type_resource'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -141,7 +148,10 @@ function gbif_resource_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'node_options_resource';
-  $strongarm->value = array();
+  $strongarm->value = array(
+    0 => 'moderation',
+    1 => 'revision',
+  );
   $export['node_options_resource'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -164,6 +174,13 @@ function gbif_resource_strongarm() {
   $strongarm->name = 'pathauto_node_resource_pattern';
   $strongarm->value = 'resource/[node:nid]';
   $export['pathauto_node_resource_pattern'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'workbench_moderation_default_state_resource';
+  $strongarm->value = 'draft';
+  $export['workbench_moderation_default_state_resource'] = $strongarm;
 
   return $export;
 }

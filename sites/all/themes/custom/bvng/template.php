@@ -399,7 +399,7 @@ function bvng_preprocess_node(&$variables) {
 				case 'Edit':
 					// Alter the 'edit' link to point to the node/%/edit
 					$variables['tabs']['#primary'][$key]['#link']['href'] = 'node/' . $variables['node']->nid . '/edit';
-					if (!in_array('Editor', $user->roles)) unset($variables['tabs']['#primary'][$key]);
+					if (!in_array('Editor', $user->roles) && !in_array('Publisher', $user->roles)) unset($variables['tabs']['#primary'][$key]);
 					break;
 				case 'Manage display':
 					// "Manage display" tab is not for editors so we also disable it.

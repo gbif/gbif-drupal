@@ -304,7 +304,6 @@ features[user_permission][] = view revisions
 features[user_permission][] = view the administration theme
 features[user_role][] = Administrator
 features[user_role][] = Editor
-features[user_role][] = Editor-in-chief
 features[user_role][] = REGISTRY_ADMIN
 features[user_role][] = REGISTRY_EDITOR
 features[user_role][] = TDWG DQIG

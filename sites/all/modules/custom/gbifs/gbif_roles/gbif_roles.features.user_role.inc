@@ -22,12 +22,6 @@ function gbif_roles_user_default_roles() {
     'weight' => 4,
   );
 
-  // Exported role: Editor-in-chief.
-  $roles['Editor-in-chief'] = array(
-    'name' => 'Editor-in-chief',
-    'weight' => 3,
-  );
-
   // Exported role: REGISTRY_ADMIN.
   $roles['REGISTRY_ADMIN'] = array(
     'name' => 'REGISTRY_ADMIN',

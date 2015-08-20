@@ -16,7 +16,7 @@ function gbif_roles_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
       'TDWG DQIG' => 'TDWG DQIG',
     ),
     'module' => 'admin_menu',
@@ -28,7 +28,7 @@ function gbif_roles_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
       'TDWG DQIG' => 'TDWG DQIG',
     ),
     'module' => 'system',
@@ -39,7 +39,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'access all views',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'views',
   );
@@ -50,7 +50,7 @@ function gbif_roles_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'comment',
   );
@@ -73,7 +73,7 @@ function gbif_roles_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -93,7 +93,7 @@ function gbif_roles_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'dashboard',
   );
@@ -124,7 +124,7 @@ function gbif_roles_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
       'REGISTRY_ADMIN' => 'REGISTRY_ADMIN',
       'REGISTRY_EDITOR' => 'REGISTRY_EDITOR',
     ),
@@ -137,7 +137,7 @@ function gbif_roles_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'system',
   );
@@ -148,7 +148,7 @@ function gbif_roles_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'contact',
   );
@@ -159,7 +159,7 @@ function gbif_roles_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'contact',
   );
@@ -170,7 +170,7 @@ function gbif_roles_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'user',
   );
@@ -181,7 +181,7 @@ function gbif_roles_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
       'TDWG DQIG' => 'TDWG DQIG',
     ),
     'module' => 'workbench',
@@ -193,7 +193,7 @@ function gbif_roles_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'media_internet',
   );
@@ -267,7 +267,7 @@ function gbif_roles_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'comment',
   );
@@ -278,7 +278,7 @@ function gbif_roles_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'contact',
   );
@@ -325,7 +325,7 @@ function gbif_roles_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'date_tools',
   );
@@ -425,7 +425,8 @@ function gbif_roles_user_default_permissions() {
     'name' => 'administer media',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Editor' => 'Editor',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'media',
   );
@@ -453,7 +454,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'administer menu',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'menu',
   );
@@ -463,7 +464,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'administer meta tags',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'metatag',
   );
@@ -491,7 +492,8 @@ function gbif_roles_user_default_permissions() {
     'name' => 'administer nodes',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Editor' => 'Editor',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -555,7 +557,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'administer redirects',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'redirect',
   );
@@ -593,7 +595,7 @@ function gbif_roles_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'shortcut',
   );
@@ -612,7 +614,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'administer site verify',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'site_verify',
   );
@@ -631,7 +633,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'administer taxonomy',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'taxonomy',
   );
@@ -686,7 +688,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'administer users',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'user',
   );
@@ -705,7 +707,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'administer views',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'views',
   );
@@ -715,7 +717,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'administer workbench',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'workbench',
   );
@@ -725,7 +727,8 @@ function gbif_roles_user_default_permissions() {
     'name' => 'administer workbench moderation',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Editor' => 'Editor',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'workbench_moderation',
   );
@@ -736,7 +739,7 @@ function gbif_roles_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'system',
   );
@@ -746,7 +749,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'bypass node access',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -765,7 +768,8 @@ function gbif_roles_user_default_permissions() {
     'name' => 'bypass workbench moderation',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Editor' => 'Editor',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'workbench_moderation',
   );
@@ -776,7 +780,7 @@ function gbif_roles_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'user',
   );
@@ -796,7 +800,7 @@ function gbif_roles_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'user',
   );
@@ -815,7 +819,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'create call content',
     'roles' => array(
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -825,7 +829,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'create dir_organization content',
     'roles' => array(
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -835,7 +839,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'create event content',
     'roles' => array(
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -845,7 +849,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'create featureddataset content',
     'roles' => array(
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -855,7 +859,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'create gbif_participant content',
     'roles' => array(
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -865,7 +869,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'create generictemplate content',
     'roles' => array(
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -875,7 +879,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'create newsarticle content',
     'roles' => array(
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -885,7 +889,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'create page content',
     'roles' => array(
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -895,7 +899,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'create programme content',
     'roles' => array(
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -905,7 +909,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'create project content',
     'roles' => array(
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -915,7 +919,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'create resource content',
     'roles' => array(
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
       'TDWG DQIG' => 'TDWG DQIG',
     ),
     'module' => 'node',
@@ -927,7 +931,7 @@ function gbif_roles_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'path',
   );
@@ -937,7 +941,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'create usesofdata content',
     'roles' => array(
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -957,7 +961,7 @@ function gbif_roles_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'shortcut',
   );
@@ -966,7 +970,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['delete any call content'] = array(
     'name' => 'delete any call content',
     'roles' => array(
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -975,7 +979,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['delete any dir_organization content'] = array(
     'name' => 'delete any dir_organization content',
     'roles' => array(
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -984,7 +988,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['delete any event content'] = array(
     'name' => 'delete any event content',
     'roles' => array(
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -993,7 +997,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['delete any featureddataset content'] = array(
     'name' => 'delete any featureddataset content',
     'roles' => array(
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -1002,7 +1006,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['delete any gbif_participant content'] = array(
     'name' => 'delete any gbif_participant content',
     'roles' => array(
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -1011,7 +1015,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['delete any generictemplate content'] = array(
     'name' => 'delete any generictemplate content',
     'roles' => array(
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -1020,7 +1024,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['delete any newsarticle content'] = array(
     'name' => 'delete any newsarticle content',
     'roles' => array(
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -1029,7 +1033,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['delete any page content'] = array(
     'name' => 'delete any page content',
     'roles' => array(
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -1038,7 +1042,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['delete any programme content'] = array(
     'name' => 'delete any programme content',
     'roles' => array(
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -1047,7 +1051,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['delete any project content'] = array(
     'name' => 'delete any project content',
     'roles' => array(
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -1056,7 +1060,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['delete any resource content'] = array(
     'name' => 'delete any resource content',
     'roles' => array(
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -1065,7 +1069,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['delete any usesofdata content'] = array(
     'name' => 'delete any usesofdata content',
     'roles' => array(
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -1075,7 +1079,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'delete own call content',
     'roles' => array(
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -1085,7 +1089,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'delete own dir_organization content',
     'roles' => array(
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -1095,7 +1099,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'delete own event content',
     'roles' => array(
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -1105,7 +1109,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'delete own featureddataset content',
     'roles' => array(
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -1115,7 +1119,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'delete own gbif_participant content',
     'roles' => array(
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -1125,7 +1129,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'delete own generictemplate content',
     'roles' => array(
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -1135,7 +1139,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'delete own newsarticle content',
     'roles' => array(
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -1145,7 +1149,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'delete own page content',
     'roles' => array(
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -1155,7 +1159,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'delete own programme content',
     'roles' => array(
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -1165,7 +1169,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'delete own project content',
     'roles' => array(
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -1175,7 +1179,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'delete own resource content',
     'roles' => array(
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
       'TDWG DQIG' => 'TDWG DQIG',
     ),
     'module' => 'node',
@@ -1186,7 +1190,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'delete own usesofdata content',
     'roles' => array(
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -1196,7 +1200,8 @@ function gbif_roles_user_default_permissions() {
     'name' => 'delete revisions',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Editor' => 'Editor',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -1206,7 +1211,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'delete terms in about_gbif',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'taxonomy',
   );
@@ -1216,7 +1221,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'delete terms in audience',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'taxonomy',
   );
@@ -1226,7 +1231,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'delete terms in capacity_enhancement',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'taxonomy',
   );
@@ -1243,7 +1248,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'delete terms in countries',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'taxonomy',
   );
@@ -1253,7 +1258,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'delete terms in data_analysis_and_use',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'taxonomy',
   );
@@ -1263,7 +1268,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'delete terms in data_type',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'taxonomy',
   );
@@ -1273,7 +1278,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'delete terms in data_use',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'taxonomy',
   );
@@ -1283,7 +1288,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'delete terms in informatics',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'taxonomy',
   );
@@ -1294,7 +1299,7 @@ function gbif_roles_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'taxonomy',
   );
@@ -1304,7 +1309,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'delete terms in language',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'taxonomy',
   );
@@ -1314,7 +1319,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'delete terms in opportunities',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'taxonomy',
   );
@@ -1324,7 +1329,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'delete terms in organizations',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'taxonomy',
   );
@@ -1334,7 +1339,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'delete terms in programme',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'taxonomy',
   );
@@ -1344,7 +1349,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'delete terms in purpose',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'taxonomy',
   );
@@ -1354,7 +1359,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'delete terms in regions',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'taxonomy',
   );
@@ -1364,7 +1369,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'delete terms in resource_type',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'taxonomy',
   );
@@ -1374,7 +1379,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'delete terms in tags',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'taxonomy',
   );
@@ -1384,7 +1389,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'delete terms in term_attribute',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'taxonomy',
   );
@@ -1394,7 +1399,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'delete terms in thematic_tags',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'taxonomy',
   );
@@ -1404,7 +1409,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'delete terms in topic',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'taxonomy',
   );
@@ -1414,7 +1419,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'display drupal links',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'admin_menu',
   );
@@ -1424,7 +1429,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'edit any call content',
     'roles' => array(
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -1434,7 +1439,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'edit any dir_organization content',
     'roles' => array(
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -1444,7 +1449,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'edit any event content',
     'roles' => array(
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -1454,7 +1459,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'edit any featureddataset content',
     'roles' => array(
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -1464,7 +1469,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'edit any gbif_participant content',
     'roles' => array(
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -1474,7 +1479,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'edit any generictemplate content',
     'roles' => array(
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -1484,7 +1489,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'edit any newsarticle content',
     'roles' => array(
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -1494,7 +1499,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'edit any page content',
     'roles' => array(
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -1504,7 +1509,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'edit any programme content',
     'roles' => array(
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -1514,7 +1519,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'edit any project content',
     'roles' => array(
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -1524,7 +1529,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'edit any resource content',
     'roles' => array(
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
       'TDWG DQIG' => 'TDWG DQIG',
     ),
     'module' => 'node',
@@ -1535,7 +1540,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'edit any usesofdata content',
     'roles' => array(
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -1546,7 +1551,7 @@ function gbif_roles_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
       'TDWG DQIG' => 'TDWG DQIG',
     ),
     'module' => 'media',
@@ -1557,7 +1562,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'edit meta tags',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'metatag',
   );
@@ -1577,7 +1582,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'edit own call content',
     'roles' => array(
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -1588,7 +1593,7 @@ function gbif_roles_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'comment',
   );
@@ -1598,7 +1603,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'edit own dir_organization content',
     'roles' => array(
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -1608,7 +1613,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'edit own event content',
     'roles' => array(
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -1618,7 +1623,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'edit own featureddataset content',
     'roles' => array(
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -1628,7 +1633,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'edit own gbif_participant content',
     'roles' => array(
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -1638,7 +1643,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'edit own generictemplate content',
     'roles' => array(
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -1648,7 +1653,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'edit own newsarticle content',
     'roles' => array(
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -1658,7 +1663,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'edit own page content',
     'roles' => array(
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -1668,7 +1673,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'edit own programme content',
     'roles' => array(
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -1678,7 +1683,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'edit own project content',
     'roles' => array(
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -1688,7 +1693,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'edit own resource content',
     'roles' => array(
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
       'TDWG DQIG' => 'TDWG DQIG',
     ),
     'module' => 'node',
@@ -1699,7 +1704,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'edit own usesofdata content',
     'roles' => array(
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -1709,7 +1714,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'edit terms in about_gbif',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'taxonomy',
   );
@@ -1719,7 +1724,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'edit terms in audience',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'taxonomy',
   );
@@ -1729,7 +1734,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'edit terms in capacity_enhancement',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'taxonomy',
   );
@@ -1746,7 +1751,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'edit terms in countries',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'taxonomy',
   );
@@ -1756,7 +1761,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'edit terms in data_analysis_and_use',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'taxonomy',
   );
@@ -1766,7 +1771,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'edit terms in data_type',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'taxonomy',
   );
@@ -1776,7 +1781,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'edit terms in data_use',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'taxonomy',
   );
@@ -1786,7 +1791,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'edit terms in informatics',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'taxonomy',
   );
@@ -1797,7 +1802,7 @@ function gbif_roles_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'taxonomy',
   );
@@ -1807,7 +1812,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'edit terms in language',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'taxonomy',
   );
@@ -1817,7 +1822,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'edit terms in opportunities',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'taxonomy',
   );
@@ -1827,7 +1832,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'edit terms in organizations',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'taxonomy',
   );
@@ -1837,7 +1842,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'edit terms in programme',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'taxonomy',
   );
@@ -1847,7 +1852,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'edit terms in purpose',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'taxonomy',
   );
@@ -1857,7 +1862,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'edit terms in regions',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'taxonomy',
   );
@@ -1867,7 +1872,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'edit terms in resource_type',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'taxonomy',
   );
@@ -1877,7 +1882,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'edit terms in tags',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'taxonomy',
   );
@@ -1887,7 +1892,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'edit terms in term_attribute',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'taxonomy',
   );
@@ -1897,7 +1902,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'edit terms in thematic_tags',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'taxonomy',
   );
@@ -1907,7 +1912,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'edit terms in topic',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'taxonomy',
   );
@@ -1918,7 +1923,7 @@ function gbif_roles_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
       'TDWG DQIG' => 'TDWG DQIG',
     ),
     'module' => 'admin_menu',
@@ -1939,7 +1944,7 @@ function gbif_roles_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'media',
   );
@@ -1968,7 +1973,7 @@ function gbif_roles_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
       'TDWG DQIG' => 'TDWG DQIG',
     ),
     'module' => 'workbench_moderation',
@@ -1980,7 +1985,7 @@ function gbif_roles_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
       'TDWG DQIG' => 'TDWG DQIG',
     ),
     'module' => 'workbench_moderation',
@@ -1991,7 +1996,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'moderate content from needs_review to published',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'workbench_moderation',
   );
@@ -2020,7 +2025,7 @@ function gbif_roles_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'comment',
   );
@@ -2039,7 +2044,8 @@ function gbif_roles_user_default_permissions() {
     'name' => 'revert revisions',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Editor' => 'Editor',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
@@ -2060,7 +2066,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'select account cancellation method',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'user',
   );
@@ -2089,7 +2095,7 @@ function gbif_roles_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'comment',
   );
@@ -2100,7 +2106,7 @@ function gbif_roles_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'shortcut',
   );
@@ -2120,7 +2126,7 @@ function gbif_roles_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'locale',
   );
@@ -2205,7 +2211,7 @@ function gbif_roles_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
       'TDWG DQIG' => 'TDWG DQIG',
     ),
     'module' => 'filter',
@@ -2216,7 +2222,8 @@ function gbif_roles_user_default_permissions() {
     'name' => 'use text format full_html',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Editor' => 'Editor',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'filter',
   );
@@ -2254,7 +2261,7 @@ function gbif_roles_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
       'TDWG DQIG' => 'TDWG DQIG',
     ),
     'module' => 'workbench_media',
@@ -2266,7 +2273,7 @@ function gbif_roles_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
       'TDWG DQIG' => 'TDWG DQIG',
     ),
     'module' => 'workbench_moderation',
@@ -2278,7 +2285,7 @@ function gbif_roles_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
       'TDWG DQIG' => 'TDWG DQIG',
     ),
     'module' => 'workbench_moderation',
@@ -2289,7 +2296,8 @@ function gbif_roles_user_default_permissions() {
     'name' => 'view all unpublished content',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Editor' => 'Editor',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'workbench_moderation',
   );
@@ -2300,7 +2308,7 @@ function gbif_roles_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
     ),
     'module' => 'date_repeat_field',
   );
@@ -2323,7 +2331,7 @@ function gbif_roles_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
       'TDWG DQIG' => 'TDWG DQIG',
     ),
     'module' => 'workbench_moderation',
@@ -2335,7 +2343,7 @@ function gbif_roles_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
       'TDWG DQIG' => 'TDWG DQIG',
     ),
     'module' => 'workbench_moderation',
@@ -2347,7 +2355,7 @@ function gbif_roles_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
       'TDWG DQIG' => 'TDWG DQIG',
     ),
     'module' => 'node',
@@ -2368,7 +2376,7 @@ function gbif_roles_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
       'TDWG DQIG' => 'TDWG DQIG',
     ),
     'module' => 'node',
@@ -2380,7 +2388,7 @@ function gbif_roles_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Editor' => 'Editor',
-      'Editor-in-chief' => 'Editor-in-chief',
+      'Publisher' => 'Publisher',
       'TDWG DQIG' => 'TDWG DQIG',
     ),
     'module' => 'system',

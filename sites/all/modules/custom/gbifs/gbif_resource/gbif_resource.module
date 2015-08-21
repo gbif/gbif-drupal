@@ -342,20 +342,22 @@ function gbif_resource_preprocess_views_view_field(&$vars) {
 
 	// for gr_file
   if (in_array($vars['view']->current_display, $applied_blocks) && $vars['field']->field == 'gr_file') {
-		// show this field only if the resource type is document.
-
+		// show this field only if the resource type is "Document" or "Presentation".
 		// load node object for resource type checking.
 		$node = node_load($vars['row']->nid);
 		$wrapper = entity_metadata_wrapper('node', $node);
 		$value = $wrapper->gr_resource_type->value();
-		if ($value->name == 'Document') {
+		if ($value->name == 'Document' || $value->name == 'Presentation') {
 			$view_field = 'field_' . $vars['field']->field;
 
 			// check if there is a value
 			if (count($vars['row']->$view_field) != 0) {
 				$lang_code = $vars['row']->_field_data['nid']['entity']->language;
 				$link_title = t('Download') . ' ' . $vars['row']->_field_data['nid']['entity']->gr_file[$lang_code][0]['description'];
-				$link_path = 'system/files_force' . substr($vars['row']->_field_data['nid']['entity']->gr_file[$lang_code][0]['uri'], 8); // Strip off file schema.
+        // Try locating file path with different $lang_code, which may be stored
+        // inconsistently.
+        $file_uri = $vars['row']->_field_data['nid']['entity']->gr_file[$lang_code][0]['uri']; // pay attention to i18n code here.
+				$link_path = 'system/files_force' . substr($file_uri, 8); // Strip off file schema.
 				$img = theme_image(
 					array(
 						'path' => drupal_get_path('module', 'gbif_resource') . '/icons/download164.png',
@@ -393,7 +395,7 @@ function gbif_resource_preprocess_views_view_field(&$vars) {
 		$node = node_load($vars['row']->nid);
 		$wrapper = entity_metadata_wrapper('node', $node);
 		$value = $wrapper->gr_resource_type->value();
-		if ($value->name == 'Tool') {
+		if ($value->name == 'Tool' || $value->name == 'Link') {
 			$view_field = 'field_' . $vars['field']->field;
 
 			// check if there is a value

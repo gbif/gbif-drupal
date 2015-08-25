@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the GBIF Scaled Contents feature.
+ */
+
+include_once 'gbif_scaled_contents.features.inc';

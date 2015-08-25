@@ -1,0 +1,57 @@
+<?php
+
+/**
+ * Implements hook_install().
+ */
+function gbif_scaled_contents_install() {
+  gbif_scaled_contents_file_directories('create');
+}
+
+/**
+ * Implements hook_uninstall().
+ * @todo Need a dummy proof mechanism here because we don't uninstall this on the live portal.
+ */
+function gbif_scaled_contents_uninstall() {
+  //gbif_scaled_contents_file_directories('delete');
+  //gbif_tweaks_delete_all(array('resource'));
+  //node_type_delete('resource');
+  //field_purge_batch(500);
+}
+
+
+function gbif_scaled_contents_file_directories($mode = NULL) {
+  switch ($mode) {
+    case 'create':
+      // Create directories for storing relevant files for IMS resources.
+      $uris = array(
+        'public://gbif_scaled_contents'
+      );
+      foreach ($uris as $uri) {
+        $dir_exists = file_prepare_directory($uri);
+        if (!$dir_exists) {
+          $dir_created = drupal_mkdir($uri, NULL, TRUE);
+          if ($dir_created == TRUE) {
+            watchdog('gbif_scaled_contents', '!directory created.', array('!directory' => $uri), WATCHDOG_NOTICE);
+          }
+          else {
+            watchdog('gbif_scaled_contents', '!directory creation failed.', array('!directory' => $uri), WATCHDOG_ERROR);
+          }
+        }
+        else {
+          watchdog('gbif_scaled_contents', '!directory already exists.', array('!directory' => $uri), WATCHDOG_WARNING);
+        }
+      }
+      break;
+
+    case 'delete':
+      $uri = 'public://gbif_scaled_contents';
+      $dir_exists = file_prepare_directory($uri);
+      if ($dir_exists) {
+        $deleted = file_unmanaged_delete_recursive($uri);
+        if ($deleted == TRUE) {
+          drupal_set_message('Content files are successfully deleted.');
+        }
+      }
+      break;
+  }
+}

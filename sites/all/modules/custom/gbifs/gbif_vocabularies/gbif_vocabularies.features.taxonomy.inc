@@ -33,6 +33,22 @@ function gbif_vocabularies_taxonomy_default_vocabularies() {
       'module' => 'taxonomy',
       'weight' => -8,
     ),
+    'continent' => array(
+      'name' => 'Continent',
+      'machine_name' => 'continent',
+      'description' => 'Following http://registry.gbif.org/enumeration/basic/Continent',
+      'hierarchy' => 0,
+      'module' => 'taxonomy',
+      'weight' => 0,
+    ),
+    'countries' => array(
+      'name' => 'Countries',
+      'machine_name' => 'countries',
+      'description' => NULL,
+      'hierarchy' => 0,
+      'module' => 'taxonomy',
+      'weight' => 4,
+    ),
     'data_type' => array(
       'name' => 'Data type',
       'machine_name' => 'data_type',
@@ -48,6 +64,14 @@ function gbif_vocabularies_taxonomy_default_vocabularies() {
       'hierarchy' => 0,
       'module' => 'taxonomy',
       'weight' => -6,
+    ),
+    'gbif_area' => array(
+      'name' => 'GBIF area',
+      'machine_name' => 'gbif_area',
+      'description' => 'The administrative areas within GBIF, consistent with http://registry.gbif.org/enumeration/basic/GbifRegion',
+      'hierarchy' => 0,
+      'module' => 'taxonomy',
+      'weight' => 0,
     ),
     'informatics' => array(
       'name' => 'Informatics',
@@ -72,6 +96,14 @@ function gbif_vocabularies_taxonomy_default_vocabularies() {
       'hierarchy' => 0,
       'module' => 'taxonomy',
       'weight' => -4,
+    ),
+    'organizations' => array(
+      'name' => 'Organizations/economies',
+      'machine_name' => 'organizations',
+      'description' => '',
+      'hierarchy' => 0,
+      'module' => 'taxonomy',
+      'weight' => 6,
     ),
     'programme' => array(
       'name' => 'Programme',
@@ -120,6 +152,14 @@ function gbif_vocabularies_taxonomy_default_vocabularies() {
       'hierarchy' => 0,
       'module' => 'taxonomy',
       'weight' => 1,
+    ),
+    'un_region' => array(
+      'name' => 'UN region',
+      'machine_name' => 'un_region',
+      'description' => 'The region terms following the definition used in UN.',
+      'hierarchy' => 0,
+      'module' => 'taxonomy',
+      'weight' => 0,
     ),
   );
 }

@@ -104,7 +104,12 @@ function gbif_mendeley_preprocess_page(&$variables) {
  */
 function gbif_mendeley_retrieve_by_oauth2() {
 
-	$mendeley_access_token = variable_get('mendeley_access_token');
+  $mendeley_access_token = variable_get('mendeley_access_token');
+
+  // Check if the token is valid. If not, then set it as null.
+  if (!isset($mendeley_access_token->expires_in) || !isset($mendeley_access_token->refresh_token)) {
+    $mendeley_access_token = NULL;
+  }
 
 	// If there is no token stored, or the token doesn't have authorization code,
 	// then we need to direct user to authentication.
@@ -156,7 +161,7 @@ function gbif_mendeley_retrieve_by_oauth2() {
 function _gbif_mendeley_oauth2_callback($token_json = NULL) {
 
 	// If $token_json is set, then this should be a call to refresh token.
-	if (isset($token_json)) {
+	if (isset($token_json->refresh_token)) {
 		$params = array(
 			'grant_type' => 'refresh_token',
 			'refresh_token' => $token_json->refresh_token,

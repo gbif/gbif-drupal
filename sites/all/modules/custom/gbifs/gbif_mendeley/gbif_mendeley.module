@@ -13,7 +13,7 @@ define('MENDELEY_GBIF_PORTAL_CLIENT_ID', variable_get('mendeley_app_id'));
 define('MENDELEY_GBIF_PORTAL_CLIENT_SECRET', variable_get('mendeley_app_secret'));
 define('MENDELEY_GBIF_PUBLIC_GROUP_ID', 'dcb8ff61-dbc0-3519-af76-2072f22bc22f');
 define('MENDELEY_GBIF_STAFF_GROUP_ID', 'e5fcecec-e1e4-32cd-bde1-987edb6583f4');
-define('MENDELEY_API', 'https://api.mendeley.com:443');
+define('MENDELEY_API', 'https://api.mendeley.com');
 define('MENDELEY_AUTHORIZATION_ENDPOINT', MENDELEY_API . '/oauth/authorize');
 define('MENDELEY_OAUTH_TOKEN_EXCHANGE_ENDPOINT', MENDELEY_API . '/oauth/token');
 define('MENDELEY_REDIRECT_URI', $GLOBALS['base_url'] . '/mendeley/oauth2_callback');
@@ -110,16 +110,16 @@ function gbif_mendeley_retrieve_by_oauth2() {
 	// then we need to direct user to authentication.
 	if ($mendeley_access_token == NULL || !isset($mendeley_access_token->code) || $mendeley_access_token->message == 'No service found for your request') {
 		$state = drupal_hash_base64(variable_get('mendeley_state', drupal_random_bytes(128)));
-
+    $params = array(
+      'client_id' => MENDELEY_GBIF_PORTAL_CLIENT_ID,
+      'redirect_uri' => MENDELEY_REDIRECT_URI,
+      'response_type' => 'code',
+      'scope' => 'all',
+      'state' => $state,
+    );
 		$auth_ui_url = url(MENDELEY_AUTHORIZATION_ENDPOINT, array(
-			'query' => array(
-				'client_id' => MENDELEY_GBIF_PORTAL_CLIENT_ID,
-				'redirect_uri' => MENDELEY_REDIRECT_URI,
-				'response_type' => 'code',
-				'scope' => 'all',
-				'state' => $state,
-			)
-		));
+      'query' => $params
+    ));
 
 		try {
 			drupal_goto($auth_ui_url);
@@ -175,24 +175,16 @@ function _gbif_mendeley_oauth2_callback($token_json = NULL) {
 
 	// Actual call to get new or refreshed token.
 	$url = MENDELEY_OAUTH_TOKEN_EXCHANGE_ENDPOINT;
-	$query = rawurldecode(http_build_query($params));
+	$query = http_build_query($params);
 
-	$ch = curl_init();
+	$ch = curl_init($url);
 	curl_setopt($ch, CURLOPT_HTTPHEADER, array("Authorization: Basic " . base64_encode(MENDELEY_GBIF_PORTAL_CLIENT_ID . ':' . MENDELEY_GBIF_PORTAL_CLIENT_SECRET)));
+  curl_setopt($ch, CURLOPT_POST, true);
+  curl_setopt($ch, CURLOPT_POSTFIELDS, $query);
+  curl_setopt($ch, CURLOPT_HEADER, 'Content-Type: application/x-www-form-urlencoded');
 	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-	curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-	$CAcertificate = drupal_get_path('module', 'gbif_mendeley') . '/CAcertificates/GeoTrustGlobalCA';
-	if (file_exists($CAcertificate)) {
-		curl_setopt($ch, CURLOPT_CAINFO, $CAcertificate);
-	}
-	curl_setopt($ch, CURLOPT_URL, $url);
-	curl_setopt($ch, CURLOPT_POST, 1);
-	curl_setopt($ch, CURLOPT_POSTFIELDS, $query);
-	curl_setopt($ch, CURLOPT_HEADER, 1);
-	curl_setopt($ch, CURLINFO_HEADER_OUT, true);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-
-	$result = curl_exec($ch);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  $result = curl_exec($ch);
 	$json = json_decode(end(explode("\r\n", $result)));
 
 	if (isset($json->error)) {

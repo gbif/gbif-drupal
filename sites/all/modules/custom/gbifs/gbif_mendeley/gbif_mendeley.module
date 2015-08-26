@@ -83,7 +83,7 @@ function gbif_mendeley_preprocess_page(&$variables) {
           if ($tab['#href'] == $path_to_highlight) {
             // make it active
             array_push($variables['page']['menu']['menu_block_gbif_navigation_menu_tabs']['#content'][$k]['#attributes']['class'], 'active');
-            watchdog('gbif_mendeley', 'Active menu item set for data use node.', NULL, WATCHDOG_DEBUG);
+            watchdog('mendeley', 'Active menu item set for data use node.', NULL, WATCHDOG_DEBUG);
           }
         }
       }

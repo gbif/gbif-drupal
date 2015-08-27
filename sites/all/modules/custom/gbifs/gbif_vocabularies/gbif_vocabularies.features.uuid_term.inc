@@ -2126,6 +2126,14 @@ function gbif_vocabularies_uuid_features_default_terms() {
     ),
   );
   $terms[] = array(
+    'name' => 'DOIs',
+    'description' => '',
+    'format' => 'full_html',
+    'weight' => 0,
+    'uuid' => '2f6ae0ed-304f-49b6-9ffc-9ded563916ff',
+    'vocabulary_machine_name' => 'informatics',
+  );
+  $terms[] = array(
     'name' => 'Lithuania',
     'description' => 'Lithuania',
     'format' => NULL,
@@ -3291,6 +3299,15 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
+  );
+  $terms[] = array(
+    'name' => 'Abundance data',
+    'description' => '',
+    'format' => 'full_html',
+    'weight' => 0,
+    'uuid' => '4556dfb8-44c5-4d06-8090-adbd1e4560de',
+    'vocabulary_machine_name' => 'data_type',
+    'field_ims_keyword_id' => array(),
   );
   $terms[] = array(
     'name' => 'Biodiversity informatics standard',
@@ -7198,6 +7215,14 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'field_term_attributes' => array(),
   );
   $terms[] = array(
+    'name' => 'Vocabularies',
+    'description' => '',
+    'format' => 'full_html',
+    'weight' => 0,
+    'uuid' => '95a0bcf9-daf8-4329-a430-267991314ce0',
+    'vocabulary_machine_name' => 'informatics',
+  );
+  $terms[] = array(
     'name' => 'Production',
     'description' => 'Production ready',
     'format' => 'plain_text',
@@ -9891,15 +9916,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'field_term_native_name' => array(),
   );
   $terms[] = array(
-    'name' => 'GBIF.org',
-    'description' => '',
-    'format' => 'plain_text',
-    'weight' => 0,
-    'uuid' => 'd65b547b-6241-4edc-996f-e2dd9a6e3b6a',
-    'vocabulary_machine_name' => 'data_use',
-    'field_ims_keyword_id' => array(),
-  );
-  $terms[] = array(
     'name' => 'Digitization soft.',
     'description' => 'Data capture software use',
     'format' => 'plain_text',
@@ -10656,6 +10672,14 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 1,
     'uuid' => 'e7dadb3e-13de-4bdc-a01a-3add4b8a64c9',
     'vocabulary_machine_name' => 'audience',
+  );
+  $terms[] = array(
+    'name' => 'GBIF.org',
+    'description' => '',
+    'format' => 'full_html',
+    'weight' => 0,
+    'uuid' => 'e7dd054a-94ae-45aa-a79c-4765e157098c',
+    'vocabulary_machine_name' => 'about_gbif',
   );
   $terms[] = array(
     'name' => 'Latin',

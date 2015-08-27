@@ -13,6 +13,8 @@ drush field-delete field_rhimage
 drush field-delete field_audiovideo
 drush field-delete field_publication
 drush field-delete field_opportunities
+drush field-delete field_topimage
+drush field-delete field_training
 
 # taxonomy terms deletion
 # taxonomy vocabularies deletion

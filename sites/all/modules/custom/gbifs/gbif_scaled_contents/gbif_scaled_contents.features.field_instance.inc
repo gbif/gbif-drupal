@@ -567,6 +567,59 @@ function gbif_scaled_contents_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-news-field_legacy_nid'
+  $field_instances['node-news-field_legacy_nid'] = array(
+    'bundle' => 'news',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'number',
+        'settings' => array(
+          'decimal_separator' => '.',
+          'prefix_suffix' => TRUE,
+          'scale' => 0,
+          'thousand_separator' => ' ',
+        ),
+        'type' => 'number_integer',
+        'weight' => 22,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_legacy_nid',
+    'label' => 'Legacy nid',
+    'required' => 0,
+    'settings' => array(
+      'max' => '',
+      'mediafront' => array(
+        'custom' => '',
+        'field_type' => 0,
+        'media_type' => 'media',
+        'preview' => 0,
+        'thumbnail' => 0,
+      ),
+      'min' => '',
+      'prefix' => '',
+      'suffix' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'number',
+      'settings' => array(),
+      'type' => 'number',
+      'weight' => 7,
+    ),
+  );
+
   // Exported field_instance: 'node-news-field_link_to_research'
   $field_instances['node-news-field_link_to_research'] = array(
     'bundle' => 'news',
@@ -1247,6 +1300,7 @@ function gbif_scaled_contents_field_default_field_instances() {
   t('GBIF area');
   t('Images');
   t('Informatics');
+  t('Legacy nid');
   t('Link to research');
   t('Number of resources used');
   t('Related GBIF resources');

@@ -7,7 +7,50 @@
 include_once 'gbif_scaled_contents.features.inc';
 
 function gbif_scaled_contents_migrate() {
+
+  // Test node structure
+  $test_node = node_load(82218);
+
   // 1. Entity query all newsarticle nodes
+  // 2. Unpublished nodes will remain unpublished
+  $entity_query = new EntityFieldQuery();
+  $entity_query->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', 'newsarticle');
+  $exist = $entity_query->execute();
+
+
+
+  if (isset($exist['node'])) {
+
+    // Migrate each of them by iterating through.
+    // First round to save only legacy nid and the title.
+    foreach ($exist['node'] as $nid => $n_obj) {
+      $legacy_node = node_load($nid);
+      $legacy_node_wrapper = entity_metadata_wrapper('node', $legacy_node);
+
+      $new_node = new stdClass();
+      $new_node->type = 'news';
+      node_object_prepare($new_node);
+      $new_node_wrapper = entity_metadata_wrapper('node', $new_node);
+
+      // Title
+      $title = $legacy_node_wrapper->title->value();
+      $new_node_wrapper->title->set($title);
+
+      // Language
+      $new_node_wrapper->language = 'en';
+
+      // Legacy nid
+      $new_node_wrapper->field_legacy_nid->set($nid);
+
+      $new_node_wrapper->save();
+
+      workbench_moderation_moderate($new_node, 'published');
+    }
+  }
+
+
+
 }
 
 /**

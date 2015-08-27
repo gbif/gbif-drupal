@@ -5,3 +5,23 @@
  */
 
 include_once 'gbif_scaled_contents.features.inc';
+
+function gbif_scaled_contents_migrate() {
+  // 1. Entity query all newsarticle nodes
+}
+
+/**
+ * Utility function to generate the array for taxonomy terms mapping.
+ */
+function drush_gbif_scaled_contents_tx_generate() {
+  $terms = taxonomy_get_tree(30);
+  echo 'array(' . "\n";
+  foreach ($terms as $term) {
+    echo '  array(' . "\n";
+    echo "    'name' => '" . $term->name . "',\n";
+    echo "    'old_tid' => " . $term->tid . ",\n";
+    echo "    'new_tid' => NULL,\n";
+    echo "  ),\n";
+  }
+  echo ");\n";
+}

@@ -51,5 +51,4 @@ function drush_gbif_scaled_contents_file_clean() {
       unset($message);
     }
   }
-
 }

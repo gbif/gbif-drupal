@@ -480,7 +480,7 @@ function gbif_scaled_contents_field_default_field_instances() {
             'pathauto' => 0,
             'transliterate' => 0,
           ),
-          'value' => 'gbif_scaled_contents/[node:content-type:machine-name]/[node:nid]',
+          'value' => 'gbif_scaled_contents/[node:content-type:machine-name]/[current-date:custom:Y-F]/[node:nid]',
         ),
         'retroactive_update' => 0,
       ),

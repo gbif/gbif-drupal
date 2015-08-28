@@ -6,6 +6,17 @@
 
 include_once 'gbif_scaled_contents.features.inc';
 
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function gbif_scaled_contents_form_news_node_form_alter(&$form, &$form_state) {
+  $form['field_legacy_nid']['#disabled'] = TRUE;
+}
+
+
+/**
+ *
+ */
 function gbif_scaled_contents_migrate() {
 
   // Test node structure
@@ -17,8 +28,6 @@ function gbif_scaled_contents_migrate() {
   $entity_query->entityCondition('entity_type', 'node')
     ->entityCondition('bundle', 'newsarticle');
   $exist = $entity_query->execute();
-
-
 
   if (isset($exist['node'])) {
 
@@ -33,19 +42,36 @@ function gbif_scaled_contents_migrate() {
       node_object_prepare($new_node);
       $new_node_wrapper = entity_metadata_wrapper('node', $new_node);
 
+      // Legacy nid
+      $new_node_wrapper->field_legacy_nid->set($nid);
+
       // Title
       $title = $legacy_node_wrapper->title->value();
       $new_node_wrapper->title->set($title);
 
-      // Language
-      $new_node_wrapper->language = 'en';
+      // Body
+      $body = $legacy_node_wrapper->body->value();
+      $new_node_wrapper->body->set($body);
 
-      // Legacy nid
-      $new_node_wrapper->field_legacy_nid->set($nid);
+      // Images
+      // @see http://dropbucket.org/node/1201 for checking a field is set.
+      if ($legacy_node_wrapper->__isset('field_image')) {
+        $image = $legacy_node_wrapper->field_image->value();
+        if (!empty($image)) {
+          $new_node_wrapper->field_images->set(array($image));
+          $author = $legacy_node_wrapper->author->value();
+          $new_node_wrapper->author->set($author);
+          $new_node_wrapper->log->set('Revision created by migration script.');
+          $new_node_wrapper->save();
+          workbench_moderation_moderate($new_node, 'published');
+        }
+      }
 
-      $new_node_wrapper->save();
+      // Term reference fields
 
-      workbench_moderation_moderate($new_node, 'published');
+      // Save content
+
+      unset($legacy_node, $legacy_node_wrapper, $new_node, $new_node_wrapper);
     }
   }
 

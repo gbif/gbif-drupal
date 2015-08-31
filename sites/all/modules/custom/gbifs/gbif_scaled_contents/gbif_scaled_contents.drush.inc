@@ -25,10 +25,21 @@ function drush_gbif_scaled_contents_migrate() {
   drupal_set_message($result);
 }
 
+/**
+ * Orphan files cleaning.
+ */
 function drush_gbif_scaled_contents_file_clean() {
   $query = db_select('file_managed', 'f');
   $query->addField('f', 'fid');
   $query->addField('f', 'uri');
+  $db_or = db_or();
+  $db_or->condition('uri', '%' . db_like('/temp/') . '%', 'LIKE')
+    ->condition('uri', '%' . db_like('/orc/') . '%', 'LIKE')
+    ->condition('uri', '%' . db_like('/npt_mendeley/') . '%', 'LIKE')
+    ->condition('uri', '%' . db_like('/temp/') . '%', 'LIKE')
+    ->condition('uri', '%' . db_like('/orc_temp/') . '%', 'LIKE')
+    ->condition('uri', '%' . db_like('/fontyourface/') . '%', 'LIKE');
+  $query->condition($db_or);
   $results = $query->execute()->fetchAll();
 
   foreach ($results as $result) {
@@ -37,7 +48,7 @@ function drush_gbif_scaled_contents_file_clean() {
     }
     else {
       $file_obj = file_load($result->fid);
-      $delete_result = file_delete($file_obj);
+      $delete_result = file_delete($file_obj, TRUE);
       if ($delete_result == TRUE) {
       }
       elseif ($delete_result == FALSE) {

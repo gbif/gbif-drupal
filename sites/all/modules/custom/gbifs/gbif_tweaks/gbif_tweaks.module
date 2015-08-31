@@ -218,6 +218,19 @@ function gbif_tweaks_file_directories($mode = NULL, $name) {
 }
 
 /**
+ * Temporary fix for entityreference module to Drupal 7.39.
+ * @see https://www.drupal.org/node/2554553#comment-10254987
+ * @param $type
+ */
+function gbif_tweaks_element_info_alter(&$type) {
+  $type['entityreference']['#process'] = array(
+    'entityreference_autocomplete_process_entityreference',
+    'form_process_autocomplete',
+    'ajax_process_form'
+  );
+}
+
+/**
  * UUID generator.
  * @see http://stackoverflow.com/questions/2040240/php-function-to-generate-v4-uuid
  */

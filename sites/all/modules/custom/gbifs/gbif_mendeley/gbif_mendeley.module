@@ -535,7 +535,14 @@ function gbif_mendeley_page_router() {
 		}
 		else {
 
-      $documents = ($args[4] == 'count') ? $count : $documents;
+      switch ($args[4]) {
+        case 'count':
+          $documents = $count;
+          break;
+        case 'top5':
+          $documents = array_slice($documents, 0, 5);
+          break;
+      }
 			// If this is a JSONP request.
 			if (isset($_GET['callback'])) {
 				header('Content-Type: text/javascript; charset=utf8');

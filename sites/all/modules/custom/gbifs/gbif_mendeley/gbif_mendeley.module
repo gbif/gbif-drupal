@@ -551,7 +551,7 @@ function gbif_mendeley_page_router() {
         case 'count':
           $documents = $count;
           break;
-        case 'top5':
+        case 'recent5':
           $documents = array_slice($documents, 0, 5);
           break;
         case 'range':

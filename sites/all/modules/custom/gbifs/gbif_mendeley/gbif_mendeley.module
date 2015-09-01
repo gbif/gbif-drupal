@@ -493,6 +493,7 @@ function gbif_mendeley_page_router() {
 
 	$args = arg();
 	$tag_sets = gbif_mendeley_default_tag_sets();
+  $json_export = FALSE;
 
 	// $args[0] is "mendeley" so we determine the list from $args[1].
 	// The landing page.
@@ -511,7 +512,34 @@ function gbif_mendeley_page_router() {
 		$html = _mendeley_print_publications($documents_to_export, $machine_name);
 		return theme('mendeley_publications', array('html' => $html));
 	}
-	// When it's a request to call country list in JSON, stop processing and export right away.
+  // Documents by year, prepared for output.
+  elseif ((count($args) == 4 || count($args) == 3) && $args[1] == 'year') {
+    $documents = json_decode(file_get_contents(file_build_uri('gbif_mendeley/documents.json')), TRUE);
+    $documents_by_year = array();
+    foreach ($documents as $key => $item) {
+      $documents_by_year[$item['year']][$key] = $item;
+    }
+    ksort($documents_by_year, SORT_NUMERIC);
+
+    $documents = $documents_by_year[$args[2]];
+    $count = count($documents);
+
+    if (isset($args[3]) && $args[3] == 'count') {
+      $result = $count;
+    }
+    else {
+      if ($count == 0) {
+        $message_json = 'No document has been curated for ' . $args[2] . '.';
+        $result = array('Message' => $message_json);
+      }
+      else {
+        $result = $documents;
+      }
+    }
+    $json_export = TRUE;
+
+  }
+	// When it's a request to call country list in JSON, prepare data for output.
 	elseif ((count($args) == 4 || count($args) == 5) && $args[1] == 'country' && $args[3] == 'json') {
 
 		// Find the country documents.
@@ -519,19 +547,8 @@ function gbif_mendeley_page_router() {
 		$count = count($documents);
 
 		if ($count == 0) {
-			$message = 'No document is tagged with ' . $args[2] . '.';
-			$result = ($args[4] == 'count') ? $count : array('Error' => $message);
-
-			// If this is a JSONP request.
-			if (isset($_GET['callback'])) {
-				header('Content-Type: text/javascript; charset=utf8');
-				header('Access-Control-Max-Age: 3628800');
-				header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
-				echo $_GET['callback'] . '(' . json_encode($result) . ')';
-			}
-			else {
-				drupal_json_output($result);
-			}
+			$message_json = 'No document is tagged with ' . $args[2] . '.';
+			$result = ($args[4] == 'count') ? $count : array('Message' => $message_json);
 		}
 		else {
 
@@ -543,22 +560,27 @@ function gbif_mendeley_page_router() {
           $documents = array_slice($documents, 0, 5);
           break;
       }
-			// If this is a JSONP request.
-			if (isset($_GET['callback'])) {
-				header('Content-Type: text/javascript; charset=utf8');
-				header('Access-Control-Max-Age: 3628800');
-				header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
-				echo $_GET['callback'] . '(' . json_encode($documents) . ')';
-			}
-			else {
-				drupal_json_output($documents);
-			}
-
+      $result = $documents;
 		}
+    $json_export = TRUE;
 	}
 	else {
 		return MENU_NOT_FOUND;
 	}
+
+  // JSON or JSONP export
+  if ($json_export == TRUE && isset($result)) {
+    // If this is a JSONP request.
+    if (isset($_GET['callback'])) {
+      header('Content-Type: text/javascript; charset=utf8');
+      header('Access-Control-Max-Age: 3628800');
+      header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
+      echo $_GET['callback'] . '(' . json_encode($result) . ')';
+    }
+    else {
+      drupal_json_output($result);
+    }
+  }
 }
 
 /**

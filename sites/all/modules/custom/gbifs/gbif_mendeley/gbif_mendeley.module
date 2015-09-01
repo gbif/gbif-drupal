@@ -560,7 +560,9 @@ function gbif_mendeley_page_router() {
           $documents_by_year = gbif_mendeley_group_docs_by_year($documents);
           $documents_total = array();
           for ($i = $year_start; $i <= $year_end; $i++) {
-            $documents_total = array_merge($documents_total, $documents_by_year[$i]);
+            if (isset($documents_by_year[$i])) {
+              $documents_total = array_merge($documents_total, $documents_by_year[$i]);
+            }
           }
           $documents = count($documents_total);
           break;

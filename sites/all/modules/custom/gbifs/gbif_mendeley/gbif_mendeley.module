@@ -515,12 +515,7 @@ function gbif_mendeley_page_router() {
   // Documents by year, prepared for output.
   elseif ((count($args) == 4 || count($args) == 3) && $args[1] == 'year') {
     $documents = json_decode(file_get_contents(file_build_uri('gbif_mendeley/documents.json')), TRUE);
-    $documents_by_year = array();
-    foreach ($documents as $key => $item) {
-      $documents_by_year[$item['year']][$key] = $item;
-    }
-    ksort($documents_by_year, SORT_NUMERIC);
-
+    $documents_by_year = gbif_mendeley_group_docs_by_year($documents);
     $documents = $documents_by_year[$args[2]];
     $count = count($documents);
 
@@ -540,7 +535,7 @@ function gbif_mendeley_page_router() {
 
   }
 	// When it's a request to call country list in JSON, prepare data for output.
-	elseif ((count($args) == 4 || count($args) == 5) && $args[1] == 'country' && $args[3] == 'json') {
+	elseif ((count($args) == 4 || count($args) == 5 || count($args) == 7) && $args[1] == 'country' && $args[3] == 'json') {
 
 		// Find the country documents.
 		$documents = json_decode(file_get_contents(file_build_uri('gbif_mendeley/countries/' . $args[2] . '.json')), TRUE);
@@ -558,6 +553,16 @@ function gbif_mendeley_page_router() {
           break;
         case 'top5':
           $documents = array_slice($documents, 0, 5);
+          break;
+        case 'range':
+          $year_start = $args[5];
+          $year_end = $args[6];
+          $documents_by_year = gbif_mendeley_group_docs_by_year($documents);
+          $documents_total = array();
+          for ($i = $year_start; $i <= $year_end; $i++) {
+            $documents_total = array_merge($documents_total, $documents_by_year[$i]);
+          }
+          $documents = count($documents_total);
           break;
       }
       $result = $documents;
@@ -581,6 +586,18 @@ function gbif_mendeley_page_router() {
       drupal_json_output($result);
     }
   }
+}
+
+/**
+ * Group Mendeley documents by year
+ */
+function gbif_mendeley_group_docs_by_year($documents) {
+  $documents_by_year = array();
+  foreach ($documents as $key => $item) {
+    $documents_by_year[$item['year']][$key] = $item;
+  }
+  ksort($documents_by_year, SORT_NUMERIC);
+  return $documents_by_year;
 }
 
 /**

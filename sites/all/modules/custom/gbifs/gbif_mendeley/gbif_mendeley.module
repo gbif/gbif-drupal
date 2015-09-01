@@ -512,7 +512,7 @@ function gbif_mendeley_page_router() {
 		return theme('mendeley_publications', array('html' => $html));
 	}
 	// When it's a request to call country list in JSON, stop processing and export right away.
-	elseif (count($args) == 4 && $args[1] == 'country' && $args[3] == 'json') {
+	elseif ((count($args) == 4 || count($args) == 5) && $args[1] == 'country' && $args[3] == 'json') {
 
 		// Find the country documents.
 		$documents = json_decode(file_get_contents(file_build_uri('gbif_mendeley/countries/' . $args[2] . '.json')), TRUE);
@@ -520,7 +520,7 @@ function gbif_mendeley_page_router() {
 
 		if ($count == 0) {
 			$message = 'No document is tagged with ' . $args[2] . '.';
-			$result = array('Error' => $message);
+			$result = ($args[4] == 'count') ? $count : array('Error' => $message);
 
 			// If this is a JSONP request.
 			if (isset($_GET['callback'])) {
@@ -535,6 +535,7 @@ function gbif_mendeley_page_router() {
 		}
 		else {
 
+      $documents = ($args[4] == 'count') ? $count : $documents;
 			// If this is a JSONP request.
 			if (isset($_GET['callback'])) {
 				header('Content-Type: text/javascript; charset=utf8');

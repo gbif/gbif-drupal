@@ -549,7 +549,13 @@ function gbif_mendeley_page_router() {
 
       switch ($args[4]) {
         case 'count':
-          $documents = $count;
+          // include only after 2008
+          foreach ($documents as $key => $doc) {
+            if ($doc['year'] < 2008) {
+              unset($documents[$key]);
+            }
+          }
+          $documents = count($documents);
           break;
         case 'recent5':
           $documents = array_slice($documents, 0, 5);

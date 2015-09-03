@@ -408,7 +408,7 @@ function gbif_project_preprocess_field(&$variables) {
         $org_url = $entity_wrapper->field_url->value();
 
         // In the programme type, the field_co_funder is rendered differently
-        // with funder image and statement, execpt GBIF funded ones.
+        // with funder image and statement, except GBIF funded ones.
         // For other content types, we only render it as a link.
         if ($variables['element']['#object']->type == 'programme' && $item['entity']->title !== 'Global Biodiversity Information Facility') {
           // Make the name of the funder a link if it's mentioned in the statement.
@@ -423,22 +423,24 @@ function gbif_project_preprocess_field(&$variables) {
 
           // Produce linkable funder image.
           $field_image = $entity_wrapper->field_image->value();
-          $image_array = field_view_value('node', $item['entity'], 'field_image', $field_image, array(
-            'type' => 'image',
-            'settings' => array(
-              'image_style' => 'funder_image'
-            )
-          ));
-          $image = render($image_array);
-          $image_link = l($image, $org_url[0]['url'], array(
-            'html' => TRUE,
-            'attributes' => array(
-              'title' => $org_url[0]['title'],
-              'class' => 'funder-image-link'
-            )
-          ));
-
-          $variables['items'][$i]['#markup'] = '<p>' . $funding_statement . '</p>'. $image_link;
+          if (isset($field_image)) {
+            $image_array = field_view_value('node', $item['entity'], 'field_image', $field_image, array(
+              'type' => 'image',
+              'settings' => array(
+                'image_style' => 'funder_image'
+              )
+            ));
+            $image = render($image_array);
+            $image_link = l($image, $org_url[0]['url'], array(
+              'html' => TRUE,
+              'attributes' => array(
+                'title' => $org_url[0]['title'],
+                'class' => 'funder-image-link'
+              )
+            ));
+          }
+          $variables['items'][$i]['#markup'] = (!empty($funding_statement)) ? '<p>' . $funding_statement . '</p>' : '';
+          $variables['items'][$i]['#markup'] .= (!empty($image_link)) ? $image_link : '';
         }
         else {
           // we always use the first one for URL
@@ -451,7 +453,7 @@ function gbif_project_preprocess_field(&$variables) {
           }
         }
 
-        unset($org_url);
+        unset($org_url, $funding_statement, $image_link);
       }
       break;
     case 'field_related_news':

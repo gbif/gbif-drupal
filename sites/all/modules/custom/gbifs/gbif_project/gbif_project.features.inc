@@ -35,6 +35,22 @@ function gbif_project_views_api($module = NULL, $api = NULL) {
 function gbif_project_image_default_styles() {
   $styles = array();
 
+  // Exported image style: funder_image.
+  $styles['funder_image'] = array(
+    'label' => 'Funder image',
+    'effects' => array(
+      11 => array(
+        'name' => 'image_scale',
+        'data' => array(
+          'width' => 220,
+          'height' => '',
+          'upscale' => 0,
+        ),
+        'weight' => 1,
+      ),
+    ),
+  );
+
   // Exported image style: programme_image_for_landing_page.
   $styles['programme_image_for_landing_page'] = array(
     'label' => 'Programme image for landing page',

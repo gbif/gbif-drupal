@@ -549,9 +549,15 @@ function gbif_mendeley_page_router() {
 
       switch ($args[4]) {
         case 'count':
-          $documents = $count;
+          // include only after 2008
+          foreach ($documents as $key => $doc) {
+            if ($doc['year'] < 2008) {
+              unset($documents[$key]);
+            }
+          }
+          $documents = count($documents);
           break;
-        case 'top5':
+        case 'recent5':
           $documents = array_slice($documents, 0, 5);
           break;
         case 'range':
@@ -560,7 +566,9 @@ function gbif_mendeley_page_router() {
           $documents_by_year = gbif_mendeley_group_docs_by_year($documents);
           $documents_total = array();
           for ($i = $year_start; $i <= $year_end; $i++) {
-            $documents_total = array_merge($documents_total, $documents_by_year[$i]);
+            if (isset($documents_by_year[$i])) {
+              $documents_total = array_merge($documents_total, $documents_by_year[$i]);
+            }
           }
           $documents = count($documents_total);
           break;

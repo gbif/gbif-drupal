@@ -235,6 +235,7 @@ function gbif_project_field_multiple_value_form($variables) {
  * Implements hook_preprocess_page().
  */
 function gbif_project_page_build(&$page) {
+  // Overriding the banner title according to the content of the programme.
   if (isset($page['content']['system_main']['nodes'])) {
     $element_child = element_children($page['content']['system_main']['nodes']);
     if (count($element_child) == 1) {

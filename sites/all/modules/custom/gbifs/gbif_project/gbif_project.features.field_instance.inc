@@ -1190,7 +1190,7 @@ function gbif_project_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_co_funder',
-    'label' => 'Funder',
+    'label' => 'Co-Funder(s)',
     'required' => 0,
     'settings' => array(
       'mediafront' => array(
@@ -1468,7 +1468,7 @@ function gbif_project_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_pj_matching_fund',
-    'label' => 'Matching fund',
+    'label' => 'Estimated Co-Funding',
     'required' => 0,
     'settings' => array(
       'max' => '',
@@ -2708,9 +2708,11 @@ function gbif_project_field_default_field_instances() {
   t('Acronym');
   t('Body');
   t('Call');
+  t('Co-Funder(s)');
   t('Country code ISO2');
   t('Description');
   t('Duration');
+  t('Estimated Co-Funding');
   t('File');
   t('Files');
   t('Files that are attached to only this programme. For those that should be available via the resource library, they need to be created as a resource first, and then \'linked\' with the \'internal or external links\' field.');
@@ -2729,7 +2731,6 @@ function gbif_project_field_default_field_instances() {
   t('Internal or external links');
   t('Links to the curated GBIF resources/pages or external ones.');
   t('MOU 2012 date');
-  t('Matching fund');
   t('Max 135 characters. Won\'t wrap if longer. This is the slogan-like sentence placed under the title in the banner.');
   t('Max 49 characters. Wont\' wrap if longer. This is the slightly short version of the title that is used primarily as the heading in the banner area.');
   t('Max 90 characters. If provided, this field will be used to replace the normal title for a neat layout.');

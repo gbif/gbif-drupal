@@ -124,8 +124,8 @@
             <?php endif; ?>
 
             <?php
-              $block = block_load('views', 'related_activities-related_news');
-              print render(_block_get_renderable_array(_block_render_blocks(array($block))));
+              $block = _block_get_renderable_array(_block_render_blocks(array(block_load('views', 'related_activities-related_news'))));
+              print render($block);
             ?>
 
             <?php if (!empty($resources_html)): ?>

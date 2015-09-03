@@ -51,15 +51,16 @@ Community {"url":"<front>"}
 -Participation {"url":"participation\/summary", "description": "Being part of the GBIF community"}
 --Summary {"url":"participation\/summary"}
 --Membership {"url":"participation\/membership"}
---Regional collaboration {"url":"participation\/regional-collaboration"}
 --Participant list {"url":"participation\/participant-list"}
 --How to join {"url":"participation\/how-to-join"}
 -Capacity enhancement {"url":"capacity-enhancement\/summary", "description": "Sharing expertise, experience and technology around the GBIF community"}
 --Summary {"url":"capacity-enhancement\/summary"}
---Support programme {"url":"programme"}
---BID {"url":"programme\/bid"}
---GBIF support {"url":"programme\/gbif-support"}
+--Support programme {"url":"capacity-enhancement\/support-programme"}
+--Regional collaboration {"url":"capacity-enhancement\/regional-collaboration"}
 --Training {"url":"capacity-enhancement\/training"}
+--Capacity programmes {"url":"capacity-enhancement\/capacity-programmes"}
+--Current projects {"url":"capacity-enhancement\/current-projects"}
+--Past projects {"url":"capacity-enhancement\/past-projects"}
 -Resources {"url":"resources", "description": "Library of documents, tools and and other information to support the GBIF community (look template.php for changing this particular item.)"}
 --Resources {"url":"resources"}
 --Literature {"url":"mendeley"}

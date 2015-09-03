@@ -80,7 +80,9 @@ function gbif_pages_taxonomy_term_page($term) {
  * Implements hook_preprocess_page().
  */
 function gbif_pages_preprocess_page(&$variables) {
-  // Changing the width of menu tabs in capacity enhancement to fit more.
+  /**
+   * Changing the width of menu tabs in capacity enhancement to fit more.
+   *
 	$capacity_pages = array(
 		'node/226', // capacity-enhancement/summary
 		'node/3669', // capacity-enhancement/support-programme
@@ -100,6 +102,7 @@ function gbif_pages_preprocess_page(&$variables) {
 			}
 		}
 	}
+  */
 
   // Highlighting the menu tab for BID updates.
   $bid_updates = array(

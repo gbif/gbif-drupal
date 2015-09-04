@@ -120,14 +120,14 @@
             <?php endif; ?>
 
             <?php
-              $block_loaded = block_load('views', '6775b3284eaf04e2c36a07da29e19bc4');
-              $block = _block_get_renderable_array(_block_render_blocks(array($block_loaded)));
+              // Related projects view block
+              $block = _block_get_renderable_array(_block_render_blocks(array(block_load('views', '6775b3284eaf04e2c36a07da29e19bc4'))));
               print render($block);
             ?>
 
             <?php
-              $block_loaded = block_load('views', 'related_activities-related_news');
-              $block = _block_get_renderable_array(_block_render_blocks(array($block_loaded)));
+              // Related activities news block
+              $block = _block_get_renderable_array(_block_render_blocks(array(block_load('views', 'related_activities-related_news'))));
               print render($block);
             ?>
 

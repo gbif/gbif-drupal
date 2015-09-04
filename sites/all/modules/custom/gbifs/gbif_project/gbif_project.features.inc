@@ -80,20 +80,20 @@ function gbif_project_image_default_styles() {
   $styles['teaser_thumbmail'] = array(
     'label' => 'Teaser thumbmail',
     'effects' => array(
-      14 => array(
+      12 => array(
         'name' => 'image_scale',
         'data' => array(
           'width' => '',
-          'height' => 72,
+          'height' => 100,
           'upscale' => 0,
         ),
         'weight' => 1,
       ),
-      15 => array(
+      13 => array(
         'name' => 'image_crop',
         'data' => array(
-          'width' => 72,
-          'height' => 72,
+          'width' => 100,
+          'height' => 100,
           'anchor' => 'center-center',
         ),
         'weight' => 2,

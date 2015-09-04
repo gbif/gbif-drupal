@@ -119,12 +119,15 @@
               <?php print render($content['body']); ?>
             <?php endif; ?>
 
-            <?php if (!empty($projects_html)): ?>
-              <?php print $projects_html; ?>
-            <?php endif; ?>
+            <?php
+              $block_loaded = block_load('views', '6775b3284eaf04e2c36a07da29e19bc4');
+              $block = _block_get_renderable_array(_block_render_blocks(array($block_loaded)));
+              print render($block);
+            ?>
 
             <?php
-              $block = _block_get_renderable_array(_block_render_blocks(array(block_load('views', 'related_activities-related_news'))));
+              $block_loaded = block_load('views', 'related_activities-related_news');
+              $block = _block_get_renderable_array(_block_render_blocks(array($block_loaded)));
               print render($block);
             ?>
 

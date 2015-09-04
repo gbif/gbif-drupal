@@ -120,7 +120,7 @@ function gbif_project_node_info() {
     'dir_organization' => array(
       'name' => t('Organization'),
       'base' => 'node_content',
-      'description' => t('Organization entity to be synced with the future directory.'),
+      'description' => t('Organization entity serve as an interim option for displaying funding statements and it\'s logo. This is to be synced with the future directory.'),
       'has_title' => '1',
       'title_label' => t('Title'),
       'help' => '',

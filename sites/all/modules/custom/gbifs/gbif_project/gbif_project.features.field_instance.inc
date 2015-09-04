@@ -1606,7 +1606,7 @@ function gbif_project_field_default_field_instances() {
     'bundle' => 'project',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'Refers to the umbrella project.',
+    'description' => 'Refers to the umbrella programme/project.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -2740,7 +2740,7 @@ function gbif_project_field_default_field_instances() {
   t('Partners');
   t('Programme');
   t('Purpose');
-  t('Refers to the umbrella project.');
+  t('Refers to the umbrella programme/project.');
   t('Related events');
   t('Related news');
   t('Related projects');

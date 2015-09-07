@@ -192,7 +192,7 @@ function gbif_project_views_default_views() {
     'trim_type' => 'words',
     'trim_suffix' => '...',
     'more_link' => '0',
-    'more_text' => 'Read more',
+    'more_text' => 'learn more',
     'summary_handler' => 'full',
     'trim_options' => array(
       'text' => 'text',
@@ -206,7 +206,7 @@ function gbif_project_views_default_views() {
   $handler->display->display_options['fields']['field_duration']['label'] = '';
   $handler->display->display_options['fields']['field_duration']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_duration']['settings'] = array(
-    'format_type' => 'monthyear',
+    'format_type' => 'mmm_yyyy',
     'fromto' => 'both',
     'multiple_number' => '',
     'multiple_from' => '',

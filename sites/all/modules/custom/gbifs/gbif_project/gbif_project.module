@@ -415,7 +415,7 @@ function gbif_project_preprocess_field(&$variables) {
       // Precision only to month
       $start_timestamp = $variables['element']['#items'][0]['value'];
       $end_timestamp = $variables['element']['#items'][0]['value2'];
-      $duration = date('M, Y', $start_timestamp) . ' - ' . date('M, Y', $end_timestamp);
+      $duration = date('M Y', $start_timestamp) . ' to ' . date('M Y', $end_timestamp);
       $variables['items'][0]['#markup'] = $duration;
       break;
     case 'field_pj_funding_allocated':

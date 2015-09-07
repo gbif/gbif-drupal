@@ -109,8 +109,32 @@ function gbif_project_field_widget_form_alter(&$element, &$form_state, $context)
   }
 }
 
+/**
+ * @todo Landing page for all programmes. A panel?
+ * @param $variables
+ */
 function gbif_project_programme_page(&$variables) {
 
+}
+
+/**
+ * Implements hook_preprocess_page().
+ */
+function gbif_project_preprocess_page(&$variables) {
+  if (isset($variables['page']['menu']['menu_block_gbif_navigation_menu_tabs'])) {
+    if (isset($variables['node']) && $variables['node']->type == 'project') {
+      foreach ($variables['page']['menu']['menu_block_gbif_navigation_menu_tabs']['#content'] as $k => $tab) {
+        if (gettype($k) == 'integer') {
+          $path = explode('/', $tab['#href']);
+          $nid = $path[1];
+          $url_alias = drupal_get_path_alias($tab['#href']);
+          if ($url_alias == 'programme/gbif-support') {
+            $variables['page']['menu']['menu_block_gbif_navigation_menu_tabs']['#content'][$k]['#attributes']['class'][] = 'back-menu';
+          }
+        }
+      }
+    }
+  }
 }
 
 /**

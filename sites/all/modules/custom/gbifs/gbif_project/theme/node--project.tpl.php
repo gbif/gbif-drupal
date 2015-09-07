@@ -78,7 +78,23 @@
  *
  * @ingroup themeable
  */
+
+/**
+ * Processing programme/umbrella project for leading back to the page of the upper level.
+ */
+$node_wrapper = entity_metadata_wrapper('node', $node);
+$field_programme_value = $node_wrapper->field_programme_ef->value();
+$programme_url = drupal_get_path_alias('node/'. $field_programme_value->nid);
+$programme_title = $field_programme_value->title;
+
 ?>
+<div class="back-to-previous">
+  <div class="container">
+    <div class="row">
+      <p>&lt; <u><a href="/<?php print $programme_url; ?>">Back to <?php print $programme_title; ?></a></u></p>
+    </div>
+  </div>
+</div>
 <div class="container well well-lg well-margin-top<?php print (empty($next_node)) ? ' well-margin-bottom' : ''; ?>">
   <div class="row">
     <div class="col-xs-12">

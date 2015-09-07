@@ -77,6 +77,15 @@ function gbif_project_views_default_views() {
     ),
     'trim_preserve_tags' => '',
   );
+  /* Field: Content: Updated/commented date */
+  $handler->display->display_options['fields']['last_updated']['id'] = 'last_updated';
+  $handler->display->display_options['fields']['last_updated']['table'] = 'node_comment_statistics';
+  $handler->display->display_options['fields']['last_updated']['field'] = 'last_updated';
+  $handler->display->display_options['fields']['last_updated']['label'] = '';
+  $handler->display->display_options['fields']['last_updated']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['last_updated']['date_format'] = 'custom';
+  $handler->display->display_options['fields']['last_updated']['custom_date_format'] = 'F jS, Y';
+  $handler->display->display_options['fields']['last_updated']['second_date_format'] = 'long';
   /* Sort criterion: Content: Related news (field_related_news:delta) */
   $handler->display->display_options['sorts']['delta']['id'] = 'delta';
   $handler->display->display_options['sorts']['delta']['table'] = 'field_data_field_related_news';

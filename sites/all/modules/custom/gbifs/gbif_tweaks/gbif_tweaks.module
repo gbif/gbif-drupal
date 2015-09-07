@@ -15,6 +15,31 @@ function gbif_tweaks_menu() {
 }
 
 /**
+ * Implements hook_date_format_types().
+ */
+/**
+ * Implements hook_date_format_types().
+ */
+function gbif_tweaks_date_format_types() {
+  return array(
+    'mmm_yyyy' => t('Sep 2015'),
+  );
+}
+
+/**
+ * Implements hook_date_formats().
+ */
+function gbif_tweaks_date_formats() {
+  return array(
+    array(
+      'type' => 'Sep 2015',
+      'format' => 'M Y',
+      'locales' => array()
+    ),
+  );
+}
+
+/**
  * Mainly a wrapper function that adds elapsed time to the result.
  *
  * @param $task

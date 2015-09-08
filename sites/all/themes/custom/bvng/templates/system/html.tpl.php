@@ -81,9 +81,11 @@
 	<link rel="icon" type="image/png" sizes="192x192" href="/<?php print drupal_get_path('theme', 'bvng'); ?>/images/favicons/android-chrome-192x192.png">
 	<link rel="icon" type="image/png" sizes="16x16" href="/<?php print drupal_get_path('theme', 'bvng'); ?>/images/favicons/favicon-16x16.png">
 	<link rel="manifest" href="/<?php print drupal_get_path('theme', 'bvng'); ?>/images/favicons/manifest.json">
-	<meta name="msapplication-TileColor" content="#00a300">
+  <meta name="apple-mobile-web-app-title" content="GBIF">
+  <meta name="application-name" content="GBIF">
+	<meta name="msapplication-TileColor" content="#509e2f">
 	<meta name="msapplication-TileImage" content="/<?php print drupal_get_path('theme', 'bvng'); ?>/images/favicons/mstile-144x144.png">
-	<meta name="theme-color" content="#ffffff">
+	<meta name="theme-color" content="#509e2f">
 
 	<!-- ending favicons -->
 

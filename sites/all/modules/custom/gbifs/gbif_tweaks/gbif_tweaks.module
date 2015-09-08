@@ -1,4 +1,9 @@
 <?php
+/**
+ * @file
+ * Code for the GBIF Tweaks feature.
+ */
+include_once 'gbif_tweaks.features.inc';
 
 function gbif_tweaks_menu() {
 	$items['admin/config/gbif'] = array(
@@ -17,12 +22,9 @@ function gbif_tweaks_menu() {
 /**
  * Implements hook_date_format_types().
  */
-/**
- * Implements hook_date_format_types().
- */
 function gbif_tweaks_date_format_types() {
   return array(
-    'mmm_yyyy' => t('Sep 2015'),
+    'mmm_yyyy' => t('MMM YYYY'),
   );
 }
 
@@ -30,13 +32,16 @@ function gbif_tweaks_date_format_types() {
  * Implements hook_date_formats().
  */
 function gbif_tweaks_date_formats() {
-  return array(
-    array(
-      'type' => 'Sep 2015',
-      'format' => 'M Y',
-      'locales' => array()
-    ),
+  $formats = array();
+  $formats[] = array(
+    'type' => 'mmm_yyyy',
+    'format' => 'M Y',
+    'locales' => array()
   );
+  foreach ($formats as $format) {
+    variable_set('date_format_' . $format['type'], $format['format']);
+  }
+  return $formats;
 }
 
 /**

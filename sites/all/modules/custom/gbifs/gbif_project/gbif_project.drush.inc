@@ -19,6 +19,10 @@ function gbif_project_drush_command() {
  */
 function drush_gbif_project_publish() {
   $types = array('call', 'project', 'programme', 'dir_organization');
+  $programme_alias = array(
+    '82219' => 'programme/gbif-support',
+    '82243' => 'programme/bid'
+  );
   foreach ($types as $type) {
     $count = 0;
     $query = new EntityFieldQuery();
@@ -29,6 +33,14 @@ function drush_gbif_project_publish() {
       foreach ($entities['node'] as $nid => $ref) {
         $node = node_load($nid);
         $node->status = 1;
+        // handling URL alias here for programme, only for alias defined in $programme_alias
+        if ($type == 'programme' && isset($programme_alias[$nid])) {
+          $url_alias = drupal_get_path_alias('node/' . $node->nid);
+          $url_alias_delete = db_delete('url_alias')
+            ->condition('source', $url_alias)
+            ->execute();
+          $node->path = array('alias' => $programme_alias[$nid], 'pathauto' => FALSE);
+        }
         node_save($node);
         $count++;
         unset($node);
@@ -40,5 +52,21 @@ function drush_gbif_project_publish() {
     else {
       drush_print('No nodes of the ' . $type . ' content type were published.');
     }
+  }
+
+  // update URL alias for programme and participation/regional-collaboration
+  $node_to_update = array(
+    '230' => 'participation/regional-collaboration',
+    '3669' => 'programme'
+  );
+  foreach ($node_to_update as $nid => $alias) {
+    $node = node_load($nid);
+    $url_alias = drupal_get_path_alias('node/', $nid);
+    $url_alias_delete = db_delete('url_alias')
+      ->condition('source', $url_alias)
+      ->execute();
+    $node->path = array('alias' => $alias, 'pathauto' => FALSE);
+    node_save($node);
+    drush_print($url_alias . ' has been updated. Now ' . $alias. '.');
   }
 }

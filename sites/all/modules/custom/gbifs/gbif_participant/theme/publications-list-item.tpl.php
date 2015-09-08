@@ -3,16 +3,23 @@
 		<?php
 			$title_link = l($p['title'], $p['websites'][0], array('attributes' => array('target' => '_blank')));
 
-			// Authors
-			$authors = '';
-			for ($i = 0; $i < count($p['authors']); $i++) {
-				$authors .= $p['authors'][$i]['last_name'] . ', ';
-				$authors .= strtoupper(substr($p['authors'][$i]['first_name'], 0, 1)) . '.';
-				if ($i < count($p['authors']) - 1) {
-					$authors .= ', ';
-				}
-			}
-			$year = isset($p['year']) ? ', ' . $p['year'] . '.' : NULL;
+    // Authors
+    $authors = '';
+    $max_count = (count($p['authors']) > 6) ? 6 : count($p['authors']);
+    for ($i = 0; $i < $max_count; $i++) {
+      $last_name = $p['authors'][$i]['last_name'];
+      $authors .= (mb_strtoupper($last_name, 'utf-8') == $last_name) ? ucfirst(strtolower($last_name)) . ' ' : $last_name . ' ';
+      $authors .= (isset($p['authors'][$i]['first_name'])) ? strtoupper(substr($p['authors'][$i]['first_name'], 0, 1)) : '';
+      if ($i < $max_count - 1) {
+        $authors .= ', ';
+      }
+      unset($last_name);
+    }
+    if (count($p['authors']) > 6) {
+      $authors .= ' et al. ';
+    }
+
+    $year = isset($p['year']) ? ' (' . $p['year'] . ')' : NULL;
 
 		$journal = (!empty($p['source'])) ? '<em>' . $p['source'] . '</em>' : '';
 		$journal .= (!empty($p['volume'])) ? ' ' . $p['volume'] : '';

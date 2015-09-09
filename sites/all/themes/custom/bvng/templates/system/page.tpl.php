@@ -76,6 +76,10 @@
  *
  * @ingroup themeable
  */
+
+$logo_path = '/' . path_to_theme() . '/images/GBIF-2015-full-CS5.svg';
+$logo_path_png = '/' . path_to_theme() . '/images/GBIF-2015-full-CS5.png';
+
 ?>
 <section id="masthead">
   <div class="container">
@@ -90,15 +94,11 @@
     			<div id="branding">
         		<?php if ($logo): ?>
           		<a class="logo" href="<?php print $front_page; ?>" title="<?php print t('Home'); ?>">
-          			<img src="<?php print $logo; ?>" alt="<?php print t('Home'); ?>" />
+                <svg width="239" height="49">
+                  <image xlink:href="<?php print $logo_path; ?>" src="<?php print $logo_path_png; ?>" width="239" height="49" />
+                </svg>
           		</a>
         		<?php endif; ?>
-        		<?php if (!empty($site_name)): ?>
-        		  <h1><a href="<?php print $front_page; ?>" title="<?php print t('Home'); ?>"><?php print $site_name; ?></a></h1>
-        		<?php endif; ?>
-        		<?php if (!empty($site_slogan)): ?>
-            	<span><?php print $site_slogan; ?></span>
-            <?php endif; ?>
       		</div>
 
           <?php if (!empty($primary_nav) || !empty($secondary_nav) || !empty($page['navigation'])): ?>

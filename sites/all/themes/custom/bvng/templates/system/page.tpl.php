@@ -77,8 +77,8 @@
  * @ingroup themeable
  */
 
-$logo_path = '/' . path_to_theme() . '/images/GBIF-2015-full-CS5.svg';
-$logo_path_png = '/' . path_to_theme() . '/images/GBIF-2015-full-CS5.png';
+$logo_path = '/' . path_to_theme() . '/images/GBIF-2015-full.svg';
+$logo_path_png = '/' . path_to_theme() . '/images/GBIF-2015-full-ie8-fallback.png';
 
 ?>
 <section id="masthead">
@@ -94,8 +94,8 @@ $logo_path_png = '/' . path_to_theme() . '/images/GBIF-2015-full-CS5.png';
     			<div id="branding">
         		<?php if ($logo): ?>
           		<a class="logo" href="<?php print $front_page; ?>" title="<?php print t('Home'); ?>">
-                <svg width="239" height="49">
-                  <image xlink:href="<?php print $logo_path; ?>" src="<?php print $logo_path_png; ?>" width="239" height="49" />
+                <svg>
+                  <image xlink:href="<?php print $logo_path; ?>" src="<?php print $logo_path_png; ?>" width="245" height="52" title="<?php print $site_name . ' - ' . $site_slogan; ?>" alt="Logo of GBIF" />
                 </svg>
           		</a>
         		<?php endif; ?>

@@ -35,6 +35,25 @@ function gbif_project_views_api($module = NULL, $api = NULL) {
 function gbif_project_image_default_styles() {
   $styles = array();
 
+  // Exported image style: focal_point_for_projects.
+  $styles['focal_point_for_projects'] = array(
+    'label' => 'Focal point for projects',
+    'effects' => array(
+      11 => array(
+        'name' => 'focal_point_scale_and_crop',
+        'data' => array(
+          'width' => 602,
+          'height' => 388,
+          'focal_point_advanced' => array(
+            'shift_x' => '',
+            'shift_y' => '',
+          ),
+        ),
+        'weight' => 1,
+      ),
+    ),
+  );
+
   // Exported image style: funder_image.
   $styles['funder_image'] = array(
     'label' => 'Funder image',

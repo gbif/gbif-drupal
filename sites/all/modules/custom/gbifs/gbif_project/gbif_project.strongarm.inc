@@ -372,6 +372,30 @@ function gbif_project_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'focal_point_default_method';
+  $strongarm->value = '';
+  $export['focal_point_default_method'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'focal_point_enabled_for';
+  $strongarm->value = array(
+    'image' => 'image',
+    'media' => 0,
+  );
+  $export['focal_point_enabled_for'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'focal_point_test_drive_image';
+  $strongarm->value = '147910';
+  $export['focal_point_test_drive_image'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'language_content_type_call';
   $strongarm->value = '0';
   $export['language_content_type_call'] = $strongarm;

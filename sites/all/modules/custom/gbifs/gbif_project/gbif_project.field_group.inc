@@ -139,8 +139,8 @@ function gbif_project_field_group_info() {
       2 => 'group_participant_partner',
       3 => 'group_programme',
       4 => 'group_related_activities',
-      5 => 'group_tags',
-      6 => 'group_related_docs_and_info',
+      5 => 'group_related_docs_and_info',
+      6 => 'group_tags',
     ),
     'format_type' => 'tabs',
     'format_settings' => array(
@@ -197,7 +197,7 @@ function gbif_project_field_group_info() {
       1 => 'field_programme_ef',
       2 => 'field_status',
       3 => 'pj_call',
-      4 => 'pj_image',
+      4 => 'field_pj_image',
     ),
     'format_type' => 'tab',
     'format_settings' => array(

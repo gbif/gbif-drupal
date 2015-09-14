@@ -162,13 +162,13 @@ function gbif_project_views_default_views() {
   $handler->display->display_options['relationships']['field_programme_ef_target_id']['field'] = 'field_programme_ef_target_id';
   $handler->display->display_options['relationships']['field_programme_ef_target_id']['required'] = TRUE;
   /* Field: Content: Image */
-  $handler->display->display_options['fields']['pj_image']['id'] = 'pj_image';
-  $handler->display->display_options['fields']['pj_image']['table'] = 'field_data_pj_image';
-  $handler->display->display_options['fields']['pj_image']['field'] = 'pj_image';
-  $handler->display->display_options['fields']['pj_image']['label'] = '';
-  $handler->display->display_options['fields']['pj_image']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['pj_image']['click_sort_column'] = 'fid';
-  $handler->display->display_options['fields']['pj_image']['settings'] = array(
+  $handler->display->display_options['fields']['field_pj_image']['id'] = 'field_pj_image';
+  $handler->display->display_options['fields']['field_pj_image']['table'] = 'field_data_field_pj_image';
+  $handler->display->display_options['fields']['field_pj_image']['field'] = 'field_pj_image';
+  $handler->display->display_options['fields']['field_pj_image']['label'] = '';
+  $handler->display->display_options['fields']['field_pj_image']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_pj_image']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_pj_image']['settings'] = array(
     'image_style' => 'teaser_thumbmail',
     'image_link' => 'content',
   );

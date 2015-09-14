@@ -133,8 +133,8 @@ $programme_title = $field_programme_value->title;
               // fields to print in the main content block
             ?>
 
-            <?php if (isset($content['pj_image'])): ?>
-              <?php print render($content['pj_image']); ?>
+            <?php if (isset($content['field_pj_image'])): ?>
+              <?php print render($content['field_pj_image']); ?>
             <?php endif; ?>
 
             <?php if (isset($content['body'])): ?>

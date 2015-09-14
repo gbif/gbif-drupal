@@ -107,10 +107,6 @@
               <?php print render($content['field_programme_ef_image']); ?>
             <?php endif; ?>
 
-            <?php if (isset($content['service_links'])): ?>
-              <?php print render($content['service_links']); ?>
-            <?php endif; ?>
-
           </div>
         </div>
         <div class="row">
@@ -134,6 +130,11 @@
             <?php if (!empty($resources_html)): ?>
               <?php print $resources_html; ?>
             <?php endif; ?>
+
+            <?php if (isset($content['service_links'])): ?>
+              <?php print render($content['service_links']); ?>
+            <?php endif; ?>
+
           </div>
           <aside class="node-sidebar sidebar col-xs-3">
             <?php if (isset($content['field_co_funder'])): ?>

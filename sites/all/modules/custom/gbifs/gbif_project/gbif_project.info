@@ -24,6 +24,7 @@ dependencies[] = list
 dependencies[] = media
 dependencies[] = number
 dependencies[] = options
+dependencies[] = readmore_formatter
 dependencies[] = references_dialog
 dependencies[] = strongarm
 dependencies[] = taxonomy

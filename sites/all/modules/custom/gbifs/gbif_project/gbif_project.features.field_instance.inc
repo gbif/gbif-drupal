@@ -475,9 +475,20 @@ function gbif_project_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'hidden',
-        'module' => 'text',
-        'settings' => array(),
-        'type' => 'text_default',
+        'module' => 'readmore_formatter',
+        'settings' => array(
+          'collapsedClass' => 'readmore-js-collapsed',
+          'embedCSS' => 1,
+          'expandedClass' => 'readmore-js-expanded',
+          'heightMargin' => 16,
+          'lessLink' => '<a href="#" class="readmore-pane-to-close">Close</a>',
+          'maxHeight' => 300,
+          'moreLink' => '<a href="#" class="readmore-pane-to-open">Read more</a>',
+          'sectionCSS' => 'display: block;',
+          'speed' => 900,
+          'startOpen' => 0,
+        ),
+        'type' => 'readmore_formatter',
         'weight' => 3,
       ),
       'teaser' => array(

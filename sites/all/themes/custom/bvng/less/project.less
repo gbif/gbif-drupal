@@ -124,10 +124,20 @@
       margin-bottom: 18px;
     }
     
-    .views-field-field-image {
+    .views-field-field-image,
+    .views-field-field-pj-image {
       float: left;
       margin: 0px 10px 10px 0px;
       padding-top: 5px;
+      
+      .image-field-caption {
+        display: none;
+      }
+      
+      a:hover + .image-field-caption {
+        display: block;
+      }
+      
     }
     
     .views-field-title,

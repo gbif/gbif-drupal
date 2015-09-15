@@ -167,6 +167,7 @@ function gbif_project_views_default_views() {
   $handler->display->display_options['fields']['field_pj_image']['field'] = 'field_pj_image';
   $handler->display->display_options['fields']['field_pj_image']['label'] = '';
   $handler->display->display_options['fields']['field_pj_image']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_pj_image']['hide_empty'] = TRUE;
   $handler->display->display_options['fields']['field_pj_image']['click_sort_column'] = 'fid';
   $handler->display->display_options['fields']['field_pj_image']['settings'] = array(
     'image_style' => 'teaser_thumbmail',

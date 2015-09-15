@@ -61,12 +61,12 @@ function drush_gbif_project_publish() {
   );
   foreach ($node_to_update as $nid => $alias) {
     $node = node_load($nid);
-    $url_alias = drupal_get_path_alias('node/', $nid);
+    $url_alias = drupal_get_path_alias('node/' . $nid);
     $url_alias_delete = db_delete('url_alias')
       ->condition('source', $url_alias)
       ->execute();
     $node->path = array('alias' => $alias, 'pathauto' => FALSE);
     node_save($node);
-    drush_print($url_alias . ' has been updated. Now ' . $alias. '.');
+    drush_print($url_alias . ' has been updated. Now ' . $alias . '.');
   }
 }

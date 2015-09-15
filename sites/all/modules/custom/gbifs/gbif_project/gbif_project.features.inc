@@ -74,23 +74,17 @@ function gbif_project_image_default_styles() {
   $styles['programme_image_for_landing_page'] = array(
     'label' => 'Programme image for landing page',
     'effects' => array(
-      11 => array(
-        'name' => 'image_scale',
-        'data' => array(
-          'width' => 878,
-          'height' => '',
-          'upscale' => 0,
-        ),
-        'weight' => 1,
-      ),
-      12 => array(
-        'name' => 'image_crop',
+      13 => array(
+        'name' => 'focal_point_scale_and_crop',
         'data' => array(
           'width' => 876,
           'height' => 336,
-          'anchor' => 'center-center',
+          'focal_point_advanced' => array(
+            'shift_x' => '',
+            'shift_y' => '',
+          ),
         ),
-        'weight' => 2,
+        'weight' => 3,
       ),
     ),
   );

@@ -17,6 +17,7 @@ function readmore_formatter_field_formatter_info() {
         // Add default settings with text, so we can wrap them in t().
         'speed' => 100, // in milliseconds
         'maxHeight' => 180, // in pixel
+        'collapsedHeight' => 200, // in pixel
         'heightMargin' => 16, // in pixel
         'moreLink' => '<a href="#">' . t('Read more') . '</a>', 
         'lessLink' => '<a href="#">' . t('Close') . '</a>', 
@@ -51,6 +52,14 @@ function readmore_formatter_field_formatter_settings_form($field, $instance, $vi
     '#title' => t('Height'),
     '#description' => t('Height after which readmore will be added.'),
     '#default_value' => $settings['maxHeight'],
+    '#element_validate' => array('_element_validate_integer_positive'),
+  );
+
+  $element['collapsedHeight'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Collapsed height'),
+    '#description' => t('Height after which readmore will be added.'),
+    '#default_value' => $settings['collapsedHeight'],
     '#element_validate' => array('_element_validate_integer_positive'),
   );
 
@@ -144,6 +153,7 @@ function readmore_formatter_field_formatter_view($entity_type, $entity, $field, 
   $integer_fields = array(
     'speed',
     'maxHeight',
+    'collapsedHeight',
     'heightMargin',
     'embedCSS',
     'startOpen',
@@ -162,7 +172,7 @@ function readmore_formatter_field_formatter_view($entity_type, $entity, $field, 
     );
     $element[$delta]['#attached']['js'] = array(
       drupal_get_path('module', 'readmore_formatter') . '/js/readmore_formatter.js' => array('type' => 'file'),
-      libraries_get_path('readmore_formatter') . '/readmore.min.js' => array('type' => 'file'),
+      libraries_get_path('readmore_formatter') . '/readmore.js' => array('type' => 'file'),
       array('data' => array('readmoreSettings' => array($delta => $settings)), 'type' => 'setting'),
     );
     ++$delta;

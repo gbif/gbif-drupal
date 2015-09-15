@@ -84,6 +84,8 @@
 
 .image-field-caption {
   font-size: 11px;
+  height: 0px;
+  overflow: visible;
 }
 
 .height-wrapper {
@@ -134,10 +136,13 @@
         display: none;
       }
       
+      .image-field-caption + p {
+        margin-bottom: 0px;
+      }
+      
       a:hover + .image-field-caption {
         display: block;
       }
-      
     }
     
     .views-field-title,

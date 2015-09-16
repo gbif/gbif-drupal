@@ -402,7 +402,7 @@ function gbif_project_field_default_field_instances() {
     'bundle' => 'dir_organization',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'We allow multiple URLs here, though the first one will always be used as the official one and will be set as the link target whenever the organization appear on GBIF.org as a link.',
+    'description' => 'We allow multiple URLs here, though the first one will always be used as the official one and will be set as the link target whenever the organization appear on GBIF.org as a link. Remember to add "http://" or "https://".',
     'display' => array(
       'default' => array(
         'label' => 'above',

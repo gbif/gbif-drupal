@@ -22,7 +22,7 @@ function readmore_formatter_field_formatter_info() {
         'moreLink' => '<a href="#">' . t('Read more') . '</a>', 
         'lessLink' => '<a href="#">' . t('Close') . '</a>', 
         'embedCSS' => 1,
-        'sectionCSS' => 'display: block; width: 100%;',
+        'blockCSS' => 'display: block; width: 100%;',
         'startOpen' => 0,
         'expandedClass' => 'readmore-js-expanded',
         'collapsedClass' => 'readmore-js-collapsed',
@@ -96,11 +96,11 @@ function readmore_formatter_field_formatter_settings_form($field, $instance, $vi
     ),
   );
 
-  $element['sectionCSS'] = array(
+  $element['blockCSS'] = array(
     '#type' => 'textfield',
     '#title' => t('Section styling)'),
     '#description' => t('Sets the styling of the blocks, ignored if embedCSS is false).'),
-    '#default_value' => $settings['sectionCSS'],
+    '#default_value' => $settings['blockCSS'],
   );
 
   $element['startOpen'] = array(

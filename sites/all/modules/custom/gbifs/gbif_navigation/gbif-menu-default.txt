@@ -56,7 +56,6 @@ Community {"url":"<front>"}
 --How to join {"url":"participation\/how-to-join"}
 -Capacity enhancement {"url":"capacity-enhancement\/summary", "description": "Sharing expertise, experience and technology around the GBIF community"}
 --Summary {"url":"capacity-enhancement\/summary"}
---Support programme {"url":"programme"}
 --BID {"url":"programme\/bid"}
 --GBIF support {"url":"programme\/gbif-support"}
 --Training {"url":"capacity-enhancement\/training"}

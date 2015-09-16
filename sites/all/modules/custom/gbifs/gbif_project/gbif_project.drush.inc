@@ -57,7 +57,6 @@ function drush_gbif_project_publish() {
   // update URL alias for programme and participation/regional-collaboration
   $node_to_update = array(
     '230' => 'participation/regional-collaboration',
-    '3669' => 'programme'
   );
   foreach ($node_to_update as $nid => $alias) {
     $node = node_load($nid);
@@ -69,4 +68,13 @@ function drush_gbif_project_publish() {
     node_save($node);
     drush_print($url_alias . ' has been updated. Now ' . $alias . '.');
   }
+  $node_to_unpublish = array(
+    '3669', '228'
+  );
+  foreach ($node_to_unpublish as $nid) {
+    $node = node_load($nid);
+    $node->status = 0;
+    node_save($node);
+  }
+
 }

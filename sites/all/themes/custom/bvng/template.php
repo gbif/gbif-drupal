@@ -551,6 +551,9 @@ function _bvng_well_types($current_path, $node_type = NULL) {
   if ($is_filter_path == TRUE) {
     return 'filter';
   }
+  elseif ($status == '403 Forbidden') {
+    return 'normal';
+  }
   // the node page won't need a well.
   elseif ($is_none_path == TRUE || $node_type !== NULL) {
     return 'none';

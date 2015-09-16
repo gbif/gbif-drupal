@@ -86,10 +86,12 @@ function gbif_project_views_default_views() {
   $handler->display->display_options['fields']['last_updated']['date_format'] = 'custom';
   $handler->display->display_options['fields']['last_updated']['custom_date_format'] = 'F jS, Y';
   $handler->display->display_options['fields']['last_updated']['second_date_format'] = 'long';
-  /* Sort criterion: Content: Related news (field_related_news:delta) */
-  $handler->display->display_options['sorts']['delta']['id'] = 'delta';
-  $handler->display->display_options['sorts']['delta']['table'] = 'field_data_field_related_news';
-  $handler->display->display_options['sorts']['delta']['field'] = 'delta';
+  /* Sort criterion: Content: Post date */
+  $handler->display->display_options['sorts']['created']['id'] = 'created';
+  $handler->display->display_options['sorts']['created']['table'] = 'node';
+  $handler->display->display_options['sorts']['created']['field'] = 'created';
+  $handler->display->display_options['sorts']['created']['order'] = 'DESC';
+  $handler->display->display_options['sorts']['created']['granularity'] = 'minute';
   /* Contextual filter: Content: Nid */
   $handler->display->display_options['arguments']['nid']['id'] = 'nid';
   $handler->display->display_options['arguments']['nid']['table'] = 'node';

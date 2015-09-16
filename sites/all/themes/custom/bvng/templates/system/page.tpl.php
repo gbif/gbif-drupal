@@ -105,7 +105,7 @@ $logo_path_png = '/' . path_to_theme() . '/images/GBIF-2015-full-ie8-fallback.pn
     			<div id="navigation-menu" class="nav-inline">
       			<nav role="navigation">
       				<?php if (!empty($page['navigation'])): ?>
-      				<?php print render($page['navigation']); ?>
+      				  <?php print render($page['navigation']); ?>
       				<?php endif; ?>
 
       				<!-- $primary_nav is kept for compatibility reason. -->
@@ -116,7 +116,7 @@ $logo_path_png = '/' . path_to_theme() . '/images/GBIF-2015-full-ie8-fallback.pn
       		</div>
       		<?php endif; ?>
   				<?php if (!empty($page['search'])): ?>
-  				<?php print render($page['search']); ?>
+  				  <?php print render($page['search']); ?>
   				<?php endif; ?>
     		</div>
     	</div>

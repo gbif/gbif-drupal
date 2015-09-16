@@ -14,6 +14,7 @@ function gbif_project_default_fe_block_settings() {
 
   $export['views-6775b3284eaf04e2c36a07da29e19bc4'] = array(
     'cache' => -1,
+    'custom' => 0,
     'delta' => '6775b3284eaf04e2c36a07da29e19bc4',
     'module' => 'views',
     'node_types' => array(),
@@ -39,6 +40,8 @@ function gbif_project_default_fe_block_settings() {
         'weight' => 0,
       ),
     ),
+    'title' => '',
+    'visibility' => 0,
   );
 
   $export['views-related_activities-related_news'] = array(

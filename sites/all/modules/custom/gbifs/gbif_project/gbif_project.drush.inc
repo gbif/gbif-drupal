@@ -69,7 +69,7 @@ function drush_gbif_project_publish() {
     drush_print($url_alias . ' has been updated. Now ' . $alias . '.');
   }
   $node_to_unpublish = array(
-    '3669', '228'
+    '3669', '228', '82189'
   );
   foreach ($node_to_unpublish as $nid) {
     $node = node_load($nid);

@@ -2825,7 +2825,7 @@ function gbif_project_field_default_field_instances() {
   t('URL');
   t('URL (hosting inst.)');
   t('URL of the hosting institution. Or if a landing page is available for the participant.');
-  t('We allow multiple URLs here, though the first one will always be used as the official one and will be set as the link target whenever the organization appear on GBIF.org as a link.');
+  t('We allow multiple URLs here, though the first one will always be used as the official one and will be set as the link target whenever the organization appear on GBIF.org as a link. Remember to add "http://" or "https://".');
 
   return $field_instances;
 }

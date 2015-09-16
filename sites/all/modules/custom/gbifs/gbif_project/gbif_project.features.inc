@@ -65,7 +65,14 @@ function gbif_project_image_default_styles() {
           'height' => '',
           'upscale' => 0,
         ),
-        'weight' => 1,
+        'weight' => -10,
+      ),
+      12 => array(
+        'name' => 'image_style_quality',
+        'data' => array(
+          'quality' => 95,
+        ),
+        'weight' => -9,
       ),
     ),
   );

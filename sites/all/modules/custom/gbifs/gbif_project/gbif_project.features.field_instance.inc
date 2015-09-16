@@ -478,7 +478,7 @@ function gbif_project_field_default_field_instances() {
         'module' => 'readmore_formatter',
         'settings' => array(
           'collapsedClass' => 'readmore-js-collapsed',
-          'collapsedHeight' => 350,
+          'collapsedHeight' => 200,
           'embedCSS' => 1,
           'expandedClass' => 'readmore-js-expanded',
           'heightMargin' => 16,

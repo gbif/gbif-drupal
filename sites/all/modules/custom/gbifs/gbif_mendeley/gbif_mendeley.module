@@ -113,7 +113,7 @@ function gbif_mendeley_retrieve_by_oauth2() {
 
 	// If there is no token stored, or the token doesn't have authorization code,
 	// then we need to direct user to authentication.
-	if ($mendeley_access_token == NULL || !isset($mendeley_access_token->code) || $mendeley_access_token->message == 'No service found for your request') {
+	if ($mendeley_access_token == NULL || !isset($mendeley_access_token->code) || (isset($mendeley_access_token->message) && $mendeley_access_token->message == 'No service found for your request')) {
 		$state = drupal_hash_base64(variable_get('mendeley_state', drupal_random_bytes(128)));
     $params = array(
       'client_id' => MENDELEY_GBIF_PORTAL_CLIENT_ID,
@@ -190,7 +190,8 @@ function _gbif_mendeley_oauth2_callback($token_json = NULL) {
 	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
   $result = curl_exec($ch);
-	$json = json_decode(end(explode("\r\n", $result)));
+  $end = end(explode("\r\n", $result));
+	$json = json_decode($end);
 
 	if (isset($json->error)) {
 		return 'Error: ' . $json->error . '. ' . $json->error_description;

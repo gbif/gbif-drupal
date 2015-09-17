@@ -1,3 +1,7 @@
+<?php
+$logo_path = '/' . path_to_theme() . '/images/GBIF-2015-full.svg';
+$logo_path_png = '/' . path_to_theme() . '/images/GBIF-2015-full-ie8-fallback.png';
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN"
   "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd">
 <html lang="en" dir="ltr"
@@ -46,9 +50,11 @@
       <div id="region-navigation" class="col-xs-12">
     		<div class="navbar-header">
     			<div id="branding">
-        		<a class="logo" href="/" title="Home"><img src="/sites/all/themes/custom/bvng/logo.png" alt="Home" /></a>
-        		<h1><a href="/" title="Home">GBIF.org</a></h1>
-        		<span>Free and Open Access to Biodiversity Data</span>
+              <a class="logo" href="<?php print $front_page; ?>" title="<?php print t('Home'); ?>">
+                <svg>
+                  <image xlink:href="<?php print $logo_path; ?>" src="<?php print $logo_path_png; ?>" width="245" height="52" title="<?php print $site_name . ' - ' . $site_slogan; ?>" alt="Logo of GBIF" />
+                </svg>
+              </a>
           </div>
           <div id="navigation-menu" class="nav-inline">
       			<nav role="navigation">
@@ -142,7 +148,7 @@
               <div class="region region-credits">
     <ul>
       <li>
-        <h3>2014 &copy; GBIF</h3>
+        <h3>2015 &copy; GBIF</h3>
         <ul>
           <li><div class='logo'></div></li>
         </ul>

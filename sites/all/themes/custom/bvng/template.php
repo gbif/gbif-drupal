@@ -673,6 +673,7 @@ function _bvng_get_title_data($node_count = NULL, $user = NULL, $node = NULL) {
 			'node/5549',
 			'node/5553',
 			'node/5557',
+      'node/82192',
 		);
 		foreach ($resource_paths as $path) {
 			$matched = drupal_match_path($current_path, $path);

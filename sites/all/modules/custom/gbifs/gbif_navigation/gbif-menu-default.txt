@@ -76,6 +76,7 @@ About {"url":"<front>"}
 --Resources {"url":"resources"}
 --Literature {"url":"mendeley"}
 --Key information {"url":"resources\/key-information"}
+--Logos {"url":"resources\/logos"}
 --For publishers {"url":"resources\/for-publishers"}
 --For users {"url":"resources\/for-users"}
 --For GBIF delegations {"url":"resources\/for-delegations"}

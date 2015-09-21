@@ -901,7 +901,7 @@ function _mendeley_print_recent_publications($machine_name, $number) {
 			$documents = array_slice($documents, 0, $number);
 			$html = '<p>' . t('Most recent !count publications in this category:', array('!count' => $number)) . '</p>';
 			$html .= theme('mendeley_publications_digest_list_item', array('publications' => $documents));
-			$html .= l('see more...', 'mendeley/' . $machine_name);
+			$html .= l('see more...', 'mendeley/' . $tag_set['url']);
 			return $html;
 		}
 	}

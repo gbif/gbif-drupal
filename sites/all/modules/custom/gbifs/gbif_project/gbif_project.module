@@ -36,6 +36,10 @@ function gbif_project_theme($existing, $type, $theme, $path) {
       'template' => 'node--programme',
       'path' => $path . '/theme',
     ),
+    'region__content__all_projects' => array(
+      'template' => 'region--content--all_projects',
+      'path' => $path . '/theme',
+    ),
   );
 }
 
@@ -121,7 +125,9 @@ function gbif_project_programme_page(&$variables) {
  * Implements hook_preprocess_page().
  */
 function gbif_project_preprocess_page(&$variables) {
+  $current_path = current_path();
   if (isset($variables['page']['menu']['menu_block_gbif_navigation_menu_tabs'])) {
+    // for project node
     if (isset($variables['node']) && $variables['node']->type == 'project') {
       foreach ($variables['page']['menu']['menu_block_gbif_navigation_menu_tabs']['#content'] as $k => $tab) {
         if (gettype($k) == 'integer') {
@@ -133,6 +139,43 @@ function gbif_project_preprocess_page(&$variables) {
           }
         }
       }
+    }
+    // for project view
+    elseif (strpos($current_path, 'all-projects') !== FALSE) {
+      foreach ($variables['page']['menu']['menu_block_gbif_navigation_menu_tabs']['#content'] as $k => $tab) {
+        if (gettype($k) == 'integer') {
+          $path = explode('/', $tab['#href']);
+          $nid = $path[1];
+          $url_alias = drupal_get_path_alias($tab['#href']);
+          if ($url_alias == 'programme/gbif-support') {
+            $variables['page']['menu']['menu_block_gbif_navigation_menu_tabs']['#content'][$k]['#attributes']['class'][] = 'back-menu';
+          }
+        }
+      }
+
+      $programme_id = (isset($variables['page']['#views_contextual_links_info']['views_ui']['view']->args[0])) ? $variables['page']['#views_contextual_links_info']['views_ui']['view']->args[0] : NULL;
+      if (!empty($programme_id)) {
+        $node = node_load($programme_id);
+        $node_wrapper = entity_metadata_wrapper('node', $node);
+        $variables['page']['highlighted_title'] = array(
+          'name' => $node_wrapper->title->value(),
+          'description' => $node_wrapper->field_subtitle->value(),
+        );
+      }
+    }
+  }
+}
+
+/**
+ * Implements template_preprocess_block().
+ */
+function gbif_project_preprocess_region(&$variables) {
+  $current_path = current_path();
+  // Preprocess for system main block.
+  if ($variables['elements']['#region'] == 'content') {
+    // Use our own block template to create a "back-to" block above the normal views template.
+    if (strpos($current_path, 'all-projects') !== FALSE) {
+      array_push($variables['theme_hook_suggestions'], 'region__content__all_projects');
     }
   }
 }

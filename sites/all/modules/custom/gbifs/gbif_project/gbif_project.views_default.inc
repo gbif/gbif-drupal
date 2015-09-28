@@ -149,6 +149,7 @@ function gbif_project_views_default_views() {
   $handler->display->display_options['title'] = 'Related projects';
   $handler->display->display_options['use_more'] = TRUE;
   $handler->display->display_options['use_more_always'] = FALSE;
+  $handler->display->display_options['use_more_text'] = 'View all related projects...';
   $handler->display->display_options['access']['type'] = 'perm';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
@@ -249,10 +250,29 @@ function gbif_project_views_default_views() {
 
   /* Display: Related projects */
   $handler = $view->new_display('block', 'Related projects', 'related_projects');
+
+  /* Display: Page related projects */
+  $handler = $view->new_display('page', 'Page related projects', 'page_related_projects');
+  $handler->display->display_options['defaults']['title'] = FALSE;
+  $handler->display->display_options['title'] = 'All related projects';
+  $handler->display->display_options['defaults']['use_more'] = FALSE;
+  $handler->display->display_options['use_more'] = TRUE;
+  $handler->display->display_options['defaults']['use_more_always'] = FALSE;
+  $handler->display->display_options['defaults']['use_more_always'] = FALSE;
+  $handler->display->display_options['use_more_always'] = FALSE;
+  $handler->display->display_options['defaults']['use_more_text'] = FALSE;
+  $handler->display->display_options['use_more_text'] = 'View all related projects...';
+  $handler->display->display_options['defaults']['pager'] = FALSE;
+  $handler->display->display_options['pager']['type'] = 'full';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '10';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['pager']['options']['id'] = '0';
+  $handler->display->display_options['pager']['options']['quantity'] = '9';
+  $handler->display->display_options['path'] = 'programme/%/all-projects';
   $translatables['related_projects'] = array(
     t('Master'),
     t('Related projects'),
-    t('more'),
+    t('View all related projects...'),
     t('Apply'),
     t('Reset'),
     t('Sort by'),
@@ -260,6 +280,16 @@ function gbif_project_views_default_views() {
     t('Desc'),
     t('Content entity referenced from field_programme_ef'),
     t('All'),
+    t('more'),
+    t('Page related projects'),
+    t('All related projects'),
+    t('Items per page'),
+    t('- All -'),
+    t('Offset'),
+    t('« first'),
+    t('‹ previous'),
+    t('next ›'),
+    t('last »'),
   );
   $export['related_projects'] = $view;
 

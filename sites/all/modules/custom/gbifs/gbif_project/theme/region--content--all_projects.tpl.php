@@ -1,0 +1,51 @@
+<?php
+
+/**
+ * @file
+ * Default theme implementation to display a region.
+ *
+ * Available variables:
+ * - $content: The content for this region, typically blocks.
+ * - $classes: String of classes that can be used to style contextually through
+ *   CSS. It can be manipulated through the variable $classes_array from
+ *   preprocess functions. The default values can be one or more of the following:
+ *   - region: The current template type, i.e., "theming hook".
+ *   - region-[name]: The name of the region with underscores replaced with
+ *     dashes. For example, the page_top region would have a region-page-top class.
+ * - $region: The name of the region variable as defined in the theme's .info file.
+ *
+ * Helper variables:
+ * - $classes_array: Array of html class attribute values. It is flattened
+ *   into a string within the variable $classes.
+ * - $is_admin: Flags true when the current user is an administrator.
+ * - $is_front: Flags true when presented in the front page.
+ * - $logged_in: Flags true when the current user is a logged-in member.
+ *
+ * @see template_preprocess()
+ * @see template_preprocess_region()
+ * @see template_process()
+ *
+ * @ingroup themeable
+ */
+?>
+<div class="back-to-previous">
+  <div class="container">
+    <div class="row">
+      <p>&lt; <u><a href="/programme/gbif-support">Back to Capacity enhancement support programme</a></u></p>
+    </div>
+  </div>
+</div>
+
+<?php if ($content): ?>
+  <div class="<?php print $classes; ?>">
+    <?php if (isset($well_top)): ?>
+    <?php print $well_top; ?>
+    <?php endif; ?>
+
+    <?php print $content; ?>
+
+    <?php if (isset($well_bottom)): ?>
+    <?php print $well_bottom; ?>
+    <?php endif; ?>
+  </div>
+<?php endif; ?>

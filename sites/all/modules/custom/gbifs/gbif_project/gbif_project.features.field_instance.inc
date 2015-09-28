@@ -1783,7 +1783,7 @@ function gbif_project_field_default_field_instances() {
     'entity_type' => 'node',
     'field_name' => 'field_programme_ef',
     'label' => 'Programme',
-    'required' => 0,
+    'required' => 1,
     'settings' => array(
       'mediafront' => array(
         'custom' => '',

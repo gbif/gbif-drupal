@@ -34,6 +34,7 @@ dependencies[] = uuid
 dependencies[] = uuid_features
 dependencies[] = views
 features[context][] = project_node_menu
+features[context][] = project_view_menu
 features[ctools][] = context:context:3
 features[ctools][] = field_group:field_group:1
 features[ctools][] = linkit:linkit_profiles:1

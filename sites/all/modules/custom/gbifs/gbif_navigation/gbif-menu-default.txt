@@ -57,7 +57,7 @@ Community {"url":"<front>"}
 -Capacity enhancement {"url":"capacity-enhancement\/summary", "description": "Sharing expertise, experience and technology around the GBIF community"}
 --Summary {"url":"capacity-enhancement\/summary"}
 --BID {"url":"programme\/bid"}
---GBIF support {"url":"programme\/gbif-support"}
+--Capacity support {"url":"programme\/capacity-support"}
 --Training {"url":"capacity-enhancement\/training"}
 --Past projects {"url":"capacity-enhancement\/past-projects"}
 -Resources {"url":"resources", "description": "Library of documents, tools and and other information to support the GBIF community (look template.php for changing this particular item.)"}

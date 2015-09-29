@@ -134,7 +134,7 @@ function gbif_project_preprocess_page(&$variables) {
           $path = explode('/', $tab['#href']);
           $nid = $path[1];
           $url_alias = drupal_get_path_alias($tab['#href']);
-          if ($url_alias == 'programme/gbif-support') {
+          if ($url_alias == 'programme/capacity-support') {
             $variables['page']['menu']['menu_block_gbif_navigation_menu_tabs']['#content'][$k]['#attributes']['class'][] = 'back-menu';
           }
         }
@@ -147,7 +147,7 @@ function gbif_project_preprocess_page(&$variables) {
           $path = explode('/', $tab['#href']);
           $nid = $path[1];
           $url_alias = drupal_get_path_alias($tab['#href']);
-          if ($url_alias == 'programme/gbif-support') {
+          if ($url_alias == 'programme/capacity-support') {
             $variables['page']['menu']['menu_block_gbif_navigation_menu_tabs']['#content'][$k]['#attributes']['class'][] = 'back-menu';
           }
         }

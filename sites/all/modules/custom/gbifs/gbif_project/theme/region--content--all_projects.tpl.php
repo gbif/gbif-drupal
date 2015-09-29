@@ -31,7 +31,7 @@
 <div class="back-to-previous">
   <div class="container">
     <div class="row">
-      <p>&lt; <u><a href="/programme/gbif-support">Back to Capacity enhancement support programme</a></u></p>
+      <p>&lt; <u><a href="/programme/capacity-support">Back to Capacity enhancement support programme</a></u></p>
     </div>
   </div>
 </div>

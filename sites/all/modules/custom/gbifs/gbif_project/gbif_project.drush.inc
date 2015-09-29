@@ -20,7 +20,7 @@ function gbif_project_drush_command() {
 function drush_gbif_project_publish() {
   $types = array('call', 'project', 'programme', 'dir_organization');
   $programme_alias = array(
-    '82219' => 'programme/gbif-support',
+    '82219' => 'programme/capacity-support',
     '82243' => 'programme/bid'
   );
   foreach ($types as $type) {

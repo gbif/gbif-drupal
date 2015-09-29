@@ -59,7 +59,7 @@ Community {"url":"<front>"}
 --Support programme {"url":"programme"}
 --BID {"url":"programme\/bid"}
 --BIFA {"url":"programme\/bifa"}
---GBIF support {"url":"programme\/gbif-support"}
+--Capacity support {"url":"programme\/capacity-support"}
 --Training {"url":"capacity-enhancement\/training"}
 -Resources {"url":"resources", "description": "Library of documents, tools and and other information to support the GBIF community (look template.php for changing this particular item.)"}
 --Resources {"url":"resources"}

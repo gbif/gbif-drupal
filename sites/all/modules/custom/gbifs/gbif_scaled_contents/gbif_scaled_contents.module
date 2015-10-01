@@ -15,7 +15,7 @@ function gbif_scaled_contents_form_news_node_form_alter(&$form, &$form_state) {
 
 
 /**
- *
+ * The one-time migration script which converts old content types to the new one.
  */
 function gbif_scaled_contents_migrate() {
 
@@ -70,6 +70,7 @@ function gbif_scaled_contents_migrate() {
       // Term reference fields
 
       // Save content
+      // @todo preserve create timestamp
 
       unset($legacy_node, $legacy_node_wrapper, $new_node, $new_node_wrapper);
     }

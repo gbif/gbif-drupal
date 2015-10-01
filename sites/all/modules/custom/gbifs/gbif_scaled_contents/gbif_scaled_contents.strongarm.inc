@@ -113,16 +113,19 @@ function gbif_scaled_contents_strongarm() {
     'extra_fields' => array(
       'form' => array(
         'metatags' => array(
-          'weight' => '10',
+          'weight' => '12',
         ),
         'title' => array(
           'weight' => '0',
         ),
         'path' => array(
-          'weight' => '9',
+          'weight' => '11',
         ),
         'redirect' => array(
-          'weight' => '8',
+          'weight' => '10',
+        ),
+        'twitter' => array(
+          'weight' => '2',
         ),
       ),
       'display' => array(),
@@ -265,7 +268,7 @@ function gbif_scaled_contents_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'twitter_search';
-  $strongarm->value = 'http://search.twitter.com';
+  $strongarm->value = 'https://twitter.com/';
   $export['twitter_search'] = $strongarm;
 
   $strongarm = new stdClass();

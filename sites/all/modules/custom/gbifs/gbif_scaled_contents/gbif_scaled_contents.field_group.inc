@@ -21,11 +21,11 @@ function gbif_scaled_contents_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Content annotations',
-    'weight' => '5',
+    'weight' => '7',
     'children' => array(
       0 => 'group_attributes',
-      1 => 'group_data',
-      2 => 'group_citations',
+      1 => 'group_citations',
+      2 => 'group_data',
     ),
     'format_type' => 'tabs',
     'format_settings' => array(
@@ -50,10 +50,10 @@ function gbif_scaled_contents_field_group_info() {
     'label' => 'Attributes',
     'weight' => '5',
     'children' => array(
-      0 => 'field_researcher_location',
-      1 => 'field_study_area',
-      2 => 'field_link_to_research',
-      3 => 'field_num_rs_used',
+      0 => 'field_link_to_research',
+      1 => 'field_num_rs_used',
+      2 => 'field_researcher_location',
+      3 => 'field_study_area',
     ),
     'format_type' => 'tab',
     'format_settings' => array(
@@ -107,8 +107,8 @@ function gbif_scaled_contents_field_group_info() {
     'label' => 'Data',
     'weight' => '6',
     'children' => array(
-      0 => 'field_dataset_uuid',
-      1 => 'field_data_source',
+      0 => 'field_data_source',
+      1 => 'field_dataset_uuid',
       2 => 'field_related_gbif_resources',
     ),
     'format_type' => 'tab',
@@ -136,10 +136,10 @@ function gbif_scaled_contents_field_group_info() {
     'label' => 'Defined Taxonomy',
     'weight' => '23',
     'children' => array(
-      0 => 'tx_audience',
-      1 => 'tx_about_gbif',
-      2 => 'tx_data_use',
-      3 => 'tx_capacity_enhancement',
+      0 => 'tx_about_gbif',
+      1 => 'tx_audience',
+      2 => 'tx_capacity_enhancement',
+      3 => 'tx_data_use',
       4 => 'tx_informatics',
     ),
     'format_type' => 'tab',
@@ -165,10 +165,10 @@ function gbif_scaled_contents_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'GBIF CMS Taxonomy',
-    'weight' => '6',
+    'weight' => '8',
     'children' => array(
-      0 => 'group_regions',
-      1 => 'group_def_taxonomy',
+      0 => 'group_def_taxonomy',
+      1 => 'group_regions',
       2 => 'group_topics_tags',
     ),
     'format_type' => 'tabs',

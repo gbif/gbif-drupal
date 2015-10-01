@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # Put this file under the site folder to ensure drush get the correct configuration.
+# Run this script as user _www (or apache)
 
 drush features-revert -y gbif_vocabularies
 drush en -y gbif_scaled_contents

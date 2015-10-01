@@ -26,7 +26,8 @@ function drush_gbif_scaled_contents_migrate() {
 }
 
 /**
- * Orphan files cleaning.
+ * File cleaning. The goal is to make sure files in the file_managed table reflect
+ * the actual file systems in default/files directory.
  */
 function drush_gbif_scaled_contents_file_clean() {
   $query = db_select('file_managed', 'f');

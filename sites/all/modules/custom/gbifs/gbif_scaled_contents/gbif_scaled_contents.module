@@ -7,12 +7,110 @@
 include_once 'gbif_scaled_contents.features.inc';
 
 /**
+ * Implements hook_theme().
+ */
+function gbif_scaled_contents_theme($existing, $type, $theme, $path) {
+  $path = drupal_get_path('module', 'gbif_scaled_contents');
+  return array(
+    'node__news' => array(
+      'template' => 'node--news',
+      'path' => $path . '/theme',
+    ),
+  );
+}
+
+/**
  * Implements hook_form_FORM_ID_alter().
  */
 function gbif_scaled_contents_form_news_node_form_alter(&$form, &$form_state) {
   $form['field_legacy_nid']['#disabled'] = TRUE;
 }
 
+/**
+ * Implements hook_preprocess_node().
+ */
+function gbif_scaled_contents_preprocess_node(&$variables) {
+  $node_type = (isset($variables)) ? $variables['node']->type : NULL;
+  $content = $variables['content'];
+
+  // a manually-made field render array for the Tags field
+  $tx_tags_collection = array(
+    '#theme' => 'field',
+    '#weight' => 50,
+    '#title' => 'Tags',
+    '#access' => true,
+    '#label_display' => 'above',
+    '#view_mode' => 'full',
+    '#language' => 'und',
+    '#field_name' => 'tx_tags_collection',
+    '#field_type' => 'taxonomy_term_reference',
+    '#field_translatable' => '0',
+    '#entity_type' => 'node',
+    '#bundle' => 'news',
+  );
+
+  // Fields for various blocks.
+  $sidebar_fields = array(
+    'field_researcher_location',
+    'field_link_to_research',
+    'field_gbif_area',
+    'field_study_area',
+    'field_dataset_uuid',
+    'field_num_rs_used',
+  );
+  $footer_fields = array(
+    'field_citation_information',
+    'field_related_gbif_resources',
+  );
+  $tags_fields = array(
+    'tx_about_gbif',
+    'tx_capacity_enhancement',
+    'tx_audience',
+    'tx_data_use',
+    'tx_informatics',
+    'tx_topic',
+    'tx_tags',
+  );
+  $node_wrapper = entity_metadata_wrapper('node', $variables['node']);
+
+  if ($node_type == 'news') {
+    // generating HTML for sidebar fields
+    $sidebar = '';
+    foreach ($sidebar_fields as $sidebar_field) {
+      $sidebar .= render($content[$sidebar_field]);
+    }
+    $variables['sidebar'] = $sidebar;
+
+    // generating HTML for footer fields
+    $node_footer = '';
+    foreach ($footer_fields as $footer_field) {
+      $node_footer .= render($content[$footer_field]);
+    }
+    $variables['node_footer'] = $node_footer;
+
+    // generating HTML for Tags and attach to the sidebar
+    $tag_items = array();
+    $tag_links = array();
+    foreach ($tags_fields as $tag_field) {
+      if (isset($content[$tag_field])) {
+        foreach ($content[$tag_field] as $attr => $value) {
+          if ($attr === '#items') {
+            foreach ($content[$tag_field][$attr] as $item) {
+              $tag_items[] = $item;
+            }
+          }
+          elseif (is_numeric($attr)) {
+            $tag_links[] = $content[$tag_field][$attr];
+          }
+        }
+      }
+    }
+    $tx_tags_collection['#items'] = $tag_items;
+    $tx_tags_collection = array_merge($tx_tags_collection, $tag_links);
+    $variables['sidebar'] .= render($tx_tags_collection);
+  }
+
+}
 
 /**
  * The one-time migration script which converts old content types to the new one.
@@ -58,10 +156,10 @@ function gbif_scaled_contents_migrate() {
       if ($legacy_node_wrapper->__isset('field_image')) {
         $image = $legacy_node_wrapper->field_image->value();
         if (!empty($image)) {
-          $new_node_wrapper->field_images->set(array($image));
+          $new_node_wrapper->field_uni_images->set(array($image));
           $author = $legacy_node_wrapper->author->value();
           $new_node_wrapper->author->set($author);
-          $new_node_wrapper->log->set('Revision created by migration script.');
+          $new_node_wrapper->log->set('Revision created by the migration script.');
           $new_node_wrapper->save();
           workbench_moderation_moderate($new_node, 'published');
         }

@@ -375,8 +375,10 @@ function bvng_preprocess_node(&$variables) {
 
   /* Get footer fields for data use articles.
    */
-  $node_footer = _bvng_get_node_footer_content($variables['node']);
-  $variables['node_footer'] = $node_footer;
+  if (!isset($variables['node_footer'])) {
+    $node_footer = _bvng_get_node_footer_content($variables['node']);
+    $variables['node_footer'] = $node_footer;
+  }
 
   /* Process menu_local_tasks()
    */
@@ -413,6 +415,12 @@ function bvng_preprocess_node(&$variables) {
 			}
 		}
 	}
+}
+
+function bvng_preprocess_field(&$variables) {
+  if (isset($variables['element']) && $variables['element']['#field_name'] == 'body') {
+    $variables['classes_array'][] = 'clearfix';
+  }
 }
 
 /**
@@ -739,7 +747,10 @@ function _bvng_get_title_data($node_count = NULL, $user = NULL, $node = NULL) {
 			'name' => t('Search GBIF'),
 		);
 	}
-	return $title;
+
+  if (isset($title)) {
+    return $title;
+  }
 }
 
 function _bvng_get_node_footer_content($node) {

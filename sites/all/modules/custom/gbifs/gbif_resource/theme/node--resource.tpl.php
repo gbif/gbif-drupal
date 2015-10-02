@@ -10,7 +10,7 @@
 </div>
 <article id="node-<?php print $node->nid; ?>" class="container <?php print $classes; ?>">
 	<div class="row">
-		<section id="event" class="col-xs-12 well well-lg well-margin-top clearfix"<?php print $attributes; ?>>
+		<section id="resource" class="col-xs-12 well well-lg well-margin-top clearfix"<?php print $attributes; ?>>
 			<div class="row">
 				<header class="content-header col-xs-12">
 					<h3>Resource</h3>

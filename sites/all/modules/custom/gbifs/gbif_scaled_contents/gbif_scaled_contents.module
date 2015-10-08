@@ -27,6 +27,19 @@ function gbif_scaled_contents_form_news_node_form_alter(&$form, &$form_state) {
 }
 
 /**
+ * Implements hook_node_presave().
+ * @see http://drupal.stackexchange.com/questions/39591/how-to-stop-drupal-for-setting-node-changed-date-on-creation
+ */
+function gbif_scaled_contents_node_presave($node) {
+  if (!empty($node->legacy_node_changed)) {
+    $node->changed = $node->legacy_node_changed;
+  }
+  if (!empty($node->legacy_node_created)) {
+    $node->created = $node->legacy_node_created;
+  }
+}
+
+/**
  * Implements hook_preprocess_node().
  */
 function gbif_scaled_contents_preprocess_node(&$variables) {
@@ -39,6 +52,7 @@ function gbif_scaled_contents_preprocess_node(&$variables) {
     'field_link_to_research',
     'field_gbif_area',
     'field_study_area',
+    'field_data_source',
     'field_dataset_uuid',
     'field_num_rs_used',
   );

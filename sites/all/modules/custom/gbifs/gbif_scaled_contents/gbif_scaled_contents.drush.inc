@@ -34,13 +34,13 @@ function drush_gbif_scaled_contents_migrate() {
   // 2. Unpublished nodes will remain unpublished
   $entity_query = new EntityFieldQuery();
   $entity_query->entityCondition('entity_type', 'node')
-    ->entityCondition('bundle', 'newsarticle');
+    ->entityCondition('bundle', array('newsarticle', 'usesofdata'), 'IN');
   $exist = $entity_query->execute();
 
   if (isset($exist['node'])) {
 
-    $count_newsarticle = count($exist['node']);
-    drush_print($count_newsarticle . ' newsarticle nodes to be processed.');
+    $count = count($exist['node']);
+    drush_print($count . ' nodes to be processed...');
     $count_unpublished = 0;
     $count_published = 0;
     $count_migrated = 0;
@@ -114,22 +114,76 @@ function drush_gbif_scaled_contents_migrate() {
         'field_relatedgbifresources' => 'field_related_gbif_resources', // links
         'field_numofresused' => 'field_num_rs_used',
         'field_reasearcherslocation' => 'field_researcher_location',
-        'field_linkstoresearch' => 'field_link_to_research',
+        //'field_linkstoresearch' => 'field_link_to_research',
         'field_datasetkey' => 'field_dataset_uuid',
       );
       foreach ($text_fields as $field_from => $field_to) {
         if (!empty($legacy_node->$field_from)) {
           $field_from_value = $legacy_node_wrapper->$field_from->value();
+          if (isset($field_from_value['url'])) {
+            $field_from_value = array($field_from_value);
+          }
           $new_node_wrapper->$field_to->set($field_from_value);
-          unset($field_from_value);
+          unset($field_from_value, $field_from, $field_to);
         }
       }
 
-      // fields needing conversion
-      $link_conversion_fields = array(
-        'field_studyarea' => 'field_study_area',
-        'field_datasources' => 'field_data_source',
-      );
+      if (!empty($legacy_node->field_studyarea)) {
+        $field_studyarea_value = $legacy_node_wrapper->field_studyarea->value();
+        $field_studyarea_values = explode(', ', $field_studyarea_value);
+        $new_study_area_value = array();
+        foreach ($field_studyarea_values as $value) {
+          $value_array = array(
+            'url' => '',
+            'title' => $value,
+            'attributes' => array(),
+          );
+          $new_study_area_value[] = $value_array;
+        }
+        $new_node_wrapper->field_study_area->set($new_study_area_value);
+      }
+
+      if (!empty($legacy_node->field_datasources)) {
+        $field_datasources_value = $legacy_node_wrapper->field_datasources->value();
+        $field_datasources_values = explode(', ', $field_datasources_value);
+        $new_data_source_value = array();
+        foreach ($field_datasources_values as $value) {
+          if (substr($value, 0, 7) === 'http://') {
+            $value_array = array(
+              'url' => $value,
+              'title' => '',
+              'attributes' => array(),
+            );
+          }
+          elseif (strpos($value, '(') !== FALSE) {
+            $values = explode(' (', $value);
+            if (substr($values[1], 0, 7) === 'http://') {
+              $url = str_replace(')', '', $values[1]);
+              $value_array = array(
+                'url' => $url,
+                'title' => $values[0],
+                'attributes' => array(),
+              );
+            }
+            else {
+              $value_array = array(
+                'url' => '',
+                'title' => trim($value),
+                'attributes' => array(),
+              );
+            }
+          }
+          else {
+            $value_array = array(
+              'url' => '',
+              'title' => trim($value),
+              'attributes' => array(),
+            );
+          }
+          $new_data_source_value[] = $value_array;
+        }
+        $new_node_wrapper->field_data_source->set($new_data_source_value);
+      }
 
       // Same term reference fields
       $same_term_fields = array(
@@ -144,15 +198,18 @@ function drush_gbif_scaled_contents_migrate() {
       $author = $legacy_node_wrapper->author->value();
       $new_node_wrapper->author->set($author);
       $new_node_wrapper->log->set('Revision created by the migration script.');
-      $new_node_wrapper->language->set($legacy_node->language);
+      $new_node_wrapper->language->set('en');
       $new_node_wrapper->created->set($legacy_node_created);
       $new_node_wrapper->status->set($legacy_node->status);
       $new_node_wrapper->promote->set($legacy_node->promote);
       $new_node_wrapper->sticky->set($legacy_node->sticky);
+
       $new_node_wrapper->save();
+      drush_print('New node ' . $new_node->nid . ' created and saved.');
       if ($legacy_node->status == '1') {
         workbench_moderation_moderate($new_node, 'published');
       }
+
       // redirect for published nodes
 
       // delete old node
@@ -160,15 +217,6 @@ function drush_gbif_scaled_contents_migrate() {
     }
   }
 
-}
-
-/**
- * Implements hook_node_presave().
- * @see http://drupal.stackexchange.com/questions/39591/how-to-stop-drupal-for-setting-node-changed-date-on-creation
- */
-function gbif_scaled_contents_node_presave($node) {
-  $node->changed = $node->legacy_node_changed;
-  $node->created = $node->legacy_node_created;
 }
 
 /**

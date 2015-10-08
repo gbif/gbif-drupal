@@ -33,22 +33,6 @@ function gbif_scaled_contents_preprocess_node(&$variables) {
   $node_type = (isset($variables)) ? $variables['node']->type : NULL;
   $content = $variables['content'];
 
-  // a manually-made field render array for the Tags field
-  $tx_tags_collection = array(
-    '#theme' => 'field',
-    '#weight' => 50,
-    '#title' => 'Tags',
-    '#access' => true,
-    '#label_display' => 'above',
-    '#view_mode' => 'full',
-    '#language' => 'und',
-    '#field_name' => 'tx_tags_collection',
-    '#field_type' => 'taxonomy_term_reference',
-    '#field_translatable' => '0',
-    '#entity_type' => 'node',
-    '#bundle' => 'news',
-  );
-
   // Fields for various blocks.
   $sidebar_fields = array(
     'field_researcher_location',
@@ -105,76 +89,29 @@ function gbif_scaled_contents_preprocess_node(&$variables) {
         }
       }
     }
-    $tx_tags_collection['#items'] = $tag_items;
-    $tx_tags_collection = array_merge($tx_tags_collection, $tag_links);
-    $variables['sidebar'] .= render($tx_tags_collection);
-  }
 
-}
+    // attach a manually-made field render array for the Tags field
+    if (count($tag_items) > 0) {
+      $tx_tags_collection = array(
+        '#theme' => 'field',
+        '#weight' => 50,
+        '#title' => 'Tags',
+        '#access' => true,
+        '#label_display' => 'above',
+        '#view_mode' => 'full',
+        '#language' => 'und',
+        '#field_name' => 'tx_tags_collection',
+        '#field_type' => 'taxonomy_term_reference',
+        '#field_translatable' => '0',
+        '#entity_type' => 'node',
+        '#bundle' => 'news',
+      );
 
-/**
- * The one-time migration script which converts old content types to the new one.
- */
-function gbif_scaled_contents_migrate() {
-
-  // Test node structure
-  $test_node = node_load(82218);
-
-  // 1. Entity query all newsarticle nodes
-  // 2. Unpublished nodes will remain unpublished
-  $entity_query = new EntityFieldQuery();
-  $entity_query->entityCondition('entity_type', 'node')
-    ->entityCondition('bundle', 'newsarticle');
-  $exist = $entity_query->execute();
-
-  if (isset($exist['node'])) {
-
-    // Migrate each of them by iterating through.
-    // First round to save only legacy nid and the title.
-    foreach ($exist['node'] as $nid => $n_obj) {
-      $legacy_node = node_load($nid);
-      $legacy_node_wrapper = entity_metadata_wrapper('node', $legacy_node);
-
-      $new_node = new stdClass();
-      $new_node->type = 'news';
-      node_object_prepare($new_node);
-      $new_node_wrapper = entity_metadata_wrapper('node', $new_node);
-
-      // Legacy nid
-      $new_node_wrapper->field_legacy_nid->set($nid);
-
-      // Title
-      $title = $legacy_node_wrapper->title->value();
-      $new_node_wrapper->title->set($title);
-
-      // Body
-      $body = $legacy_node_wrapper->body->value();
-      $new_node_wrapper->body->set($body);
-
-      // Images
-      // @see http://dropbucket.org/node/1201 for checking a field is set.
-      if ($legacy_node_wrapper->__isset('field_image')) {
-        $image = $legacy_node_wrapper->field_image->value();
-        if (!empty($image)) {
-          $new_node_wrapper->field_uni_images->set(array($image));
-          $author = $legacy_node_wrapper->author->value();
-          $new_node_wrapper->author->set($author);
-          $new_node_wrapper->log->set('Revision created by the migration script.');
-          $new_node_wrapper->save();
-          workbench_moderation_moderate($new_node, 'published');
-        }
-      }
-
-      // Term reference fields
-
-      // Save content
-      // @todo preserve create timestamp
-
-      unset($legacy_node, $legacy_node_wrapper, $new_node, $new_node_wrapper);
+      $tx_tags_collection['#items'] = $tag_items;
+      $tx_tags_collection = array_merge($tx_tags_collection, $tag_links);
+      $variables['sidebar'] .= render($tx_tags_collection);
     }
   }
-
-
 
 }
 

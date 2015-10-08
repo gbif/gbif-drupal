@@ -76,7 +76,7 @@ function gbif_scaled_contents_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 7,
+        'weight' => 8,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -128,7 +128,7 @@ function gbif_scaled_contents_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 2,
+        'weight' => 3,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -182,7 +182,7 @@ function gbif_scaled_contents_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 1,
+        'weight' => 2,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -234,7 +234,7 @@ function gbif_scaled_contents_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',
-        'weight' => 4,
+        'weight' => 5,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -281,7 +281,7 @@ function gbif_scaled_contents_field_default_field_instances() {
         'module' => 'link',
         'settings' => array(),
         'type' => 'link_default',
-        'weight' => 10,
+        'weight' => 11,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -350,7 +350,7 @@ function gbif_scaled_contents_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 3,
+        'weight' => 4,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -402,7 +402,7 @@ function gbif_scaled_contents_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',
-        'weight' => 5,
+        'weight' => 6,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -499,7 +499,7 @@ function gbif_scaled_contents_field_default_field_instances() {
         'module' => 'link',
         'settings' => array(),
         'type' => 'link_default',
-        'weight' => 11,
+        'weight' => 12,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -568,7 +568,7 @@ function gbif_scaled_contents_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 13,
+        'weight' => 14,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -620,7 +620,7 @@ function gbif_scaled_contents_field_default_field_instances() {
         'module' => 'link',
         'settings' => array(),
         'type' => 'link_default',
-        'weight' => 12,
+        'weight' => 13,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -689,7 +689,7 @@ function gbif_scaled_contents_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',
-        'weight' => 8,
+        'weight' => 9,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -736,7 +736,7 @@ function gbif_scaled_contents_field_default_field_instances() {
         'module' => 'link',
         'settings' => array(),
         'type' => 'link_default',
-        'weight' => 9,
+        'weight' => 10,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -805,7 +805,7 @@ function gbif_scaled_contents_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',
-        'weight' => 6,
+        'weight' => 7,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -851,10 +851,10 @@ function gbif_scaled_contents_field_default_field_instances() {
         'module' => 'image',
         'settings' => array(
           'image_link' => '',
-          'image_style' => '',
+          'image_style' => 'focal_point_for_news',
         ),
         'type' => 'image',
-        'weight' => 23,
+        'weight' => 1,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -886,7 +886,7 @@ function gbif_scaled_contents_field_default_field_instances() {
             'pathauto' => 0,
             'transliterate' => 0,
           ),
-          'value' => 'gbif_scaled_contents/[node:content-type:machine-name]/[current-date:custom:Y-F]/[node:nid]',
+          'value' => 'gbif_scaled_contents/[node:content-type:machine-name]/[node:created:custom:Y-F]/[node:nid]',
         ),
         'retroactive_update' => 0,
       ),
@@ -934,11 +934,12 @@ function gbif_scaled_contents_field_default_field_instances() {
         'insert' => 0,
         'insert_absolute' => 0,
         'insert_class' => '',
-        'insert_default' => 'auto',
+        'insert_default' => 'image_focal_point_for_news',
         'insert_styles' => array(
-          'auto' => 'auto',
+          'auto' => 0,
           'colorbox__featured' => 0,
           'colorbox__featured_news_slideshow_image' => 0,
+          'colorbox__focal_point_for_news' => 0,
           'colorbox__focal_point_for_projects' => 0,
           'colorbox__focal_point_preview' => 0,
           'colorbox__funder_image' => 0,
@@ -956,6 +957,7 @@ function gbif_scaled_contents_field_default_field_instances() {
           'image' => 0,
           'image_featured' => 0,
           'image_featured_news_slideshow_image' => 0,
+          'image_focal_point_for_news' => 'image_focal_point_for_news',
           'image_focal_point_for_projects' => 0,
           'image_focal_point_preview' => 0,
           'image_funder_image' => 0,

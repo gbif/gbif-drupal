@@ -116,7 +116,7 @@ function _gbif_registry_detail_of_submission(&$message, $params, $options) {
     '@country' => $params['org']['country']['title'],
     '@desc' => $params['org']['desc'],
     '@isIntlOrg' => $params['org']['isIntlOrg'],
-    '@exampleFile' => ($params['org']['exampleFile'] == true) ? 'yes' : 'no'
+    '@exampleFile' => (isset($params['org']['exampleFile']) && $params['org']['exampleFile'] == true) ? 'yes' : 'no'
   ), $options);
 	// additional contacts
 	// admin contact

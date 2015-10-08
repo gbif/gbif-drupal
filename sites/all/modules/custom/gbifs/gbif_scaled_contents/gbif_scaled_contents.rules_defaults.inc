@@ -7,6 +7,7 @@
 /**
  * Implements hook_default_rules_configuration().
  */
+/*
 function gbif_scaled_contents_default_rules_configuration() {
   $items = array();
   $items['rules_add_content_to_facebook'] = entity_import('rules_config', '{ "rules_add_content_to_facebook" : {
@@ -67,3 +68,4 @@ function gbif_scaled_contents_default_rules_configuration() {
   }');
   return $items;
 }
+*/

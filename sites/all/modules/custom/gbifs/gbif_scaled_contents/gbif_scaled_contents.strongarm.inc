@@ -78,38 +78,34 @@ function gbif_scaled_contents_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'fb_permissions_facebook_permissions:1';
-  $strongarm->value = array(
-    0 => 'publish_actions',
-  );
-  $export['fb_permissions_facebook_permissions:1'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'fb_permissions_facebook_permissions:2';
-  $strongarm->value = array(
-    0 => 'publish_actions',
-  );
-  $export['fb_permissions_facebook_permissions:2'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'fb_permissions_facebook_permissions:3';
-  $strongarm->value = array(
-    0 => 'manage_pages',
-    1 => 'publish_actions',
-    2 => 'publish_pages',
-  );
-  $export['fb_permissions_facebook_permissions:3'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
   $strongarm->name = 'field_bundle_settings_node__news';
   $strongarm->value = array(
-    'view_modes' => array(),
+    'view_modes' => array(
+      'teaser' => array(
+        'custom_settings' => TRUE,
+      ),
+      'full' => array(
+        'custom_settings' => FALSE,
+      ),
+      'rss' => array(
+        'custom_settings' => FALSE,
+      ),
+      'search_index' => array(
+        'custom_settings' => FALSE,
+      ),
+      'search_result' => array(
+        'custom_settings' => FALSE,
+      ),
+      'ical' => array(
+        'custom_settings' => FALSE,
+      ),
+      'token' => array(
+        'custom_settings' => FALSE,
+      ),
+      'revision' => array(
+        'custom_settings' => FALSE,
+      ),
+    ),
     'extra_fields' => array(
       'form' => array(
         'metatags' => array(
@@ -200,83 +196,6 @@ function gbif_scaled_contents_strongarm() {
   $strongarm->name = 'transliteration_file_uploads_display_name';
   $strongarm->value = 1;
   $export['transliteration_file_uploads_display_name'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'twitter_api';
-  $strongarm->value = 'https://api.twitter.com';
-  $export['twitter_api'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'twitter_expire';
-  $strongarm->value = '0';
-  $export['twitter_expire'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'twitter_host';
-  $strongarm->value = 'http://twitter.com';
-  $export['twitter_host'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'twitter_import';
-  $strongarm->value = 0;
-  $export['twitter_import'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'twitter_post_default_format';
-  $strongarm->value = 'New post: !title !tinyurl';
-  $export['twitter_post_default_format'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'twitter_post_default_value';
-  $strongarm->value = 0;
-  $export['twitter_post_default_value'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'twitter_post_types';
-  $strongarm->value = array(
-    'news' => 'news',
-    'page' => 0,
-    'call' => 0,
-    'event' => 0,
-    'featureddataset' => 0,
-    'usesofdata' => 0,
-    'gbif_participant' => 0,
-    'generictemplate' => 0,
-    'newsarticle' => 0,
-    'dir_organization' => 0,
-    'programme' => 0,
-    'project' => 0,
-    'resource' => 0,
-  );
-  $export['twitter_post_types'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'twitter_search';
-  $strongarm->value = 'https://twitter.com/';
-  $export['twitter_search'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'twitter_tinyurl';
-  $strongarm->value = 'http://tinyurl.com';
-  $export['twitter_tinyurl'] = $strongarm;
 
   return $export;
 }

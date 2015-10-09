@@ -34,7 +34,7 @@ function drush_gbif_scaled_contents_migrate() {
   // 2. Unpublished nodes will remain unpublished
   $entity_query = new EntityFieldQuery();
   $entity_query->entityCondition('entity_type', 'node')
-    ->entityCondition('bundle', array('newsarticle', 'usesofdata'), 'IN');
+    ->entityCondition('bundle', array('newsarticle', 'usesofdata', 'featureddataset'), 'IN');
   $exist = $entity_query->execute();
 
   if (isset($exist['node'])) {
@@ -49,6 +49,7 @@ function drush_gbif_scaled_contents_migrate() {
     // First round to save only legacy nid and the title.
     foreach ($exist['node'] as $nid => $n_obj) {
       $legacy_node = node_load($nid);
+      drush_print('Node ' . $legacy_node->nid . ' is being processed...');
       $legacy_node_wrapper = entity_metadata_wrapper('node', $legacy_node);
       $legacy_node_status = $legacy_node_wrapper->status->value();
       switch ($legacy_node_status) {
@@ -91,10 +92,10 @@ function drush_gbif_scaled_contents_migrate() {
           if (!$dir_exists) {
             $dir_created = drupal_mkdir($file_destination_dir_uri, NULL, TRUE);
             if ($dir_created == TRUE) {
-              drush_print('Node ' . $legacy_node->nid . ' directory created.');
+              drush_print('  Node ' . $legacy_node->nid . ' directory created.');
             }
             else {
-              drush_print('Node ' . $legacy_node->nid . ' directory creation failed.');
+              drush_print('  Node ' . $legacy_node->nid . ' directory creation failed.');
             }
           }
           $image_real_path = drupal_realpath($image['uri']);
@@ -108,26 +109,48 @@ function drush_gbif_scaled_contents_migrate() {
         }
       }
 
-      // fields having the same structure
-      $text_fields = array(
-        //'field_citationinformation' => 'field_citation_information',
+      // fields that can be migrated without term mapping.
+      $fields_wo_term_mapping = array(
+        'field_citationinformation' => 'field_citation_information',
         'field_relatedgbifresources' => 'field_related_gbif_resources', // links
         'field_numofresused' => 'field_num_rs_used',
         'field_reasearcherslocation' => 'field_researcher_location',
-        //'field_linkstoresearch' => 'field_link_to_research',
+        'field_linkstoresearch' => 'field_link_to_research',
         'field_datasetkey' => 'field_dataset_uuid',
+        'field_country' => 'field_country',
       );
-      foreach ($text_fields as $field_from => $field_to) {
+      foreach ($fields_wo_term_mapping as $field_from => $field_to) {
         if (!empty($legacy_node->$field_from)) {
+          drush_print('  Processing ' . $field_from . '...');
+
           $field_from_value = $legacy_node_wrapper->$field_from->value();
-          if (isset($field_from_value['url'])) {
-            $field_from_value = array($field_from_value);
+
+          // EMW seems omitting delta when there is only one value in the field.
+          // We need to restore the array structure here.
+          if (is_array($field_from_value)) {
+            $keys = array_keys($field_from_value);
+            $delta_true = TRUE;
+            foreach ($keys as $key) {
+              if (!is_numeric($key)) $delta_true = FALSE;
+            }
+            if ($delta_true == FALSE) {
+              $field_from_value = array($field_from_value);
+            }
+          }
+          if ($field_from == 'field_datasetkey') {
+            $field_from_value = array(
+              array(
+                $field_from_value,
+              ),
+            );
           }
           $new_node_wrapper->$field_to->set($field_from_value);
           unset($field_from_value, $field_from, $field_to);
         }
       }
 
+      // Converting text fields to link fields
+      // Study area
       if (!empty($legacy_node->field_studyarea)) {
         $field_studyarea_value = $legacy_node_wrapper->field_studyarea->value();
         $field_studyarea_values = explode(', ', $field_studyarea_value);
@@ -142,7 +165,7 @@ function drush_gbif_scaled_contents_migrate() {
         }
         $new_node_wrapper->field_study_area->set($new_study_area_value);
       }
-
+      // Data sources
       if (!empty($legacy_node->field_datasources)) {
         $field_datasources_value = $legacy_node_wrapper->field_datasources->value();
         $field_datasources_values = explode(', ', $field_datasources_value);
@@ -185,12 +208,7 @@ function drush_gbif_scaled_contents_migrate() {
         $new_node_wrapper->field_data_source->set($new_data_source_value);
       }
 
-      // Same term reference fields
-      $same_term_fields = array(
-        'field_country'
-      );
-
-      // term reference fields to be migrated
+      // Term reference fields that needs to map to the new core taxonomy.
 
       // Path and alias
 

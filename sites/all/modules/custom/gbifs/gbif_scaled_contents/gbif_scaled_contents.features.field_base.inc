@@ -139,7 +139,7 @@ function gbif_scaled_contents_field_default_field_bases() {
     'locked' => 0,
     'module' => 'text',
     'settings' => array(
-      'max_length' => 32,
+      'max_length' => 36,
     ),
     'translatable' => 0,
     'type' => 'text',

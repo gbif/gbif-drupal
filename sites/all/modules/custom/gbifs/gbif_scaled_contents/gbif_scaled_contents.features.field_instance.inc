@@ -383,7 +383,7 @@ function gbif_scaled_contents_field_default_field_instances() {
       'active' => 1,
       'module' => 'text',
       'settings' => array(
-        'size' => 32,
+        'size' => 36,
       ),
       'type' => 'text_textfield',
       'weight' => 9,

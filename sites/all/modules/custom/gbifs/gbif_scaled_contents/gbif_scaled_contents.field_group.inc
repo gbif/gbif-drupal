@@ -136,11 +136,13 @@ function gbif_scaled_contents_field_group_info() {
     'label' => 'Defined Taxonomy',
     'weight' => '23',
     'children' => array(
-      0 => 'tx_about_gbif',
-      1 => 'tx_audience',
-      2 => 'tx_capacity_enhancement',
-      3 => 'tx_data_use',
-      4 => 'tx_informatics',
+      0 => 'field_tx_purpose',
+      1 => 'tx_about_gbif',
+      2 => 'tx_audience',
+      3 => 'tx_capacity_enhancement',
+      4 => 'tx_data_use',
+      5 => 'tx_informatics',
+      6 => 'field_tx_data_type',
     ),
     'format_type' => 'tab',
     'format_settings' => array(

@@ -25,8 +25,6 @@ function gbif_scaled_contents_drush_command() {
  */
 function drush_gbif_scaled_contents_migrate() {
   include_once('taxonomy_terms_mapping.php');
-  $thematic_tags_mapping = gbif_scaled_contents_get_thematic_tags_mapping();
-  $data_use_cat_mapping = gbif_scaled_contents_get_data_use_mapping();
   $voc_field_mapping = gbif_scaled_contents_voc_field_mapping();
 
   // node object structure for reference
@@ -222,20 +220,31 @@ function drush_gbif_scaled_contents_migrate() {
         'tx_audience' => array(),
         'tx_data_use' => array(),
         'tx_informatics' => array(),
+        'field_tx_purpose' => array(),
         'tx_topic' => array(),
         'tx_tags' => array(),
         'field_gbif_area' => array(),
         'field_un_region' => array(),
       );
-      if (in_array($legacy_node->type, array('newsarticle', 'usesofdata'))) {
-        $legacy_term_fields = array('field_datausecategories', 'field_capacity');
+      if (in_array($legacy_node->type, array('newsarticle'))) { // usesofdata
+        $legacy_term_fields = array(
+          array(
+            'field' => 'field_datausecategories',
+            'mapping' => 'gbif_scaled_contents_get_data_use_mapping'
+          ),
+          array(
+            'field' => 'field_capacity',
+            'mapping' => 'gbif_scaled_contents_get_thematic_tags_mapping'
+          ),
+        );
         foreach ($legacy_term_fields as $f) {
-          if (!empty($legacy_node->$f)) {
+          if (!empty($legacy_node->$f['field'])) {
             // retrieve tids from the legacy node
-            $legacy_values = $legacy_node_wrapper->$f->value();
-            drush_print('  Term references of ' . $f . 'are being analysed...');
+            $legacy_values = $legacy_node_wrapper->$f['field']->value();
+            drush_print('  Term references of ' . $f['field'] . ' are being analysed...');
             foreach ($legacy_values as $v) {
-              foreach ($data_use_cat_mapping as $cat) {
+              $mapping = $f['mapping']();
+              foreach ($mapping as $cat) {
                 $new_tid = ($cat['old_tid'] == $v->tid) ? $cat['new_tid'] : NULL;
                 if (!empty($new_tid)) {
                   $new_t_obj = taxonomy_term_load($new_tid);

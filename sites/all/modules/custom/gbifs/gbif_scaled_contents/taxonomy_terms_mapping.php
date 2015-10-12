@@ -300,7 +300,7 @@ function gbif_scaled_contents_get_thematic_tags_mapping() {
     array(
       'name' => 'Persistent identifiers',
       'old_tid' => 651,
-      'new_tid' => 1234,
+      'new_tid' => 1223,
     ),
     array(
       'name' => 'Standards and protocols',
@@ -415,10 +415,12 @@ function gbif_scaled_contents_get_data_use_mapping() {
 function gbif_scaled_contents_voc_field_mapping() {
   return array(
     '25' => 'tx_about_gbif',
-    '32' => 'tx_capacity_enhancement',
     '31' => 'tx_audience',
+    '32' => 'tx_capacity_enhancement',
+    '33' => 'field_tx_data_type',
     '34' => 'tx_data_use',
     '35' => 'tx_informatics',
+    '38' => 'field_tx_purpose',
     '42' => 'tx_topic',
     '40' => 'tx_tags',
     '45' => 'field_gbif_area',

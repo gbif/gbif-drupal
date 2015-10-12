@@ -793,6 +793,94 @@ function gbif_scaled_contents_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-news-field_tx_data_type'
+  $field_instances['node-news-field_tx_data_type'] = array(
+    'bundle' => 'news',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 24,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_tx_data_type',
+    'label' => 'Data type',
+    'required' => 0,
+    'settings' => array(
+      'mediafront' => array(
+        'custom' => '',
+        'field_type' => 0,
+        'media_type' => 'media',
+        'preview' => 0,
+        'thumbnail' => 0,
+      ),
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_buttons',
+      'weight' => 26,
+    ),
+  );
+
+  // Exported field_instance: 'node-news-field_tx_purpose'
+  $field_instances['node-news-field_tx_purpose'] = array(
+    'bundle' => 'news',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 23,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_tx_purpose',
+    'label' => 'Purpose',
+    'required' => 0,
+    'settings' => array(
+      'mediafront' => array(
+        'custom' => '',
+        'field_type' => 0,
+        'media_type' => 'media',
+        'preview' => 0,
+        'thumbnail' => 0,
+      ),
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_buttons',
+      'weight' => 27,
+    ),
+  );
+
   // Exported field_instance: 'node-news-field_un_region'
   $field_instances['node-news-field_un_region'] = array(
     'bundle' => 'news',
@@ -1304,6 +1392,7 @@ function gbif_scaled_contents_field_default_field_instances() {
   t('Content tweet');
   t('Country');
   t('Data source');
+  t('Data type');
   t('Data use');
   t('Dataset UUID');
   t('GBIF area');
@@ -1312,6 +1401,7 @@ function gbif_scaled_contents_field_default_field_instances() {
   t('Legacy nid');
   t('Link to research');
   t('Number of resources used');
+  t('Purpose');
   t('Related GBIF resources');
   t('Researcher location');
   t('Study area');

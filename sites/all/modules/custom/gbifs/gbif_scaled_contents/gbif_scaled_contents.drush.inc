@@ -24,8 +24,15 @@ function gbif_scaled_contents_drush_command() {
  * The one-time migration script which converts old content types to the new one.
  */
 function drush_gbif_scaled_contents_migrate() {
+  include_once('taxonomy_terms_mapping.php');
+  $thematic_tags_mapping = gbif_scaled_contents_get_thematic_tags_mapping();
+  $data_use_cat_mapping = gbif_scaled_contents_get_data_use_mapping();
+  $voc_field_mapping = gbif_scaled_contents_voc_field_mapping();
+
   // node object structure for reference
-  $test_news_node = node_load(82275);
+  //$test_news_node = node_load(82284);
+  //$test_news_node_wrapper = entity_metadata_wrapper('node', $test_news_node);
+  //$tx_topic = $test_news_node_wrapper->tx_topic->value();
   $test_newsarticle_node = node_load(82176);
   $test_datause_node = node_load(82262);
   $test_dataset_node = node_load(82265);
@@ -34,7 +41,7 @@ function drush_gbif_scaled_contents_migrate() {
   // 2. Unpublished nodes will remain unpublished
   $entity_query = new EntityFieldQuery();
   $entity_query->entityCondition('entity_type', 'node')
-    ->entityCondition('bundle', array('newsarticle', 'usesofdata', 'featureddataset'), 'IN');
+    ->entityCondition('bundle', array('newsarticle', 'usesofdata'), 'IN');
   $exist = $entity_query->execute();
 
   if (isset($exist['node'])) {
@@ -209,6 +216,43 @@ function drush_gbif_scaled_contents_migrate() {
       }
 
       // Term reference fields that needs to map to the new core taxonomy.
+      $target_fields = array(
+        'tx_about_gbif' => array(),
+        'tx_capacity_enhancement' => array(),
+        'tx_audience' => array(),
+        'tx_data_use' => array(),
+        'tx_informatics' => array(),
+        'tx_topic' => array(),
+        'tx_tags' => array(),
+        'field_gbif_area' => array(),
+        'field_un_region' => array(),
+      );
+      if (in_array($legacy_node->type, array('newsarticle', 'usesofdata'))) {
+        $legacy_term_fields = array('field_datausecategories', 'field_capacity');
+        foreach ($legacy_term_fields as $f) {
+          if (!empty($legacy_node->$f)) {
+            // retrieve tids from the legacy node
+            $legacy_values = $legacy_node_wrapper->$f->value();
+            drush_print('  Term references of ' . $f . 'are being analysed...');
+            foreach ($legacy_values as $v) {
+              foreach ($data_use_cat_mapping as $cat) {
+                $new_tid = ($cat['old_tid'] == $v->tid) ? $cat['new_tid'] : NULL;
+                if (!empty($new_tid)) {
+                  $new_t_obj = taxonomy_term_load($new_tid);
+                  $target_field = $voc_field_mapping[$new_t_obj->vid];
+                  $target_fields[$target_field][] = $new_t_obj;
+                }
+              }
+              unset($new_tid);
+            }
+          }
+        }
+      }
+      foreach ($target_fields as $f_name => $f_values) {
+        if (count($f_values) !== 0) {
+          $new_node_wrapper->$f_name->set($f_values);
+        }
+      }
 
       // Path and alias
 

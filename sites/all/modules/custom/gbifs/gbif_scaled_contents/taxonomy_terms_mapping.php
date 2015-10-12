@@ -411,3 +411,17 @@ function gbif_scaled_contents_get_data_use_mapping() {
   );
   return $data_use_categories;
 }
+
+function gbif_scaled_contents_voc_field_mapping() {
+  return array(
+    '25' => 'tx_about_gbif',
+    '32' => 'tx_capacity_enhancement',
+    '31' => 'tx_audience',
+    '34' => 'tx_data_use',
+    '35' => 'tx_informatics',
+    '42' => 'tx_topic',
+    '40' => 'tx_tags',
+    '45' => 'field_gbif_area',
+    '46' => 'field_un_region',
+  );
+}

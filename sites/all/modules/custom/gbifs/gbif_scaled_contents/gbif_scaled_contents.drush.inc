@@ -214,19 +214,8 @@ function drush_gbif_scaled_contents_migrate() {
       }
 
       // Term reference fields that needs to map to the new core taxonomy.
-      $target_fields = array(
-        'tx_about_gbif' => array(),
-        'tx_capacity_enhancement' => array(),
-        'tx_audience' => array(),
-        'tx_data_use' => array(),
-        'tx_informatics' => array(),
-        'field_tx_purpose' => array(),
-        'tx_topic' => array(),
-        'tx_tags' => array(),
-        'field_gbif_area' => array(),
-        'field_un_region' => array(),
-      );
-      if (in_array($legacy_node->type, array('newsarticle'))) { // usesofdata
+      $target_fields = array();
+      if (in_array($legacy_node->type, array('newsarticle', 'usesofdata', 'featureddataset'))) {
         $legacy_term_fields = array(
           array(
             'field' => 'field_datausecategories',
@@ -235,6 +224,10 @@ function drush_gbif_scaled_contents_migrate() {
           array(
             'field' => 'field_capacity',
             'mapping' => 'gbif_scaled_contents_get_thematic_tags_mapping'
+          ),
+          array(
+            'field' => 'field_regions',
+            'mapping' => 'gbif_scaled_contents_get_regions_mapping',
           ),
         );
         foreach ($legacy_term_fields as $f) {

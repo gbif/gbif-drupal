@@ -5978,6 +5978,15 @@ function gbif_vocabularies_uuid_features_default_terms() {
     ),
   );
   $terms[] = array(
+    'name' => 'Antarctic',
+    'description' => '',
+    'format' => 'full_html',
+    'weight' => 0,
+    'uuid' => '7a91eeb6-2a0a-4752-81f3-dcb40e051604',
+    'vocabulary_machine_name' => 'gbif_area',
+    'ge_ims_kp_id' => array(),
+  );
+  $terms[] = array(
     'name' => 'Uzbekistan',
     'description' => 'Uzbekistan',
     'format' => NULL,
@@ -9916,6 +9925,15 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'field_term_native_name' => array(),
   );
   $terms[] = array(
+    'name' => 'GBIF.org',
+    'description' => '',
+    'format' => 'plain_text',
+    'weight' => 0,
+    'uuid' => 'd65b547b-6241-4edc-996f-e2dd9a6e3b6a',
+    'vocabulary_machine_name' => 'data_use',
+    'field_ims_keyword_id' => array(),
+  );
+  $terms[] = array(
     'name' => 'Digitization soft.',
     'description' => 'Data capture software use',
     'format' => 'plain_text',
@@ -10592,6 +10610,15 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
+  );
+  $terms[] = array(
+    'name' => 'Arctic',
+    'description' => '',
+    'format' => 'full_html',
+    'weight' => 0,
+    'uuid' => 'e57c893b-d39f-4f9d-a23b-cd06f9bcf000',
+    'vocabulary_machine_name' => 'gbif_area',
+    'ge_ims_kp_id' => array(),
   );
   $terms[] = array(
     'name' => 'Viet Nam',

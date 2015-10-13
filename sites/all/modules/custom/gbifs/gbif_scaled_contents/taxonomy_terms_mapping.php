@@ -230,7 +230,7 @@ function gbif_scaled_contents_get_thematic_tags_mapping() {
     array(
       'name' => 'Abundance data',
       'old_tid' => 682,
-      'new_tid' => 1233,
+      'new_tid' => 1224,
     ),
     array(
       'name' => 'Ecological/ecosystem data',
@@ -426,4 +426,50 @@ function gbif_scaled_contents_voc_field_mapping() {
     '45' => 'field_gbif_area',
     '46' => 'field_un_region',
   );
+}
+
+function gbif_scaled_contents_get_regions_mapping() {
+  $regions = array(
+    array(
+      'name' => 'Africa',
+      'old_tid' => 289,
+      'new_tid' => 1237,
+    ),
+    array(
+      'name' => 'Antarctic',
+      'old_tid' => 644,
+      'new_tid' => 1227,
+    ),
+    array(
+      'name' => 'Arctic',
+      'old_tid' => 645,
+      'new_tid' => 1234,
+    ),
+    array(
+      'name' => 'Asia',
+      'old_tid' => 291,
+      'new_tid' => 1232,
+    ),
+    array(
+      'name' => 'Europe',
+      'old_tid' => 287,
+      'new_tid' => 1231,
+    ),
+    array(
+      'name' => 'Latin America',
+      'old_tid' => 288,
+      'new_tid' => 1225,
+    ),
+    array(
+      'name' => 'North America',
+      'old_tid' => 290,
+      'new_tid' => 1228,
+    ),
+    array(
+      'name' => 'Oceania',
+      'old_tid' => 292,
+      'new_tid' => 1220,
+    ),
+  );
+  return $regions;
 }

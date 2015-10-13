@@ -123,8 +123,11 @@ function drush_gbif_scaled_contents_migrate() {
         'field_linkstoresearch' => 'field_link_to_research',
         'field_datasetkey' => 'field_dataset_uuid',
         'field_country' => 'field_country',
+        'field_programme' => 'field_programme',
+        'field_organizations' => 'field_organizations',
       );
       foreach ($fields_wo_term_mapping as $field_from => $field_to) {
+        drush_print('  Field ' . $field_from . ' are being analysed and migrated to ' . $field_to . '...');
         if (!empty($legacy_node->$field_from)) {
           drush_print('  Processing ' . $field_from . '...');
 

@@ -6,9 +6,12 @@
 		<?php
 			$title_link = l($publisher['title'], $env['data_portal_base_url'] . '/publisher/' . $publisher['key']);
 			$paragraph = t('A data publisher from ');
-			$paragraph .= (!empty($publisher['city'])) ? trim($publisher['city']) . ', ' : '';
-			$country_title = gbif_participant_country_lookup($publisher['country'], 'iso2', 'title');
-			$paragraph .= $country_title;
+			$paragraph .= (!empty($publisher['city'])) ? trim($publisher['city']) : '';
+      if (isset($publisher['country'])) {
+        $country_title = gbif_participant_country_lookup($publisher['country'], 'iso2', 'title');
+        $paragraph .= (!empty($publisher['city'])) ? ', ' : '';
+        $paragraph .= $country_title;
+      }
 			if ($publisher['numPublishedDatasets'] != 0) {
 				$published = format_plural($publisher['numPublishedDatasets'],
 					'1 published dataset',
@@ -25,7 +28,7 @@
 		</li>
 		<?php else: ?>
 			<li>
-				<strong><?php print $title_link; ?></strong> <span class="title-annotating-text"><?php print $published; ?></span><br>
+				<strong><?php print $title_link; ?></strong> <span class="title-annotating-text"><?php if (isset($published)) print $published; ?></span><br>
 				<?php if (!empty($publisher['description'])): ?>
 				<p><?php print $publisher['description']; ?></p>
 				<?php endif; ?>
@@ -35,5 +38,6 @@
 			</li>
 		<?php endif; ?>
 		<?php $i++; ?>
+    <?php unset($published); ?>
 	<?php endforeach; ?>
 </ul>

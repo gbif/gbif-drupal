@@ -39,7 +39,7 @@ function drush_gbif_scaled_contents_migrate() {
   // 2. Unpublished nodes will remain unpublished
   $entity_query = new EntityFieldQuery();
   $entity_query->entityCondition('entity_type', 'node')
-    ->entityCondition('bundle', array('newsarticle', 'usesofdata'), 'IN');
+    ->entityCondition('bundle', array('newsarticle'), 'IN'); // , 'usesofdata', 'featureddataset'
   $exist = $entity_query->execute();
 
   if (isset($exist['node'])) {
@@ -259,8 +259,6 @@ function drush_gbif_scaled_contents_migrate() {
         }
       }
 
-      // Path and alias
-
       // Save content
       $author = $legacy_node_wrapper->author->value();
       $new_node_wrapper->author->set($author);
@@ -277,9 +275,40 @@ function drush_gbif_scaled_contents_migrate() {
         workbench_moderation_moderate($new_node, 'published');
       }
 
+      // Path, alias, and redirects
+      $url_alias = drupal_get_path_alias('node/' . $legacy_node->nid);
       // redirect for published nodes
+      // to update the old node path with the new one.
+      // to add old URL alias as a new redirect.
+      $redirect = new stdClass();
+      redirect_object_prepare(
+        $redirect,
+        array(
+          'source' => $url_alias,
+          'source_options' => array(),
+          'redirect' => 'node/' . $new_node->nid,
+          'redirect_options' => array(),
+          'language' => 'en',
+        )
+      );
+      redirect_save($redirect);
+      unset($redirect);
 
-      // delete old node
+      $redirect_results = db_select('redirect', 'r')
+        ->fields('r')
+        ->condition('redirect', 'node/' . $legacy_node->nid, '=')
+        ->execute()
+        ->fetchAll();
+      if (!empty($redirect_results)) {
+        // delete old node
+        node_delete($legacy_node->nid);
+        foreach ($redirect_results as $redirect_result) {
+          $redirect_result->redirect = 'node/' . $new_node->nid;
+          redirect_save($redirect_result);
+        }
+      }
+
+      // reset all variables
       unset($legacy_node, $legacy_node_wrapper, $new_node, $new_node_wrapper);
     }
   }

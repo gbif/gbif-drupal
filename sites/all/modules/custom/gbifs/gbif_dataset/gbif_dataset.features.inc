@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * gbif_data_use.features.inc
+ * gbif_dataset.features.inc
  */
 
 /**
  * Implements hook_ctools_plugin_api().
  */
-function gbif_data_use_ctools_plugin_api($module = NULL, $api = NULL) {
+function gbif_dataset_ctools_plugin_api($module = NULL, $api = NULL) {
   if ($module == "field_group" && $api == "field_group") {
     return array("version" => "1");
   }
@@ -19,10 +19,10 @@ function gbif_data_use_ctools_plugin_api($module = NULL, $api = NULL) {
 /**
  * Implements hook_node_info().
  */
-function gbif_data_use_node_info() {
+function gbif_dataset_node_info() {
   $items = array(
-    'data_use' => array(
-      'name' => t('Data use'),
+    'dataset' => array(
+      'name' => t('Dataset'),
       'base' => 'node_content',
       'description' => t('The data use content type as part of the new content publication workflow.'),
       'has_title' => '1',

@@ -72,6 +72,22 @@ function gbif_scaled_contents_strongarm() {
     'group_citations|node|news|form' => FALSE,
     'group_def_taxonomy|node|news|form' => FALSE,
     'group_topics_tags|node|news|form' => FALSE,
+    'group_annotations|node|data_use|form' => FALSE,
+    'group_attributes|node|data_use|form' => FALSE,
+    'group_citations|node|data_use|form' => FALSE,
+    'group_data|node|data_use|form' => FALSE,
+    'group_def_taxonomy|node|data_use|form' => FALSE,
+    'group_gbif_cms_taxonomy|node|data_use|form' => FALSE,
+    'group_regions|node|data_use|form' => FALSE,
+    'group_topics_tags|node|data_use|form' => FALSE,
+    'group_annotations|node|dataset|form' => FALSE,
+    'group_attributes|node|dataset|form' => FALSE,
+    'group_citations|node|dataset|form' => FALSE,
+    'group_data|node|dataset|form' => FALSE,
+    'group_def_taxonomy|node|dataset|form' => FALSE,
+    'group_gbif_cms_taxonomy|node|dataset|form' => FALSE,
+    'group_regions|node|dataset|form' => FALSE,
+    'group_topics_tags|node|dataset|form' => FALSE,
   );
   $export['default_field_group'] = $strongarm;
 

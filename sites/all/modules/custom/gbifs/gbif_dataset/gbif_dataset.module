@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the GBIF Dataset feature.
+ */
+
+include_once 'gbif_dataset.features.inc';

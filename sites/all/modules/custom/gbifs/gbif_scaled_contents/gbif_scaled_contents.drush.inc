@@ -31,15 +31,15 @@ function drush_gbif_scaled_contents_migrate() {
   //$test_news_node = node_load(82284);
   //$test_news_node_wrapper = entity_metadata_wrapper('node', $test_news_node);
   //$tx_topic = $test_news_node_wrapper->tx_topic->value();
-  $test_newsarticle_node = node_load(82176);
-  $test_datause_node = node_load(82262);
-  $test_dataset_node = node_load(82265);
+  //$test_newsarticle_node = node_load(82176);
+  //$test_datause_node = node_load(82262);
+  //$test_dataset_node = node_load(82265);
 
   // 1. Entity query all 'newsarticle' nodes
   // 2. Unpublished nodes will remain unpublished
   $entity_query = new EntityFieldQuery();
   $entity_query->entityCondition('entity_type', 'node')
-    ->entityCondition('bundle', array('newsarticle'), 'IN'); // , 'usesofdata', 'featureddataset'
+    ->entityCondition('bundle', array('newsarticle', 'usesofdata', 'featureddataset'), 'IN'); //
   $exist = $entity_query->execute();
 
   if (isset($exist['node'])) {
@@ -299,9 +299,11 @@ function drush_gbif_scaled_contents_migrate() {
         ->condition('redirect', 'node/' . $legacy_node->nid, '=')
         ->execute()
         ->fetchAll();
+      // delete old node
+      node_delete($legacy_node->nid);
+      drush_print('Old node ' . $legacy_node->nid . ' deleled.');
+      $count_migrated++;
       if (!empty($redirect_results)) {
-        // delete old node
-        node_delete($legacy_node->nid);
         foreach ($redirect_results as $redirect_result) {
           $redirect_result->redirect = 'node/' . $new_node->nid;
           redirect_save($redirect_result);
@@ -313,6 +315,10 @@ function drush_gbif_scaled_contents_migrate() {
     }
   }
 
+  drush_print($count . ' nodes processed.');
+  drush_print($count_published . ' node(s) published.');
+  drush_print($count_unpublished . ' node(s) unpublished.');
+  drush_print($count_migrated . ' node(s) migrated.');
 }
 
 /**

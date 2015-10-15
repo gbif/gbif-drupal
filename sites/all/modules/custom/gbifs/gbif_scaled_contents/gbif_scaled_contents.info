@@ -78,6 +78,7 @@ features[field_instance][] = node-news-tx_data_use
 features[field_instance][] = node-news-tx_informatics
 features[field_instance][] = node-news-tx_tags
 features[field_instance][] = node-news-tx_topic
+features[image][] = featured
 features[image][] = focal_point_for_news
 features[node][] = news
 features[variable][] = comment_anonymous_news

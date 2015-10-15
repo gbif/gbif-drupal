@@ -22,6 +22,31 @@ function gbif_scaled_contents_ctools_plugin_api($module = NULL, $api = NULL) {
 function gbif_scaled_contents_image_default_styles() {
   $styles = array();
 
+  // Exported image style: featured.
+  $styles['featured'] = array(
+    'label' => 'Featured block image',
+    'effects' => array(
+      4 => array(
+        'name' => 'image_scale',
+        'data' => array(
+          'width' => 273,
+          'height' => '',
+          'upscale' => 0,
+        ),
+        'weight' => 1,
+      ),
+      5 => array(
+        'name' => 'image_crop',
+        'data' => array(
+          'width' => 271,
+          'height' => 171,
+          'anchor' => 'center-center',
+        ),
+        'weight' => 2,
+      ),
+    ),
+  );
+
   // Exported image style: focal_point_for_news.
   $styles['focal_point_for_news'] = array(
     'label' => 'Focal point for news',

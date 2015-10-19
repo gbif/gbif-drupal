@@ -527,7 +527,7 @@ function _bvng_well_types($current_path, $node_type = NULL) {
   // Paths that have a filter well.
   $filter_paths = array(
     'newsroom/news*',
-    'newsroom/uses/all',
+    'newsroom/uses*',
     'newsroom/events/upcoming',
     'newsroom/events/past',
     'search/*',
@@ -547,24 +547,23 @@ function _bvng_well_types($current_path, $node_type = NULL) {
     'participation/participant-list',
     'mendeley*',
     'newsroom/summary',
-    'newsroom/uses',
+    'newsroom/uses/summary',
     'user*'
   );
-
   $is_none_path = FALSE;
   foreach ($none_paths as $path) {
     if (drupal_match_path($current_path, $path)) $is_none_path = TRUE;
   }
 
-  if ($is_filter_path == TRUE) {
+  // the node page won't need a well.
+  if ($is_none_path == TRUE || $node_type !== NULL) {
+    return 'none';
+  }
+  elseif ($is_filter_path == TRUE) {
     return 'filter';
   }
   elseif ($status == '403 Forbidden') {
     return 'normal';
-  }
-  // the node page won't need a well.
-  elseif ($is_none_path == TRUE || $node_type !== NULL) {
-    return 'none';
   }
   else {
     return 'normal';
@@ -703,7 +702,7 @@ function _bvng_get_title_data($node_count = NULL, $user = NULL, $node = NULL) {
 		}
 	}
 	elseif ($active_menu_item == FALSE && isset($node)) {
-		if (in_array($node->type, array('usesofdata', 'newsarticle', 'event'))) {
+		if (in_array($node->type, array('data_use', 'news', 'event'))) {
 			$title = array(
 				'name' => t('GBIF Newsroom'),
 				'description' => t('News and events from around the GBIF community'),
@@ -790,20 +789,6 @@ function _bvng_get_regional_links() {
     $links .= '<li>';
     $url_base = 'newsroom/news/';
     $links .= l($region, $url_base . $region);
-    $links .= '</li>';
-  }
-  $links .= '</ul>';
-  return $links;
-}
-
-function _bvng_get_subject_links() {
-  $subjects = variable_get('gbif_subject_definition');
-  $links = '';
-  $links = '<ul class="filter-list">';
-  foreach ($subjects as $term => $subject) {
-    $links .= '<li>';
-    $url_base = 'taxonomy/term/';
-    $links .= l($subject, $url_base . $term);
     $links .= '</li>';
   }
   $links .= '</ul>';

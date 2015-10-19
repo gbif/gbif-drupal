@@ -29,8 +29,8 @@ function drush_gbif_scaled_contents_migrate() {
   include_once('taxonomy_terms_mapping.php');
   $voc_field_mapping = gbif_scaled_contents_voc_field_mapping();
   $content_type_mapping = array(
-    //'newsarticle' => 'news',
-    'usesofdata' => 'data_use',
+    'newsarticle' => 'news',
+    //'usesofdata' => 'data_use',
     //'featureddataset' => 'dataset',
   );
 
@@ -83,12 +83,7 @@ function drush_gbif_scaled_contents_migrate() {
         // Body
         $body = $legacy_node_wrapper->body->value();
         // If this node only has title and no body, and is unpublished, delete and exit the loop.
-        if (empty($body) && $legacy_node->status == 0) {
-          node_delete($legacy_node->nid);
-          drush_print('  ==> Node ' . $legacy_node->nid . ' is deleted as being without body.');
-          break;
-        }
-        else {
+        if (!empty($body)) {
           $new_node_wrapper->body->set($body);
         }
 
@@ -133,9 +128,9 @@ function drush_gbif_scaled_contents_migrate() {
           'field_organizations' => 'field_organizations',
         );
         foreach ($fields_wo_term_mapping as $field_from => $field_to) {
-          drush_print('  Field ' . $field_from . ' are being analysed and migrated to ' . $field_to . '...');
+          //drush_print('  Field ' . $field_from . ' are being analysed and migrated to ' . $field_to . '...');
           if (!empty($legacy_node->$field_from)) {
-            drush_print('  Processing ' . $field_from . '...');
+            //drush_print('  Processing ' . $field_from . '...');
 
             $field_from_value = $legacy_node_wrapper->$field_from->value();
 
@@ -321,10 +316,15 @@ function drush_gbif_scaled_contents_migrate() {
       }
     }
 
-    drush_print($count . ' ' . $old_type . 'nodes processed.');
+    drush_print($count . ' ' . $old_type . ' nodes processed.');
     drush_print($count_published . ' ' . $new_type . ' node(s) published.');
     drush_print($count_unpublished . ' ' . $new_type . ' node(s) unpublished.');
-    drush_print($count_migrated . ' ' . $old_type . ' node(s) migrated.');  }
+    drush_print($count_migrated . ' ' . $old_type . ' node(s) migrated.');
+
+    node_type_delete($old_type);
+    drush_print($old_type . ' node type deleted.');
+
+  }
 }
 
 /**

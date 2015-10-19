@@ -110,8 +110,7 @@ function gbif_tweaks_uninstall() {
   
   // Revert GBIF definitions.
   variable_del('gbif_region_definition');
-  variable_del('gbif_subject_definition');
-  
+
   // Uninstall GBIF related modules.
   $module_list = array(
     'gbif_blocks',
@@ -135,21 +134,6 @@ function gbif_tweaks_region_definition() {
     t('Oceania'),
   );
   variable_set('gbif_region_definition', $regions);
-}
-
-/**
- * Define main subjects for filtering.
- */
-function gbif_tweaks_subject_definition() {
-  $subjects = array(
-    '635' => t('Invasives'),
-    '639' => t('Climate change'),
-    '638' => t('Conservation'),
-    '636' => t('Agriculture'),
-    '637' => t('Human health'),
-    '640' => t('Species distributions'),
-  );
-  variable_set('gbif_subject_definition', $subjects);
 }
 
 /**

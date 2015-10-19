@@ -7,6 +7,31 @@
 include_once 'gbif_scaled_contents.features.inc';
 
 /**
+ * Implements hook_menu().
+ */
+function gbif_scaled_contents_menu() {
+  $items = array();
+  // Menu link for full list browsing.
+  $items['newsroom/summary'] = array(
+    'type' => MENU_NORMAL_ITEM,
+    'title' => 'GBIF News',
+    'page callback' => 'gbif_scaled_contents_page_summary',
+    'access callback' => TRUE,
+    'weight' => -30,
+  );
+  return $items;
+}
+
+function gbif_scaled_contents_page_summary() {
+  // build newsroom/summary
+  $markup = '';
+  $markup .= views_embed_view('news_slideshow', 'default');
+  $markup .= views_embed_view('data_use', 'latest3');
+  $markup .= views_embed_view('news', 'latest3');
+  return $markup;
+}
+
+/**
  * Implements hook_theme().
  */
 function gbif_scaled_contents_theme($existing, $type, $theme, $path) {
@@ -17,6 +42,47 @@ function gbif_scaled_contents_theme($existing, $type, $theme, $path) {
       'path' => $path . '/theme',
     ),
   );
+}
+
+/**
+ * Implements hook_theme_registry_alter().
+ */
+function gbif_scaled_contents_theme_registry_alter(&$theme_registry) {
+  $path = drupal_get_path('module', 'gbif_scaled_contents');
+  $theme_registry['views_view__news__latest1_fp']['template'] = 'views-view--news--latest1-fp';
+  $theme_registry['views_view__news__latest1_fp']['path'] = $path . '/theme';
+  $theme_registry['views_view__news__latest3']['template'] = 'views-view--news--latest3';
+  $theme_registry['views_view__news__latest3']['path'] = $path . '/theme';
+  $theme_registry['views_view__news__latest4_fp']['template'] = 'views-view--news--latest4-fp';
+  $theme_registry['views_view__news__latest4_fp']['path'] = $path . '/theme';
+  $theme_registry['views_view__news__page']['template'] = 'views-view--news--page';
+  $theme_registry['views_view__news__page']['preprocess functions'][] = 'gbif_scaled_contents_preprocess_views_view';
+  $theme_registry['views_view__news__page']['path'] = $path . '/theme';
+}
+
+/**
+ * Implements hook_preprocess_views_view().
+ */
+function gbif_scaled_contents_preprocess_views_view(&$variables) {
+  switch ($variables['view']->name) {
+    case 'news':
+      $region = arg(2);
+      $feed_url = (!empty($region)) ? '/newsroom/news/rss/' . $region : '/newsroom/news/rss';
+      // Add RSS feed icon.
+      $alt = $variables['view']->get_title();
+      $icon = theme_image(array(
+        'path' => drupal_get_path('theme', 'bvng') . '/images/rss-feed.gif',
+        'width' => 28,
+        'height' => 28,
+        'alt' => $alt,
+        'title' => t('Subscribe to this list'),
+        'attributes' => array(),
+      ));
+      $icon = l($icon, $feed_url . '/feed', array('html' => TRUE));
+      $variables['feed_icon'] = $icon;
+
+      break;
+  }
 }
 
 /**
@@ -47,20 +113,20 @@ function gbif_scaled_contents_preprocess_node(&$variables) {
   $content = $variables['content'];
 
   // Fields for various blocks.
-  $sidebar_fields = array(
-    'field_researcher_location',
-    'field_link_to_research',
-    'field_gbif_area',
-    'field_study_area',
-    'field_data_source',
-    'field_dataset_uuid',
-    'field_num_rs_used',
-  );
   $footer_fields = array(
     'field_citation_information',
     'field_related_gbif_resources',
   );
+  $sidebar_fields = array(
+    'field_researcher_location',
+    'field_study_area',
+    'field_data_source',
+    'field_link_to_research',
+    'field_dataset_uuid',
+    'field_num_rs_used',
+  );
   $tags_fields = array(
+    'field_gbif_area',
     'tx_about_gbif',
     'tx_capacity_enhancement',
     'tx_audience',
@@ -71,7 +137,7 @@ function gbif_scaled_contents_preprocess_node(&$variables) {
   );
   $node_wrapper = entity_metadata_wrapper('node', $variables['node']);
 
-  if ($node_type == 'news') {
+  if (in_array($node_type, array('news', 'data_use', 'dataset'))) {
     // generating HTML for sidebar fields
     $sidebar = '';
     foreach ($sidebar_fields as $sidebar_field) {
@@ -126,7 +192,6 @@ function gbif_scaled_contents_preprocess_node(&$variables) {
       $variables['sidebar'] .= render($tx_tags_collection);
     }
   }
-
 }
 
 /**

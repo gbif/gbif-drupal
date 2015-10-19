@@ -35,14 +35,14 @@ News {"url":"<front>"}
 -GBIF News {"url":"newsroom\/summary", "description": "News and events from around the GBIF community"}
 --Summary {"url":"newsroom\/summary"}
 --News {"url":"newsroom\/news"}
---Uses of data {"url":"newsroom\/uses"}
----Featured uses of data accessed through GBIF {"url":"page\/82148"}
+--Uses of data {"url":"newsroom\/uses\/summary"}
+---Featured uses of data accessed through GBIF {"url":"page\/82182"}
 --Opportunities {"url":"newsroom\/opportunities"}
 --Events {"url":"newsroom\/events\/upcoming"}
 ---Past events {"url":"newsroom\/events\/past"}
 --Newsletter {"url":"newsroom\/newsletter"}
 --Consultations {"url":"newsroom\/consultations"}
--Featured data use {"url":"newsroom\/uses"}
+-Featured data use {"url":"newsroom\/uses\/summary"}
 -Opportunities {"url":"newsroom\/opportunities"}
 -Events {"url":"newsroom\/events\/upcoming"}
 -Newsletter {"url":"newsroom\/newsletter"}

@@ -59,7 +59,6 @@ function gbif_pages_views_api() {
 
 function gbif_pages_views_register() {
 	$views = array(
-		'featurednewsarticles',
 		'taxonomy_term_json',
 	);
 	return $views;
@@ -191,45 +190,12 @@ function gbif_pages_form_alter(&$form, &$form_state, $form_id) {
     case 'generictemplate_node_form':
       $form['body']['#suffix'] = '<p>' . t('For full-width images, please use 877 pixels as the width and make sure the dimensions are provided in the "Appearance" tab of the image dialogue box.') . '</p>';
       break;
-    case 'newsarticle_node_form':
-      break;
     case 'user_login':
       $form['actions']['submit']['#value'] = t('Login');
       break;
     case 'user_profile_form':
       break;
   }
-}
-
-/**
- * Implements hook_image_default_styles().
- */
-function gbif_pages_image_default_styles() {
-	$styles = array();
-	$styles['featured_news_slideshow_image'] = array(
-		'label' => t('Featured news slideshow image'),
-		'effects' => array(
-			array(
-				'name' => 'image_scale',
-				'data' => array(
-					'width' => 628,
-          'height' => 426,
-					'upscale' => 1,
-				),
-				'weight' => 0,
-			),
-			array(
-				'name' => 'image_crop',
-				'data' => array(
-					'width' => 626,
-					'height' => 424,
-				),
-				'weight' => 1,
-			),
-		),
-	);
-
-	return $styles;
 }
 
 /**

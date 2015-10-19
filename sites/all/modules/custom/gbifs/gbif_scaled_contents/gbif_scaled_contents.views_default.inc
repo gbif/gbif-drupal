@@ -1,17 +1,17 @@
 <?php
 /**
  * @file
- * gbif_legacy_news.views_default.inc
+ * gbif_scaled_contents.views_default.inc
  */
 
 /**
  * Implements hook_views_default_views().
  */
-function gbif_legacy_news_views_default_views() {
+function gbif_scaled_contents_views_default_views() {
   $export = array();
 
   $view = new view();
-  $view->name = 'legacy_news';
+  $view->name = 'news';
   $view->description = 'Latest stories from around our community';
   $view->tag = 'default';
   $view->base_table = 'node';
@@ -85,7 +85,7 @@ function gbif_legacy_news_views_default_views() {
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
   $handler->display->display_options['filters']['type']['value'] = array(
-    'newsarticle' => 'newsarticle',
+    'news' => 'news',
   );
 
   /* Display: Page */
@@ -103,22 +103,22 @@ function gbif_legacy_news_views_default_views() {
   $handler->display->display_options['pager']['options']['tags']['last'] = 'last';
   $handler->display->display_options['defaults']['relationships'] = FALSE;
   $handler->display->display_options['defaults']['arguments'] = FALSE;
-  /* Contextual filter: Content: Regions (field_regions) */
-  $handler->display->display_options['arguments']['field_regions_tid']['id'] = 'field_regions_tid';
-  $handler->display->display_options['arguments']['field_regions_tid']['table'] = 'field_data_field_regions';
-  $handler->display->display_options['arguments']['field_regions_tid']['field'] = 'field_regions_tid';
-  $handler->display->display_options['arguments']['field_regions_tid']['title_enable'] = TRUE;
-  $handler->display->display_options['arguments']['field_regions_tid']['title'] = 'GBIF news about %1';
-  $handler->display->display_options['arguments']['field_regions_tid']['default_argument_type'] = 'fixed';
-  $handler->display->display_options['arguments']['field_regions_tid']['summary']['number_of_records'] = '0';
-  $handler->display->display_options['arguments']['field_regions_tid']['summary']['format'] = 'default_summary';
-  $handler->display->display_options['arguments']['field_regions_tid']['summary_options']['items_per_page'] = '25';
-  $handler->display->display_options['arguments']['field_regions_tid']['specify_validation'] = TRUE;
-  $handler->display->display_options['arguments']['field_regions_tid']['validate']['type'] = 'taxonomy_term';
-  $handler->display->display_options['arguments']['field_regions_tid']['validate_options']['vocabularies'] = array(
-    'regions' => 'regions',
+  /* Contextual filter: Content: GBIF area (field_gbif_area) */
+  $handler->display->display_options['arguments']['field_gbif_area_tid']['id'] = 'field_gbif_area_tid';
+  $handler->display->display_options['arguments']['field_gbif_area_tid']['table'] = 'field_data_field_gbif_area';
+  $handler->display->display_options['arguments']['field_gbif_area_tid']['field'] = 'field_gbif_area_tid';
+  $handler->display->display_options['arguments']['field_gbif_area_tid']['title_enable'] = TRUE;
+  $handler->display->display_options['arguments']['field_gbif_area_tid']['title'] = 'GBIF news about %1';
+  $handler->display->display_options['arguments']['field_gbif_area_tid']['default_argument_type'] = 'fixed';
+  $handler->display->display_options['arguments']['field_gbif_area_tid']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['field_gbif_area_tid']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['field_gbif_area_tid']['summary_options']['items_per_page'] = '25';
+  $handler->display->display_options['arguments']['field_gbif_area_tid']['specify_validation'] = TRUE;
+  $handler->display->display_options['arguments']['field_gbif_area_tid']['validate']['type'] = 'taxonomy_term';
+  $handler->display->display_options['arguments']['field_gbif_area_tid']['validate_options']['vocabularies'] = array(
+    'gbif_area' => 'gbif_area',
   );
-  $handler->display->display_options['arguments']['field_regions_tid']['validate_options']['type'] = 'convert';
+  $handler->display->display_options['arguments']['field_gbif_area_tid']['validate_options']['type'] = 'convert';
   $handler->display->display_options['path'] = 'newsroom/news';
   $handler->display->display_options['menu']['title'] = 'A view of all GBIF news articles';
   $handler->display->display_options['menu']['weight'] = '0';
@@ -170,17 +170,18 @@ function gbif_legacy_news_views_default_views() {
   $handler->display->display_options['fields']['title']['alter']['link_class'] = 'title';
   $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['title']['element_default_classes'] = FALSE;
-  /* Field: Content: Featured */
-  $handler->display->display_options['fields']['field_featured']['id'] = 'field_featured';
-  $handler->display->display_options['fields']['field_featured']['table'] = 'field_data_field_featured';
-  $handler->display->display_options['fields']['field_featured']['field'] = 'field_featured';
-  $handler->display->display_options['fields']['field_featured']['label'] = '';
-  $handler->display->display_options['fields']['field_featured']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_featured']['click_sort_column'] = 'fid';
-  $handler->display->display_options['fields']['field_featured']['settings'] = array(
+  /* Field: Content: Images */
+  $handler->display->display_options['fields']['field_uni_images']['id'] = 'field_uni_images';
+  $handler->display->display_options['fields']['field_uni_images']['table'] = 'field_data_field_uni_images';
+  $handler->display->display_options['fields']['field_uni_images']['field'] = 'field_uni_images';
+  $handler->display->display_options['fields']['field_uni_images']['label'] = '';
+  $handler->display->display_options['fields']['field_uni_images']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_uni_images']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_uni_images']['settings'] = array(
     'image_style' => 'featured',
     'image_link' => '',
   );
+  $handler->display->display_options['fields']['field_uni_images']['delta_offset'] = '0';
   /* Field: Content: Body */
   $handler->display->display_options['fields']['body']['id'] = 'body';
   $handler->display->display_options['fields']['body']['table'] = 'field_data_body';
@@ -189,7 +190,7 @@ function gbif_legacy_news_views_default_views() {
   $handler->display->display_options['fields']['body']['alter']['max_length'] = '300';
   $handler->display->display_options['fields']['body']['alter']['ellipsis'] = FALSE;
   $handler->display->display_options['fields']['body']['alter']['more_link_text'] = 'more GBIF news';
-  $handler->display->display_options['fields']['body']['alter']['more_link_path'] = 'newsroom/archive/allnewsarticles';
+  $handler->display->display_options['fields']['body']['alter']['more_link_path'] = 'newsroom/archive/allnewss';
   $handler->display->display_options['fields']['body']['alter']['trim'] = TRUE;
   $handler->display->display_options['fields']['body']['alter']['html'] = TRUE;
   $handler->display->display_options['fields']['body']['element_label_colon'] = FALSE;
@@ -212,18 +213,15 @@ function gbif_legacy_news_views_default_views() {
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
   $handler->display->display_options['filters']['type']['value'] = array(
-    'newsarticle' => 'newsarticle',
+    'news' => 'news',
   );
-  /* Filter criterion: Content: Featured (field_featured:fid) */
-  $handler->display->display_options['filters']['field_featured_fid']['id'] = 'field_featured_fid';
-  $handler->display->display_options['filters']['field_featured_fid']['table'] = 'field_data_field_featured';
-  $handler->display->display_options['filters']['field_featured_fid']['field'] = 'field_featured_fid';
-  $handler->display->display_options['filters']['field_featured_fid']['operator'] = 'not empty';
+  $handler->display->display_options['filters']['type']['group'] = 1;
   /* Filter criterion: Content: Promoted to front page */
   $handler->display->display_options['filters']['promote']['id'] = 'promote';
   $handler->display->display_options['filters']['promote']['table'] = 'node';
   $handler->display->display_options['filters']['promote']['field'] = 'promote';
   $handler->display->display_options['filters']['promote']['value'] = '1';
+  $handler->display->display_options['filters']['promote']['group'] = 1;
 
   /* Display: Block of latest 4 */
   $handler = $view->new_display('block', 'Block of latest 4', 'latest4_fp');
@@ -362,23 +360,22 @@ function gbif_legacy_news_views_default_views() {
   $handler->display->display_options['fields']['created']['date_format'] = 'custom';
   $handler->display->display_options['fields']['created']['custom_date_format'] = 'F jS, Y';
   $handler->display->display_options['defaults']['arguments'] = FALSE;
-  /* Contextual filter: Content: Regions (field_regions) */
-  $handler->display->display_options['arguments']['field_regions_tid']['id'] = 'field_regions_tid';
-  $handler->display->display_options['arguments']['field_regions_tid']['table'] = 'field_data_field_regions';
-  $handler->display->display_options['arguments']['field_regions_tid']['field'] = 'field_regions_tid';
-  $handler->display->display_options['arguments']['field_regions_tid']['title_enable'] = TRUE;
-  $handler->display->display_options['arguments']['field_regions_tid']['title'] = 'GBIF news about %1';
-  $handler->display->display_options['arguments']['field_regions_tid']['default_argument_type'] = 'fixed';
-  $handler->display->display_options['arguments']['field_regions_tid']['summary']['number_of_records'] = '0';
-  $handler->display->display_options['arguments']['field_regions_tid']['summary']['format'] = 'default_summary';
-  $handler->display->display_options['arguments']['field_regions_tid']['summary_options']['items_per_page'] = '25';
-  $handler->display->display_options['arguments']['field_regions_tid']['specify_validation'] = TRUE;
-  $handler->display->display_options['arguments']['field_regions_tid']['validate']['type'] = 'taxonomy_term';
-  $handler->display->display_options['arguments']['field_regions_tid']['validate_options']['vocabularies'] = array(
-    'regions' => 'regions',
+  /* Contextual filter: Content: GBIF area (field_gbif_area) */
+  $handler->display->display_options['arguments']['field_gbif_area_tid']['id'] = 'field_gbif_area_tid';
+  $handler->display->display_options['arguments']['field_gbif_area_tid']['table'] = 'field_data_field_gbif_area';
+  $handler->display->display_options['arguments']['field_gbif_area_tid']['field'] = 'field_gbif_area_tid';
+  $handler->display->display_options['arguments']['field_gbif_area_tid']['title_enable'] = TRUE;
+  $handler->display->display_options['arguments']['field_gbif_area_tid']['title'] = 'GBIF news about %1';
+  $handler->display->display_options['arguments']['field_gbif_area_tid']['default_argument_type'] = 'fixed';
+  $handler->display->display_options['arguments']['field_gbif_area_tid']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['field_gbif_area_tid']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['field_gbif_area_tid']['summary_options']['items_per_page'] = '25';
+  $handler->display->display_options['arguments']['field_gbif_area_tid']['specify_validation'] = TRUE;
+  $handler->display->display_options['arguments']['field_gbif_area_tid']['validate']['type'] = 'taxonomy_term';
+  $handler->display->display_options['arguments']['field_gbif_area_tid']['validate_options']['vocabularies'] = array(
+    'gbif_area' => 'gbif_area',
   );
-  $handler->display->display_options['arguments']['field_regions_tid']['validate_options']['type'] = 'convert';
-  $handler->display->display_options['arguments']['field_regions_tid']['validate']['fail'] = 'ignore';
+  $handler->display->display_options['arguments']['field_gbif_area_tid']['validate_options']['type'] = 'convert';
   $handler->display->display_options['path'] = 'newsroom/news/rss';
   $handler->display->display_options['sitename_title'] = 0;
   $translatables['news'] = array(
@@ -411,6 +408,145 @@ function gbif_legacy_news_views_default_views() {
     t('GBIF news feed'),
   );
   $export['news'] = $view;
+
+  $view = new view();
+  $view->name = 'news_slideshow';
+  $view->description = '';
+  $view->tag = 'default';
+  $view->base_table = 'node';
+  $view->human_name = 'Featured news slideshow';
+  $view->core = 7;
+  $view->api_version = '3.0';
+  $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+
+  /* Display: Master */
+  $handler = $view->new_display('default', 'Master', 'default');
+  $handler->display->display_options['title'] = 'Featured';
+  $handler->display->display_options['use_more_always'] = FALSE;
+  $handler->display->display_options['access']['type'] = 'perm';
+  $handler->display->display_options['cache']['type'] = 'none';
+  $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['exposed_form']['type'] = 'basic';
+  $handler->display->display_options['pager']['type'] = 'some';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '5';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['style_plugin'] = 'slideshow';
+  $handler->display->display_options['style_options']['row_class'] = 'slideshow-row';
+  $handler->display->display_options['style_options']['default_row_class'] = FALSE;
+  $handler->display->display_options['style_options']['row_class_special'] = FALSE;
+  $handler->display->display_options['style_options']['slideshow_type'] = 'views_slideshow_cycle';
+  $handler->display->display_options['style_options']['slideshow_skin'] = 'default';
+  $handler->display->display_options['style_options']['skin_info'] = array(
+    'class' => 'default',
+    'name' => 'Default',
+    'module' => 'views_slideshow',
+    'path' => '',
+    'stylesheets' => array(),
+  );
+  $handler->display->display_options['style_options']['widgets']['top']['views_slideshow_pager']['enable'] = 1;
+  $handler->display->display_options['style_options']['widgets']['top']['views_slideshow_pager']['weight'] = '1';
+  $handler->display->display_options['style_options']['widgets']['top']['views_slideshow_pager']['hide_on_single_slide'] = 1;
+  $handler->display->display_options['style_options']['widgets']['top']['views_slideshow_pager']['type'] = 'views_slideshow_pager_fields';
+  $handler->display->display_options['style_options']['widgets']['top']['views_slideshow_pager']['views_slideshow_pager_fields_fields'] = array(
+    'nid' => 'nid',
+    'title' => 0,
+    'body' => 0,
+    'field_uni_images' => 0,
+  );
+  $handler->display->display_options['style_options']['widgets']['top']['views_slideshow_pager']['views_slideshow_pager_fields_hover'] = 1;
+  $handler->display->display_options['style_options']['widgets']['top']['views_slideshow_controls']['weight'] = '1';
+  $handler->display->display_options['style_options']['widgets']['top']['views_slideshow_controls']['type'] = 'views_slideshow_controls_text';
+  $handler->display->display_options['style_options']['widgets']['top']['views_slideshow_slide_counter']['weight'] = '1';
+  $handler->display->display_options['style_options']['widgets']['bottom']['views_slideshow_pager']['weight'] = '1';
+  $handler->display->display_options['style_options']['widgets']['bottom']['views_slideshow_pager']['type'] = 'views_slideshow_pager_fields';
+  $handler->display->display_options['style_options']['widgets']['bottom']['views_slideshow_pager']['views_slideshow_pager_fields_fields'] = array(
+    'title' => 0,
+    'body' => 0,
+    'field_uni_images' => 0,
+    'nid' => 0,
+  );
+  $handler->display->display_options['style_options']['widgets']['bottom']['views_slideshow_controls']['weight'] = '1';
+  $handler->display->display_options['style_options']['widgets']['bottom']['views_slideshow_controls']['type'] = 'views_slideshow_controls_text';
+  $handler->display->display_options['style_options']['widgets']['bottom']['views_slideshow_slide_counter']['weight'] = '1';
+  $handler->display->display_options['style_options']['views_slideshow_cycle']['timeout'] = '5000';
+  $handler->display->display_options['style_options']['views_slideshow_cycle']['speed'] = '700';
+  $handler->display->display_options['style_options']['views_slideshow_cycle']['delay'] = '0';
+  $handler->display->display_options['style_options']['views_slideshow_cycle']['start_paused'] = 0;
+  $handler->display->display_options['style_options']['views_slideshow_cycle']['remember_slide_days'] = '1';
+  $handler->display->display_options['style_options']['views_slideshow_cycle']['items_per_slide'] = '1';
+  $handler->display->display_options['style_options']['views_slideshow_cycle']['wait_for_image_load_timeout'] = '3000';
+  $handler->display->display_options['style_options']['views_slideshow_cycle']['cleartype'] = 0;
+  $handler->display->display_options['style_options']['views_slideshow_cycle']['cleartypenobg'] = 0;
+  $handler->display->display_options['row_plugin'] = 'fields';
+  /* Field: Content: Title */
+  $handler->display->display_options['fields']['title']['id'] = 'title';
+  $handler->display->display_options['fields']['title']['table'] = 'node';
+  $handler->display->display_options['fields']['title']['field'] = 'title';
+  $handler->display->display_options['fields']['title']['label'] = '';
+  $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
+  $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
+  $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['title']['link_to_node'] = FALSE;
+  /* Field: Content: Body */
+  $handler->display->display_options['fields']['body']['id'] = 'body';
+  $handler->display->display_options['fields']['body']['table'] = 'field_data_body';
+  $handler->display->display_options['fields']['body']['field'] = 'body';
+  $handler->display->display_options['fields']['body']['label'] = '';
+  $handler->display->display_options['fields']['body']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['body']['type'] = 'text_summary_or_trimmed';
+  $handler->display->display_options['fields']['body']['settings'] = array(
+    'trim_length' => '600',
+  );
+  /* Field: Content: Images */
+  $handler->display->display_options['fields']['field_uni_images']['id'] = 'field_uni_images';
+  $handler->display->display_options['fields']['field_uni_images']['table'] = 'field_data_field_uni_images';
+  $handler->display->display_options['fields']['field_uni_images']['field'] = 'field_uni_images';
+  $handler->display->display_options['fields']['field_uni_images']['label'] = '';
+  $handler->display->display_options['fields']['field_uni_images']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_uni_images']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_uni_images']['settings'] = array(
+    'image_style' => 'featured_news_slideshow_image',
+    'image_link' => '',
+  );
+  $handler->display->display_options['fields']['field_uni_images']['delta_offset'] = '0';
+  /* Field: Content: Nid */
+  $handler->display->display_options['fields']['nid']['id'] = 'nid';
+  $handler->display->display_options['fields']['nid']['table'] = 'node';
+  $handler->display->display_options['fields']['nid']['field'] = 'nid';
+  $handler->display->display_options['fields']['nid']['label'] = '';
+  $handler->display->display_options['fields']['nid']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['nid']['element_label_colon'] = FALSE;
+  /* Sort criterion: Content: Post date */
+  $handler->display->display_options['sorts']['created']['id'] = 'created';
+  $handler->display->display_options['sorts']['created']['table'] = 'node';
+  $handler->display->display_options['sorts']['created']['field'] = 'created';
+  $handler->display->display_options['sorts']['created']['order'] = 'DESC';
+  /* Filter criterion: Content: Published */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'node';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['value'] = 1;
+  $handler->display->display_options['filters']['status']['group'] = 1;
+  $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
+  /* Filter criterion: Content: Type */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'node';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'news' => 'news',
+  );
+  $handler->display->display_options['filters']['type']['group'] = 1;
+  $translatables['news_slideshow'] = array(
+    t('Master'),
+    t('Featured'),
+    t('more'),
+    t('Apply'),
+    t('Reset'),
+    t('Sort by'),
+    t('Asc'),
+    t('Desc'),
+  );
+  $export['news_slideshow'] = $view;
 
   return $export;
 }

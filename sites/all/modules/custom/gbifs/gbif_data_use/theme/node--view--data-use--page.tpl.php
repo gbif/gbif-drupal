@@ -79,75 +79,36 @@
  * @ingroup themeable
  */
 ?>
-<div class="container well well-lg well-margin-top<?php print (empty($next_node)) ? ' well-margin-bottom' : ''; ?>">
-  <div class="row">
-    <div class="col-xs-12">
+<article id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?> clearfix"<?php print $attributes; ?>>
+  <div class="node-list">
+    <?php if (!empty($title)): ?>
+      <h2<?php print $title_attributes; ?>><a href="<?php print $node_url; ?>"><?php print $title; ?></a></h2>
+    <?php endif; ?>
 
-      <article id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?> clearfix"<?php print $attributes; ?>>
-        <div class="row">
-          <header class="content-header col-xs-12">
-						<?php if (!empty($type_title)): ?>
-            <h3><?php print render($type_title); ?></h3>
-						<?php endif; ?>
-            <?php print render($title_prefix); ?>
-            <?php if (!empty($title)): ?>
-            <h2<?php print $title_attributes; ?>><?php print $title; ?></h2>
-            <?php endif; ?>
-            <?php print render($title_suffix); ?>
-          </header>
-        </div>
-        <div class="row">
-          <div class="node-content col-xs-8">
-
-            <?php if (user_is_logged_in()): ?>
-            <div class="submitted">
-              <?php print $submitted; ?>
-          		<?php if (!empty($tabs)): ?>
-          			<?php print render($tabs); ?>
-          		<?php endif; ?>
-            </div>
-            <?php endif; ?>
-
-            <?php
-              // Hide comments, tags, and links now so that we can render them later.
-              hide($content['comments']);
-              hide($content['links']);
-              print render($content['field_uni_images']);
-              print render($content['body']);
-            ?>
-            <?php if (!empty($content['field_tags']) || !empty($content['links'])): ?>
-            <footer>
-              <?php print render($content['field_tags']); ?>
-              <?php print render($content['links']); ?>
-              <?php print $node_footer; ?>
-            </footer>
-            <?php endif; ?>
-            <?php print render($content['comments']); ?>
-          </div>
-          <div class="node-sidebar col-xs-3">
-						<?php if (isset($content['service_links'])): ?>
-							<?php print render($content['service_links']); ?>
-						<?php endif; ?>
-            <?php
-              print $sidebar;
-            ?>
-          </div>
-        </div>
-      </article>
+    <?php if (user_is_logged_in()): ?>
+    <div class="submitted">
+      <?php print $submitted; ?>
+  		<?php if (!empty($tabs)): ?>
+  			<?php print render($tabs); ?>
+  		<?php endif; ?>
     </div>
+    <?php endif; ?>
+
+    <?php
+      // Hide comments, tags, and links now so that we can render them later.
+      hide($content['comments']);
+      hide($content['links']);
+      hide($content['field_tags']);
+      print render($content['body']);
+    ?> 
+    <?php if (!empty($content['field_tags']) || !empty($content['links']) || !empty($created)): ?>
+    <footer>
+      <?php if (isset($also_tagged)): ?>
+      <?php print render($also_tagged); ?>
+      <?php endif; ?>
+      <p class="date"><?php print format_date($created, 'custom', 'F jS, Y '); ?></p>
+    </footer>
+    <?php endif; ?>
+    <?php print render($content['comments']); ?>
   </div>
-</div>
-<?php if (!empty($next_node) && in_array($type, array('news', 'dataset', 'data_use'))): ?>
-<div class="container well well-lg well-margin-bottom">
-  <div class="row">
-    <article class="col-xs-12 node-next">
-      <div class="row">
-      	<header class="next-header col-xs-12">
-      		<h3>Next <?php print render($type_title); ?> Story</h3>
-      		<h2><?php print $next_node_link; ?></h2>
-      	</header>
-      </div>
-    </article>
-  </div>
-</div>
-<?php endif; ?>
+</article>

@@ -17,6 +17,13 @@ function gbif_scaled_contents_ctools_plugin_api($module = NULL, $api = NULL) {
 }
 
 /**
+ * Implements hook_views_api().
+ */
+function gbif_scaled_contents_views_api($module = NULL, $api = NULL) {
+  return array("api" => "3.0");
+}
+
+/**
  * Implements hook_image_default_styles().
  */
 function gbif_scaled_contents_image_default_styles() {
@@ -26,23 +33,36 @@ function gbif_scaled_contents_image_default_styles() {
   $styles['featured'] = array(
     'label' => 'Featured block image',
     'effects' => array(
-      4 => array(
-        'name' => 'image_scale',
-        'data' => array(
-          'width' => 273,
-          'height' => '',
-          'upscale' => 0,
-        ),
-        'weight' => 1,
-      ),
-      5 => array(
-        'name' => 'image_crop',
+      13 => array(
+        'name' => 'focal_point_scale_and_crop',
         'data' => array(
           'width' => 271,
           'height' => 171,
-          'anchor' => 'center-center',
+          'focal_point_advanced' => array(
+            'shift_x' => '',
+            'shift_y' => '',
+          ),
         ),
-        'weight' => 2,
+        'weight' => 1,
+      ),
+    ),
+  );
+
+  // Exported image style: featured_news_slideshow_image.
+  $styles['featured_news_slideshow_image'] = array(
+    'label' => 'Featured news slideshow image',
+    'effects' => array(
+      13 => array(
+        'name' => 'focal_point_scale_and_crop',
+        'data' => array(
+          'width' => 628,
+          'height' => 425,
+          'focal_point_advanced' => array(
+            'shift_x' => '',
+            'shift_y' => '',
+          ),
+        ),
+        'weight' => 1,
       ),
     ),
   );

@@ -29,15 +29,30 @@ function gbif_social_media_strongarm() {
   $strongarm->api_version = 1;
   $strongarm->name = 'service_links_category_vocs';
   $strongarm->value = array(
-    22 => 0,
-    15 => 0,
     25 => 0,
+    31 => 0,
+    32 => 0,
+    33 => 0,
+    34 => 0,
+    35 => 0,
+    37 => 0,
+    38 => 0,
+    39 => 0,
+    40 => 0,
+    44 => 0,
+    45 => 0,
+    36 => 0,
+    43 => 0,
+    41 => 0,
+    46 => 0,
+    22 => 0,
+    42 => 0,
+    15 => 0,
     17 => 0,
     16 => 0,
     18 => 0,
     21 => 0,
     30 => 0,
-    24 => 0,
   );
   $export['service_links_category_vocs'] = $strongarm;
 
@@ -262,15 +277,19 @@ function gbif_social_media_strongarm() {
   $strongarm->api_version = 1;
   $strongarm->name = 'service_links_node_types';
   $strongarm->value = array(
+    'data_use' => 'data_use',
     'event' => 'event',
-    'usesofdata' => 'usesofdata',
-    'newsarticle' => 'newsarticle',
-		'resource' => 'resource',
-    'baremetal' => 0,
+    'news' => 'news',
+    'resource' => 'resource',
     'page' => 0,
+    'call' => 0,
     'featureddataset' => 0,
     'gbif_participant' => 0,
     'generictemplate' => 0,
+    'newsarticle' => 0,
+    'dir_organization' => 0,
+    'programme' => 0,
+    'project' => 0,
   );
   $export['service_links_node_types'] = $strongarm;
 

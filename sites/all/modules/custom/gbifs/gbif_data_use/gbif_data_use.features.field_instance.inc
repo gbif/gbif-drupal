@@ -801,7 +801,7 @@ function gbif_data_use_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_researcher_location',
-    'label' => 'Researcher location',
+    'label' => 'Location of Researchers',
     'required' => 0,
     'settings' => array(
       'mediafront' => array(
@@ -1495,12 +1495,12 @@ function gbif_data_use_field_default_field_instances() {
   t('Informatics');
   t('Legacy nid');
   t('Link to research');
+  t('Location of Researchers');
   t('Number of resources used');
   t('Organizations');
   t('Programme');
   t('Purpose');
   t('Related GBIF resources');
-  t('Researcher location');
   t('Study area');
   t('Tags');
   t('The UUID or dataset key that is associated with a GBIF indexed dataset, if any.');

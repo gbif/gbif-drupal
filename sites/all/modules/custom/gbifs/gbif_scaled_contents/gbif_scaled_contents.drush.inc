@@ -29,9 +29,9 @@ function drush_gbif_scaled_contents_migrate() {
   include_once('taxonomy_terms_mapping.php');
   $voc_field_mapping = gbif_scaled_contents_voc_field_mapping();
   $content_type_mapping = array(
-    'newsarticle' => 'news',
+    //'newsarticle' => 'news',
     'usesofdata' => 'data_use',
-    'featureddataset' => 'dataset',
+    //'featureddataset' => 'dataset',
   );
 
   foreach ($content_type_mapping as $old_type => $new_type) {
@@ -324,7 +324,7 @@ function drush_gbif_scaled_contents_migrate() {
     drush_print($count . ' ' . $old_type . 'nodes processed.');
     drush_print($count_published . ' ' . $new_type . ' node(s) published.');
     drush_print($count_unpublished . ' ' . $new_type . ' node(s) unpublished.');
-    drush_print($count_migrated . $old_type . ' node(s) migrated.');  }
+    drush_print($count_migrated . ' ' . $old_type . ' node(s) migrated.');  }
 }
 
 /**

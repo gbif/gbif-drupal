@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * gbif_legacy_news.context.inc
+ * gbif_scaled_contents.context.inc
  */
 
 /**
  * Implements hook_context_default_contexts().
  */
-function gbif_legacy_news_context_default_contexts() {
+function gbif_scaled_contents_context_default_contexts() {
   $export = array();
 
   $context = new stdClass();
@@ -19,7 +19,7 @@ function gbif_legacy_news_context_default_contexts() {
   $context->conditions = array(
     'node' => array(
       'values' => array(
-        'newsarticle' => 'newsarticle',
+        'news' => 'news',
       ),
       'options' => array(
         'node_form' => '1',

@@ -256,7 +256,8 @@ function drush_gbif_scaled_contents_migrate() {
         }
         foreach ($target_fields as $f_name => $f_values) {
           if (count($f_values) !== 0) {
-            $new_node_wrapper->$f_name->set($f_values);
+            $unique_values = array_map('unserialize', array_unique(array_map('serialize', $f_values)));
+            $new_node_wrapper->$f_name->set($unique_values);
           }
         }
 

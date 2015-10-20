@@ -41,6 +41,18 @@ function gbif_scaled_contents_theme($existing, $type, $theme, $path) {
       'template' => 'node--news',
       'path' => $path . '/theme',
     ),
+    'node__view__news__latest1_fp' => array(
+      'template' => 'node--view--news--latest1-fp',
+      'path' => $path . '/theme'
+    ),
+    'node__view__news__latest3' => array(
+      'template' => 'node--view--news--latest3',
+      'path' => $path . '/theme'
+    ),
+    'node__view__news' => array(
+      'template' => 'node--view--news',
+      'path' => $path . '/theme'
+    )
   );
 }
 
@@ -49,13 +61,9 @@ function gbif_scaled_contents_theme($existing, $type, $theme, $path) {
  */
 function gbif_scaled_contents_theme_registry_alter(&$theme_registry) {
   $path = drupal_get_path('module', 'gbif_scaled_contents');
-  $theme_registry['views_view__news__latest1_fp']['template'] = 'views-view--news--latest1-fp';
   $theme_registry['views_view__news__latest1_fp']['path'] = $path . '/theme';
-  $theme_registry['views_view__news__latest3']['template'] = 'views-view--news--latest3';
   $theme_registry['views_view__news__latest3']['path'] = $path . '/theme';
-  $theme_registry['views_view__news__latest4_fp']['template'] = 'views-view--news--latest4-fp';
   $theme_registry['views_view__news__latest4_fp']['path'] = $path . '/theme';
-  $theme_registry['views_view__news__page']['template'] = 'views-view--news--page';
   $theme_registry['views_view__news__page']['preprocess functions'][] = 'gbif_scaled_contents_preprocess_views_view';
   $theme_registry['views_view__news__page']['path'] = $path . '/theme';
 }

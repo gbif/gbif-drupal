@@ -100,7 +100,7 @@
       hide($content['links']);
       hide($content['field_tags']);
       print render($content['body']);
-    ?> 
+    ?>
     <?php if (!empty($content['field_tags']) || !empty($content['links']) || !empty($created)): ?>
     <footer>
       <?php if (isset($also_tagged)): ?>

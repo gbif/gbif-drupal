@@ -279,9 +279,11 @@ function drush_gbif_scaled_contents_migrate() {
 
         // Path, alias, and redirects
         $url_alias = drupal_get_path_alias('node/' . $legacy_node->nid);
+        if (isset($url_alias)) $new_node->path = array('alias' => $url_alias, 'pathauto' => FALSE);
         // redirect for published nodes
         // to update the old node path with the new one.
         // to add old URL alias as a new redirect.
+        /*
         $redirect = new stdClass();
         redirect_object_prepare(
           $redirect,
@@ -295,7 +297,7 @@ function drush_gbif_scaled_contents_migrate() {
         );
         redirect_save($redirect);
         unset($redirect);
-
+        */
         $redirect_results = db_select('redirect', 'r')
           ->fields('r')
           ->condition('redirect', 'node/' . $legacy_node->nid, '=')

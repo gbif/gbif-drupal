@@ -83,6 +83,7 @@ function gbif_data_use_views_default_views() {
   $handler->display->display_options['arguments']['tx_topic_tid']['id'] = 'tx_topic_tid';
   $handler->display->display_options['arguments']['tx_topic_tid']['table'] = 'field_data_tx_topic';
   $handler->display->display_options['arguments']['tx_topic_tid']['field'] = 'tx_topic_tid';
+  $handler->display->display_options['arguments']['tx_topic_tid']['exception']['value'] = '';
   $handler->display->display_options['arguments']['tx_topic_tid']['title_enable'] = TRUE;
   $handler->display->display_options['arguments']['tx_topic_tid']['title'] = 'Featured data uses about %1';
   $handler->display->display_options['arguments']['tx_topic_tid']['default_argument_type'] = 'fixed';
@@ -230,17 +231,18 @@ function gbif_data_use_views_default_views() {
   $handler->display->display_options['fields']['path']['field'] = 'path';
   $handler->display->display_options['fields']['path']['label'] = '';
   $handler->display->display_options['fields']['path']['element_label_colon'] = FALSE;
-  /* Field: Content: Image */
-  $handler->display->display_options['fields']['field_image']['id'] = 'field_image';
-  $handler->display->display_options['fields']['field_image']['table'] = 'field_data_field_image';
-  $handler->display->display_options['fields']['field_image']['field'] = 'field_image';
-  $handler->display->display_options['fields']['field_image']['label'] = '';
-  $handler->display->display_options['fields']['field_image']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_image']['click_sort_column'] = 'fid';
-  $handler->display->display_options['fields']['field_image']['settings'] = array(
-    'image_style' => '',
+  /* Field: Content: Images */
+  $handler->display->display_options['fields']['field_uni_images']['id'] = 'field_uni_images';
+  $handler->display->display_options['fields']['field_uni_images']['table'] = 'field_data_field_uni_images';
+  $handler->display->display_options['fields']['field_uni_images']['field'] = 'field_uni_images';
+  $handler->display->display_options['fields']['field_uni_images']['label'] = '';
+  $handler->display->display_options['fields']['field_uni_images']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_uni_images']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_uni_images']['settings'] = array(
+    'image_style' => 'featured',
     'image_link' => '',
   );
+  $handler->display->display_options['fields']['field_uni_images']['delta_offset'] = '0';
   /* Field: Content: Author uid */
   $handler->display->display_options['fields']['uid']['id'] = 'uid';
   $handler->display->display_options['fields']['uid']['table'] = 'node';

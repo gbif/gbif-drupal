@@ -41,6 +41,13 @@ function gbif_data_use_page_build(&$page) {
 }
 
 /**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function gbif_data_use_form_data_use_node_form_alter(&$form, &$form_state) {
+  $form['field_legacy_nid']['#disabled'] = TRUE;
+}
+
+/**
  * Implements hook_preprocess_page().
  * @param $variables
  */

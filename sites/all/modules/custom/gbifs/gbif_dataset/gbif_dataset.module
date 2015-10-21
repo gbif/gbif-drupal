@@ -5,3 +5,10 @@
  */
 
 include_once 'gbif_dataset.features.inc';
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function gbif_dataset_form_dataset_node_form_alter(&$form, &$form_state) {
+  $form['field_legacy_nid']['#disabled'] = TRUE;
+}

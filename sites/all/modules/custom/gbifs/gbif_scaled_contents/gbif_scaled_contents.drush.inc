@@ -30,9 +30,11 @@ function drush_gbif_scaled_contents_migrate() {
   $voc_field_mapping = gbif_scaled_contents_voc_field_mapping();
   $content_type_mapping = array(
     'newsarticle' => 'news',
-    //'usesofdata' => 'data_use',
-    //'featureddataset' => 'dataset',
+    'usesofdata' => 'data_use',
+    'featureddataset' => 'dataset',
   );
+
+  variable_del('gbif_subject_definition');
 
   foreach ($content_type_mapping as $old_type => $new_type) {
     $entity_query = new EntityFieldQuery();
@@ -284,23 +286,7 @@ function drush_gbif_scaled_contents_migrate() {
           workbench_moderation_moderate($new_node, 'published');
         }
 
-        // redirect for published nodes
-        // this is commented out because pathauto adds new redirect automatically
-        /*
-        $redirect = new stdClass();
-        redirect_object_prepare(
-          $redirect,
-          array(
-            'source' => $url_alias,
-            'source_options' => array(),
-            'redirect' => 'node/' . $new_node->nid,
-            'redirect_options' => array(),
-            'language' => 'en',
-          )
-        );
-        redirect_save($redirect);
-        unset($redirect);
-        */
+        // Updating redirect
         $redirect_results = db_select('redirect', 'r')
           ->fields('r')
           ->condition('redirect', 'node/' . $legacy_node->nid, '=')
@@ -331,6 +317,38 @@ function drush_gbif_scaled_contents_migrate() {
     drush_print($old_type . ' node type deleted.');
 
   }
+
+  // site redirects
+  drush_print('Global redirect...');
+  $site_redirects = array(
+    '/newsroom/uses' => '/newsroom/uses/summary',
+    '/newsroom/uses/all' => '/newsroom/uses',
+  );
+  foreach ($site_redirects as $from => $to) {
+    $redirect = new stdClass();
+    redirect_object_prepare(
+      $redirect,
+      array(
+        'source' => $from,
+        'source_options' => array(),
+        'redirect' => $to,
+        'redirect_options' => array(),
+        'language' => 'en',
+      )
+    );
+    redirect_save($redirect);
+    drush_print('Redirected ' . $from . ' to ' . $to . '.');
+    unset($redirect);
+  }
+
+  // delete unused view
+  $views_to_delete = array('viewallfeaturedarticles', 'featureddatasetsarticles');
+  foreach ($views_to_delete as $v) {
+    $view = views_ui_cache_load($v);
+    $view->delete();
+    drush_print('Unused view ' . $view->name . ' deleted.');
+  }
+
 }
 
 /**

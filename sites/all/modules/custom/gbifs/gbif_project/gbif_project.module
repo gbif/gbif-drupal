@@ -531,9 +531,9 @@ function gbif_project_preprocess_field(&$variables) {
         foreach ($variables['element']['#items'] as $i => $item) {
           $entity_wrapper = entity_metadata_wrapper('node', $item['entity']);
           // news image
-          $field_image = $entity_wrapper->field_image->value();
-          if (!empty($field_image)) {
-            $image_array = field_view_value('node', $item['entity'], 'field_image', $field_image, array(
+          $field_uni_images = $entity_wrapper->field_uni_images->value();
+          if (!empty($field_uni_images)) {
+            $image_array = field_view_value('node', $item['entity'], 'field_uni_images', $field_uni_images, array(
               'type' => 'image',
               'settings' => array(
                 'image_style' => 'teaser_thumbmail'
@@ -576,7 +576,7 @@ function gbif_project_preprocess_field(&$variables) {
           $body_teaser = render($body_array);
 
           $variables['items'][$i]['#markup'] = $image . '<p>' . $link . '</p>' . $body_teaser;
-          unset($image, $image_array, $field_image, $field_body, $body_teaser);
+          unset($image, $image_array, $field_uni_images, $field_body, $body_teaser);
         }
       }
       break;

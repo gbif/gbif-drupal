@@ -576,7 +576,7 @@ function gbif_project_field_default_field_bases() {
           'type' => 'property',
         ),
         'target_bundles' => array(
-          'newsarticle' => 'newsarticle',
+          'news' => 'news',
         ),
       ),
       'target_type' => 'node',

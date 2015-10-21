@@ -38,18 +38,19 @@ function gbif_project_views_default_views() {
   $handler->display->display_options['relationships']['reverse_field_related_news_node']['table'] = 'node';
   $handler->display->display_options['relationships']['reverse_field_related_news_node']['field'] = 'reverse_field_related_news_node';
   $handler->display->display_options['relationships']['reverse_field_related_news_node']['required'] = TRUE;
-  /* Field: Content: Image */
-  $handler->display->display_options['fields']['field_image']['id'] = 'field_image';
-  $handler->display->display_options['fields']['field_image']['table'] = 'field_data_field_image';
-  $handler->display->display_options['fields']['field_image']['field'] = 'field_image';
-  $handler->display->display_options['fields']['field_image']['label'] = '';
-  $handler->display->display_options['fields']['field_image']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_image']['hide_empty'] = TRUE;
-  $handler->display->display_options['fields']['field_image']['click_sort_column'] = 'fid';
-  $handler->display->display_options['fields']['field_image']['settings'] = array(
+  /* Field: Content: Images */
+  $handler->display->display_options['fields']['field_uni_images']['id'] = 'field_uni_images';
+  $handler->display->display_options['fields']['field_uni_images']['table'] = 'field_data_field_uni_images';
+  $handler->display->display_options['fields']['field_uni_images']['field'] = 'field_uni_images';
+  $handler->display->display_options['fields']['field_uni_images']['label'] = '';
+  $handler->display->display_options['fields']['field_uni_images']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_uni_images']['hide_empty'] = TRUE;
+  $handler->display->display_options['fields']['field_uni_images']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_uni_images']['settings'] = array(
     'image_style' => 'teaser_thumbmail',
     'image_link' => 'content',
   );
+  $handler->display->display_options['fields']['field_uni_images']['delta_offset'] = '0';
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
@@ -115,7 +116,7 @@ function gbif_project_views_default_views() {
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
   $handler->display->display_options['filters']['type']['value'] = array(
-    'newsarticle' => 'newsarticle',
+    'news' => 'news',
   );
 
   /* Display: Related news */

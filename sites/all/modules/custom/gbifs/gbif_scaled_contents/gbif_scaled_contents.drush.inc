@@ -286,13 +286,33 @@ function drush_gbif_scaled_contents_migrate() {
           workbench_moderation_moderate($new_node, 'published');
         }
 
+        // Update entityreference from programme/project
+        foreach (array('field_data_field_related_news', 'field_revision_field_related_news') as $table) {
+          $entityrefs = db_select($table, 'f')
+            ->fields('f')
+            ->condition('field_related_news_target_id', $legacy_node->nid, '=')
+            ->execute()
+            ->fetchAll();
+          if (!empty($entityrefs)) {
+            foreach ($entityrefs as $entityref) {
+              $updated = db_update($table)
+                ->fields(array(
+                  'field_related_news_target_id' => $new_node->nid
+                ))
+                ->condition('field_related_news_target_id', $entityref->field_related_news_target_id, '=')
+                ->execute();
+            }
+          }
+          unset($entityrefs, $entityref, $updated);
+        }
+
         // Updating redirect
         $redirect_results = db_select('redirect', 'r')
           ->fields('r')
           ->condition('redirect', 'node/' . $legacy_node->nid, '=')
           ->execute()
           ->fetchAll();
-        // delete old node
+        // delete old node before the redirect is saved
         node_delete($legacy_node->nid);
         drush_print('Old node ' . $legacy_node->nid . ' deleled.');
         $count_migrated++;

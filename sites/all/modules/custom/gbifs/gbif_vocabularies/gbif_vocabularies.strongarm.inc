@@ -22,14 +22,13 @@ function gbif_vocabularies_strongarm() {
   $strongarm->api_version = 1;
   $strongarm->name = 'uuid_features_entity_node';
   $strongarm->value = array(
-    'baremetal' => 0,
     'page' => 0,
     'event' => 0,
-    'featureddataset' => 0,
-    'usesofdata' => 0,
+    'dataset' => 0,
+    'data_use' => 0,
     'gbif_participant' => 0,
     'generictemplate' => 0,
-    'newsarticle' => 0,
+    'news' => 0,
   );
   $export['uuid_features_entity_node'] = $strongarm;
 

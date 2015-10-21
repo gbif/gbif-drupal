@@ -42,11 +42,6 @@ function gbif_analytics_menu() {
 		'page arguments' => array('about', 2),
 		'access callback' => TRUE,
 	);
-  $items['analytics/country/%/report'] = array(
-    'page callback' => '_gbif_analytics_detail_view',
-    'page arguments' => array('report', 2),
-    'access callback' => TRUE,
-  );
 	return $items;
 }
 
@@ -69,12 +64,7 @@ function _gbif_analytics_detail_view($type, $iso2 = NULL, $extra_args = NULL) {
 
 	$base_images_url = $base_url . '/sites/default/files/gbif_analytics/';
 
-  if ($type == 'report') {
-    $country_name = _gbif_analytics_country_name('about', $iso2);
-  }
-  else {
-    $country_name = _gbif_analytics_country_name($type, $iso2);
-  }
+  $country_name = _gbif_analytics_country_name($type, $iso2);
 
 	// safeguard against URLs with countries not found
 	if (is_null($country_name) && !is_null($iso2)) {
@@ -98,19 +88,6 @@ function _gbif_analytics_detail_view($type, $iso2 = NULL, $extra_args = NULL) {
 			. ', and those shared by publishers from other countries.';
 
 	}
-  // download the PDF country report
-  elseif ($type == 'report') {
-    $file = 'gbif_analytics/country/' . $iso2 . '/GBIF_CountryReport_' . $iso2 . '.pdf';
-    $report_file_loc = file_build_uri($file);
-    $file_exists = file_exists(drupal_realpath($report_file_loc));
-    if ($file_exists == TRUE) {
-      $file = $base_url . '/sites/default/files/' . $file;
-      drupal_goto($file, array('absolute' => TRUE));
-    }
-    else {
-      drupal_goto('analytics/global'); // redirect
-    }
-  }
   else {
 		$base_images_url = $base_images_url . 'country' . '/' . $iso2 . '/publishedBy/figure' ;
 		$data_sharing = 'This chart shows the number of records shared by publishers within '

@@ -271,8 +271,8 @@ function bvng_preprocess_node(&$variables) {
   // Prepare the prev/next $node of the same content type.
   if ($variables['node']) {
     switch ($variables['node']->type) {
-      case 'newsarticle':
-      case 'usesofdata':
+      case 'news':
+      case 'data_use':
         $next_node = node_load(prev_next_nid($variables['node']->nid, 'prev'));
         if (is_object($next_node)) {
           $next_node = ($next_node->status == 1) ? $next_node : NULL; // Only refer to published node.
@@ -371,13 +371,6 @@ function bvng_preprocess_node(&$variables) {
     $variables['cchunks_title'] = $cchunks_title;
     $variables['cchunks_content'] = $cchunks_content;
     $variables['cchunks_sidebar'] = $cchunks_sidebar;
-  }
-
-  /* Get footer fields for data use articles.
-   */
-  if (!isset($variables['node_footer'])) {
-    $node_footer = _bvng_get_node_footer_content($variables['node']);
-    $variables['node_footer'] = $node_footer;
   }
 
   /* Process menu_local_tasks()
@@ -750,26 +743,6 @@ function _bvng_get_title_data($node_count = NULL, $user = NULL, $node = NULL) {
   if (isset($title)) {
     return $title;
   }
-}
-
-function _bvng_get_node_footer_content($node) {
-  $markup = '';
-  switch ($node->type) {
-    case 'newsarticle':
-    case 'usesofdata':
-      $fields = array(
-        'field_citationinformation',
-        'field_relatedgbifresources',
-      );
-      foreach ($fields as $field) {
-        if (!empty($node->$field)) {
-        	$item = field_view_field('node', $node, $field);
-     			$markup .= render($item);
-        }
-      }
-      break;
-  }
-  return $markup;
 }
 
 function _bvng_get_tag_links(&$field_items, &$item_list) {

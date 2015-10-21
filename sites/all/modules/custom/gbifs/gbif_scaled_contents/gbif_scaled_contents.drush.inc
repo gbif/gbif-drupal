@@ -71,6 +71,13 @@ function drush_gbif_scaled_contents_migrate() {
         node_object_prepare($new_node);
         $new_node->legacy_node_created = $legacy_node_created;
         $new_node->legacy_node_changed = $legacy_node_changed;
+
+        // Pathauto and URL alias
+        $url_alias = drupal_get_path_alias('node/' . $legacy_node->nid);
+        if (isset($url_alias)) {
+          $new_node->legacy_node_path = $url_alias;
+        }
+
         $new_node_wrapper = entity_metadata_wrapper('node', $new_node);
 
         // Legacy nid
@@ -277,12 +284,8 @@ function drush_gbif_scaled_contents_migrate() {
           workbench_moderation_moderate($new_node, 'published');
         }
 
-        // Path, alias, and redirects
-        $url_alias = drupal_get_path_alias('node/' . $legacy_node->nid);
-        if (isset($url_alias)) $new_node->path = array('alias' => $url_alias, 'pathauto' => FALSE);
         // redirect for published nodes
-        // to update the old node path with the new one.
-        // to add old URL alias as a new redirect.
+        // this is commented out because pathauto adds new redirect automatically
         /*
         $redirect = new stdClass();
         redirect_object_prepare(

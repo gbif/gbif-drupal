@@ -111,6 +111,12 @@ function gbif_scaled_contents_node_presave($node) {
   if (!empty($node->legacy_node_created)) {
     $node->created = $node->legacy_node_created;
   }
+  // Pathauto
+  if (!empty($node->legacy_node_path)) {
+    $node->path['pathauto'] = 0;
+    $node->path['alias'] = $node->legacy_node_path;
+  }
+
 }
 
 /**

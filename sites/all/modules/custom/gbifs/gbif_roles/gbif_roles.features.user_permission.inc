@@ -74,6 +74,7 @@ function gbif_roles_user_default_permissions() {
       'Administrator' => 'Administrator',
       'Editor' => 'Editor',
       'Publisher' => 'Publisher',
+      'TDWG DQIG' => 'TDWG DQIG',
     ),
     'module' => 'node',
   );
@@ -543,6 +544,15 @@ function gbif_roles_user_default_permissions() {
     'module' => 'user',
   );
 
+  // Exported permission: 'administer prev_next'.
+  $permissions['administer prev_next'] = array(
+    'name' => 'administer prev_next',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'prev_next',
+  );
+
   // Exported permission: 'administer recaptcha'.
   $permissions['administer recaptcha'] = array(
     'name' => 'administer recaptcha',
@@ -824,6 +834,28 @@ function gbif_roles_user_default_permissions() {
     'module' => 'node',
   );
 
+  // Exported permission: 'create data_use content'.
+  $permissions['create data_use content'] = array(
+    'name' => 'create data_use content',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'Editor' => 'Editor',
+      'Publisher' => 'Publisher',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'create dataset content'.
+  $permissions['create dataset content'] = array(
+    'name' => 'create dataset content',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'Editor' => 'Editor',
+      'Publisher' => 'Publisher',
+    ),
+    'module' => 'node',
+  );
+
   // Exported permission: 'create dir_organization content'.
   $permissions['create dir_organization content'] = array(
     'name' => 'create dir_organization content',
@@ -837,16 +869,6 @@ function gbif_roles_user_default_permissions() {
   // Exported permission: 'create event content'.
   $permissions['create event content'] = array(
     'name' => 'create event content',
-    'roles' => array(
-      'Editor' => 'Editor',
-      'Publisher' => 'Publisher',
-    ),
-    'module' => 'node',
-  );
-
-  // Exported permission: 'create featureddataset content'.
-  $permissions['create featureddataset content'] = array(
-    'name' => 'create featureddataset content',
     'roles' => array(
       'Editor' => 'Editor',
       'Publisher' => 'Publisher',
@@ -936,16 +958,6 @@ function gbif_roles_user_default_permissions() {
     'module' => 'path',
   );
 
-  // Exported permission: 'create usesofdata content'.
-  $permissions['create usesofdata content'] = array(
-    'name' => 'create usesofdata content',
-    'roles' => array(
-      'Editor' => 'Editor',
-      'Publisher' => 'Publisher',
-    ),
-    'module' => 'node',
-  );
-
   // Exported permission: 'customize ckeditor'.
   $permissions['customize ckeditor'] = array(
     'name' => 'customize ckeditor',
@@ -975,6 +987,24 @@ function gbif_roles_user_default_permissions() {
     'module' => 'node',
   );
 
+  // Exported permission: 'delete any data_use content'.
+  $permissions['delete any data_use content'] = array(
+    'name' => 'delete any data_use content',
+    'roles' => array(
+      'Publisher' => 'Publisher',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'delete any dataset content'.
+  $permissions['delete any dataset content'] = array(
+    'name' => 'delete any dataset content',
+    'roles' => array(
+      'Publisher' => 'Publisher',
+    ),
+    'module' => 'node',
+  );
+
   // Exported permission: 'delete any dir_organization content'.
   $permissions['delete any dir_organization content'] = array(
     'name' => 'delete any dir_organization content',
@@ -987,15 +1017,6 @@ function gbif_roles_user_default_permissions() {
   // Exported permission: 'delete any event content'.
   $permissions['delete any event content'] = array(
     'name' => 'delete any event content',
-    'roles' => array(
-      'Publisher' => 'Publisher',
-    ),
-    'module' => 'node',
-  );
-
-  // Exported permission: 'delete any featureddataset content'.
-  $permissions['delete any featureddataset content'] = array(
-    'name' => 'delete any featureddataset content',
     'roles' => array(
       'Publisher' => 'Publisher',
     ),
@@ -1065,19 +1086,32 @@ function gbif_roles_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: 'delete any usesofdata content'.
-  $permissions['delete any usesofdata content'] = array(
-    'name' => 'delete any usesofdata content',
+  // Exported permission: 'delete own call content'.
+  $permissions['delete own call content'] = array(
+    'name' => 'delete own call content',
     'roles' => array(
+      'Editor' => 'Editor',
       'Publisher' => 'Publisher',
     ),
     'module' => 'node',
   );
 
-  // Exported permission: 'delete own call content'.
-  $permissions['delete own call content'] = array(
-    'name' => 'delete own call content',
+  // Exported permission: 'delete own data_use content'.
+  $permissions['delete own data_use content'] = array(
+    'name' => 'delete own data_use content',
     'roles' => array(
+      'Administrator' => 'Administrator',
+      'Editor' => 'Editor',
+      'Publisher' => 'Publisher',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'delete own dataset content'.
+  $permissions['delete own dataset content'] = array(
+    'name' => 'delete own dataset content',
+    'roles' => array(
+      'Administrator' => 'Administrator',
       'Editor' => 'Editor',
       'Publisher' => 'Publisher',
     ),
@@ -1097,16 +1131,6 @@ function gbif_roles_user_default_permissions() {
   // Exported permission: 'delete own event content'.
   $permissions['delete own event content'] = array(
     'name' => 'delete own event content',
-    'roles' => array(
-      'Editor' => 'Editor',
-      'Publisher' => 'Publisher',
-    ),
-    'module' => 'node',
-  );
-
-  // Exported permission: 'delete own featureddataset content'.
-  $permissions['delete own featureddataset content'] = array(
-    'name' => 'delete own featureddataset content',
     'roles' => array(
       'Editor' => 'Editor',
       'Publisher' => 'Publisher',
@@ -1185,16 +1209,6 @@ function gbif_roles_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: 'delete own usesofdata content'.
-  $permissions['delete own usesofdata content'] = array(
-    'name' => 'delete own usesofdata content',
-    'roles' => array(
-      'Editor' => 'Editor',
-      'Publisher' => 'Publisher',
-    ),
-    'module' => 'node',
-  );
-
   // Exported permission: 'delete revisions'.
   $permissions['delete revisions'] = array(
     'name' => 'delete revisions',
@@ -1233,6 +1247,13 @@ function gbif_roles_user_default_permissions() {
       'Administrator' => 'Administrator',
       'Publisher' => 'Publisher',
     ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'delete terms in continent'.
+  $permissions['delete terms in continent'] = array(
+    'name' => 'delete terms in continent',
+    'roles' => array(),
     'module' => 'taxonomy',
   );
 
@@ -1280,6 +1301,13 @@ function gbif_roles_user_default_permissions() {
       'Administrator' => 'Administrator',
       'Publisher' => 'Publisher',
     ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'delete terms in gbif_area'.
+  $permissions['delete terms in gbif_area'] = array(
+    'name' => 'delete terms in gbif_area',
+    'roles' => array(),
     'module' => 'taxonomy',
   );
 
@@ -1414,6 +1442,13 @@ function gbif_roles_user_default_permissions() {
     'module' => 'taxonomy',
   );
 
+  // Exported permission: 'delete terms in un_region'.
+  $permissions['delete terms in un_region'] = array(
+    'name' => 'delete terms in un_region',
+    'roles' => array(),
+    'module' => 'taxonomy',
+  );
+
   // Exported permission: 'display drupal links'.
   $permissions['display drupal links'] = array(
     'name' => 'display drupal links',
@@ -1434,6 +1469,28 @@ function gbif_roles_user_default_permissions() {
     'module' => 'node',
   );
 
+  // Exported permission: 'edit any data_use content'.
+  $permissions['edit any data_use content'] = array(
+    'name' => 'edit any data_use content',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'Editor' => 'Editor',
+      'Publisher' => 'Publisher',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'edit any dataset content'.
+  $permissions['edit any dataset content'] = array(
+    'name' => 'edit any dataset content',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'Editor' => 'Editor',
+      'Publisher' => 'Publisher',
+    ),
+    'module' => 'node',
+  );
+
   // Exported permission: 'edit any dir_organization content'.
   $permissions['edit any dir_organization content'] = array(
     'name' => 'edit any dir_organization content',
@@ -1447,16 +1504,6 @@ function gbif_roles_user_default_permissions() {
   // Exported permission: 'edit any event content'.
   $permissions['edit any event content'] = array(
     'name' => 'edit any event content',
-    'roles' => array(
-      'Editor' => 'Editor',
-      'Publisher' => 'Publisher',
-    ),
-    'module' => 'node',
-  );
-
-  // Exported permission: 'edit any featureddataset content'.
-  $permissions['edit any featureddataset content'] = array(
-    'name' => 'edit any featureddataset content',
     'roles' => array(
       'Editor' => 'Editor',
       'Publisher' => 'Publisher',
@@ -1535,16 +1582,6 @@ function gbif_roles_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: 'edit any usesofdata content'.
-  $permissions['edit any usesofdata content'] = array(
-    'name' => 'edit any usesofdata content',
-    'roles' => array(
-      'Editor' => 'Editor',
-      'Publisher' => 'Publisher',
-    ),
-    'module' => 'node',
-  );
-
   // Exported permission: 'edit media'.
   $permissions['edit media'] = array(
     'name' => 'edit media',
@@ -1598,6 +1635,28 @@ function gbif_roles_user_default_permissions() {
     'module' => 'comment',
   );
 
+  // Exported permission: 'edit own data_use content'.
+  $permissions['edit own data_use content'] = array(
+    'name' => 'edit own data_use content',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'Editor' => 'Editor',
+      'Publisher' => 'Publisher',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'edit own dataset content'.
+  $permissions['edit own dataset content'] = array(
+    'name' => 'edit own dataset content',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'Editor' => 'Editor',
+      'Publisher' => 'Publisher',
+    ),
+    'module' => 'node',
+  );
+
   // Exported permission: 'edit own dir_organization content'.
   $permissions['edit own dir_organization content'] = array(
     'name' => 'edit own dir_organization content',
@@ -1611,16 +1670,6 @@ function gbif_roles_user_default_permissions() {
   // Exported permission: 'edit own event content'.
   $permissions['edit own event content'] = array(
     'name' => 'edit own event content',
-    'roles' => array(
-      'Editor' => 'Editor',
-      'Publisher' => 'Publisher',
-    ),
-    'module' => 'node',
-  );
-
-  // Exported permission: 'edit own featureddataset content'.
-  $permissions['edit own featureddataset content'] = array(
-    'name' => 'edit own featureddataset content',
     'roles' => array(
       'Editor' => 'Editor',
       'Publisher' => 'Publisher',
@@ -1699,16 +1748,6 @@ function gbif_roles_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: 'edit own usesofdata content'.
-  $permissions['edit own usesofdata content'] = array(
-    'name' => 'edit own usesofdata content',
-    'roles' => array(
-      'Editor' => 'Editor',
-      'Publisher' => 'Publisher',
-    ),
-    'module' => 'node',
-  );
-
   // Exported permission: 'edit terms in about_gbif'.
   $permissions['edit terms in about_gbif'] = array(
     'name' => 'edit terms in about_gbif',
@@ -1736,6 +1775,13 @@ function gbif_roles_user_default_permissions() {
       'Administrator' => 'Administrator',
       'Publisher' => 'Publisher',
     ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'edit terms in continent'.
+  $permissions['edit terms in continent'] = array(
+    'name' => 'edit terms in continent',
+    'roles' => array(),
     'module' => 'taxonomy',
   );
 
@@ -1783,6 +1829,13 @@ function gbif_roles_user_default_permissions() {
       'Administrator' => 'Administrator',
       'Publisher' => 'Publisher',
     ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'edit terms in gbif_area'.
+  $permissions['edit terms in gbif_area'] = array(
+    'name' => 'edit terms in gbif_area',
+    'roles' => array(),
     'module' => 'taxonomy',
   );
 
@@ -1917,6 +1970,13 @@ function gbif_roles_user_default_permissions() {
     'module' => 'taxonomy',
   );
 
+  // Exported permission: 'edit terms in un_region'.
+  $permissions['edit terms in un_region'] = array(
+    'name' => 'edit terms in un_region',
+    'roles' => array(),
+    'module' => 'taxonomy',
+  );
+
   // Exported permission: 'flush caches'.
   $permissions['flush caches'] = array(
     'name' => 'flush caches',
@@ -2028,6 +2088,15 @@ function gbif_roles_user_default_permissions() {
       'Publisher' => 'Publisher',
     ),
     'module' => 'comment',
+  );
+
+  // Exported permission: 'preview focal point'.
+  $permissions['preview focal point'] = array(
+    'name' => 'preview focal point',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'focal_point',
   );
 
   // Exported permission: 'rename features'.
@@ -2224,6 +2293,7 @@ function gbif_roles_user_default_permissions() {
       'Administrator' => 'Administrator',
       'Editor' => 'Editor',
       'Publisher' => 'Publisher',
+      'TDWG DQIG' => 'TDWG DQIG',
     ),
     'module' => 'filter',
   );

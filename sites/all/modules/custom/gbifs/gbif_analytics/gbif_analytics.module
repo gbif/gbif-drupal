@@ -63,7 +63,8 @@ function _gbif_analytics_detail_view($type, $iso2 = NULL, $extra_args = NULL) {
 	$assets_url = $base_url . '/' . drupal_get_path('module', 'gbif_analytics');
 
 	$base_images_url = $base_url . '/sites/default/files/gbif_analytics/';
-	$country_name = _gbif_analytics_country_name($type, $iso2);
+
+  $country_name = _gbif_analytics_country_name($type, $iso2);
 
 	// safeguard against URLs with countries not found
 	if (is_null($country_name) && !is_null($iso2)) {
@@ -86,7 +87,8 @@ function _gbif_analytics_detail_view($type, $iso2 = NULL, $extra_args = NULL) {
 			. $country_name
 			. ', and those shared by publishers from other countries.';
 
-	} else {
+	}
+  else {
 		$base_images_url = $base_images_url . 'country' . '/' . $iso2 . '/publishedBy/figure' ;
 		$data_sharing = 'This chart shows the number of records shared by publishers within '
 			. $country_name

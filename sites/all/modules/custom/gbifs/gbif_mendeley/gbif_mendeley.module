@@ -711,8 +711,10 @@ function gbif_mendeley_analyse() {
 			foreach ($documents as $k => $doc) {
         if ($doc->type == 'journal') {
           $tag_count = count($tag_set['tags']);
-          if (count(array_intersect($tag_set['tags'], $doc->tags)) == $tag_count) {
-            array_push($$machine_name, $doc);
+          if (is_array($doc->tags)) {
+            if (count(array_intersect($tag_set['tags'], $doc->tags)) == $tag_count) {
+              array_push($$machine_name, $doc);
+            }
           }
         }
 			}
@@ -723,9 +725,10 @@ function gbif_mendeley_analyse() {
           if ($doc->type == 'journal') {
             foreach ($tag_set['tags_alt'] as $tag_alt) {
               $tag_count = count($tag_alt);
-
-              if (count(array_intersect($tag_set['tags_alt'], $doc->tags)) == $tag_count) {
-                array_push($$machine_name, $doc);
+              if (is_array($doc->tags)) {
+                if (count(array_intersect($tag_set['tags_alt'], $doc->tags)) == $tag_count) {
+                  array_push($$machine_name, $doc);
+                }
               }
             }
           }

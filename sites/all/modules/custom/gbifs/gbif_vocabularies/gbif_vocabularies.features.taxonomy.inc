@@ -161,5 +161,13 @@ function gbif_vocabularies_taxonomy_default_vocabularies() {
       'module' => 'taxonomy',
       'weight' => 0,
     ),
+    'content_stream' => array(
+      'name' => 'Content stream',
+      'machine_name' => 'content_stream',
+      'description' => 'Which media/publication the content will go.',
+      'hierarchy' => 0,
+      'module' => 'taxonomy',
+      'weight' => 0,
+    ),
   );
 }

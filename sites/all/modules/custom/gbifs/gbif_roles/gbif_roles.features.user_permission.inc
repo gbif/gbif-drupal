@@ -838,7 +838,6 @@ function gbif_roles_user_default_permissions() {
   $permissions['create data_use content'] = array(
     'name' => 'create data_use content',
     'roles' => array(
-      'Administrator' => 'Administrator',
       'Editor' => 'Editor',
       'Publisher' => 'Publisher',
     ),
@@ -849,7 +848,6 @@ function gbif_roles_user_default_permissions() {
   $permissions['create dataset content'] = array(
     'name' => 'create dataset content',
     'roles' => array(
-      'Administrator' => 'Administrator',
       'Editor' => 'Editor',
       'Publisher' => 'Publisher',
     ),
@@ -1000,6 +998,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['delete any dataset content'] = array(
     'name' => 'delete any dataset content',
     'roles' => array(
+      'Editor' => 'Editor',
       'Publisher' => 'Publisher',
     ),
     'module' => 'node',
@@ -1100,7 +1099,6 @@ function gbif_roles_user_default_permissions() {
   $permissions['delete own data_use content'] = array(
     'name' => 'delete own data_use content',
     'roles' => array(
-      'Administrator' => 'Administrator',
       'Editor' => 'Editor',
       'Publisher' => 'Publisher',
     ),
@@ -1111,7 +1109,6 @@ function gbif_roles_user_default_permissions() {
   $permissions['delete own dataset content'] = array(
     'name' => 'delete own dataset content',
     'roles' => array(
-      'Administrator' => 'Administrator',
       'Editor' => 'Editor',
       'Publisher' => 'Publisher',
     ),
@@ -1445,7 +1442,9 @@ function gbif_roles_user_default_permissions() {
   // Exported permission: 'delete terms in un_region'.
   $permissions['delete terms in un_region'] = array(
     'name' => 'delete terms in un_region',
-    'roles' => array(),
+    'roles' => array(
+      'Publisher' => 'Publisher',
+    ),
     'module' => 'taxonomy',
   );
 
@@ -1473,7 +1472,6 @@ function gbif_roles_user_default_permissions() {
   $permissions['edit any data_use content'] = array(
     'name' => 'edit any data_use content',
     'roles' => array(
-      'Administrator' => 'Administrator',
       'Editor' => 'Editor',
       'Publisher' => 'Publisher',
     ),
@@ -1484,8 +1482,6 @@ function gbif_roles_user_default_permissions() {
   $permissions['edit any dataset content'] = array(
     'name' => 'edit any dataset content',
     'roles' => array(
-      'Administrator' => 'Administrator',
-      'Editor' => 'Editor',
       'Publisher' => 'Publisher',
     ),
     'module' => 'node',
@@ -1639,7 +1635,6 @@ function gbif_roles_user_default_permissions() {
   $permissions['edit own data_use content'] = array(
     'name' => 'edit own data_use content',
     'roles' => array(
-      'Administrator' => 'Administrator',
       'Editor' => 'Editor',
       'Publisher' => 'Publisher',
     ),
@@ -1650,7 +1645,6 @@ function gbif_roles_user_default_permissions() {
   $permissions['edit own dataset content'] = array(
     'name' => 'edit own dataset content',
     'roles' => array(
-      'Administrator' => 'Administrator',
       'Editor' => 'Editor',
       'Publisher' => 'Publisher',
     ),
@@ -1973,7 +1967,9 @@ function gbif_roles_user_default_permissions() {
   // Exported permission: 'edit terms in un_region'.
   $permissions['edit terms in un_region'] = array(
     'name' => 'edit terms in un_region',
-    'roles' => array(),
+    'roles' => array(
+      'Publisher' => 'Publisher',
+    ),
     'module' => 'taxonomy',
   );
 

@@ -154,7 +154,7 @@ function gbif_dataset_views_default_views() {
     'guid_field' => 'field_datasetkey',
     'guid_field_is_permalink' => 0,
   );
-  $handler->display->display_options['path'] = 'dataset/feed';
+  $handler->display->display_options['path'] = 'featured-datasets/feed';
   $handler->display->display_options['displays'] = array(
     'page' => 'page',
     'default' => 0,
@@ -179,7 +179,7 @@ function gbif_dataset_views_default_views() {
   $handler->display->display_options['defaults']['style_options'] = FALSE;
   $handler->display->display_options['defaults']['row_plugin'] = FALSE;
   $handler->display->display_options['defaults']['row_options'] = FALSE;
-  $handler->display->display_options['path'] = 'dataset/json';
+  $handler->display->display_options['path'] = 'featured-datasets/json';
   $translatables['dataset'] = array(
     t('Master'),
     t('more'),

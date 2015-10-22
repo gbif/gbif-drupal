@@ -52,10 +52,10 @@ function gbif_data_use_field_group_info() {
     'children' => array(
       0 => 'field_link_to_research',
       1 => 'field_num_rs_used',
-      2 => 'field_researcher_location',
-      3 => 'field_study_area',
-      4 => 'field_programme',
-      5 => 'field_organizations',
+      2 => 'field_organizations',
+      3 => 'field_programme',
+      4 => 'field_researcher_location',
+      5 => 'field_study_area',
     ),
     'format_type' => 'tab',
     'format_settings' => array(
@@ -95,6 +95,33 @@ function gbif_data_use_field_group_info() {
     ),
   );
   $export['group_citations|node|data_use|form'] = $field_group;
+
+  $field_group = new stdClass();
+  $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
+  $field_group->api_version = 1;
+  $field_group->identifier = 'group_cnt_management|node|data_use|form';
+  $field_group->group_name = 'group_cnt_management';
+  $field_group->entity_type = 'node';
+  $field_group->bundle = 'data_use';
+  $field_group->mode = 'form';
+  $field_group->parent_name = 'group_gbif_cms_taxonomy';
+  $field_group->data = array(
+    'label' => 'Content management',
+    'weight' => '25',
+    'children' => array(
+      0 => 'field_content_stream',
+    ),
+    'format_type' => 'tab',
+    'format_settings' => array(
+      'formatter' => 'closed',
+      'instance_settings' => array(
+        'description' => '',
+        'classes' => 'group-cnt-management field-group-tab',
+        'required_fields' => 1,
+      ),
+    ),
+  );
+  $export['group_cnt_management|node|data_use|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -171,9 +198,10 @@ function gbif_data_use_field_group_info() {
     'label' => 'GBIF CMS Taxonomy',
     'weight' => '8',
     'children' => array(
-      0 => 'group_def_taxonomy',
-      1 => 'group_regions',
-      2 => 'group_topics_tags',
+      0 => 'group_cnt_management',
+      1 => 'group_def_taxonomy',
+      2 => 'group_regions',
+      3 => 'group_topics_tags',
     ),
     'format_type' => 'tabs',
     'format_settings' => array(

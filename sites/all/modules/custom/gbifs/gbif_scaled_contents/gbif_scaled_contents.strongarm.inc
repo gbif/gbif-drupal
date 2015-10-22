@@ -88,6 +88,7 @@ function gbif_scaled_contents_strongarm() {
     'group_gbif_cms_taxonomy|node|dataset|form' => FALSE,
     'group_regions|node|dataset|form' => FALSE,
     'group_topics_tags|node|dataset|form' => FALSE,
+    'group_cnt_management|node|news|form' => FALSE,
   );
   $export['default_field_group'] = $strongarm;
 
@@ -203,7 +204,7 @@ function gbif_scaled_contents_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'prev_next_index_nid';
-  $strongarm->value = 59676;
+  $strongarm->value = 2997;
   $export['prev_next_index_nid'] = $strongarm;
 
   $strongarm = new stdClass();

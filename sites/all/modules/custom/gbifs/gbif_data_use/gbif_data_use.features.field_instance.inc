@@ -173,6 +173,50 @@ function gbif_data_use_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-data_use-field_content_stream'
+  $field_instances['node-data_use-field_content_stream'] = array(
+    'bundle' => 'data_use',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 27,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_content_stream',
+    'label' => 'Content stream',
+    'required' => 1,
+    'settings' => array(
+      'mediafront' => array(
+        'custom' => '',
+        'field_type' => 0,
+        'media_type' => 'media',
+        'preview' => 0,
+        'thumbnail' => 0,
+      ),
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_buttons',
+      'weight' => 42,
+    ),
+  );
+
   // Exported field_instance: 'node-data_use-field_content_tweet'
   $field_instances['node-data_use-field_content_tweet'] = array(
     'bundle' => 'data_use',
@@ -1474,6 +1518,7 @@ function gbif_data_use_field_default_field_instances() {
   t('Capacity enhancement');
   t('Citation information');
   t('Content GBits');
+  t('Content stream');
   t('Content tweet');
   t('Country');
   t('Data source');

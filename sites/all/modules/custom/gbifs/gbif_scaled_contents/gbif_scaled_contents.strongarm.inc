@@ -89,6 +89,10 @@ function gbif_scaled_contents_strongarm() {
     'group_regions|node|dataset|form' => FALSE,
     'group_topics_tags|node|dataset|form' => FALSE,
     'group_cnt_management|node|news|form' => FALSE,
+    'group_content|node|news|form' => FALSE,
+    'group_body|node|news|form' => FALSE,
+    'group_gbits|node|news|form' => FALSE,
+    'group_social_media|node|news|form' => FALSE,
   );
   $export['default_field_group'] = $strongarm;
 
@@ -126,16 +130,16 @@ function gbif_scaled_contents_strongarm() {
     'extra_fields' => array(
       'form' => array(
         'metatags' => array(
-          'weight' => '12',
+          'weight' => '13',
         ),
         'title' => array(
           'weight' => '0',
         ),
         'path' => array(
-          'weight' => '11',
+          'weight' => '12',
         ),
         'redirect' => array(
-          'weight' => '10',
+          'weight' => '11',
         ),
         'twitter' => array(
           'weight' => '2',
@@ -204,7 +208,7 @@ function gbif_scaled_contents_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'prev_next_index_nid';
-  $strongarm->value = 2997;
+  $strongarm->value = 0;
   $export['prev_next_index_nid'] = $strongarm;
 
   $strongarm = new stdClass();

@@ -1321,6 +1321,14 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'field_term_attributes' => array(),
   );
   $terms[] = array(
+    'name' => 'GBits',
+    'description' => '',
+    'format' => 'plain_text',
+    'weight' => 1,
+    'uuid' => '1e97a2e9-7f93-46be-8d79-c85ea4b00204',
+    'vocabulary_machine_name' => 'content_stream',
+  );
+  $terms[] = array(
     'name' => 'PIDs',
     'description' => 'Persistent Identifiers',
     'format' => 'plain_text',
@@ -7667,6 +7675,14 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'field_term_attributes' => array(),
   );
   $terms[] = array(
+    'name' => 'Science review',
+    'description' => '',
+    'format' => 'plain_text',
+    'weight' => 2,
+    'uuid' => 'a17bb594-df1d-4d3e-9bb4-c75a835912b3',
+    'vocabulary_machine_name' => 'content_stream',
+  );
+  $terms[] = array(
     'name' => 'Tonga',
     'description' => NULL,
     'format' => 'plain_text',
@@ -8223,7 +8239,7 @@ function gbif_vocabularies_uuid_features_default_terms() {
     ),
   );
   $terms[] = array(
-    'name' => 'Cimate',
+    'name' => 'Climate',
     'description' => 'Climate impacts',
     'format' => 'plain_text',
     'weight' => 0,
@@ -8237,6 +8253,14 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_attributes' => array(),
+  );
+  $terms[] = array(
+    'name' => 'none',
+    'description' => '',
+    'format' => 'full_html',
+    'weight' => 3,
+    'uuid' => 'b023c35c-6b88-4d05-985e-034da9be4a0d',
+    'vocabulary_machine_name' => 'content_stream',
   );
   $terms[] = array(
     'name' => 'Falkland Islands (Malvinas)',
@@ -10638,6 +10662,14 @@ function gbif_vocabularies_uuid_features_default_terms() {
     ),
   );
   $terms[] = array(
+    'name' => 'Annual report',
+    'description' => '',
+    'format' => 'plain_text',
+    'weight' => 0,
+    'uuid' => 'e63aa23e-4dbf-4ce3-bfee-89bc5a1389e1',
+    'vocabulary_machine_name' => 'content_stream',
+  );
+  $terms[] = array(
     'name' => 'Peru',
     'description' => 'Peru',
     'format' => NULL,
@@ -11980,30 +12012,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'weight' => 4,
     'uuid' => 'ff25fe1c-d969-474d-bf36-fc3ff8dbcc7f',
     'vocabulary_machine_name' => 'resource_type',
-  );
-  $terms[] = array(
-    'name' => 'GBits',
-    'description' => '',
-    'format' => 'plain_text',
-    'weight' => 0,
-    'uuid' => '1e97a2e9-7f93-46be-8d79-c85ea4b00204',
-    'vocabulary_machine_name' => 'content_stream',
-  );
-  $terms[] = array(
-    'name' => 'Annual report',
-    'description' => '',
-    'format' => 'plain_text',
-    'weight' => 0,
-    'uuid' => 'e63aa23e-4dbf-4ce3-bfee-89bc5a1389e1',
-    'vocabulary_machine_name' => 'content_stream',
-  );
-  $terms[] = array(
-    'name' => 'Science review',
-    'description' => '',
-    'format' => 'plain_text',
-    'weight' => 0,
-    'uuid' => 'a17bb594-df1d-4d3e-9bb4-c75a835912b3',
-    'vocabulary_machine_name' => 'content_stream',
   );
   return $terms;
 }

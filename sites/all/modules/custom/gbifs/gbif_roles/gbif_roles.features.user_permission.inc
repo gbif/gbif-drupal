@@ -1250,20 +1250,6 @@ function gbif_roles_user_default_permissions() {
   // Exported permission: 'delete terms in continent'.
   $permissions['delete terms in continent'] = array(
     'name' => 'delete terms in continent',
-    'roles' => array(),
-    'module' => 'taxonomy',
-  );
-
-  // Exported permission: 'delete terms in corenews'.
-  $permissions['delete terms in corenews'] = array(
-    'name' => 'delete terms in corenews',
-    'roles' => array(),
-    'module' => 'taxonomy',
-  );
-
-  // Exported permission: 'delete terms in countries'.
-  $permissions['delete terms in countries'] = array(
-    'name' => 'delete terms in countries',
     'roles' => array(
       'Administrator' => 'Administrator',
       'Publisher' => 'Publisher',
@@ -1271,9 +1257,9 @@ function gbif_roles_user_default_permissions() {
     'module' => 'taxonomy',
   );
 
-  // Exported permission: 'delete terms in data_analysis_and_use'.
-  $permissions['delete terms in data_analysis_and_use'] = array(
-    'name' => 'delete terms in data_analysis_and_use',
+  // Exported permission: 'delete terms in countries'.
+  $permissions['delete terms in countries'] = array(
+    'name' => 'delete terms in countries',
     'roles' => array(
       'Administrator' => 'Administrator',
       'Publisher' => 'Publisher',
@@ -1304,7 +1290,10 @@ function gbif_roles_user_default_permissions() {
   // Exported permission: 'delete terms in gbif_area'.
   $permissions['delete terms in gbif_area'] = array(
     'name' => 'delete terms in gbif_area',
-    'roles' => array(),
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'Publisher' => 'Publisher',
+    ),
     'module' => 'taxonomy',
   );
 
@@ -1332,16 +1321,6 @@ function gbif_roles_user_default_permissions() {
   // Exported permission: 'delete terms in language'.
   $permissions['delete terms in language'] = array(
     'name' => 'delete terms in language',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-      'Publisher' => 'Publisher',
-    ),
-    'module' => 'taxonomy',
-  );
-
-  // Exported permission: 'delete terms in opportunities'.
-  $permissions['delete terms in opportunities'] = array(
-    'name' => 'delete terms in opportunities',
     'roles' => array(
       'Administrator' => 'Administrator',
       'Publisher' => 'Publisher',
@@ -1379,16 +1358,6 @@ function gbif_roles_user_default_permissions() {
     'module' => 'taxonomy',
   );
 
-  // Exported permission: 'delete terms in regions'.
-  $permissions['delete terms in regions'] = array(
-    'name' => 'delete terms in regions',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-      'Publisher' => 'Publisher',
-    ),
-    'module' => 'taxonomy',
-  );
-
   // Exported permission: 'delete terms in resource_type'.
   $permissions['delete terms in resource_type'] = array(
     'name' => 'delete terms in resource_type',
@@ -1412,16 +1381,6 @@ function gbif_roles_user_default_permissions() {
   // Exported permission: 'delete terms in term_attribute'.
   $permissions['delete terms in term_attribute'] = array(
     'name' => 'delete terms in term_attribute',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-      'Publisher' => 'Publisher',
-    ),
-    'module' => 'taxonomy',
-  );
-
-  // Exported permission: 'delete terms in thematic_tags'.
-  $permissions['delete terms in thematic_tags'] = array(
-    'name' => 'delete terms in thematic_tags',
     'roles' => array(
       'Administrator' => 'Administrator',
       'Publisher' => 'Publisher',
@@ -1775,20 +1734,6 @@ function gbif_roles_user_default_permissions() {
   // Exported permission: 'edit terms in continent'.
   $permissions['edit terms in continent'] = array(
     'name' => 'edit terms in continent',
-    'roles' => array(),
-    'module' => 'taxonomy',
-  );
-
-  // Exported permission: 'edit terms in corenews'.
-  $permissions['edit terms in corenews'] = array(
-    'name' => 'edit terms in corenews',
-    'roles' => array(),
-    'module' => 'taxonomy',
-  );
-
-  // Exported permission: 'edit terms in countries'.
-  $permissions['edit terms in countries'] = array(
-    'name' => 'edit terms in countries',
     'roles' => array(
       'Administrator' => 'Administrator',
       'Publisher' => 'Publisher',
@@ -1796,9 +1741,9 @@ function gbif_roles_user_default_permissions() {
     'module' => 'taxonomy',
   );
 
-  // Exported permission: 'edit terms in data_analysis_and_use'.
-  $permissions['edit terms in data_analysis_and_use'] = array(
-    'name' => 'edit terms in data_analysis_and_use',
+  // Exported permission: 'edit terms in countries'.
+  $permissions['edit terms in countries'] = array(
+    'name' => 'edit terms in countries',
     'roles' => array(
       'Administrator' => 'Administrator',
       'Publisher' => 'Publisher',
@@ -1829,7 +1774,10 @@ function gbif_roles_user_default_permissions() {
   // Exported permission: 'edit terms in gbif_area'.
   $permissions['edit terms in gbif_area'] = array(
     'name' => 'edit terms in gbif_area',
-    'roles' => array(),
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'Publisher' => 'Publisher',
+    ),
     'module' => 'taxonomy',
   );
 
@@ -1857,16 +1805,6 @@ function gbif_roles_user_default_permissions() {
   // Exported permission: 'edit terms in language'.
   $permissions['edit terms in language'] = array(
     'name' => 'edit terms in language',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-      'Publisher' => 'Publisher',
-    ),
-    'module' => 'taxonomy',
-  );
-
-  // Exported permission: 'edit terms in opportunities'.
-  $permissions['edit terms in opportunities'] = array(
-    'name' => 'edit terms in opportunities',
     'roles' => array(
       'Administrator' => 'Administrator',
       'Publisher' => 'Publisher',
@@ -1904,16 +1842,6 @@ function gbif_roles_user_default_permissions() {
     'module' => 'taxonomy',
   );
 
-  // Exported permission: 'edit terms in regions'.
-  $permissions['edit terms in regions'] = array(
-    'name' => 'edit terms in regions',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-      'Publisher' => 'Publisher',
-    ),
-    'module' => 'taxonomy',
-  );
-
   // Exported permission: 'edit terms in resource_type'.
   $permissions['edit terms in resource_type'] = array(
     'name' => 'edit terms in resource_type',
@@ -1937,16 +1865,6 @@ function gbif_roles_user_default_permissions() {
   // Exported permission: 'edit terms in term_attribute'.
   $permissions['edit terms in term_attribute'] = array(
     'name' => 'edit terms in term_attribute',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-      'Publisher' => 'Publisher',
-    ),
-    'module' => 'taxonomy',
-  );
-
-  // Exported permission: 'edit terms in thematic_tags'.
-  $permissions['edit terms in thematic_tags'] = array(
-    'name' => 'edit terms in thematic_tags',
     'roles' => array(
       'Administrator' => 'Administrator',
       'Publisher' => 'Publisher',

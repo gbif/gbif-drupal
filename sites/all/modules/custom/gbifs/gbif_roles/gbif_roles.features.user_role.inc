@@ -22,6 +22,12 @@ function gbif_roles_user_default_roles() {
     'weight' => 4,
   );
 
+  // Exported role: Publisher.
+  $roles['Publisher'] = array(
+    'name' => 'Publisher',
+    'weight' => 3,
+  );
+
   // Exported role: REGISTRY_ADMIN.
   $roles['REGISTRY_ADMIN'] = array(
     'name' => 'REGISTRY_ADMIN',

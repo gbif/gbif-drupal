@@ -31,7 +31,7 @@ function gbif_dataset_node_info() {
     'dataset' => array(
       'name' => t('Dataset'),
       'base' => 'node_content',
-      'description' => t('The data use content type as part of the new content publication workflow.'),
+      'description' => t('The news content type as part of the new content publication workflow.'),
       'has_title' => '1',
       'title_label' => t('Title'),
       'help' => '',

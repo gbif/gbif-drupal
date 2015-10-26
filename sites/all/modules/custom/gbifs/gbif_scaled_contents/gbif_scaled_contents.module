@@ -257,7 +257,7 @@ function gbif_scaled_contents_preprocess_node(&$variables) {
   }
 
   // for views, we provide "also tagged".
-  if (isset($variables['node']) && $variables['node']->type == 'news') {
+  if (isset($variables['node']) && in_array($variables['node']->type, array('news', 'data_use'))) {
     // Get also tagged
     $variables['also_tagged'] = _gbif_scaled_contents_get_also_tag_links($variables['node']);
   }

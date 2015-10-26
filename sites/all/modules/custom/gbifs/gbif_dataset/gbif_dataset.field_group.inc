@@ -21,7 +21,7 @@ function gbif_dataset_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Content annotations',
-    'weight' => '7',
+    'weight' => '8',
     'children' => array(
       0 => 'group_attributes',
       1 => 'group_citations',
@@ -72,6 +72,33 @@ function gbif_dataset_field_group_info() {
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
   $field_group->api_version = 1;
+  $field_group->identifier = 'group_body|node|dataset|form';
+  $field_group->group_name = 'group_body';
+  $field_group->entity_type = 'node';
+  $field_group->bundle = 'dataset';
+  $field_group->mode = 'form';
+  $field_group->parent_name = 'group_content';
+  $field_group->data = array(
+    'label' => 'Body',
+    'weight' => '14',
+    'children' => array(
+      0 => 'body',
+    ),
+    'format_type' => 'tab',
+    'format_settings' => array(
+      'formatter' => 'closed',
+      'instance_settings' => array(
+        'description' => '',
+        'classes' => 'group-body field-group-tab',
+        'required_fields' => 1,
+      ),
+    ),
+  );
+  $export['group_body|node|dataset|form'] = $field_group;
+
+  $field_group = new stdClass();
+  $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
+  $field_group->api_version = 1;
   $field_group->identifier = 'group_citations|node|dataset|form';
   $field_group->group_name = 'group_citations';
   $field_group->entity_type = 'node';
@@ -104,10 +131,10 @@ function gbif_dataset_field_group_info() {
   $field_group->entity_type = 'node';
   $field_group->bundle = 'dataset';
   $field_group->mode = 'form';
-  $field_group->parent_name = 'group_gbif_cms_taxonomy';
+  $field_group->parent_name = 'group_content';
   $field_group->data = array(
     'label' => 'Content management',
-    'weight' => '25',
+    'weight' => '17',
     'children' => array(
       0 => 'field_content_stream',
     ),
@@ -122,6 +149,34 @@ function gbif_dataset_field_group_info() {
     ),
   );
   $export['group_cnt_management|node|dataset|form'] = $field_group;
+
+  $field_group = new stdClass();
+  $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
+  $field_group->api_version = 1;
+  $field_group->identifier = 'group_content|node|dataset|form';
+  $field_group->group_name = 'group_content';
+  $field_group->entity_type = 'node';
+  $field_group->bundle = 'dataset';
+  $field_group->mode = 'form';
+  $field_group->parent_name = '';
+  $field_group->data = array(
+    'label' => 'Content',
+    'weight' => '1',
+    'children' => array(
+      0 => 'group_cnt_management',
+      1 => 'group_body',
+      2 => 'group_gbits',
+      3 => 'group_social_media',
+    ),
+    'format_type' => 'tabs',
+    'format_settings' => array(
+      'formatter' => '',
+      'instance_settings' => array(
+        'classes' => 'group-content field-group-tabs',
+      ),
+    ),
+  );
+  $export['group_content|node|dataset|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -196,12 +251,11 @@ function gbif_dataset_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'GBIF CMS Taxonomy',
-    'weight' => '8',
+    'weight' => '9',
     'children' => array(
-      0 => 'group_cnt_management',
-      1 => 'group_def_taxonomy',
-      2 => 'group_regions',
-      3 => 'group_topics_tags',
+      0 => 'group_def_taxonomy',
+      1 => 'group_regions',
+      2 => 'group_topics_tags',
     ),
     'format_type' => 'tabs',
     'format_settings' => array(
@@ -212,6 +266,33 @@ function gbif_dataset_field_group_info() {
     ),
   );
   $export['group_gbif_cms_taxonomy|node|dataset|form'] = $field_group;
+
+  $field_group = new stdClass();
+  $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
+  $field_group->api_version = 1;
+  $field_group->identifier = 'group_gbits|node|dataset|form';
+  $field_group->group_name = 'group_gbits';
+  $field_group->entity_type = 'node';
+  $field_group->bundle = 'dataset';
+  $field_group->mode = 'form';
+  $field_group->parent_name = 'group_content';
+  $field_group->data = array(
+    'label' => 'GBits',
+    'weight' => '15',
+    'children' => array(
+      0 => 'field_content_gbits',
+    ),
+    'format_type' => 'tab',
+    'format_settings' => array(
+      'formatter' => 'closed',
+      'instance_settings' => array(
+        'description' => '',
+        'classes' => 'group-gbits field-group-tab',
+        'required_fields' => 1,
+      ),
+    ),
+  );
+  $export['group_gbits|node|dataset|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -241,6 +322,34 @@ function gbif_dataset_field_group_info() {
     ),
   );
   $export['group_regions|node|dataset|form'] = $field_group;
+
+  $field_group = new stdClass();
+  $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
+  $field_group->api_version = 1;
+  $field_group->identifier = 'group_social_media|node|dataset|form';
+  $field_group->group_name = 'group_social_media';
+  $field_group->entity_type = 'node';
+  $field_group->bundle = 'dataset';
+  $field_group->mode = 'form';
+  $field_group->parent_name = 'group_content';
+  $field_group->data = array(
+    'label' => 'Social media',
+    'weight' => '16',
+    'children' => array(
+      0 => 'field_content_facebook',
+      1 => 'field_content_tweet',
+    ),
+    'format_type' => 'tab',
+    'format_settings' => array(
+      'formatter' => 'closed',
+      'instance_settings' => array(
+        'description' => '',
+        'classes' => 'group-social-media field-group-tab',
+        'required_fields' => 1,
+      ),
+    ),
+  );
+  $export['group_social_media|node|dataset|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */

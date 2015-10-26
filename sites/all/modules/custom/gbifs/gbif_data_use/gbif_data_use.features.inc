@@ -34,7 +34,7 @@ function gbif_data_use_node_info() {
     'data_use' => array(
       'name' => t('Data use'),
       'base' => 'node_content',
-      'description' => t('The data use content type as part of the new content publication workflow.'),
+      'description' => t('The news content type as part of the new content publication workflow.'),
       'has_title' => '1',
       'title_label' => t('Title'),
       'help' => '',

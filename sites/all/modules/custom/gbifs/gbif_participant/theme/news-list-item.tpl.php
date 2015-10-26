@@ -2,12 +2,11 @@
 	<?php foreach ($items as $k => $item): ?>
 		<?php
 			switch ($item['type']) {
-				case 'News item':
-				case 'Featured data use':
-					$title_link = l($item['title'], 'page/' . $k);
-					break;
+				case 'News':
+				case 'Data use':
 				case 'Event':
-					$title_link = l($item['title'], 'event/' . $k);
+          $url_alias = drupal_get_path_alias('node/' . $k);
+					$title_link = l($item['title'], $url_alias);
 					break;
 			}
 		?>

@@ -97,7 +97,7 @@ function gbif_dataset_strongarm() {
   $strongarm->api_version = 1;
   $strongarm->name = 'menu_options_dataset';
   $strongarm->value = array(
-    0 => 'main-menu',
+    0 => 'gbif-menu',
   );
   $export['menu_options_dataset'] = $strongarm;
 
@@ -105,7 +105,7 @@ function gbif_dataset_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'menu_parent_dataset';
-  $strongarm->value = 'main-menu:0';
+  $strongarm->value = 'gbif-menu:0';
   $export['menu_parent_dataset'] = $strongarm;
 
   $strongarm = new stdClass();

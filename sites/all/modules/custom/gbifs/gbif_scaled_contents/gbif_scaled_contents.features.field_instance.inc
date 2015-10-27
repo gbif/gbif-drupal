@@ -271,58 +271,6 @@ function gbif_scaled_contents_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-news-field_content_tweet'
-  $field_instances['node-news-field_content_tweet'] = array(
-    'bundle' => 'news',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'text',
-        'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 2,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_content_tweet',
-    'label' => 'Content tweet',
-    'required' => 0,
-    'settings' => array(
-      'linkit' => array(
-        'button_text' => 'Search',
-        'enable' => 0,
-        'profile' => '',
-      ),
-      'mediafront' => array(
-        'custom' => '',
-        'field_type' => 0,
-        'media_type' => 'media',
-        'preview' => 0,
-        'thumbnail' => 0,
-      ),
-      'text_processing' => 0,
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'text',
-      'settings' => array(
-        'size' => 140,
-      ),
-      'type' => 'text_textfield',
-      'weight' => 5,
-    ),
-  );
-
   // Exported field_instance: 'node-news-field_country'
   $field_instances['node-news-field_country'] = array(
     'bundle' => 'news',
@@ -1574,7 +1522,6 @@ function gbif_scaled_contents_field_default_field_instances() {
   t('Content Facebook');
   t('Content GBits');
   t('Content stream');
-  t('Content tweet');
   t('Country');
   t('Data source');
   t('Data type');

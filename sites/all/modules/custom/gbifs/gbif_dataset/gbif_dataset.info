@@ -43,7 +43,6 @@ features[field_instance][] = node-dataset-field_citation_information
 features[field_instance][] = node-dataset-field_content_facebook
 features[field_instance][] = node-dataset-field_content_gbits
 features[field_instance][] = node-dataset-field_content_stream
-features[field_instance][] = node-dataset-field_content_tweet
 features[field_instance][] = node-dataset-field_country
 features[field_instance][] = node-dataset-field_data_source
 features[field_instance][] = node-dataset-field_dataset_uuid

@@ -94,10 +94,30 @@ function gbif_scaled_contents_preprocess_views_view(&$variables) {
 }
 
 /**
- * Implements hook_form_FORM_ID_alter().
+ * Implements hook_form_alter().
  */
-function gbif_scaled_contents_form_news_node_form_alter(&$form, &$form_state) {
-  $form['field_legacy_nid']['#disabled'] = TRUE;
+function gbif_scaled_contents_form_alter(&$form, &$form_state, $form_id) {
+  if (in_array($form_id, array('news_node_form', 'data_use_node_form', 'dataset_node_form'))) {
+    $form['field_legacy_nid']['#disabled'] = TRUE;
+    $form['#group_children']['twitter'] = 'group_social_media';
+    $form['twitter']['#group'] = 'group_social_media';
+  }
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ * Make sure that our form alter is called AFTER the same hook provided in twitter
+ */
+function gbif_scaled_contents_module_implements_alter(&$implementations, $hook) {
+  if ($hook == 'form_alter') {
+    // Move my_module_rdf_mapping() to the end of the list. module_implements()
+    // iterates through $implementations with a foreach loop which PHP iterates
+    // in the order that the items were added, so to move an item to the end of
+    // the array, we remove it and then add it.
+    $group = $implementations['gbif_scaled_contents'];
+    unset($implementations['gbif_scaled_contents']);
+    $implementations['gbif_scaled_contents'] = $group;
+  }
 }
 
 /**

@@ -89,10 +89,6 @@ function gbif_scaled_contents_strongarm() {
     'group_regions|node|dataset|form' => FALSE,
     'group_topics_tags|node|dataset|form' => FALSE,
     'group_cnt_management|node|news|form' => FALSE,
-    'group_content|node|news|form' => FALSE,
-    'group_body|node|news|form' => FALSE,
-    'group_gbits|node|news|form' => FALSE,
-    'group_social_media|node|news|form' => FALSE,
   );
   $export['default_field_group'] = $strongarm;
 

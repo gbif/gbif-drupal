@@ -163,8 +163,8 @@ function gbif_scaled_contents_field_group_info() {
     'label' => 'Content',
     'weight' => '1',
     'children' => array(
-      0 => 'group_cnt_management',
-      1 => 'group_body',
+      0 => 'group_body',
+      1 => 'group_cnt_management',
       2 => 'group_gbits',
       3 => 'group_social_media',
     ),
@@ -336,8 +336,8 @@ function gbif_scaled_contents_field_group_info() {
     'label' => 'Social media',
     'weight' => '16',
     'children' => array(
-      0 => 'field_content_facebook',
-      1 => 'field_content_tweet',
+      0 => 'field_facebook_message',
+      1 => 'twitter',
     ),
     'format_type' => 'tab',
     'format_settings' => array(

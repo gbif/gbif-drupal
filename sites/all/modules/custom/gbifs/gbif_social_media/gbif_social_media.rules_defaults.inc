@@ -29,8 +29,10 @@ function gbif_social_media_default_rules_configuration() {
           }
         },
         { "entity_has_field" : { "entity" : [ "node" ], "field" : "field_facebook_message" } },
+        { "entity_has_field" : { "entity" : [ "node" ], "field" : "field_post_to_facebook" } },
         { "NOT data_is_empty" : { "data" : [ "node:field-facebook-message" ] } },
-        { "contents_current_state" : { "node" : [ "node" ], "moderation_state" : "published" } }
+        { "contents_current_state" : { "node" : [ "node" ], "moderation_state" : "published" } },
+        { "data_is" : { "data" : [ "node:field-post-to-facebook" ], "value" : "1" } }
       ],
       "DO" : [
         { "entity_create" : {

@@ -29,25 +29,6 @@ function gbif_scaled_contents_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'field_content_facebook'
-  $field_bases['field_content_facebook'] = array(
-    'active' => 1,
-    'cardinality' => 1,
-    'deleted' => 0,
-    'entity_types' => array(),
-    'field_name' => 'field_content_facebook',
-    'indexes' => array(
-      'format' => array(
-        0 => 'format',
-      ),
-    ),
-    'locked' => 0,
-    'module' => 'text',
-    'settings' => array(),
-    'translatable' => 0,
-    'type' => 'text_with_summary',
-  );
-
   // Exported field_base: 'field_content_gbits'
   $field_bases['field_content_gbits'] = array(
     'active' => 1,
@@ -284,6 +265,31 @@ function gbif_scaled_contents_field_default_field_bases() {
     ),
     'translatable' => 0,
     'type' => 'taxonomy_term_reference',
+  );
+
+  // Exported field_base: 'field_post_to_facebook'
+  $field_bases['field_post_to_facebook'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_post_to_facebook',
+    'indexes' => array(
+      'value' => array(
+        0 => 'value',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'list',
+    'settings' => array(
+      'allowed_values' => array(
+        0 => '',
+        1 => 'Post to Facebook',
+      ),
+      'allowed_values_function' => '',
+    ),
+    'translatable' => 0,
+    'type' => 'list_boolean',
   );
 
   // Exported field_base: 'field_programme'

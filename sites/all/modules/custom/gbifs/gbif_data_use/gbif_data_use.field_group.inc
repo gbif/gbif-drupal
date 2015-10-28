@@ -336,8 +336,9 @@ function gbif_data_use_field_group_info() {
     'label' => 'Social media',
     'weight' => '16',
     'children' => array(
-      0 => 'field_facebook_message',
-      1 => 'twitter',
+      0 => 'field_post_to_facebook',
+      1 => 'field_facebook_message',
+      2 => 'twitter',
     ),
     'format_type' => 'tab',
     'format_settings' => array(

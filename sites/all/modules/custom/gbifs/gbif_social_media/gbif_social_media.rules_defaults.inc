@@ -15,7 +15,7 @@ function gbif_social_media_default_rules_configuration() {
       "OWNER" : "rules",
       "TAGS" : [ "social media" ],
       "REQUIRES" : [ "rules", "workbench_moderation", "fb_autopost_entity" ],
-      "ON" : { "node_insert" : [], "node_update" : [] },
+      "ON" : { "node_update" : [] },
       "IF" : [
         { "node_is_of_type" : {
             "node" : [ "node" ],
@@ -36,10 +36,15 @@ function gbif_social_media_default_rules_configuration() {
         { "entity_create" : {
             "USING" : {
               "type" : "facebook_publication",
-              "param_type" : "link",
+              "param_type" : "post",
               "param_user" : [ "site:current-user" ]
             },
             "PROVIDE" : { "entity_created" : { "entity_created" : "Created entity" } }
+          }
+        },
+        { "data_set" : {
+            "data" : [ "entity-created:field-facebook-name" ],
+            "value" : [ "node:title" ]
           }
         },
         { "data_set" : {
@@ -50,6 +55,16 @@ function gbif_social_media_default_rules_configuration() {
         { "data_set" : {
             "data" : [ "entity-created:field-facebook-link" ],
             "value" : [ "node:url" ]
+          }
+        },
+        { "data_set" : {
+            "data" : [ "entity-created:field-facebook-picture" ],
+            "value" : [ "node:field-uni-images:0:file:url" ]
+          }
+        },
+        { "data_set" : {
+            "data" : [ "entity-created:field-facebook-description" ],
+            "value" : [ "node:body:summary" ]
           }
         },
         { "publish_to_facebook" : {

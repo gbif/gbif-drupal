@@ -699,6 +699,56 @@ function gbif_dataset_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-dataset-field_post_to_facebook'
+  $field_instances['node-dataset-field_post_to_facebook'] = array(
+    'bundle' => 'dataset',
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 30,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_post_to_facebook',
+    'label' => 'Post to Facebook',
+    'required' => 0,
+    'settings' => array(
+      'mediafront' => array(
+        'custom' => '',
+        'field_type' => 0,
+        'media_type' => 'media',
+        'preview' => 0,
+        'thumbnail' => 0,
+      ),
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'display_label' => 0,
+      ),
+      'type' => 'options_onoff',
+      'weight' => 3,
+    ),
+  );
+
   // Exported field_instance: 'node-dataset-field_programme'
   $field_instances['node-dataset-field_programme'] = array(
     'bundle' => 'dataset',
@@ -1533,6 +1583,7 @@ function gbif_dataset_field_default_field_instances() {
   t('Location of Researchers');
   t('Number of resources used');
   t('Organizations');
+  t('Post to Facebook');
   t('Programme');
   t('Purpose');
   t('Related GBIF resources');

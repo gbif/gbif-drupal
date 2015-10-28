@@ -13,6 +13,30 @@ function gbif_social_media_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'fb_permissions_facebook_permissions:3';
+  $strongarm->value = array(
+    0 => 'public_profile',
+    1 => 'publish_actions',
+    2 => 'manage_pages',
+    3 => 'publish_pages',
+  );
+  $export['fb_permissions_facebook_permissions:3'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'fb_permissions_facebook_permissions:8';
+  $strongarm->value = array(
+    0 => 'public_profile',
+    1 => 'publish_actions',
+    2 => 'manage_pages',
+    3 => 'publish_pages',
+  );
+  $export['fb_permissions_facebook_permissions:8'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'service_links_append_to_url';
   $strongarm->value = '';
   $export['service_links_append_to_url'] = $strongarm;

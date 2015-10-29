@@ -135,6 +135,10 @@
 								<input name="optinform$Field0" id="optinform_Field0" type="text" placeholder="Email (required)" class="form-control">
 								<input name="optinform$Field524504240" id="optinform_Field524504240" type="text" placeholder="First name (required)" class="form-control">
 								<input name="optinform$Field524504432" id="optinform_Field524504432" type="text" placeholder="Last name (required)" class="form-control">
+                <input name="optinform$Field524505488" type="text" id="optinform_Field524505488" placeholder="Organization (required)" class="text" />
+                <select name="optinform$Field524505500" id="optinform_Field524505500">
+                  <option value=""></option>
+                </select>
 								<input type="submit" id="optinform_btnSubscribe" name="optinform$btnSubscribe" class="form-submit btn btn-primary" value="Sign me up">
 							</form>
 						</div>

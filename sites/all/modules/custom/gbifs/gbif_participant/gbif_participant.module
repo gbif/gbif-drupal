@@ -698,7 +698,7 @@ function gbif_participant_page_router($iso2 = NULL, $chapter = NULL, $sub_chapte
           $report_file_loc = file_build_uri($file);
           $file_exists = file_exists(drupal_realpath($report_file_loc));
           if ($file_exists == TRUE) {
-            $file = $env['data_portal_base_url'] . '/sites/default/files/' . $file;
+            $file = '/sites/default/files/' . $file;
             drupal_goto($file, array('absolute' => TRUE));
           }
       }

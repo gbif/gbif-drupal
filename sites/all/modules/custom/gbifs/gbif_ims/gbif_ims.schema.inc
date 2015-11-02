@@ -371,6 +371,11 @@ function _gbif_ims_tables() {
 				'resource_typeID' => array('resource_typeID'),
 			),
 		),
+    'gbif_ims_region' => array(
+      'ims_eqv' => '__Region',
+      'description' => 'Region definition. Not sure why it was introduced in 2010.',
+      'fields' => array(),
+    ),
 	);
 	foreach ($schema as $table_name => $table) {
 		$field_source = '_' . $table_name . '_fields';
@@ -2636,4 +2641,23 @@ function _gbif_ims_resource_type_language_fields() {
 		),
 	);
 	return $fields;
+}
+
+function _gbif_ims_region_fields() {
+  $fields = array(
+    'regionID' => array(
+      'ims_eqv' => '__kp_ID',
+      'description' => 'Region ID',
+      'type' => 'int',
+      'not null' => TRUE,
+    ),
+    'region' => array(
+      'ims_eqv' => 'Region',
+      'description' => 'Region name',
+      'type' => 'varchar',
+      'length' => '256',
+      'not null' => TRUE,
+    ),
+  );
+  return $fields;
 }

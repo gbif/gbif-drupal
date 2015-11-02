@@ -24,7 +24,6 @@ dependencies[] = widget_services
 dependencies[] = workbench_moderation
 features[ctools][] = strongarm:strongarm:1
 features[features_api][] = api:2
-features[rules_config][] = rules_post_to_facebook
 features[user_permission][] = access service links
 features[user_permission][] = use PHP for service visibility
 features[variable][] = fb_permissions_facebook_permissions:1

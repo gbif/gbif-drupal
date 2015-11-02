@@ -167,3 +167,16 @@ function gbif_ims_update_7001() {
 		db_create_table($table, $schema[$table]);
 	}
 }
+
+/**
+ * Create new database tables for region attribution.
+ */
+function gbif_ims_update_7002() {
+  $tables = array(
+    'gbif_ims_region',
+  );
+  $schema = _gbif_ims_tables();
+  foreach ($tables as $table) {
+    db_create_table($table, $schema[$table]);
+  }
+}

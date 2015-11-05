@@ -86,7 +86,7 @@ function gbif_scaled_contents_preprocess_views_view(&$variables) {
         'title' => t('Subscribe to this list'),
         'attributes' => array(),
       ));
-      $icon = l($icon, $feed_url . '/feed', array('html' => TRUE));
+      $icon = l($icon, $feed_url, array('html' => TRUE));
       $variables['feed_icon'] = $icon;
 
       break;

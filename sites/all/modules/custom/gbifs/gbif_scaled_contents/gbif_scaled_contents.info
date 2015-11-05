@@ -13,6 +13,7 @@ dependencies[] = gbif_resource
 dependencies[] = gbif_social_media
 dependencies[] = image
 dependencies[] = link
+dependencies[] = list
 dependencies[] = locale
 dependencies[] = number
 dependencies[] = options

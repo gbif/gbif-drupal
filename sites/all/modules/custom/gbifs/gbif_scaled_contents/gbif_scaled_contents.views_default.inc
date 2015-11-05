@@ -337,12 +337,6 @@ function gbif_scaled_contents_views_default_views() {
     'image_link' => '',
   );
   $handler->display->display_options['fields']['field_uni_images']['delta_offset'] = '0';
-  /* Field: Content: Author uid */
-  $handler->display->display_options['fields']['uid']['id'] = 'uid';
-  $handler->display->display_options['fields']['uid']['table'] = 'node';
-  $handler->display->display_options['fields']['uid']['field'] = 'uid';
-  $handler->display->display_options['fields']['uid']['label'] = '';
-  $handler->display->display_options['fields']['uid']['element_label_colon'] = FALSE;
   /* Field: Content: Node UUID */
   $handler->display->display_options['fields']['uuid']['id'] = 'uuid';
   $handler->display->display_options['fields']['uuid']['table'] = 'node';

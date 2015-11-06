@@ -401,3 +401,32 @@ function drush_gbif_scaled_contents_tx_generate() {
   }
   echo ");\n";
 }
+
+/**
+ * Implements hook_views_pre_build().
+ */
+/**
+ * Implements hook_views_pre_build().
+ */
+function gbif_scaled_contents_views_pre_build(&$view) {
+  if ($view->current_display == 'feed_bid') {
+    if (count($view->args) > 0) {
+      $rss_titles = array(
+        'fr' => '',
+        'pt' => '',
+        'es' => '',
+      );
+      switch ($view->args[0]) {
+        case 'fr':
+        case 'FR':
+          break;
+        case 'pt':
+        case 'PT':
+          break;
+        case 'es':
+        case 'ES':
+          break;
+      }
+    }
+  }
+}

@@ -791,12 +791,45 @@ function _gbif_ims_participant_fields() {
 			'length' => '1024',
 			'not null' => FALSE,
 		),
-		'mou2012_date' => array(
-			'ims_eqv' => 'MOU2012_Date',
-			'description' => 'Date of signing the 2012 MOU.',
+		'mou2001_date' => array(
+			'ims_eqv' => 'MOU2001_Date',
+			'description' => 'Date of signing the 2001 MOU.',
 			'mysql_type' => 'DATETIME',
 			'not null' => FALSE,
 		),
+    'mou2001_signatory' => array(
+      'ims_eqv' => 'MOU2001_Signatory',
+      'description' => 'Signatory information about the signing of MOU, includes the name and affiliated institution.',
+      'type' => 'varchar',
+      'length' => '1024',
+      'not null' => FALSE,
+    ),
+    'mou2007_date' => array(
+      'ims_eqv' => 'MOU2007_Date',
+      'description' => 'Date of signing the 2007 MOU.',
+      'mysql_type' => 'DATETIME',
+      'not null' => FALSE,
+    ),
+    'mou2007_signatory' => array(
+      'ims_eqv' => 'MOU2007_Signatory',
+      'description' => 'Signatory information about the signing of MOU, includes the name and affiliated institution.',
+      'type' => 'varchar',
+      'length' => '1024',
+      'not null' => FALSE,
+    ),
+    'mou2012_date' => array(
+      'ims_eqv' => 'MOU2012_Date',
+      'description' => 'Date of signing the 2012 MOU.',
+      'mysql_type' => 'DATETIME',
+      'not null' => FALSE,
+    ),
+    'mou2012_signatory' => array(
+      'ims_eqv' => 'MOU2012_Signatory',
+      'description' => 'Signatory information about the signing of MOU, includes the name and affiliated institution.',
+      'type' => 'varchar',
+      'length' => '1024',
+      'not null' => FALSE,
+    ),
 		'url_hosting' => array(
 			'ims_eqv' => 'Host_URL',
 			'description' => 'URL of the hosting institution.',

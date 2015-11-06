@@ -10,7 +10,9 @@
 module_load_include('inc', 'gbif_ims', 'gbif_ims.schema');
 
 /**
- * Break apart each of the data migration tasks 
+ * Break apart each of the data migration tasks
+ * For each table, the sync script first wipes out all records in the target table,
+ * and then insert records that are retrieved from the FileMaker.
  */
 function _gbif_ims_sync() {
 	$schema = _gbif_ims_tables();
@@ -131,7 +133,9 @@ function _gi_insert_records($result, $table_name, $table) {
 									$value = '01 ' . $value . ' 00:00';
 									$format = 'd F Y H:i';
 									break;
-								case 'MOU2012_Date':
+								case 'MOU2001_Date':
+                case 'MOU2007_Date':
+                case 'MOU2012_Date':
 									// format is (so far...) 'mm/dd/yyyy' so we only patch the time.
 									$value .= ' 00:00';
 									$format = 'm/d/Y H:i';

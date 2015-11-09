@@ -432,6 +432,8 @@ function gbif_scaled_contents_views_default_views() {
 
   /* Display: News JSON for BID */
   $handler = $view->new_display('page', 'News JSON for BID', 'json_bid');
+  $handler->display->display_options['defaults']['title'] = FALSE;
+  $handler->display->display_options['title'] = 'GBIF News for BID';
   $handler->display->display_options['defaults']['pager'] = FALSE;
   $handler->display->display_options['pager']['type'] = 'none';
   $handler->display->display_options['pager']['options']['offset'] = '0';
@@ -441,7 +443,7 @@ function gbif_scaled_contents_views_default_views() {
   $handler->display->display_options['style_options']['top_child_object'] = '';
   $handler->display->display_options['style_options']['plaintext_output'] = 1;
   $handler->display->display_options['style_options']['remove_newlines'] = 0;
-  $handler->display->display_options['style_options']['jsonp_prefix'] = '';
+  $handler->display->display_options['style_options']['jsonp_prefix'] = 'callback';
   $handler->display->display_options['style_options']['using_views_api_mode'] = 0;
   $handler->display->display_options['style_options']['object_arrays'] = 0;
   $handler->display->display_options['style_options']['numeric_strings'] = 0;
@@ -559,6 +561,7 @@ function gbif_scaled_contents_views_default_views() {
     t('News feed only shows news about BID'),
     t('Programme (field_programme)'),
     t('News JSON for BID'),
+    t('GBIF News for BID'),
   );
   $export['news'] = $view;
 

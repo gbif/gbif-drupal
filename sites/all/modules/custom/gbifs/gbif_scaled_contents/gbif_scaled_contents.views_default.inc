@@ -733,5 +733,159 @@ function gbif_scaled_contents_views_default_views() {
   );
   $export['news_slideshow'] = $view;
 
+  $view = new view();
+  $view->name = 'node_json';
+  $view->description = 'Exporting news, data_use and dataset nodes in JSON format.';
+  $view->tag = 'default';
+  $view->base_table = 'node';
+  $view->human_name = 'Node JSON';
+  $view->core = 7;
+  $view->api_version = '3.0';
+  $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+
+  /* Display: Master */
+  $handler = $view->new_display('default', 'Master', 'default');
+  $handler->display->display_options['title'] = 'Node JSON';
+  $handler->display->display_options['use_more_always'] = FALSE;
+  $handler->display->display_options['access']['type'] = 'perm';
+  $handler->display->display_options['cache']['type'] = 'none';
+  $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['exposed_form']['type'] = 'basic';
+  $handler->display->display_options['pager']['type'] = 'some';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '10';
+  $handler->display->display_options['style_plugin'] = 'views_json';
+  $handler->display->display_options['style_options']['root_object'] = '';
+  $handler->display->display_options['style_options']['top_child_object'] = '';
+  $handler->display->display_options['style_options']['plaintext_output'] = 1;
+  $handler->display->display_options['style_options']['remove_newlines'] = 0;
+  $handler->display->display_options['style_options']['jsonp_prefix'] = 'callback';
+  $handler->display->display_options['style_options']['using_views_api_mode'] = 0;
+  $handler->display->display_options['style_options']['object_arrays'] = 0;
+  $handler->display->display_options['style_options']['numeric_strings'] = 0;
+  $handler->display->display_options['style_options']['bigint_string'] = 0;
+  $handler->display->display_options['style_options']['pretty_print'] = 0;
+  $handler->display->display_options['style_options']['unescaped_slashes'] = 0;
+  $handler->display->display_options['style_options']['unescaped_unicode'] = 0;
+  $handler->display->display_options['style_options']['char_encoding'] = array();
+  /* Field: Content: Title */
+  $handler->display->display_options['fields']['title']['id'] = 'title';
+  $handler->display->display_options['fields']['title']['table'] = 'node';
+  $handler->display->display_options['fields']['title']['field'] = 'title';
+  $handler->display->display_options['fields']['title']['label'] = '';
+  $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
+  $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
+  /* Field: Content: Body */
+  $handler->display->display_options['fields']['body']['id'] = 'body';
+  $handler->display->display_options['fields']['body']['table'] = 'field_data_body';
+  $handler->display->display_options['fields']['body']['field'] = 'body';
+  $handler->display->display_options['fields']['body']['label'] = '';
+  $handler->display->display_options['fields']['body']['element_label_colon'] = FALSE;
+  /* Field: Content: Images (field_uni_images:delta) */
+  $handler->display->display_options['fields']['delta']['id'] = 'delta';
+  $handler->display->display_options['fields']['delta']['table'] = 'field_data_field_uni_images';
+  $handler->display->display_options['fields']['delta']['field'] = 'delta';
+  $handler->display->display_options['fields']['delta']['label'] = '';
+  $handler->display->display_options['fields']['delta']['element_label_colon'] = FALSE;
+  /* Field: Content: Related GBIF resources */
+  $handler->display->display_options['fields']['field_related_gbif_resources']['id'] = 'field_related_gbif_resources';
+  $handler->display->display_options['fields']['field_related_gbif_resources']['table'] = 'field_data_field_related_gbif_resources';
+  $handler->display->display_options['fields']['field_related_gbif_resources']['field'] = 'field_related_gbif_resources';
+  $handler->display->display_options['fields']['field_related_gbif_resources']['label'] = '';
+  $handler->display->display_options['fields']['field_related_gbif_resources']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_related_gbif_resources']['click_sort_column'] = 'url';
+  $handler->display->display_options['fields']['field_related_gbif_resources']['type'] = 'link_absolute';
+  $handler->display->display_options['fields']['field_related_gbif_resources']['delta_offset'] = '0';
+  /* Field: Content: Citation information */
+  $handler->display->display_options['fields']['field_citation_information']['id'] = 'field_citation_information';
+  $handler->display->display_options['fields']['field_citation_information']['table'] = 'field_data_field_citation_information';
+  $handler->display->display_options['fields']['field_citation_information']['field'] = 'field_citation_information';
+  $handler->display->display_options['fields']['field_citation_information']['label'] = '';
+  $handler->display->display_options['fields']['field_citation_information']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_citation_information']['delta_offset'] = '0';
+  /* Field: Content: Nid */
+  $handler->display->display_options['fields']['nid']['id'] = 'nid';
+  $handler->display->display_options['fields']['nid']['table'] = 'node';
+  $handler->display->display_options['fields']['nid']['field'] = 'nid';
+  $handler->display->display_options['fields']['nid']['label'] = '';
+  $handler->display->display_options['fields']['nid']['element_label_colon'] = FALSE;
+  /* Field: Content: Type */
+  $handler->display->display_options['fields']['type']['id'] = 'type';
+  $handler->display->display_options['fields']['type']['table'] = 'node';
+  $handler->display->display_options['fields']['type']['field'] = 'type';
+  $handler->display->display_options['fields']['type']['label'] = '';
+  $handler->display->display_options['fields']['type']['element_label_colon'] = FALSE;
+  /* Field: Content: Post date */
+  $handler->display->display_options['fields']['created']['id'] = 'created';
+  $handler->display->display_options['fields']['created']['table'] = 'node';
+  $handler->display->display_options['fields']['created']['field'] = 'created';
+  $handler->display->display_options['fields']['created']['label'] = '';
+  $handler->display->display_options['fields']['created']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['created']['date_format'] = 'mmm_yyyy';
+  $handler->display->display_options['fields']['created']['second_date_format'] = 'mmm_yyyy';
+  /* Field: Content revision: Updated date */
+  $handler->display->display_options['fields']['timestamp']['id'] = 'timestamp';
+  $handler->display->display_options['fields']['timestamp']['table'] = 'node_revision';
+  $handler->display->display_options['fields']['timestamp']['field'] = 'timestamp';
+  $handler->display->display_options['fields']['timestamp']['label'] = '';
+  $handler->display->display_options['fields']['timestamp']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['timestamp']['date_format'] = 'mmm_yyyy';
+  $handler->display->display_options['fields']['timestamp']['second_date_format'] = 'mmm_yyyy';
+  /* Field: Content: Topic */
+  $handler->display->display_options['fields']['tx_topic']['id'] = 'tx_topic';
+  $handler->display->display_options['fields']['tx_topic']['table'] = 'field_data_tx_topic';
+  $handler->display->display_options['fields']['tx_topic']['field'] = 'tx_topic';
+  $handler->display->display_options['fields']['tx_topic']['label'] = '';
+  $handler->display->display_options['fields']['tx_topic']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['tx_topic']['delta_offset'] = '0';
+  /* Sort criterion: Content: Post date */
+  $handler->display->display_options['sorts']['created']['id'] = 'created';
+  $handler->display->display_options['sorts']['created']['table'] = 'node';
+  $handler->display->display_options['sorts']['created']['field'] = 'created';
+  $handler->display->display_options['sorts']['created']['order'] = 'DESC';
+  /* Contextual filter: Content: Nid */
+  $handler->display->display_options['arguments']['nid']['id'] = 'nid';
+  $handler->display->display_options['arguments']['nid']['table'] = 'node';
+  $handler->display->display_options['arguments']['nid']['field'] = 'nid';
+  $handler->display->display_options['arguments']['nid']['default_action'] = 'default';
+  $handler->display->display_options['arguments']['nid']['default_argument_type'] = 'fixed';
+  $handler->display->display_options['arguments']['nid']['default_argument_options']['argument'] = 'No nid specified.';
+  $handler->display->display_options['arguments']['nid']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['nid']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['nid']['summary_options']['items_per_page'] = '25';
+  /* Filter criterion: Content: Published */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'node';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['value'] = 1;
+  $handler->display->display_options['filters']['status']['group'] = 1;
+  $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
+  /* Filter criterion: Content: Type */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'node';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'data_use' => 'data_use',
+    'dataset' => 'dataset',
+    'news' => 'news',
+  );
+
+  /* Display: Node JSON */
+  $handler = $view->new_display('page', 'Node JSON', 'node_json');
+  $handler->display->display_options['path'] = 'raw-content/%/json';
+  $translatables['node_json'] = array(
+    t('Master'),
+    t('Node JSON'),
+    t('more'),
+    t('Apply'),
+    t('Reset'),
+    t('Sort by'),
+    t('Asc'),
+    t('Desc'),
+    t('.'),
+    t(','),
+    t('All'),
+  );
+  $export['node_json'] = $view;
+
   return $export;
 }

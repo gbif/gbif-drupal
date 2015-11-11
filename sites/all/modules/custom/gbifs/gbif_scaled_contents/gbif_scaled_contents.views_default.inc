@@ -494,6 +494,30 @@ function gbif_scaled_contents_views_default_views() {
   $handler->display->display_options['fields']['path']['field'] = 'path';
   $handler->display->display_options['fields']['path']['label'] = '';
   $handler->display->display_options['fields']['path']['element_label_colon'] = FALSE;
+  /* Field: Content: Images */
+  $handler->display->display_options['fields']['field_uni_images']['id'] = 'field_uni_images';
+  $handler->display->display_options['fields']['field_uni_images']['table'] = 'field_data_field_uni_images';
+  $handler->display->display_options['fields']['field_uni_images']['field'] = 'field_uni_images';
+  $handler->display->display_options['fields']['field_uni_images']['label'] = '';
+  $handler->display->display_options['fields']['field_uni_images']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_uni_images']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_uni_images']['settings'] = array(
+    'image_style' => '',
+    'image_link' => '',
+  );
+  $handler->display->display_options['fields']['field_uni_images']['delta_offset'] = '0';
+  /* Field: Content: Nid */
+  $handler->display->display_options['fields']['nid']['id'] = 'nid';
+  $handler->display->display_options['fields']['nid']['table'] = 'node';
+  $handler->display->display_options['fields']['nid']['field'] = 'nid';
+  $handler->display->display_options['fields']['nid']['label'] = '';
+  $handler->display->display_options['fields']['nid']['element_label_colon'] = FALSE;
+  /* Field: Content: Type */
+  $handler->display->display_options['fields']['type']['id'] = 'type';
+  $handler->display->display_options['fields']['type']['table'] = 'node';
+  $handler->display->display_options['fields']['type']['field'] = 'type';
+  $handler->display->display_options['fields']['type']['label'] = '';
+  $handler->display->display_options['fields']['type']['element_label_colon'] = FALSE;
   $handler->display->display_options['defaults']['arguments'] = FALSE;
   /* Contextual filter: Content: Language */
   $handler->display->display_options['arguments']['language']['id'] = 'language';

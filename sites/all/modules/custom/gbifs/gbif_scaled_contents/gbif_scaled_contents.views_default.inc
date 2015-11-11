@@ -837,6 +837,24 @@ function gbif_scaled_contents_views_default_views() {
   $handler->display->display_options['fields']['tx_topic']['label'] = '';
   $handler->display->display_options['fields']['tx_topic']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['tx_topic']['delta_offset'] = '0';
+  /* Field: Content: Images */
+  $handler->display->display_options['fields']['field_uni_images']['id'] = 'field_uni_images';
+  $handler->display->display_options['fields']['field_uni_images']['table'] = 'field_data_field_uni_images';
+  $handler->display->display_options['fields']['field_uni_images']['field'] = 'field_uni_images';
+  $handler->display->display_options['fields']['field_uni_images']['label'] = '';
+  $handler->display->display_options['fields']['field_uni_images']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_uni_images']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_uni_images']['settings'] = array(
+    'image_style' => '',
+    'image_link' => '',
+  );
+  $handler->display->display_options['fields']['field_uni_images']['delta_offset'] = '0';
+  /* Field: Image field caption: Images (caption) */
+  $handler->display->display_options['fields']['caption']['id'] = 'caption';
+  $handler->display->display_options['fields']['caption']['table'] = 'field_uni_images_field_image_field_caption';
+  $handler->display->display_options['fields']['caption']['field'] = 'caption';
+  $handler->display->display_options['fields']['caption']['label'] = 'field_uni_images_caption';
+  $handler->display->display_options['fields']['caption']['element_label_colon'] = FALSE;
   /* Sort criterion: Content: Post date */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
   $handler->display->display_options['sorts']['created']['table'] = 'node';
@@ -883,6 +901,7 @@ function gbif_scaled_contents_views_default_views() {
     t('Desc'),
     t('.'),
     t(','),
+    t('field_uni_images_caption'),
     t('All'),
   );
   $export['node_json'] = $view;

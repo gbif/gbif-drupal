@@ -491,9 +491,15 @@ function gbif_scaled_contents_path_update($path) {
       ->fetchAssoc();
 
     if (!empty($result)) {
-      $deleted = db_delete('url_alias')
-        ->condition('pid', $result['pid'])
-        ->execute();
+      // Only delete the LANGUAGE_NONE URL alias for multilingual enabled content types.
+      $path_elements = explode('/', $path['source']);
+      $nid = $path_elements[1];
+      $node = node_load($nid);
+      if (in_array($node->type, array('news', 'data_use', 'dataset'))) {
+        $deleted = db_delete('url_alias')
+          ->condition('pid', $result['pid'])
+          ->execute();
+      }
     }
   }
 }

@@ -750,7 +750,7 @@ function gbif_scaled_contents_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'transliteration_file_lowercase';
-  $strongarm->value = 1;
+  $strongarm->value = 0;
   $export['transliteration_file_lowercase'] = $strongarm;
 
   $strongarm = new stdClass();

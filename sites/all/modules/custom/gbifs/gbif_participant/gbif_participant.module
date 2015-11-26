@@ -317,6 +317,10 @@ function gbif_participant_theme($existing, $type, $theme, $path) {
 			'path' => $path . '/theme',
 			'variables' => array('participants' => NULL, 'type' => NULL),
 		),
+    'gp_participant_not_ready' => array(
+      'template' => 'participant-not-ready',
+      'path' => $path . '/theme',
+    ),
 	);
 }
 
@@ -665,6 +669,11 @@ function gbif_participant_page_router($iso2 = NULL, $chapter = NULL, $sub_chapte
 					if ($participantID == NULL) {
 						return MENU_NOT_FOUND;
 					}
+          // If $node object is not ready, chances are a "populate" action is needed.
+          elseif (!isset($node)) {
+            watchdog('gbif_participant', 'The Drupal node for @country is not available. Populate action may be needed.', array('@country' => $results[0]->participant_name_full), WATCHDOG_ERROR, l('Populate','/admin/config/gbif/participant'));
+            return theme('gp_participant_not_ready', array());
+          }
 					else {
             // @see gbif_participant_preprocess_node() for how additional wells
             // are added.
@@ -769,15 +778,15 @@ function gbif_participant_populate() {
 	}
 	else {
 		$message = t('There are ');
-		if (isset($result['insert'])) {
+		if (isset($result['inserted'])) {
 			$inserted_text = format_plural(
-				$result['insert'],
+				$result['inserted'],
 				'1 participant record inserted',
 				'@count participant records inserted',
-				array('@count' => $result['insert'])
+				array('@count' => $result['inserted'])
 			);
 			$message .= $inserted_text;
-			if (isset($result['update'])) {
+			if (isset($result['updated'])) {
 				$message .= ', and ';
 			}
 			else {

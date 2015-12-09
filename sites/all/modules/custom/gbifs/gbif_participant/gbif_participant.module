@@ -19,15 +19,6 @@ function gbif_participant_menu() {
 		'type' => MENU_NORMAL_ITEM,
 		'menu-name' => 'country-page',
 	);
-	$items['admin/config/gbif/participant'] = array(
-		'title' => 'GBIF participant',
-		'description' => t('Configure GBIF participant related features.'),
-		'page callback' => 'drupal_get_form',
-		'page arguments' => array('gbif_participant_settings_form'),
-		'access arguments' => array('administer site configuration'),
-		'type' => MENU_NORMAL_ITEM,
-		'file' => 'gbif_participant.admin.inc',
-	);
 	$items['participation/participant-list'] = array(
 		'title' => t('Participant List'),
 		'description' => 'List of GBIF Participant.',
@@ -350,9 +341,10 @@ function gbif_participant_preprocess_page(&$variables) {
 			unset($variables['page']['menu']['menu_block_gbif_navigation_country_page']);
 		}
 	}
-	elseif (isset($variables)) {
+	elseif (isset($variables) && arg(1) != null) {
 
 		// Check if it's a participant.
+    // @todo To be replaced by Directory API.
 		$results = _gbif_participant_participant_query(NULL, arg(1));
 
 		// Preprocess for the menu tabs.
@@ -412,34 +404,37 @@ function gbif_participant_preprocess_node(&$variables) {
 	if (isset($variables) && $variables['type'] == 'gbif_participant') {
 		$gp_id = field_get_items('node', $variables['node'], 'gp_id');
 		$participantID = $gp_id[0]['value'];
-		$participant = _gbif_participant_participant_query($participantID);
-		$variables['participant_ims'] = $participant[0];
+    if (isset($participantID)) {
+      $node_wrapper = entity_metadata_wrapper('node', $variables['node']);
+      $iso2 = $node_wrapper->gp_iso2->value();
+      $participant = _gbif_participant_participant_query($participantID, $iso2);
+      $variables['participant_ims'] = $participant[0];
+    }
 		$variables['participant_node'] = array();
 
 		// Format the date to only show year.
-		$variables['participant_ims']->member_as_of = date('Y', strtotime($variables['participant_ims']->member_as_of));
+		$variables['participant_ims']['membershipStart'] = date('Y', strtotime($variables['participant_ims']['membershipStart']));
 
-		$timestamp = strtotime($variables['elements']['gp_node_established']['#items'][0]['value']);
-		if ($timestamp != FALSE) {
+		if (isset($variables['elements']['gp_node_established']) && strtotime($variables['elements']['gp_node_established']['#items'][0]['value']) != FALSE) {
+			$timestamp = strtotime($variables['elements']['gp_node_established']['#items'][0]['value']);
 			$year = date('Y', $timestamp);
 			$variables['participant_node']['node_established'] = $year;
 		}
 
-		// Get the rest of the information from the Registry API.
-		// @todo This has to be cleaned up so it's constructed from IMS tables.
+		// Get the rest of the information from the Registry API and Directory API.
 		$json = _gbif_participant_get_registry_participant($participantID);
 
 		// GBIF region
 		$region = $json->gbifRegion;
-		$variables['participant_ims']->gbif_region = _gbif_participant_print_region($region);
+		$variables['participant_ims']['gbif_region'] = _gbif_participant_print_region($region);
 
 		// Contacts
 		$contacts = _gp_get_participant_contacts($participantID);
-		$variables['participant_ims']->contact_participation = _gbif_participant_print_contacts('participation', $contacts, $variables['participant_ims']->iso2);
-		$variables['participant_ims']->contact_contacts = _gbif_participant_print_contacts('contacts', $contacts, $variables['participant_ims']->iso2);
+		$variables['participant_ims']['contact_participation'] = _gbif_participant_print_contacts('participant', $contacts, $variables['participant_ims']['countryCode']);
+		$variables['participant_ims']['contact_node'] = _gbif_participant_print_contacts('node', $contacts, $variables['participant_ims']['countryCode']);
 
 		// Endorsed publishers
-		$variables['participant_ims']->endorsed_publishers = _gbif_participant_print_endorsed_publishers($participantID, $variables['participant_ims']->iso2, 'digest');
+		$variables['participant_ims']['endorsed_publishers'] = _gbif_participant_print_endorsed_publishers($participantID, $variables['participant_ims']['countryCode'], 'digest');
 
 		// Social media
 		if (count($variables['gp_comm_social']) != 0) {
@@ -466,7 +461,10 @@ function gbif_participant_page_build(&$page) {
 	elseif (isset($page) && arg(0) == 'country') {
 		// Prepare the text for use in the banner region.
 		// @todo To move this into an earlier phase of processing.
-		$results = _gbif_participant_participant_query(NULL, arg(1));
+    // @todo To use Directory API.
+    if (arg(1) != NULL) {
+      $results = _gbif_participant_participant_query(NULL, arg(1));
+    }
 		if (arg(1) == NULL && arg(2) == NULL) {
 			$title = t('Countries, territories and islands');
 			$slogan = '';
@@ -476,8 +474,8 @@ function gbif_participant_page_build(&$page) {
 			$slogan = '';
 		}
 		elseif (count($results) == 1) {
-			$gbif_membership = $results[0]->gbif_membership;
-			$participantID = $results[0]->participantID;
+			$gbif_membership = $results[0]['participationStatus'];
+			$participantID = $results[0]['id'];
 
 			$json = _gbif_participant_get_registry_participant($participantID);
 			$region = _gbif_participant_format_region($json->gbifRegion);
@@ -489,12 +487,13 @@ function gbif_participant_page_build(&$page) {
 			$nid = $entity_query->ordered_results[0]->entity_id;
 			$node = node_load($nid);
 
+
 			$title = gbif_participant_country_lookup($json->country, 'iso2', 'title');
 			if ($json->country == 'TW') {
 				$slogan = t('A GBIF Associate Participant Economy from !region', array('!region' => $region));
 			}
 			else {
-				$slogan = t('A GBIF !gbif_membership from !region', array('!gbif_membership' => $gbif_membership, '!region' => $region));
+				$slogan = t('A GBIF !gbif_membership from !region', array('!gbif_membership' => _gp_reader_friendly_membership_type($gbif_membership), '!region' => $region));
 			}
 		}
 		if (arg(2) == 'summary') {
@@ -558,7 +557,8 @@ function gbif_participant_page_router($iso2 = NULL, $chapter = NULL, $sub_chapte
 		}
 		elseif (count($results) <= 1) {
 			// Find the nid.
-			$participantID = $results[0]->participantID;
+			$participantID = $results[0]['id'];
+      // Get the institutional address of the Node.
 
 			$entity_query = new EntityFieldQuery();
 			$entity_query->entityCondition('entity_type', 'node')
@@ -574,11 +574,11 @@ function gbif_participant_page_router($iso2 = NULL, $chapter = NULL, $sub_chapte
 				$node = node_load($nid);
 			}
 
-			// Todo: We might need the $node object for other chapters in the future.
+			// @todo: We might need the $node object for other chapters in the future.
 			switch ($chapter) {
 				case 'summary':
 					//@todo fix no result behaviour.
-					$html = _gbif_participant_country_data($iso2);
+					$html = _gbif_participant_country_data($iso2); // @todo bottleneck
 					$output = _gbif_participant_print_latest_datasets($iso2, $registry_json->key);
 					$html = array_merge($html, $output);
 
@@ -844,114 +844,140 @@ function gbif_participant_membership_types() {
 }
 
 /**
- * @todo Use local json to produce the list.
- * @todo Use http://api.gbif.org/v1/enumeration/country for the source.
- * @return mixed
- */
-function gbif_participant_country_query() {
-	$query = db_select('gbif_ims_country', 'c');
-	$query->leftjoin('gbif_ims_participant', 'p', 'p.countryID = c.countryID');
-	$query->addField('p', 'participantID', 'participantID');
-	$query->addField('c', 'name', 'country_name_full');
-	$query->addField('p', 'name_full', 'participant_name_full');
-	$query->addField('p', 'gbif_membership');
-	$query->addField('c', 'iso2', 'iso2');
-	$result = $query->execute()->fetchAll();
-	return $result;
-}
-
-/**
  * @param null $participantID
  * @param null $iso2
  * @param string $mode determine types of participant to include in the result.
  * @return mixed
  */
 function _gbif_participant_participant_query($participantID = NULL, $iso2 = NULL, $mode = 'COUNTRY') {
-	$query = db_select('gbif_ims_participant', 'p');
-	$query->join('gbif_ims_node', 'n', 'n.participantID = p.participantID');
-	$query->leftjoin('gbif_ims_country', 'c', 'p.countryID = c.countryID');
-	$query->leftjoin('gbif_ims_institution', 'i', 'i.institutionID = p.institutionID');
-	$query->addField('p', 'participantID', 'participantID');
-	$query->addField('p', 'name_full', 'participant_name_full');
-	$query->addField('p', 'name_short', 'participant_abbrev');
-	$query->addField('p', 'member_as_of');
-	$query->addField('p', 'gbif_membership');
-	$query->addField('p', 'mou2012_date');
-	$query->addField('c', 'iso2', 'iso2');
-	$query->addField('n', 'name_full', 'node_name_full');
-	$query->addField('n', 'url', 'node_url');
-	$query->addField('i', 'name', 'institution_name');
-	$query->addField('i', 'address', 'institution_address');
-	$query->addField('i', 'city', 'institution_city');
-	$query->addField('i', 'zip_code', 'institution_zip_code');
-	$query->addField('i', 'state_province', 'institution_state_province');
-	$query->addField('i', 'telephone', 'institution_telephone');
-	$query->addField('i', 'email', 'institution_email');
-	if (isset($participantID)) {
-		$query->condition('p.participantID', $participantID, '=');
-	}
-  if ($mode == 'COUNTRY') {
-    // For country pages, we only query country participants plus Chinese Taipei.
-    if (isset($iso2) && $iso2 <> 'TW') {
-      $query->condition('c.iso2', $iso2, '=');
-      $query->condition(db_or()->condition('p.gbif_membership', array('Associate Country Participant', 'Voting Participant'), 'IN'));
-    }
-    elseif (isset($iso2) && $iso2 == 'TW') {
-      $query->condition('c.iso2', $iso2, '=');
-      $query->condition('p.gbif_membership', array('Other Associate Participant'), 'IN');
-    }
+  $countries = _gbif_participant_country_object();
+  $participants = _gbif_participant_participant_object($participantID);
+  if (isset($participants['results'])) {
+    $participants = $participants['results'];
   }
   else {
-    if (isset($iso2)) {
-      $query->condition('c.iso2', $iso2, '=');
+    $participants[] = $participants;
+  }
+  $results = array();
+
+  // insert "country" name into the participants
+  foreach ($participants as &$participant) {
+    foreach ($countries as $country) {
+      if (isset($participant['countryCode']) && $participant['countryCode'] == $country['iso2']) {
+        $participant['country'] = $country['title'];
+      }
     }
   }
-	$results = $query->execute()->fetchAll();
+  unset($participant);
 
-  // insert "country" name in the result
-  foreach ($results as &$result) {
-    $result->country = gbif_participant_country_lookup($result->iso2, 'iso2', 'title');
+  // strip unwanted data items according to the criteria
+  foreach ($participants as $participant) {
+    if ($mode == 'COUNTRY' && !isset($iso2)) {
+      // For country pages, we only query country participants plus Chinese Taipei.
+      if ($participant['type'] == 'COUNTRY' || (isset($participant['countryCode']) && $participant['countryCode'] == 'TW')) {
+        $results[] = $participant;
+      }
+    }
+    elseif ($mode == 'COUNTRY' && isset($iso2) && $iso2 != 'TW') {
+      if (isset($participant['countryCode']) && $participant['countryCode'] == $iso2 && $participant['type'] == 'COUNTRY') {
+        $results[] = $participant;
+      }
+    }
+    elseif ($mode == 'COUNTRY' && isset($iso2) && $iso2 == 'TW') {
+      if (isset($participant['countryCode']) && $participant['countryCode'] == $iso2 && $participant['type'] == 'OTHER') {
+        $results[] = $participant;
+      }
+    }
   }
+
+  // attach Node information
+  if (count($results) == 1 && isset($results[0]['id'])) {
+    $participant_info = json_decode(_gp_authenticated_call(_gbif_participant_api_participant() . '/' . $results[0]['id']), TRUE);
+    if (!empty($participant_info) && !empty($participant_info['nodes'][0]['id'])) {
+      $results[0] = _gbif_participant_node_info_attach($participant_info);
+    }
+  }
+  elseif (count($results) > 1) {
+    foreach ($results as $result) {
+
+    }
+  }
+
 	return $results;
+}
+
+/**
+ * Helper function for attaching Node information
+ * @todo report missing values so admin can chase them.
+ */
+function _gbif_participant_node_info_attach($participant_info) {
+  if (!empty($participant_info)) {
+    if (!isset($participant_info['nodes'][0])) {
+      watchdog('gbif_participant', 'The node info is not available for @participant.', array('@participant' => $participant_info['name']), WATCHDOG_NOTICE, l('Populate','/admin/config/gbif/participant'));
+    }
+    else {
+      $node_info = json_decode(_gp_authenticated_call(_gbif_participant_api_node() . '/' . $participant_info['nodes'][0]['id']), TRUE);
+      $participant_info['node_name'] = (isset($node_info['name'])) ? $node_info['name'] : NULL;
+      $participant_info['node_acronym'] = (isset($node_info['acronym'])) ? $node_info['acronym'] : NULL;
+      $participant_info['node_address'] = (isset($node_info['address'])) ? $node_info['address'] : NULL;
+      $participant_info['node_url'] = (isset($node_info['nodeUrl'])) ? $node_info['nodeUrl'] : NULL;
+    }
+  }
+  return $participant_info;
 }
 
 /**
  * List participants according to membership types.
  * @param $gbif_membership
  * @return mixed
+ * @see https://github.com/gbif/directory/blob/master/migration/transform.js#L148 for definitions
  */
 function _gbif_participant_membership_query($gbif_membership) {
-	$query = db_select('gbif_ims_participant', 'p');
-	$query->leftJoin('gbif_ims_node', 'n', 'n.participantID = p.participantID');
-	$query->leftJoin('gbif_ims_country', 'c', 'p.countryID = c.countryID');
-	$query->leftJoin('gbif_ims_institution', 'i', 'i.institutionID = p.institutionID');
-	$query->addField('p', 'participantID', 'participantID');
-	$query->addField('p', 'name_full', 'participant_name_full');
-	$query->addField('p', 'name_short', 'participant_abbrev');
-	$query->addField('p', 'member_as_of');
-	$query->addField('p', 'gbif_membership');
-	$query->addField('p', 'mou2012_date');
-	$query->addField('c', 'iso2', 'iso2');
-	$query->addField('n', 'name_full', 'node_name_full');
-	$query->addField('n', 'url', 'node_url');
-	$query->addField('i', 'name', 'institution_name');
-	$query->addField('p', 'url_hosting');
-	$query->condition('p.gbif_membership', $gbif_membership);
-	$query->isNotNull('p.member_as_of');
-	$query->orderBy('p.name_full');
-	$result = $query->execute()->fetchAll();
-	return $result;
+  $participants = json_decode(_gp_authenticated_call(_gbif_participant_api_participants()), TRUE);
+  $participants = $participants['results'];
+  $results = array();
+
+  foreach ($participants as $participant) {
+    switch ($gbif_membership) {
+      case 'VOTING':
+        if ($participant['participationStatus'] == 'VOTING' && $participant['type'] == 'COUNTRY') {
+          $participant['gbif_membership'] = 'Voting Participant';
+          $results[] = $participant;
+        }
+        break;
+      case 'ASSOCIATE':
+        if ($participant['participationStatus'] == 'ASSOCIATE' && $participant['type'] == 'COUNTRY') {
+          $participant['gbif_membership'] = 'Associate Country Participant';
+          $results[] = $participant;
+        }
+        break;
+      case 'OTHER':
+        if ($participant['participationStatus'] == 'ASSOCIATE' && $participant['type'] == 'OTHER') {
+          $participant['gbif_membership'] = 'Other Associate Participant';
+          $results[] = $participant;
+        }
+        break;
+      case 'AFFILIATE':
+        if ($participant['participationStatus'] == 'OBSERVER' && $participant['type'] == 'OTHER') {
+          $participant['gbif_membership'] = 'GBIF Affiliate';
+          $results[] = $participant;
+        }
+        break;
+    }
+  }
+
+	return $results;
 }
 
 /**
  * Temporary helper function. Mainly for formatting.
- * @todo Once the new IMS is ready, values should come from Drupal fields by render().
  */
 function _gbif_participant_print_address_fields($value) {
 	if (!empty($value)) {
 		$value = $value . '<br>';
-		$value = str_replace("\n", '<br>', $value);
-		$value = str_replace('<br><br>', '<br>', $value);
+    $value = str_replace(array("\\r", "\\n"), '<br>', $value);
+		$value = str_replace("<br><br>", "<br>", $value);
+    $value = str_replace("<br><br>", "<br>", $value);
 	}
 	return $value;
 }
@@ -1378,6 +1404,53 @@ function _gp_trend_availability($iso2, $mode) {
 }
 
 /**
+ * An URI wrapper to access Directory API with authentication.
+ * @param $request_uri_wo_version
+ * @return mixed
+ */
+function _gp_authenticated_call($request_uri_wo_version) {
+  // essential variables
+  $env = variable_get('environment_settings');
+
+  $base_url = $env['gbif_api_base_url'];
+  //$base_url = $env['temp_d_api']; // For local development
+  $request_uri = '/v' . $env['gbif_api_version'] . '/directory' . $request_uri_wo_version;
+  //$request_uri = $request_uri_wo_version; // For local development
+
+  $request_url = $base_url . $request_uri;
+  $app_key = 'gbif.drupal';
+  $secret = variable_get('gbif_drupal_secret');
+
+  // Prepare $options for, signing, and eventually for drupal_http_request()
+  $options = array(
+    'method' => 'GET',
+    'data' => NULL,
+    'timeout' => 3,
+    'headers' => array(
+      //HEADER_CONTENT_TYPE => 'application/json; charset=' . CHAR_ENCODING,
+      HEADER_GBIF_USER => 'gbif.drupal',
+      HEADER_ORIGINAL_REQUEST_URL => $request_uri,
+      //HEADER_CONTENT_MD5 => $data_digest_md5,
+    )
+  );
+  // Build string for signing
+  $string_to_sign = gbif_registry_build_string_to_sign($options);
+  // Build signature
+  $signature = gbif_registry_build_signature($string_to_sign, $secret);
+  // Append the authorization header
+  $options['headers']['Authorization'] = GBIF_SCHEME . ' ' . $app_key . ':' . $signature;
+
+  $result_obj = drupal_http_request($request_url, $options);
+
+  // Catch if the Directory API doesn't return data property.
+  if (!isset($result_obj->data)) {
+    watchdog('gbif_participant', 'Unexpected data from GBIF API: @result', array('@result' => $result_obj), WATCHDOG_DEBUG);
+  }
+
+  return $result_obj->data;
+}
+
+/**
  * @param $iso2
  * @param $list_mode
  * @param $repatri_mode 'about', 'from'
@@ -1530,7 +1603,12 @@ function _gp_participant_list_page() {
 	foreach ($types as &$type) {
 		$type['url'] = 'participation/participant-list';
 		$lists[] = l($type['title'], $type['url'], array('fragment' =>  $type['key']));
-		$participants = _gbif_participant_membership_query($type['title']);
+		$participants = _gbif_participant_membership_query(strtoupper($type['key']));
+    // sort participants
+    usort($participants, function($a, $b) {
+      return (strnatcasecmp($a['name'], $b['name']));
+    });
+
 		$count = count($participants);
 		$html[$type['key'] . '_metrics'] = format_plural($count,
 			'@count ' . $type['title'],
@@ -1539,28 +1617,46 @@ function _gp_participant_list_page() {
 
 		// Format date to only year. Produce links.
 		foreach ($participants as &$participant) {
-			$participant->member_as_of = date('Y', strtotime($participant->member_as_of));
-
-			if (in_array($participant->gbif_membership, array('Voting Participant', 'Associate Country Participant'))) {
-				$participant->participant_link = l($participant->participant_name_full, 'country/' . $participant->iso2 . '/participation');
+      if (isset($participant['gbif_membership'])) {
+        $gbif_membership = $participant['gbif_membership'];
+      }
+      if (!isset($participant['nodes'][0]['id'])) {
+        $participant = json_decode(_gp_authenticated_call(_gbif_participant_api_participant() . '/' . $participant['id']), TRUE);
+        $participant = _gbif_participant_node_info_attach($participant);
+      }
+      if (isset($gbif_membership)) {
+        $participant['gbif_membership'] = $gbif_membership;
+      }
+			if (isset($participant['membershipStart'])) {
+				$participant['membershipStart'] = date('Y', strtotime($participant['membershipStart']));
+			}
+			if (in_array($participant['gbif_membership'], array('Voting Participant', 'Associate Country Participant'))) {
+        // catch undefined country code
+        if (!isset($participant['countryCode'])) {
+          $no_countryCode = 1;
+        }
+				$participant['participant_link'] = l($participant['name'], 'country/' . $participant['countryCode'] . '/participation');
 			}
 			else {
-				if (!empty($participant->node_name_full)) {
-					$participant->participant_link = l($participant->participant_name_full, gbif_tweaks_get_data_portal_base_url() . '/node/' . _gbif_participant_get_uuid($participant->participantID));
+				if (!empty($participant['node_name'])) {
+					$participant['participant_link'] = l($participant['name'], gbif_tweaks_get_data_portal_base_url() . '/node/' . _gbif_participant_get_uuid($participant['id']));
 				}
-				elseif (!empty($participant->url_hosting)) {
-					$participant->participant_link = l($participant->participant_name_full, $participant->url_hosting, array('attributes' => array('target' => '_blank')));
+				elseif (!empty($participant['node_url'])) {
+					$participant['participant_link'] = l($participant['name'], $participant['node_url'], array('attributes' => array('target' => '_blank')));
 				}
+        elseif (isset($participant['node_name']) == FALSE && isset($participant['node_url']) == FALSE && $participant['gbif_membership'] == 'GBIF Affiliate') {
+          $participant['participant_link'] = l($participant['name'], $participant['participantUrl'], array('attributes' => array('target' => '_blank')));
+        }
 				else {
-					$participant->participant_link = $participant->participant_name_full;
+					$participant['participant_link'] = $participant['name'];
 				}
 			}
 
-			if (!empty($participant->node_url)) {
-				$participant->node_link = l($participant->node_name_full, $participant->node_url);
+			if (!empty($participant['node_url'])) {
+				$participant['node_link'] = l($participant['node_name'], $participant['node_url']);
 			}
-			else {
-				$participant->node_link = $participant->node_name_full;
+			elseif (!empty($participant['node_name'])) {
+				$participant['node_link'] = $participant['node_name'];
 			}
 		}
 		$list_key = $type['key'] . '_list';
@@ -1639,6 +1735,7 @@ function _gbif_participant_format_datatype($type) {
 		'OCCURRENCE' => t('Occurrence dataset'),
 		'CHECKLIST' => t('Checklist dataset'),
 		'METADATA' => t('Metadata dataset'),
+    'SAMPLING_EVENT' => t('Sampling event'),
 	);
 	return $types[$type];
 }
@@ -1694,9 +1791,11 @@ function gbif_participant_country_count($iso2) {
 			foreach ($json->results as $k => $result) {
 				$metrics_call = 'http://api.gbif.org/v1/dataset/' . $result->key . '/metrics';
 				$metrics_json = json_decode(file_get_contents($metrics_call));
-				$usage_count = $usage_count + $metrics_json->usagesCount;
+        if (isset($metrics_json)) {
+          $usage_count = $usage_count + $metrics_json->usagesCount;
+        }
 			}
-			$counts[$call_type . '_record_count'] = $usage_count;
+			$counts[$call_type . '_record_count'] = (isset($usage_count)) ? $usage_count : '';
 		}
 
 		if (in_array($call_type, array('dataset_about', 'contributed_by', 'contributing_to'))) {
@@ -1866,7 +1965,7 @@ function _gbif_participant_columular_countries($json, $cols) {
  */
 function gbif_participant_country_lookup($value, $query_type, $return_type) {
 	$result = '';
-	$countries = json_decode(file_get_contents(drupal_get_path('module', 'gbif_participant') . '/country.json'), TRUE);
+	$countries = _gbif_participant_country_object();
 	foreach ($countries as $country) {
 		if ($country[$query_type] == $value) $result = $country[$return_type];
 	}
@@ -1874,13 +1973,13 @@ function gbif_participant_country_lookup($value, $query_type, $return_type) {
 }
 
 function _gbif_participant_country_list() {
-	$countries = json_decode(file_get_contents(drupal_get_path('module', 'gbif_participant') . '/country.json'), TRUE);
-	$participant_ims = _gbif_participant_participant_query();
+	$countries = _gbif_participant_country_object();
+	$participants = _gbif_participant_participant_query();
 	// Insert bits for determining if a country is a participant.
 	foreach ($countries as $k => $country) {
-		foreach ($participant_ims as $participant) {
-			if ($country['iso2'] == $participant->iso2 && (in_array($participant->gbif_membership, array('Voting Participant', 'Associate Country Participant')) || $participant->iso2 == 'TW')) {
-				$countries[$k]['gbif_membership'] = $participant->gbif_membership;
+		foreach ($participants as $participant) {
+			if ($country['iso2'] == $participant['countryCode'] && (in_array($participant['participationStatus'], array('VOTING', 'ASSOCIATE')) || $participant['countryCode'] == 'TW')) {
+				$countries[$k]['participationStatus'] = $participant['participationStatus'];
 			}
 		}
 	}
@@ -1893,7 +1992,7 @@ function _gbif_participant_country_list() {
 			if ($country['official'] == "true") {
 				$link = l($country['title'], 'country/' . $country['iso2']);
 				$country_list .= '<li class="country ';
-				$country_list .= (!empty($country['gbif_membership'])) ? 'participant' : '';
+				$country_list .= (!empty($country['participationStatus'])) ? 'participant' : '';
 				$country_list .= '">';
 				$country_list .= $link;
 				$country_list .= '</li>';
@@ -1904,6 +2003,19 @@ function _gbif_participant_country_list() {
 	}
 
 	return $columns;
+}
+
+function _gbif_participant_country_object() {
+  return json_decode(file_get_contents(_gbif_participant_api_enumeration_country()), TRUE);
+}
+
+function _gbif_participant_participant_object($participantID = NULL) {
+  if (isset($participantID)) {
+    return json_decode(_gp_authenticated_call(_gbif_participant_api_participant() . '/' . $participantID), TRUE);
+  }
+  else {
+    return json_decode(_gp_authenticated_call(_gbif_participant_api_participants()), TRUE);
+  }
 }
 
 function _gp_get_type_name($type_mname) {

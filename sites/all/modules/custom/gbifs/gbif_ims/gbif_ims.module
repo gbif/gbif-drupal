@@ -8,20 +8,6 @@
 
 module_load_include('inc', 'gbif_ims', 'gbif_ims.filemaker');
 
-function gbif_ims_menu() {
-	$items = array();
-	$items['admin/config/gbif/ims'] = array(
-		'title' => 'IMS configuration',
-		'description' => t('Configure GBIF Information Management System.'),
-		'page callback' => 'drupal_get_form',
-		'page arguments' => array('gbif_ims_config_form'),
-		'access arguments' => array('administer site configuration'),
-		'type' => MENU_NORMAL_ITEM,
-		'file' => 'gbif_ims.admin.inc',
-	);
-	return $items;
-}
-
 /**
  * Implements hook_entity_info_alter().
  *
@@ -56,45 +42,6 @@ function gbif_ims_theme($existing, $type, $theme, $path) {
 			'variables' => array('items' => NULL),
 		),
 	);
-}
-
-/**
- * Themes the queue display.
- *
- * Again, this is not part of the demonstration of the queue API, but is here
- * just to make the user interface more understandable.
- *
- * @param array $variables
- *   Our variables.
- */
-function theme_ims_queue_items($variables) {
-	$items = $variables['items'];
-	$rows = array();
-	foreach ($items as &$item) {
-		if ($item['expire'] > 0) {
-			$item['expire'] = t("Claimed: expires %expire", array('%expire' => date('r', $item['expire'])));
-		}
-		else {
-			$item['expire'] = t('Unclaimed');
-		}
-		$item['created'] = date('r', $item['created']);
-		$item['content'] = check_plain(unserialize($item['data']));
-		unset($item['data']);
-		$rows[] = $item;
-	}
-	if (!empty($rows)) {
-		$header = array(
-			t('Item ID'),
-			t('Claimed/Expiration'),
-			t('Created'),
-			t('Content/Data'),
-		);
-		$output = theme('table', array('header' => $header, 'rows' => $rows));
-		return $output;
-	}
-	else {
-		return t('There are no items in the queue.');
-	}
 }
 
 /**
@@ -156,160 +103,6 @@ function gbif_ims_tokens($type, $tokens, array $data = array(), array $options =
 }
 
 /**
- * Implements hook_cron().
- */
-function gbif_ims_cron() {
-  $sync_status = variable_get('gbif_tweaks_sync_status');
-  if ($sync_status == 'halted') {
-    // do nothing
-  }
-  else {
-    // sync according to the interval setting
-    $interval = variable_get('gbif_ims_sync_interval');
-    if ($interval == 0) {
-      watchdog('gbif_ims', 'IMS synchronisation has been suspended', NULL, WATCHDOG_INFO);
-    }
-    else {
-      // Cron could be set to run every minute, which is not possible and too heavy for IMS synchronisation.
-      // So we keep a time for the next run in a variable.
-      if (time() >= variable_get('gbif_ims_sync_next_execution', 0)) {
-        $sync_success = _gbif_ims_sync();
-        if ($sync_success == TRUE) {
-          watchdog('gbif_ims', 'IMS synchronisation executed at %time', array('%time' => date_iso8601(time(0))), WATCHDOG_INFO);
-        }
-        variable_set('gbif_ims_sync_next_execution', time() + $interval);
-      }
-    }
-  }
-}
-
-/**
- * Implements hook_cron_queue_info().
- */
-function gbif_ims_cron_queue_info() {
-	$queues['gbif_ims_queue'] = array(
-		'worker callback' => 'gbif_ims_queue_process',
-		'time' => 180,
-	);
-	return $queues;
-}
-
-/**
- * Worker callback for IMS relevant tasks.
- */
-function gbif_ims_queue_process($item) {
-	$cron_reset = 1;
-	switch ($item) {
-		case 'event_update':
-			if (module_exists('gbif_event')) {
-				gbif_event_sync($cron_reset);
-			}
-			break;
-	}
-}
-
-/**
- * Reporter for cron queue worker.
- * @param int $worker
- *   Worker number.
- * @param object $item
- *   The $item which was stored in the cron queue.
- */
-function gbif_ims_queue_report($worker, $item) {
-	if (!empty($GLOBALS['gbif_ims_cron_show_status_message'])) {
-		drupal_set_message(
-			t('Queue @worker worker processed item with sequence @sequence created at @time',
-				array(
-					'@worker' => $worker,
-					'@sequence' => $item->sequence,
-					'@time' => date_iso8601($item->created),
-				)
-			)
-		);
-	}
-	watchdog('cron_example', 'Queue @worker worker processed item with sequence @sequence created at @time',
-		array(
-			'@worker' => $worker,
-			'@sequence' => $item->sequence,
-			'@time' => date_iso8601($item->created),
-		)
-	);
-}
-
-function gbif_ims_sync_ui($form, $form_state) {
-	if (!empty($form_state['values']['cron_reset'])) {
-		variable_set('gbif_ims_sync_next_execution', 0);
-	}
-
-	if (time() >= variable_get('gbif_ims_sync_next_execution', 0)) {
-		return gbif_ims_sync();
-	}
-	else {
-		$next_time = variable_get('gbif_ims_sync_next_execution');
-		watchdog('gbif_ims', "Synchronisation didn't run because current interval is not expired yet. Next run is at %next.", array('%next' => date_iso8601($next_time)), WATCHDOG_INFO);
-		return t("Synchronisation didn't run because current interval is not expired yet. Next run is at %next.", array('%next' => date_iso8601($next_time)));
-	}
-}
-
-/**
- * gbif_ims_sync()
- * Synchronise contact, country, GBIF area, group, group role, node and participant information from the IMS on FileMaker.
- */
-function gbif_ims_sync() {
-	$start_time = new DateTime();
-	$sync_success = _gbif_ims_sync();
-	$end_time = new DateTime();
-	$time = $end_time->diff($start_time);
-	$time_spent = 'This task took ';
-	if ($time->y > 0) {$time_spent .= $time->y.' years, ';}
-	if ($time->m > 0) {$time_spent .= $time->m.' months, ';}
-	if ($time->d > 0) {$time_spent .= $time->d.' days, ';}
-	if ($time->h > 0) {$time_spent .= $time->h.' hours, ';}
-	if ($time->i > 0) {$time_spent .= $time->i.' minutes, ';}
-	if ($time->s > 0) {$time_spent .= $time->s.' seconds ';}
-	$time_spent .= "to complete.";
-
-	if ($sync_success == TRUE) {
-		watchdog('gbif_ims', 'IMS synchronisation executed at %time', array('%time' => date_iso8601(time(0))), WATCHDOG_INFO);
-		$interval = variable_get('gbif_ims_sync_interval', 3 * 60 * 60);
-		// Cron could be set to run every minute, which is too heavy for IMS synchronisation.
-		// So we keep a time for the next run in a variable.
-		variable_set('gbif_ims_sync_next_execution', time() + $interval);
-
-		// Now the gbif_ims_* base tables are updated, it then makes sense to add content update to the queue.
-		$items = array('event_update');
-		$queue = DrupalQueue::get('gbif_ims_queue');
-		foreach ($items as $item) {
-			$queue->createItem($item);
-		}
-
-		return t('Synchronisation finished.') . ' ' . $time_spent;
-	}
-	else {
-		watchdog('gbif_ims', 'IMS synchronisation failed at %time', array('%time' => date_iso8601(time(0))), WATCHDOG_CRITICAL);
-		return t('Synchronisation failed.') . ' ' . $time_spent;
-	}
-}
-
-/**
- * Check necessary tables exist.
- */
-function gbif_ims_tables_exist($func) {
-	$tables = $func();
-	$results = array();
-	foreach ($tables as $table) {
-		$results[$table] = db_table_exists($table);
-	}
-	$test = array_search(FALSE, $results);
-	if ($test == FALSE) {
-		return TRUE;
-	}
-	else {
-		return FALSE;
-	}
-}
-
-/**
  * Helper function to prevent empty text value from saving into node field.
  * @param $value
  * @param $format
@@ -367,27 +160,6 @@ function filemaker_load_api() {
 
 	// Tell the caller if the FileMaker class exists.
 	return class_exists('FileMaker');
-}
-
-/**
- * This function is intended to be called by other modules that need to interact
- * with the FileMaker based GBIF IMS.
- * @return FileMaker
- */
-function ims_connection() {
-	// Load FileMaker api
-	filemaker_load_api();
-
-	// Load credentials
-	$IMSCredential = variable_get('ims_connection');
-
-	$IMS = new FileMaker();
-	$IMS->setProperty('database', $IMSCredential['database']);
-	$IMS->setProperty('hostspec', $IMSCredential['hostname']);
-	$IMS->setProperty('username', $IMSCredential['username']);
-	$IMS->setProperty('password', $IMSCredential['password']);
-
-	return $IMS;
 }
 
 /**

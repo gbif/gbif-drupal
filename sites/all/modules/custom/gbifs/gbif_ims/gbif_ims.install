@@ -50,6 +50,9 @@ function gbif_ims_uninstall() {
 	drupal_uninstall_schema('gbif_ims');
 	// @todo Look for established content and delete them.
 	_gbif_ims_delete_custom_fields();
+  variable_del('gbif_tweaks_sync_status');
+  variable_del('gbif_ims_sync_interval');
+  variable_del('gbif_ims_sync_next_execution');
 }
 
 /**

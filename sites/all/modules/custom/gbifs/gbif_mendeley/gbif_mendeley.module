@@ -190,7 +190,8 @@ function _gbif_mendeley_oauth2_callback($token_json = NULL) {
 	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
   $result = curl_exec($ch);
-  $end = end(explode("\r\n", $result));
+	$exploded_result = explode("\r\n", $result);
+  $end = end($exploded_result);
 	$json = json_decode($end);
 
 	if (isset($json->error)) {

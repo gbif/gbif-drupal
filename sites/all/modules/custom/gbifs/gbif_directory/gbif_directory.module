@@ -1,0 +1,318 @@
+<?php
+
+/**
+ * Implements hook_theme().
+ */
+function gbif_directory_theme($existing, $type, $theme, $path) {
+  $path = drupal_get_path('module', 'gbif_directory');
+  return array(
+    'gd_contact_list' => array(
+      'template' => 'gd-contact-list',
+      'path' => $path . '/theme',
+      'variables' => array('results' => NULL, 'group' => NULL),
+    ),
+    'gd_participant_list' => array(
+      'template' => 'gd-participant-list',
+      'path' => $path . '/theme',
+      'variables' => array('results' => NULL, 'group' => NULL),
+    ),
+  );
+}
+
+/**
+ * Implements hook_token_info().
+ */
+function gbif_directory_token_info() {
+  $types['member'] = array(
+    'name' => t('GBIF Members'),
+    'description' => t('Tokens for emitting lists from the Directory API.'),
+  );
+
+  $groups = _gd_groups(NULL);
+  foreach ($groups as $key => $group) {
+    $gbif_directory[$key]['name'] = $group;
+    $gbif_directory[$key]['description'] = t('List of ') . $group;
+  }
+  return array(
+    'types' => $types,
+    'tokens' => array(
+      'member' => $gbif_directory,
+    ),
+  );
+}
+
+/**
+ * Implements hook_tokens()
+ * @return null|string
+ */
+function gbif_directory_tokens($type, $tokens, array $data = array(), array $options = array()) {
+  $replacements = array();
+
+  if ($type == 'member') {
+    foreach ($tokens as $name => $original) {
+      switch ($name) {
+        case 'bc':
+        case 'ec':
+        case 'rc':
+        case 'sc':
+        case 'nc':
+        case 'nsg':
+        // May not exist in the Directory API.
+        // case 'tg_adbd':
+        // case 'tg_dfua':
+        // case 'tg_dfudm':
+          $replacements[$original] = _gd_print_committee_list(_gd_groups($name));
+          break;
+        case 'gbifs':
+          $replacements[$original] = _gd_print_staff_list(_gd_groups($name));
+          break;
+        case 'vp':
+        case 'acp':
+        case 'oap':
+          $replacements[$original] = _gd_print_participant_list(_gd_groups($name));
+          break;
+      }
+    }
+  }
+
+  return $replacements;
+}
+
+/**
+ * Helper function that provides the definition of contact groups.
+ * @param $key
+ * @return array
+ */
+function _gd_groups($key) {
+  $groups = array(
+    'bc' => t('Budget Committee'),
+    'ec' => t('Executive Committee'),
+    'nc' => t('Nodes Committee'),
+    'rc' => t('Rules Committee'),
+    'sc' => t('Science Committee'),
+    'nsg' => t('Nodes Steering Group'),
+    'gbifs' => t('GBIF Secretariat'),
+    'vp' => t('Voting Participant'),
+    'acp' => t('Associate Country Participant'),
+    'oap' => t('Other Associate Participant'),
+    'tg_adbd' => t('Accelerating the Discovery of Bio-collections Data Task Force'),
+    'tg_dfua' => t('DFFU-A - Task Group on Fitness for Use in Agrobiodiversity'),
+    'tg_dfudm' => t('DFFU-DM - Task Group on Data Fitness for Use in Distribution Modelling'),
+  );
+  if (!empty($key)) {
+    return $groups[$key];
+  }
+  else {
+    return $groups;
+  }
+}
+
+/**
+ * Produce the list of various committees, except Nodes Committee.
+ * @param $group
+ * @return $persons
+ */
+function _gd_get_committee_list($group) {
+  $enumeration = str_replace(' ', '_', strtolower($group));
+  // The Directory API doesn't give a list of available committee,
+  // so we must know what can be called here.
+  $available_committee = array(
+    'executive_committee',
+    'science_committee',
+    'budget_committee',
+    'nodes_committee',
+    'nodes_steering_group'
+  );
+  if (in_array($enumeration, $available_committee)) {
+    $url = _gp_authenticated_call(_gbif_participant_api_committee() . '/' . $enumeration);
+    $persons = json_decode(_gp_authenticated_call(_gbif_participant_api_committee() . '/' . $enumeration), TRUE);
+    // insert person details
+    foreach ($persons as &$person) {
+      $detail = json_decode(_gp_authenticated_call(_gbif_participant_api_person() . '/' . $person['personId']), TRUE);
+      foreach ($detail as $property => $value) {
+        if (!isset($person[$property])) {
+          $person[$property] = $value;
+        }
+      }
+    }
+    return $persons;
+  }
+  else {
+    return FALSE;
+  }
+}
+
+/**
+ * With the same contact details as other lists, this list for Nodes Committee
+ * should return the Chair and Vice Chairs, which will be duplicated as they are
+ * also Node Managers, and nodes that don't have active Node Manager.
+ **/
+function _gd_get_node_committee_list($group) {
+  $enumeration = str_replace(' ', '_', strtolower($group));
+  $persons = json_decode(_gp_authenticated_call(_gbif_participant_api_committee() . '/' . $enumeration), TRUE);
+  $chairs = array();
+  $node_managers = array();
+  foreach ($persons as $k => &$person) {
+    $person_detail = json_decode(_gp_authenticated_call(_gbif_participant_api_person() . '/' . $person['personId']), TRUE);
+    $person = array_merge($person, $person_detail);
+
+    // Get node details, then get participant details
+    // If no participant associated, this may indicate an integrity issue and we don't show this person.
+    if (!isset($person['nodes'][0])) {
+      watchdog('gbif_directory', 'Node manager @name (@id)@institution is not assigned with a node.', array('@name' => $person['name'], '@id' => $person['id'], '@institution' => (isset($person['institutionName'])) ? ' from ' . $person['institutionName'] : ''), WATCHDOG_INFO);
+      unset($persons[$k]);
+    }
+    else {
+      $node_detail = json_decode(_gp_authenticated_call(_gbif_participant_api_node() . '/' . $person['nodes'][0]['nodeId']), TRUE);
+      $participant_detail = json_decode(_gp_authenticated_call(_gbif_participant_api_participant() . '/' . $node_detail['participantId']), TRUE);
+      $person['participantName'] = $participant_detail['name'];
+      $person['participantAbbeviatedName'] = (isset($participant_detail['abbreviatedName'])) ? $participant_detail['abbreviatedName'] : NULL;
+      $person['participantType'] = $participant_detail['type'];
+      $person['participationStatus'] = $participant_detail['participationStatus'];
+      $person['participantTableName'] = (isset($person['participantAbbeviatedName'])) ? $person['participantAbbeviatedName'] : $person['participantName'];
+    }
+
+    if ($person['role'] != 'NODE_MANAGER') {
+      $person['role'] = str_replace('NODE_MANAGER', '', $person['role']);
+      $person['role'] = str_replace(' ', '', $person['role']);
+      $person['role'] = str_replace(',', '', $person['role']);
+      $chairs[] = $person;
+    }
+    else {
+      $node_managers[] = $person;
+    }
+
+  }
+
+  // Sort the chairs 1) by role; 2) by last name.
+  $roles = array('NODES_COMMITTEE_CHAIR', 'NODES_COMMITTEE_1ST_VICE_CHAIR', 'NODES_COMMITTEE_2ND_VICE_CHAIR');
+  usort($chairs, function($a, $b) use ($roles) {
+    if ($a['role'] == $b['role']) {
+      // Type is the same, sort by name
+      if ($a['surname'] == $b['surname']) return 0;
+      return $a['surname'] < $b['surname'] ? -1 : 1;
+    }
+    return array_search($a['role'], $roles) - array_search($b['role'], $roles);
+  });
+
+  // Sort Node Managers by 1) type; 2) name. @see http://stackoverflow.com/questions/3232965/sort-multidimensional-array-by-multiple-keys
+  $sort = array();
+  foreach ($node_managers as $pk => $pv) {
+    $sort['participantTableName'][$pk] = $pv['participantTableName'];
+    $sort['participantType'][$pk] = $pv['participantType'];
+  }
+  array_multisort($sort['participantType'], SORT_ASC, $sort['participantTableName'], SORT_ASC, $node_managers);
+
+  $results = array_merge($chairs, $node_managers);
+  return $results;
+}
+
+/**
+ * @param $group
+ * @return (array) query results.
+ */
+function _gd_get_participant_list($group) {
+
+  $results = json_decode(_gp_authenticated_call(_gbif_participant_api_participants()), TRUE);
+  $participants = $results['results'];
+  $grouped_participants = array();
+  $criteria = array();
+
+  // Filtering out the group and insert people details
+  switch ($group) {
+    case 'Voting Participant':
+      $criteria['type'] = 'COUNTRY';
+      $criteria['participationStatus'] = 'VOTING';
+      break;
+    case 'Associate Country Participant':
+      $criteria['type'] = 'COUNTRY';
+      $criteria['participationStatus'] = 'ASSOCIATE';
+      break;
+    case 'Other Associate Participant':
+      $criteria['type'] = 'OTHER';
+      $criteria['participationStatus'] = 'ASSOCIATE';
+      break;
+  }
+
+  foreach ($participants as $participant) {
+    if (isset($participant['type']) && $participant['type'] == $criteria['type'] && $participant['participationStatus'] == $criteria['participationStatus']) {
+      $grouped_participants[] = $participant;
+    }
+  }
+
+  // Sort participants
+  usort($grouped_participants, function($a, $b) {
+    return (strnatcasecmp($a['name'], $b['name']));
+  });
+
+  foreach ($grouped_participants as &$p) {
+    if (isset($p['id'])) {
+      $details = json_decode(_gp_authenticated_call(_gbif_participant_api_participant() . '/' . $p['id']), TRUE);
+      foreach ($details as $property => $value) {
+        $p[$property] = $value;
+      }
+
+      // insert people details
+      foreach ($p['people'] as &$pp) {
+        $person_details = json_decode(_gp_authenticated_call(_gbif_participant_api_person() . '/' . $pp['personId']), TRUE);
+        foreach ($person_details as $prop => $val) {
+          $pp[$prop] = $val;
+        }
+        if (isset($pp['role'])) {
+          $pp['role'] = _gp_format_role($pp['role']);
+        }
+      }
+
+      // Sort the contacts 1) by role; 2) by last name.
+      $roles = array('Head of Delegation', 'Temporary Head of Delegation', 'Temporary Delegate', 'Additional Delegate', 'Node Manager', 'Node Team');
+      usort($p['people'], function($a, $b) use ($roles) {
+        if ($a['role'] == $b['role']) {
+          // Type is the same, sort by name
+          if ($a['surname'] == $b['surname']) return 0;
+          return $a['surname'] < $b['surname'] ? -1 : 1;
+        }
+        return array_search($a['role'], $roles) - array_search($b['role'], $roles);
+      });
+
+    }
+  }
+  return $grouped_participants;
+}
+
+function _gd_print_committee_list($group) {
+  if ($group == 'Nodes Committee') {
+    $results = _gd_get_node_committee_list($group);
+  }
+  else {
+    $results = _gd_get_committee_list($group);
+  }
+  return theme('gd_contact_list', array('results' => $results, 'group' => $group));
+}
+
+function _gd_print_participant_list($group) {
+  $results = _gd_get_participant_list($group);
+  return theme('gd_participant_list', array('results' => $results, 'group' => $group));
+}
+
+/**
+ * @param $group
+ * @return string
+ * @throws \Exception
+ */
+function _gd_print_staff_list($group) {
+  // Get staff list
+  $persons = json_decode(_gp_authenticated_call(_gbif_participant_api_report() . '/gbif_secretariat?format=json'), TRUE);
+  // insert person details
+  foreach ($persons as &$person) {
+    $detail = json_decode(_gp_authenticated_call(_gbif_participant_api_person() . '/' . $person['id']), TRUE);
+    if (!empty($detail)) {
+      foreach ($detail as $property => $value) {
+        if (!isset($person[$property])) {
+          $person[$property] = $value;
+        }
+      }
+    }
+  }
+  $results = $persons;
+  return theme('gd_contact_list', array('results' => $results, 'group' => $group)) ;
+}

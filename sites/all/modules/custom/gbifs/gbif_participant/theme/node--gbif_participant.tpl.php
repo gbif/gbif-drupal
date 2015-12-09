@@ -95,36 +95,27 @@
         </div>
         <div class="row">
           <div class="content col-xs-8">
-						<h3>Member Status</h3>
-						<p><?php print $participant_ims->gbif_membership; ?></p>
-						<h3>GBIF Participant since</h3>
-						<p><?php print $participant_ims->member_as_of; ?></p>
-						<?php print $participant_ims->gbif_region; ?>
-						<?php print $participant_ims->contact_participation; ?>
+            <h3>Member Status</h3>
+            <p><?php print $participant_ims['participationStatus']; ?></p>
+            <h3>GBIF Participant since</h3>
+            <p><?php print $participant_ims['membershipStart']; ?></p>
+            <?php print $participant_ims['gbif_region']; ?>
+            <?php print $participant_ims['contact_participation']; ?>
           </div>
           <aside class="content content-sidebar col-xs-4">
-						<h3>Node name</h3>
-						<p><?php print $participant_ims->node_name_full; ?></p>
-						<?php if (!empty($participant_ims->institution_address)): ?>
-							<h3>Address</h3>
-							<address>
-								<?php print _gbif_participant_print_address_fields($participant_ims->institution_name); ?>
-								<?php print _gbif_participant_print_address_fields($participant_ims->institution_address); ?>
-								<?php print _gbif_participant_print_address_fields($participant_ims->institution_zip_code); ?>
-								<?php print _gbif_participant_print_address_fields($participant_ims->institution_city); ?>
-								<?php print _gbif_participant_print_address_fields($participant_ims->institution_state_province); ?>
-								<?php print _gbif_participant_print_address_fields($participant_ims->country); ?>
-								<?php print _gbif_participant_print_address_fields($participant_ims->institution_email); ?>
-								<?php print _gbif_participant_print_address_fields($participant_ims->institution_telephone); ?>
-							</address>
-						<?php endif; ?>
-						<?php if (isset($participant_node['node_established'])): ?>
-							<h3>Node Established</h3>
-							<p><?php print $participant_node['node_established']; ?></p>
-						<?php endif; ?>
-						<?php if (!empty($participant_ims->node_url)): ?>
-							<h3>Website</h3>
-							<p><?php print 	l($participant_ims->node_url, $participant_ims->node_url, array('attributes' => array('target' => '_blank'))); ?></p>
+            <h3>Node name</h3>
+            <p><?php print $participant_ims['node_name']; ?></p>
+            <h3>Address</h3>
+            <address>
+              <?php print _gbif_participant_print_address_fields($participant_ims['node_address']); ?>
+            </address>
+            <?php if (isset($participant_node['node_established'])): ?>
+              <h3>Node Established</h3>
+              <p><?php print $participant_node['node_established']; ?></p>
+            <?php endif; ?>
+						<?php if (isset($participant_ims['node_url'])): ?>
+            <h3>Website</h3>
+            	<p><?php print l($participant_ims['node_url'], $participant_ims['node_url'], array('attributes' => array('target' => '_blank'))); ?></p>
 						<?php endif; ?>
           </aside>
         </div>
@@ -165,7 +156,7 @@
 				</div>
 				<div class="row">
 					<div class="content col-xs-8">
-						<?php print $participant_ims->contact_contacts; ?>
+						<?php print $participant_ims['contact_node']; ?>
 					</div>
 					<aside class="col-xs-4">
 
@@ -173,7 +164,7 @@
 				</div>
 			</section>
 
-			<?php if ($participant_ims->endorsed_publishers['list'] !== 0): ?>
+			<?php if ($participant_ims['endorsed_publishers']['list'] !== 0): ?>
 			<section id="endorsed-publishers" class="col-xs-12 well well-lg">
 				<div class="row">
 					<header class="content-header col-xs-12">
@@ -182,7 +173,7 @@
 				</div>
 				<div class="row">
 					<div class="content content-full">
-						<?php print $participant_ims->endorsed_publishers['list']; ?>
+						<?php print $participant_ims['endorsed_publishers']['list']; ?>
 					</div>
 				</div>
 			</section>

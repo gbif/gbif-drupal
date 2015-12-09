@@ -38,17 +38,6 @@ function gbif_resource_menu() {
     'type' => MENU_NORMAL_ITEM,
     'weight' => 30,
   );
-  /* Disabled admin page since we no longer need to sync from the FileMaker.
-  $items['admin/config/gbif/resource'] = array(
-    'title' => 'GBIF resource',
-    'description' => t('Configure GBIF resource related features.'),
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('gbif_resource_settings_form'),
-    'access arguments' => array('administer site configuration'),
-    'type' => MENU_NORMAL_ITEM,
-    'file' => 'gbif_resource.admin.inc',
-  );
-  */
 	return $items;
 }
 

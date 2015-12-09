@@ -494,8 +494,8 @@ function gbif_registry_build_string_to_sign($options) {
 	$string_to_sign = '';
 	$string_to_sign .= $options['method'];
 	$string_to_sign .= "\n" . $options['headers'][HEADER_ORIGINAL_REQUEST_URL];
-	$string_to_sign .= "\n" . $options['headers'][HEADER_CONTENT_TYPE];
-	$string_to_sign .= "\n" . $options['headers'][HEADER_CONTENT_MD5];
+	$string_to_sign .= (isset($options['headers'][HEADER_CONTENT_TYPE])) ? "\n" . $options['headers'][HEADER_CONTENT_TYPE] : '';
+	$string_to_sign .= (isset($options['headers'][HEADER_CONTENT_MD5])) ? "\n" . $options['headers'][HEADER_CONTENT_MD5] : '';
 	$string_to_sign .= "\n" . $options['headers'][HEADER_GBIF_USER];
 	return $string_to_sign;
 }

@@ -507,6 +507,8 @@ function gbif_participant_page_build(&$page) {
   $iso2 = arg(1);
 	if ($status == '404 Not Found') {
 		// Do nothing.
+		// Don't show the download box for country report on this page.
+		unset($page['highlighted']);
 	}
 	elseif (isset($page) && arg(0) == 'country') {
 		// Prepare the text for use in the banner region.

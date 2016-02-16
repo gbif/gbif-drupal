@@ -16,6 +16,18 @@ function gbif_directory_theme($existing, $type, $theme, $path) {
       'path' => $path . '/theme',
       'variables' => array('results' => NULL, 'group' => NULL),
     ),
+    'gd_tg_adbd' => array(
+      'template' => 'gd-tg_adbd',
+      'path' => $path . '/theme',
+    ),
+    'gd_tg_dfua' => array(
+      'template' => 'gd-tg_dfua',
+      'path' => $path . '/theme',
+    ),
+    'gd_tg_dfudm' => array(
+      'template' => 'gd-tg_dfudm',
+      'path' => $path . '/theme',
+    ),
   );
 }
 
@@ -57,10 +69,6 @@ function gbif_directory_tokens($type, $tokens, array $data = array(), array $opt
         case 'sc':
         case 'nc':
         case 'nsg':
-        // May not exist in the Directory API.
-        // case 'tg_adbd':
-        // case 'tg_dfua':
-        // case 'tg_dfudm':
           $replacements[$original] = _gd_print_committee_list(_gd_groups($name));
           break;
         case 'gbifs':
@@ -70,6 +78,12 @@ function gbif_directory_tokens($type, $tokens, array $data = array(), array $opt
         case 'acp':
         case 'oap':
           $replacements[$original] = _gd_print_participant_list(_gd_groups($name));
+          break;
+        // Not exist in the Directory API. Direct output instead.
+        case 'tg_adbd':
+        case 'tg_dfua':
+        case 'tg_dfudm':
+          $replacements[$original] = _gd_print_task_group_list($name);
           break;
       }
     }
@@ -315,4 +329,8 @@ function _gd_print_staff_list($group) {
   }
   $results = $persons;
   return theme('gd_contact_list', array('results' => $results, 'group' => $group)) ;
+}
+
+function _gd_print_task_group_list($name) {
+  return theme('gd_' . $name, array());
 }

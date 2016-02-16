@@ -25,7 +25,7 @@
  */
 
 $lang_code = $row->_field_data['nid']['entity']->language;
-$tid = $row->_field_data['nid']['entity']->gr_resource_type[$lang_code][0]['tid'];
+$tid = $row->_field_data['nid']['entity']->gr_resource_type['und'][0]['tid']; // gr_resource_type is not internationalized.
 
 ?>
 <?php foreach ($fields as $id => $field): ?>

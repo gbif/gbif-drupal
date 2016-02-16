@@ -29,7 +29,7 @@
 if (!empty($row->_field_data['gr_file']['entity']->gr_file)) {
 	$lang_code = $row->_entity_properties['entity object']->language;
 	$link_title = t('Download') . ' ' . $row->_field_data['gr_file']['entity']->title;
-	$link_path = 'system/files_force' . substr($row->_field_data['gr_file']['entity']->gr_file[$lang_code][0]['uri'],  8); // Strip off file schema.
+	$link_path = 'system/files_force' . substr($row->_field_data['gr_file']['entity']->gr_file['und'][0]['uri'],  8); // Strip off file schema. gr_file is not internationalized.
 	$img = theme_image(
 		array(
 			'path' => drupal_get_path('module', 'gbif_resource') . '/icons/download164.png',
@@ -45,7 +45,7 @@ if (!empty($row->_field_data['gr_file']['entity']->gr_file)) {
 	$link = l($img, $link_path, array(
 		'html' => TRUE,
 		'attributes' => array(
-			'type' => $row->_field_data['gr_file']['entity']->gr_file[$lang_code][0]['filemime'],
+			'type' => $row->_field_data['gr_file']['entity']->gr_file['und'][0]['filemime'],
 		),
 		'query' => array(
 			'download' => 1,

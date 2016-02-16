@@ -353,10 +353,10 @@ function gbif_resource_preprocess_views_view_field(&$vars) {
 			// check if there is a value
 			if (count($vars['row']->$view_field) != 0) {
 				$lang_code = $vars['row']->_field_data['nid']['entity']->language;
-				$link_title = t('Download') . ' ' . $vars['row']->_field_data['nid']['entity']->gr_file[$lang_code][0]['description'];
+				$link_title = t('Download') . ' ' . $vars['row']->_field_data['nid']['entity']->gr_file['und'][0]['description'];
         // Try locating file path with different $lang_code, which may be stored
         // inconsistently.
-        $file_uri = $vars['row']->_field_data['nid']['entity']->gr_file[$lang_code][0]['uri']; // pay attention to i18n code here.
+        $file_uri = $vars['row']->_field_data['nid']['entity']->gr_file['und'][0]['uri']; // gr_file is not internationalized.
 				$link_path = 'system/files_force' . substr($file_uri, 8); // Strip off file schema.
 				$img = theme_image(
 					array(
@@ -373,7 +373,7 @@ function gbif_resource_preprocess_views_view_field(&$vars) {
 				$link = l($img, $link_path, array(
 					'html' => TRUE,
 					'attributes' => array(
-						'type' => $vars['row']->_field_data['nid']['entity']->gr_file[$lang_code][0]['filemime'],
+						'type' => $vars['row']->_field_data['nid']['entity']->gr_file['und'][0]['filemime'], // gr_file is not internationalized.
 					),
 					'query' => array(
 						'download' => 1,

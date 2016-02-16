@@ -81,7 +81,7 @@
 
 // Check the resource type so we can decide to show external link or not.
 $lang_code = $row->_entity_properties['entity object']->language;
-$resource_type_tid = $row->_entity_properties['entity object']->gr_resource_type[$lang_code][0]['tid'];
+$resource_type_tid = $row->_entity_properties['entity object']->gr_resource_type['und'][0]['tid']; // gr_resource_type field is not internationalized.
 
 ?>
 <article class="node-list">

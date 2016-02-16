@@ -100,6 +100,10 @@ function gbif_scaled_contents_form_alter(&$form, &$form_state, $form_id) {
     $form['field_legacy_nid']['#disabled'] = TRUE;
     $form['#group_children']['twitter'] = 'group_social_media';
     $form['twitter']['#group'] = 'group_social_media';
+    $form['language']['#required'] = TRUE;
+    if ($form['language']['#default_value'] == 'und') {
+      $form['language']['#default_value'] = NULL;
+    }
   }
 }
 

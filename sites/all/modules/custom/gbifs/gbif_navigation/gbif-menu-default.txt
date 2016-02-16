@@ -7,6 +7,7 @@ Data {"url":"<front>"}
 -Separator {"url":"<separator>"}        
 -Publishing data {"url":"publishing-data\/summary", "description": "How and why you should make biodiversity datasets accessible through GBIF"}
 --Summary {"url":"publishing-data\/summary", "description": "How and why you should make biodiversity datasets accessible through GBIF"}
+--Quick guide {"url":"publishing-data\/quick-guide"}
 --Benefits {"url":"publishing-data\/benefits"}
 --How to publish {"url":"publishing-data\/how-to-publish"}
 --Guidelines {"url":"publishing-data\/guidelines"}

@@ -398,6 +398,50 @@ function gbif_participant_preprocess_page(&$variables) {
 }
 
 /**
+ * Implements hook_block_info().
+ */
+function gbif_participant_block_info() {
+  $blocks['country_report'] = array(
+    'info' => 'Country report',
+    'region' => 'highlighted',
+    'weight' => 30,
+    'status' => 1,
+  );
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function gbif_participant_block_view($delta = '') {
+  $block = array();
+  switch ($delta) {
+    //
+    case 'country_report':
+
+      // Prepare download box for country report
+      $html = '<div class="country-report">';
+      $html .= '<div class="box">';
+      $html .= '<div class="content">';
+      $html .= '<ul>';
+      $html .= '<li class="single last"><h4>Country Report</h4>' . '1/1/15 - 31/12/15' . '</li>';
+      $html .= '</ul>';
+      $html .= '<a href="' . '/country/' . arg(1) . '/report' . '" target="_blank" class="candy_blue_button download_button"><span>Download</span></a>';
+      $html .= '</div>';
+      $html .= '</div>';
+      $html .= '</div>';
+
+      $block = array(
+        'subject' => '<none>',
+        'content' => array(
+          '#markup' => $html,
+        ),
+      );
+  }
+  return $block;
+}
+
+/**
  * Implements hook_preprocess_node().
  */
 function gbif_participant_preprocess_node(&$variables) {
@@ -455,8 +499,11 @@ function gbif_participant_data_build($gp_id, $iso2) {
  */
 function gbif_participant_page_build(&$page) {
 	$status = drupal_get_http_header("status");
+  $iso2 = arg(1);
 	if ($status == '404 Not Found') {
 		// Do nothing.
+		// Don't show the download box for country report on this page.
+		unset($page['highlighted']);
 	}
 	elseif (isset($page) && arg(0) == 'country') {
 		// Prepare the text for use in the banner region.
@@ -468,6 +515,8 @@ function gbif_participant_page_build(&$page) {
 		if (arg(1) == NULL && arg(2) == NULL) {
 			$title = t('Countries, territories and islands');
 			$slogan = '';
+      // Don't show the download box for country report on the landing page.
+      unset($page['highlighted']);
 		}
 		elseif (count($results) == 0) {
 			$title = gbif_participant_country_lookup(arg(1), 'iso2', 'title');
@@ -505,6 +554,10 @@ function gbif_participant_page_build(&$page) {
 			'description' => $slogan,
 		);
 	}
+  elseif (isset($page) && arg(0) != 'country') {
+    // Not in country pages, so we don't show the download box for country report.
+    unset($page['highlighted']);
+  }
 }
 
 /**

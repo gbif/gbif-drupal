@@ -27,7 +27,7 @@ module_load_include('inc', 'gbif_registry', 'gbif_registry.messages');
  * Implements hook_menu().
  */
 function gbif_registry_menu() {
-	$items['publishing-data/how-to-publish'] = array(
+	$items['publishing-data/request-endorsement'] = array(
 		'title' => t('Data holder: Expression of interest'),
 		'description' => 'The landing page for the eoi form.',
 		'page callback' => 'gbif_registry_eoi_form',

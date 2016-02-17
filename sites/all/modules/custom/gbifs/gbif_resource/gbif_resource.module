@@ -69,7 +69,9 @@ function gbif_resource_redirect() {
 				->fieldCondition('gr_old_resource_nid', 'value', $arg[1], '=')
 				->execute();
 			if (!empty($entities['node'])) {
-				$node = node_load(array_shift(array_keys($entities['node'])));
+				$keys = array_keys($entities['node']);
+        $shifted_keys = array_shift($keys);
+				$node = node_load($shifted_keys);
 				$url = 'resource/' . $node->nid;
 				drupal_goto($url);
 			}

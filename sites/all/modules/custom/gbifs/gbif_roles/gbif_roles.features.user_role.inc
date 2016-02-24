@@ -16,6 +16,12 @@ function gbif_roles_user_default_roles() {
     'weight' => 2,
   );
 
+  // Exported role: Code editor.
+  $roles['Code editor'] = array(
+    'name' => 'Code editor',
+    'weight' => 5,
+  );
+
   // Exported role: Editor.
   $roles['Editor'] = array(
     'name' => 'Editor',
@@ -31,19 +37,19 @@ function gbif_roles_user_default_roles() {
   // Exported role: REGISTRY_ADMIN.
   $roles['REGISTRY_ADMIN'] = array(
     'name' => 'REGISTRY_ADMIN',
-    'weight' => 6,
+    'weight' => 7,
   );
 
   // Exported role: REGISTRY_EDITOR.
   $roles['REGISTRY_EDITOR'] = array(
     'name' => 'REGISTRY_EDITOR',
-    'weight' => 7,
+    'weight' => 8,
   );
 
   // Exported role: TDWG DQIG.
   $roles['TDWG DQIG'] = array(
     'name' => 'TDWG DQIG',
-    'weight' => 5,
+    'weight' => 6,
   );
 
   return $roles;

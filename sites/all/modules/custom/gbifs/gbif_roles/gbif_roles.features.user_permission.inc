@@ -34,6 +34,15 @@ function gbif_roles_user_default_permissions() {
     'module' => 'system',
   );
 
+  // Exported permission: 'access ajax markup'.
+  $permissions['access ajax markup'] = array(
+    'name' => 'access ajax markup',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'ajax_markup',
+  );
+
   // Exported permission: 'access all views'.
   $permissions['access all views'] = array(
     'name' => 'access all views',
@@ -97,6 +106,24 @@ function gbif_roles_user_default_permissions() {
       'Publisher' => 'Publisher',
     ),
     'module' => 'dashboard',
+  );
+
+  // Exported permission: 'access own authorizations'.
+  $permissions['access own authorizations'] = array(
+    'name' => 'access own authorizations',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'oauth_common',
+  );
+
+  // Exported permission: 'access own consumers'.
+  $permissions['access own consumers'] = array(
+    'name' => 'access own consumers',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'oauth_common',
   );
 
   // Exported permission: 'access registry console'.
@@ -188,6 +215,16 @@ function gbif_roles_user_default_permissions() {
     'module' => 'workbench',
   );
 
+  // Exported permission: 'add authenticated twitter accounts'.
+  $permissions['add authenticated twitter accounts'] = array(
+    'name' => 'add authenticated twitter accounts',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'Publisher' => 'Publisher',
+    ),
+    'module' => 'twitter',
+  );
+
   // Exported permission: 'add media from remote sources'.
   $permissions['add media from remote sources'] = array(
     'name' => 'add media from remote sources',
@@ -197,6 +234,16 @@ function gbif_roles_user_default_permissions() {
       'Publisher' => 'Publisher',
     ),
     'module' => 'media_internet',
+  );
+
+  // Exported permission: 'add twitter accounts'.
+  $permissions['add twitter accounts'] = array(
+    'name' => 'add twitter accounts',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'Publisher' => 'Publisher',
+    ),
+    'module' => 'twitter',
   );
 
   // Exported permission: 'admin_display_suite'.
@@ -253,6 +300,15 @@ function gbif_roles_user_default_permissions() {
     'module' => 'block',
   );
 
+  // Exported permission: 'administer bueditor'.
+  $permissions['administer bueditor'] = array(
+    'name' => 'administer bueditor',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'bueditor',
+  );
+
   // Exported permission: 'administer ckeditor'.
   $permissions['administer ckeditor'] = array(
     'name' => 'administer ckeditor',
@@ -271,6 +327,15 @@ function gbif_roles_user_default_permissions() {
       'Publisher' => 'Publisher',
     ),
     'module' => 'comment',
+  );
+
+  // Exported permission: 'administer consumers'.
+  $permissions['administer consumers'] = array(
+    'name' => 'administer consumers',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'oauth_common',
   );
 
   // Exported permission: 'administer contact forms'.
@@ -331,6 +396,24 @@ function gbif_roles_user_default_permissions() {
     'module' => 'date_tools',
   );
 
+  // Exported permission: 'administer facebook publication types'.
+  $permissions['administer facebook publication types'] = array(
+    'name' => 'administer facebook publication types',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'fb_autopost_entity',
+  );
+
+  // Exported permission: 'administer facebook publications'.
+  $permissions['administer facebook publications'] = array(
+    'name' => 'administer facebook publications',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'fb_autopost_entity',
+  );
+
   // Exported permission: 'administer facets'.
   $permissions['administer facets'] = array(
     'name' => 'administer facets',
@@ -338,6 +421,15 @@ function gbif_roles_user_default_permissions() {
       'Administrator' => 'Administrator',
     ),
     'module' => 'facetapi',
+  );
+
+  // Exported permission: 'administer fb_autopost'.
+  $permissions['administer fb_autopost'] = array(
+    'name' => 'administer fb_autopost',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'fb_autopost',
   );
 
   // Exported permission: 'administer features'.
@@ -497,6 +589,15 @@ function gbif_roles_user_default_permissions() {
       'Publisher' => 'Publisher',
     ),
     'module' => 'node',
+  );
+
+  // Exported permission: 'administer oauth'.
+  $permissions['administer oauth'] = array(
+    'name' => 'administer oauth',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'oauth_common',
   );
 
   // Exported permission: 'administer pane access'.
@@ -682,6 +783,24 @@ function gbif_roles_user_default_permissions() {
       'Administrator' => 'Administrator',
     ),
     'module' => 'token_insert',
+  );
+
+  // Exported permission: 'administer twitter'.
+  $permissions['administer twitter'] = array(
+    'name' => 'administer twitter',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'twitter',
+  );
+
+  // Exported permission: 'administer twitter accounts'.
+  $permissions['administer twitter accounts'] = array(
+    'name' => 'administer twitter accounts',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'twitter',
   );
 
   // Exported permission: 'administer url aliases'.
@@ -1247,13 +1366,17 @@ function gbif_roles_user_default_permissions() {
     'module' => 'taxonomy',
   );
 
+  // Exported permission: 'delete terms in content_stream'.
+  $permissions['delete terms in content_stream'] = array(
+    'name' => 'delete terms in content_stream',
+    'roles' => array(),
+    'module' => 'taxonomy',
+  );
+
   // Exported permission: 'delete terms in continent'.
   $permissions['delete terms in continent'] = array(
     'name' => 'delete terms in continent',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-      'Publisher' => 'Publisher',
-    ),
+    'roles' => array(),
     'module' => 'taxonomy',
   );
 
@@ -1290,10 +1413,7 @@ function gbif_roles_user_default_permissions() {
   // Exported permission: 'delete terms in gbif_area'.
   $permissions['delete terms in gbif_area'] = array(
     'name' => 'delete terms in gbif_area',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-      'Publisher' => 'Publisher',
-    ),
+    'roles' => array(),
     'module' => 'taxonomy',
   );
 
@@ -1417,6 +1537,13 @@ function gbif_roles_user_default_permissions() {
     'module' => 'admin_menu',
   );
 
+  // Exported permission: 'edit any album facebook publication'.
+  $permissions['edit any album facebook publication'] = array(
+    'name' => 'edit any album facebook publication',
+    'roles' => array(),
+    'module' => 'fb_autopost_entity',
+  );
+
   // Exported permission: 'edit any call content'.
   $permissions['edit any call content'] = array(
     'name' => 'edit any call content',
@@ -1466,6 +1593,13 @@ function gbif_roles_user_default_permissions() {
     'module' => 'node',
   );
 
+  // Exported permission: 'edit any event facebook publication'.
+  $permissions['edit any event facebook publication'] = array(
+    'name' => 'edit any event facebook publication',
+    'roles' => array(),
+    'module' => 'fb_autopost_entity',
+  );
+
   // Exported permission: 'edit any gbif_participant content'.
   $permissions['edit any gbif_participant content'] = array(
     'name' => 'edit any gbif_participant content',
@@ -1486,6 +1620,13 @@ function gbif_roles_user_default_permissions() {
     'module' => 'node',
   );
 
+  // Exported permission: 'edit any link facebook publication'.
+  $permissions['edit any link facebook publication'] = array(
+    'name' => 'edit any link facebook publication',
+    'roles' => array(),
+    'module' => 'fb_autopost_entity',
+  );
+
   // Exported permission: 'edit any news content'.
   $permissions['edit any news content'] = array(
     'name' => 'edit any news content',
@@ -1496,6 +1637,13 @@ function gbif_roles_user_default_permissions() {
     'module' => 'node',
   );
 
+  // Exported permission: 'edit any note facebook publication'.
+  $permissions['edit any note facebook publication'] = array(
+    'name' => 'edit any note facebook publication',
+    'roles' => array(),
+    'module' => 'fb_autopost_entity',
+  );
+
   // Exported permission: 'edit any page content'.
   $permissions['edit any page content'] = array(
     'name' => 'edit any page content',
@@ -1504,6 +1652,23 @@ function gbif_roles_user_default_permissions() {
       'Publisher' => 'Publisher',
     ),
     'module' => 'node',
+  );
+
+  // Exported permission: 'edit any photo facebook publication'.
+  $permissions['edit any photo facebook publication'] = array(
+    'name' => 'edit any photo facebook publication',
+    'roles' => array(),
+    'module' => 'fb_autopost_entity',
+  );
+
+  // Exported permission: 'edit any post facebook publication'.
+  $permissions['edit any post facebook publication'] = array(
+    'name' => 'edit any post facebook publication',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'Publisher' => 'Publisher',
+    ),
+    'module' => 'fb_autopost_entity',
   );
 
   // Exported permission: 'edit any programme content'.
@@ -1526,6 +1691,13 @@ function gbif_roles_user_default_permissions() {
     'module' => 'node',
   );
 
+  // Exported permission: 'edit any question facebook publication'.
+  $permissions['edit any question facebook publication'] = array(
+    'name' => 'edit any question facebook publication',
+    'roles' => array(),
+    'module' => 'fb_autopost_entity',
+  );
+
   // Exported permission: 'edit any resource content'.
   $permissions['edit any resource content'] = array(
     'name' => 'edit any resource content',
@@ -1535,6 +1707,13 @@ function gbif_roles_user_default_permissions() {
       'TDWG DQIG' => 'TDWG DQIG',
     ),
     'module' => 'node',
+  );
+
+  // Exported permission: 'edit any status facebook publication'.
+  $permissions['edit any status facebook publication'] = array(
+    'name' => 'edit any status facebook publication',
+    'roles' => array(),
+    'module' => 'fb_autopost_entity',
   );
 
   // Exported permission: 'edit media'.
@@ -1567,6 +1746,13 @@ function gbif_roles_user_default_permissions() {
       'authenticated user' => 'authenticated user',
     ),
     'module' => 'mimemail',
+  );
+
+  // Exported permission: 'edit own album facebook publication'.
+  $permissions['edit own album facebook publication'] = array(
+    'name' => 'edit own album facebook publication',
+    'roles' => array(),
+    'module' => 'fb_autopost_entity',
   );
 
   // Exported permission: 'edit own call content'.
@@ -1630,6 +1816,13 @@ function gbif_roles_user_default_permissions() {
     'module' => 'node',
   );
 
+  // Exported permission: 'edit own event facebook publication'.
+  $permissions['edit own event facebook publication'] = array(
+    'name' => 'edit own event facebook publication',
+    'roles' => array(),
+    'module' => 'fb_autopost_entity',
+  );
+
   // Exported permission: 'edit own gbif_participant content'.
   $permissions['edit own gbif_participant content'] = array(
     'name' => 'edit own gbif_participant content',
@@ -1650,6 +1843,13 @@ function gbif_roles_user_default_permissions() {
     'module' => 'node',
   );
 
+  // Exported permission: 'edit own link facebook publication'.
+  $permissions['edit own link facebook publication'] = array(
+    'name' => 'edit own link facebook publication',
+    'roles' => array(),
+    'module' => 'fb_autopost_entity',
+  );
+
   // Exported permission: 'edit own news content'.
   $permissions['edit own news content'] = array(
     'name' => 'edit own news content',
@@ -1660,6 +1860,13 @@ function gbif_roles_user_default_permissions() {
     'module' => 'node',
   );
 
+  // Exported permission: 'edit own note facebook publication'.
+  $permissions['edit own note facebook publication'] = array(
+    'name' => 'edit own note facebook publication',
+    'roles' => array(),
+    'module' => 'fb_autopost_entity',
+  );
+
   // Exported permission: 'edit own page content'.
   $permissions['edit own page content'] = array(
     'name' => 'edit own page content',
@@ -1668,6 +1875,23 @@ function gbif_roles_user_default_permissions() {
       'Publisher' => 'Publisher',
     ),
     'module' => 'node',
+  );
+
+  // Exported permission: 'edit own photo facebook publication'.
+  $permissions['edit own photo facebook publication'] = array(
+    'name' => 'edit own photo facebook publication',
+    'roles' => array(),
+    'module' => 'fb_autopost_entity',
+  );
+
+  // Exported permission: 'edit own post facebook publication'.
+  $permissions['edit own post facebook publication'] = array(
+    'name' => 'edit own post facebook publication',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'Publisher' => 'Publisher',
+    ),
+    'module' => 'fb_autopost_entity',
   );
 
   // Exported permission: 'edit own programme content'.
@@ -1690,6 +1914,13 @@ function gbif_roles_user_default_permissions() {
     'module' => 'node',
   );
 
+  // Exported permission: 'edit own question facebook publication'.
+  $permissions['edit own question facebook publication'] = array(
+    'name' => 'edit own question facebook publication',
+    'roles' => array(),
+    'module' => 'fb_autopost_entity',
+  );
+
   // Exported permission: 'edit own resource content'.
   $permissions['edit own resource content'] = array(
     'name' => 'edit own resource content',
@@ -1699,6 +1930,13 @@ function gbif_roles_user_default_permissions() {
       'TDWG DQIG' => 'TDWG DQIG',
     ),
     'module' => 'node',
+  );
+
+  // Exported permission: 'edit own status facebook publication'.
+  $permissions['edit own status facebook publication'] = array(
+    'name' => 'edit own status facebook publication',
+    'roles' => array(),
+    'module' => 'fb_autopost_entity',
   );
 
   // Exported permission: 'edit terms in about_gbif'.
@@ -1731,13 +1969,17 @@ function gbif_roles_user_default_permissions() {
     'module' => 'taxonomy',
   );
 
+  // Exported permission: 'edit terms in content_stream'.
+  $permissions['edit terms in content_stream'] = array(
+    'name' => 'edit terms in content_stream',
+    'roles' => array(),
+    'module' => 'taxonomy',
+  );
+
   // Exported permission: 'edit terms in continent'.
   $permissions['edit terms in continent'] = array(
     'name' => 'edit terms in continent',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-      'Publisher' => 'Publisher',
-    ),
+    'roles' => array(),
     'module' => 'taxonomy',
   );
 
@@ -1774,10 +2016,7 @@ function gbif_roles_user_default_permissions() {
   // Exported permission: 'edit terms in gbif_area'.
   $permissions['edit terms in gbif_area'] = array(
     'name' => 'edit terms in gbif_area',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-      'Publisher' => 'Publisher',
-    ),
+    'roles' => array(),
     'module' => 'taxonomy',
   );
 
@@ -1984,6 +2223,24 @@ function gbif_roles_user_default_permissions() {
     'module' => 'pathauto',
   );
 
+  // Exported permission: 'oauth authorize any consumers'.
+  $permissions['oauth authorize any consumers'] = array(
+    'name' => 'oauth authorize any consumers',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'oauth_common',
+  );
+
+  // Exported permission: 'oauth register any consumers'.
+  $permissions['oauth register any consumers'] = array(
+    'name' => 'oauth register any consumers',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'oauth_common',
+  );
+
   // Exported permission: 'override custom username validation'.
   $permissions['override custom username validation'] = array(
     'name' => 'override custom username validation',
@@ -2002,6 +2259,25 @@ function gbif_roles_user_default_permissions() {
       'Publisher' => 'Publisher',
     ),
     'module' => 'comment',
+  );
+
+  // Exported permission: 'post to twitter'.
+  $permissions['post to twitter'] = array(
+    'name' => 'post to twitter',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'Publisher' => 'Publisher',
+    ),
+    'module' => 'twitter_post',
+  );
+
+  // Exported permission: 'post to twitter with global account'.
+  $permissions['post to twitter with global account'] = array(
+    'name' => 'post to twitter with global account',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'twitter_post',
   );
 
   // Exported permission: 'preview focal point'.
@@ -2061,6 +2337,15 @@ function gbif_roles_user_default_permissions() {
       'Administrator' => 'Administrator',
     ),
     'module' => 'mimemail',
+  );
+
+  // Exported permission: 'set facebook permissions'.
+  $permissions['set facebook permissions'] = array(
+    'name' => 'set facebook permissions',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'fb_permissions',
   );
 
   // Exported permission: 'skip CAPTCHA'.
@@ -2212,6 +2497,16 @@ function gbif_roles_user_default_permissions() {
     'module' => 'filter',
   );
 
+  // Exported permission: 'use text format markdown'.
+  $permissions['use text format markdown'] = array(
+    'name' => 'use text format markdown',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'Code editor' => 'Code editor',
+    ),
+    'module' => 'filter',
+  );
+
   // Exported permission: 'use text format php_code'.
   $permissions['use text format php_code'] = array(
     'name' => 'use text format php_code',
@@ -2286,6 +2581,65 @@ function gbif_roles_user_default_permissions() {
     'module' => 'workbench_moderation',
   );
 
+  // Exported permission: 'view any album facebook publication'.
+  $permissions['view any album facebook publication'] = array(
+    'name' => 'view any album facebook publication',
+    'roles' => array(),
+    'module' => 'fb_autopost_entity',
+  );
+
+  // Exported permission: 'view any event facebook publication'.
+  $permissions['view any event facebook publication'] = array(
+    'name' => 'view any event facebook publication',
+    'roles' => array(),
+    'module' => 'fb_autopost_entity',
+  );
+
+  // Exported permission: 'view any link facebook publication'.
+  $permissions['view any link facebook publication'] = array(
+    'name' => 'view any link facebook publication',
+    'roles' => array(),
+    'module' => 'fb_autopost_entity',
+  );
+
+  // Exported permission: 'view any note facebook publication'.
+  $permissions['view any note facebook publication'] = array(
+    'name' => 'view any note facebook publication',
+    'roles' => array(),
+    'module' => 'fb_autopost_entity',
+  );
+
+  // Exported permission: 'view any photo facebook publication'.
+  $permissions['view any photo facebook publication'] = array(
+    'name' => 'view any photo facebook publication',
+    'roles' => array(),
+    'module' => 'fb_autopost_entity',
+  );
+
+  // Exported permission: 'view any post facebook publication'.
+  $permissions['view any post facebook publication'] = array(
+    'name' => 'view any post facebook publication',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'Publisher' => 'Publisher',
+    ),
+    'module' => 'fb_autopost_entity',
+  );
+
+  // Exported permission: 'view any question facebook publication'.
+  $permissions['view any question facebook publication'] = array(
+    'name' => 'view any question facebook publication',
+    'roles' => array(),
+    'module' => 'fb_autopost_entity',
+  );
+
+  // Exported permission: 'view any status facebook publication'.
+  $permissions['view any status facebook publication'] = array(
+    'name' => 'view any status facebook publication',
+    'roles' => array(),
+    'module' => 'fb_autopost_entity',
+  );
+
   // Exported permission: 'view date repeats'.
   $permissions['view date repeats'] = array(
     'name' => 'view date repeats',
@@ -2331,6 +2685,65 @@ function gbif_roles_user_default_permissions() {
       'TDWG DQIG' => 'TDWG DQIG',
     ),
     'module' => 'workbench_moderation',
+  );
+
+  // Exported permission: 'view own album facebook publication'.
+  $permissions['view own album facebook publication'] = array(
+    'name' => 'view own album facebook publication',
+    'roles' => array(),
+    'module' => 'fb_autopost_entity',
+  );
+
+  // Exported permission: 'view own event facebook publication'.
+  $permissions['view own event facebook publication'] = array(
+    'name' => 'view own event facebook publication',
+    'roles' => array(),
+    'module' => 'fb_autopost_entity',
+  );
+
+  // Exported permission: 'view own link facebook publication'.
+  $permissions['view own link facebook publication'] = array(
+    'name' => 'view own link facebook publication',
+    'roles' => array(),
+    'module' => 'fb_autopost_entity',
+  );
+
+  // Exported permission: 'view own note facebook publication'.
+  $permissions['view own note facebook publication'] = array(
+    'name' => 'view own note facebook publication',
+    'roles' => array(),
+    'module' => 'fb_autopost_entity',
+  );
+
+  // Exported permission: 'view own photo facebook publication'.
+  $permissions['view own photo facebook publication'] = array(
+    'name' => 'view own photo facebook publication',
+    'roles' => array(),
+    'module' => 'fb_autopost_entity',
+  );
+
+  // Exported permission: 'view own post facebook publication'.
+  $permissions['view own post facebook publication'] = array(
+    'name' => 'view own post facebook publication',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'Publisher' => 'Publisher',
+    ),
+    'module' => 'fb_autopost_entity',
+  );
+
+  // Exported permission: 'view own question facebook publication'.
+  $permissions['view own question facebook publication'] = array(
+    'name' => 'view own question facebook publication',
+    'roles' => array(),
+    'module' => 'fb_autopost_entity',
+  );
+
+  // Exported permission: 'view own status facebook publication'.
+  $permissions['view own status facebook publication'] = array(
+    'name' => 'view own status facebook publication',
+    'roles' => array(),
+    'module' => 'fb_autopost_entity',
   );
 
   // Exported permission: 'view own unpublished content'.

@@ -39,6 +39,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'access ajax markup',
     'roles' => array(
       'Administrator' => 'Administrator',
+      'Code editor' => 'Code editor',
     ),
     'module' => 'ajax_markup',
   );

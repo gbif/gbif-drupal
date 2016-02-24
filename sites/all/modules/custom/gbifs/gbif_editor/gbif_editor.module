@@ -22,6 +22,48 @@ function gbif_editor_filter_info() {
 }
 
 /**
+ * Implements hook_features_revert().
+ */
+function gbif_editor_filter_default_formats_alter(&$formats) {
+  _gbif_editor_bueditor_global_profile();
+}
+
+function _gbif_editor_bueditor_global_profile() {
+  // Settings defined here.
+  $fields = array(
+    'name' => 'Global profile',
+    'data' => "a:6:{s:9:\"full_html\";a:2:{s:7:\"default\";s:1:\"0\";s:11:\"alternative\";s:1:\"0\";}s:13:\"filtered_html\";a:2:{s:7:\"default\";s:1:\"0\";s:11:\"alternative\";s:1:\"0\";}s:10:\"plain_text\";a:2:{s:7:\"default\";s:1:\"0\";s:11:\"alternative\";s:1:\"0\";}s:8:\"php_code\";a:2:{s:7:\"default\";s:1:\"0\";s:11:\"alternative\";s:1:\"0\";}s:8:\"raw_html\";a:2:{s:7:\"default\";s:1:\"0\";s:11:\"alternative\";s:1:\"0\";}s:8:\"markdown\";a:2:{s:7:\"default\";s:1:\"5\";s:11:\"alternative\";s:1:\"0\";}}",
+  );
+
+  if (db_table_exists('bueditor_plus_profiles')) {
+    $result = db_select('bueditor_plus_profiles', 'b')
+      ->fields('b')
+      ->condition('global', 1)
+      ->execute()
+      ->fetchAssoc();
+
+		if ($result != NULL) {
+      db_update('bueditor_plus_profiles')
+        ->fields(array(
+          'name' => $fields['name'],
+          'data' => $fields['data'],
+        ))
+        ->condition('global', 1)
+        ->execute();
+    }
+    else {
+      // Insert a new global profile.
+      $insert = db_insert('bueditor_plus_profiles')
+        ->fields(array(
+          'name' => $fields['name'],
+          'data' => $fields['data'],
+          'global' => 1,
+        ))
+        ->execute();
+    }
+  }
+}
+/**
  * @param $text
  * @return mixed
  */

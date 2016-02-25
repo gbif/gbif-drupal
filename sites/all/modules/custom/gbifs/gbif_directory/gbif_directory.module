@@ -177,7 +177,11 @@ function _gd_get_node_committee_list($group) {
       unset($persons[$k]);
     }
     else {
-      $node_detail = json_decode(_gp_authenticated_call(_gbif_participant_api_node() . '/' . $person['nodes'][0]['nodeId']), TRUE);
+      foreach ($person['nodes'] as $n) {
+        if ($n['role'] == 'NODE_MANAGER') {
+          $node_detail = json_decode(_gp_authenticated_call(_gbif_participant_api_node() . '/' . $n['nodeId']), TRUE);
+        }
+      }
       $participant_detail = json_decode(_gp_authenticated_call(_gbif_participant_api_participant() . '/' . $node_detail['participantId']), TRUE);
       $person['participantName'] = $participant_detail['name'];
       $person['participantAbbeviatedName'] = (isset($participant_detail['abbreviatedName'])) ? $participant_detail['abbreviatedName'] : NULL;
@@ -196,6 +200,7 @@ function _gd_get_node_committee_list($group) {
       $node_managers[] = $person;
     }
 
+    unset($person_detail, $node_detail, $participant_detail);
   }
 
   // Sort the chairs 1) by role; 2) by last name.
@@ -212,10 +217,12 @@ function _gd_get_node_committee_list($group) {
   // Sort Node Managers by 1) type; 2) name. @see http://stackoverflow.com/questions/3232965/sort-multidimensional-array-by-multiple-keys
   $sort = array();
   foreach ($node_managers as $pk => $pv) {
-    $sort['participantTableName'][$pk] = $pv['participantTableName'];
-    $sort['participantType'][$pk] = $pv['participantType'];
+    $sort['participantTableName'][$pk] = strtolower($pv['participantTableName']);
+    // Participation group doesn't want to sort by participantType.
+    //$sort['participantType'][$pk] = $pv['participantType'];
   }
-  array_multisort($sort['participantType'], SORT_ASC, $sort['participantTableName'], SORT_ASC, $node_managers);
+  //array_multisort($sort['participantType'], SORT_ASC, $sort['participantTableName'], SORT_ASC, $node_managers);
+  array_multisort($sort['participantTableName'], SORT_ASC, $node_managers);
 
   $results = array_merge($chairs, $node_managers);
   return $results;

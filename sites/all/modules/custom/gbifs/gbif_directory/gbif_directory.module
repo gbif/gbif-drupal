@@ -183,6 +183,27 @@ function _gd_get_node_committee_list($group) {
         }
       }
       $participant_detail = json_decode(_gp_authenticated_call(_gbif_participant_api_participant() . '/' . $node_detail['participantId']), TRUE);
+
+      // Adding membership.
+      if ($participant_detail['participationStatus'] == 'VOTING' && $participant_detail['type'] == 'COUNTRY') {
+        $person['participantMembership'] = 'Voting Participant';
+      }
+      elseif ($participant_detail['participationStatus'] == 'ASSOCIATE' && $participant_detail['type'] == 'COUNTRY') {
+        $person['participantMembership'] = 'Associate Country Participant';
+      }
+      elseif ($participant_detail['participationStatus'] == 'ASSOCIATE' && $participant_detail['type'] == 'OTHER') {
+        $person['participantMembership'] = 'Other Associate Participant';
+      }
+      elseif ($participant_detail['participationStatus'] == 'AFFILIATE' && $participant_detail['type'] == 'OTHER') {
+        $person['participantMembership'] = 'GBIF Affiliate';
+      }
+      elseif ($participant_detail['participationStatus'] == 'OBSERVER') {
+        $person['participantMembership'] = 'Observer';
+      }
+      elseif ($participant_detail['participationStatus'] == 'FORMER') {
+        $person['participantMembership'] = 'Former participant';
+      }
+
       $person['participantName'] = $participant_detail['name'];
       $person['participantAbbeviatedName'] = (isset($participant_detail['abbreviatedName'])) ? $participant_detail['abbreviatedName'] : NULL;
       $person['participantType'] = $participant_detail['type'];

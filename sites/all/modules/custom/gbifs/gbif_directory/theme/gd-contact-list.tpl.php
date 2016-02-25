@@ -1,5 +1,17 @@
 <table class="table table-curved">
   <tbody>
+  <!--
+  <?php if ($group == 'Nodes Committee'): ?>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th width="25%">Title</th>
+        <th>Participant</th>
+        <th>Member Status</th>
+      <tr>
+    </thead>
+  <?php endif; ?>
+  -->
   <!-- <thead><tr><th colspan="2"></th><tr></thead> -->
   <?php foreach ($results as $row): ?>
     <?php
@@ -35,7 +47,7 @@
         </div>
       </td>
       <?php if ($group == 'Nodes Committee'): ?>
-      <td width="20%">
+      <td>
       <?php else: ?>
       <td>
       <?php endif; ?>
@@ -44,9 +56,14 @@
       <?php endif; ?>
       </td>
       <?php if ($group == 'Nodes Committee'): ?>
-        <td width="25%">
+        <td>
           <?php if (isset($row['participantTableName'])): ?>
             <?php print $row['participantTableName']; ?>
+          <?php endif; ?>
+        </td>
+        <td>
+          <?php if (isset($row['participantMembership'])): ?>
+            <?php print $row['participantMembership']; ?>
           <?php endif; ?>
         </td>
       <?php endif; ?>

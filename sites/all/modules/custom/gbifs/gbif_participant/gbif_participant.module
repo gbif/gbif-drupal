@@ -1011,7 +1011,7 @@ function _gbif_participant_membership_query($gbif_membership) {
         }
         break;
       case 'AFFILIATE':
-        if ($participant['participationStatus'] == 'OBSERVER' && $participant['type'] == 'OTHER') {
+        if ($participant['participationStatus'] == 'AFFILIATE' && $participant['type'] == 'OTHER') {
           $participant['gbif_membership'] = 'GBIF Affiliate';
           $results[] = $participant;
         }

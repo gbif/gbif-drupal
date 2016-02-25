@@ -123,7 +123,7 @@ function gbif_pages_preprocess_page(&$variables) {
 }
 
 function gbif_pages_preprocess_node(&$variables) {
-  if ($variables['type'] == 'page') {
+  if ($variables['type'] == 'page' || $variables['type'] == 'generictemplate') {
     // check if the body input format is markdown.
     $markdown = FALSE;
     foreach ($variables['body'] as $body) {

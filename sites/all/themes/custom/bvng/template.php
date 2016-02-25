@@ -306,7 +306,8 @@ function bvng_preprocess_node(&$variables) {
 
   	foreach ($variables['cchunks'] as $k => $cchunk) {
   	  $cchunks_title[$k] = _bvng_get_field_value('field_collection_item', $cchunk, 'field_title');
-  	  $cchunks_content[$k] = _bvng_get_field_value('field_collection_item', $cchunk, 'field_sectioncontent');
+  	  $cchunks_content[$k]['content'] = _bvng_get_field_value('field_collection_item', $cchunk, 'field_sectioncontent');
+      $cchunks_content[$k]['format'] = $cchunk->field_sectioncontent['und'][0]['format'];
 
       $sidebar_fields = array(
         'anchors' => 'field_anchorlinkslist',

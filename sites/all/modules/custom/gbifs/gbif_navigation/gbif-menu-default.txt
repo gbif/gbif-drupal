@@ -19,12 +19,12 @@ Data {"url":"<front>"}
 --Methods {"url":"using-data\/methods"}
 --Data applications {"url":"using-data\/data-applications"}
 --Policy relevance {"url":"using-data\/policy-relevance"}
--Infrastructure {"url":"infrastructure\/summary", "description": "How GBIF works as a global informatics infrastructure", "non_drupal_url":true}
---Summary {"url":"infrastructure\/summary", "non_drupal_url":true}
---Registry {"url":"infrastructure\/registry", "non_drupal_url":true}
---Occurrences {"url":"infrastructure\/occurrences", "non_drupal_url":true}
---Data processing {"url":"infrastructure\/data-processing","hidden":true, "non_drupal_url":true}
---Tools {"url":"infrastructure\/tools", "non_drupal_url":true}
+-Infrastructure {"url":"infrastructure\/summary", "description": "How GBIF works as a global informatics infrastructure"}
+--Summary {"url":"infrastructure\/summary"}
+--Registry {"url":"infrastructure\/registry"}
+--Occurrences {"url":"infrastructure\/occurrences"}
+--Data processing {"url":"infrastructure\/processing"}
+--Tools {"url":"infrastructure\/tools"}
 --Species {"url":"<front>","hidden":true, "non_drupal_url":true}
 --Maps {"url":"<front>","hidden":true, "non_drupal_url":true}
 --FAQ {"url":"<front>","hidden":true}

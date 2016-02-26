@@ -99,7 +99,7 @@ function gbif_event_strongarm() {
           'weight' => '2',
         ),
         'title' => array(
-          'weight' => '3',
+          'weight' => '2',
         ),
         'path' => array(
           'weight' => '1',

@@ -12,6 +12,7 @@ function gbif_event_field_default_field_instances() {
 
   // Exported field_instance: 'node-event-body'
   $field_instances['node-event-body'] = array(
+    'bueditor_profile' => -1,
     'bundle' => 'event',
     'default_value' => NULL,
     'deleted' => 0,
@@ -54,6 +55,11 @@ function gbif_event_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'display_summary' => 1,
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
       'mediafront' => array(
         'custom' => '',
         'field_type' => 0,
@@ -68,11 +74,200 @@ function gbif_event_field_default_field_instances() {
       'active' => 1,
       'module' => 'text',
       'settings' => array(
-        'rows' => 20,
+        'rows' => 10,
         'summary_rows' => 5,
       ),
       'type' => 'text_textarea_with_summary',
       'weight' => 5,
+    ),
+  );
+
+  // Exported field_instance: 'node-event-field_ge_gbifs_attendee'
+  $field_instances['node-event-field_ge_gbifs_attendee'] = array(
+    'bundle' => 'event',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => FALSE,
+        ),
+        'type' => 'entityreference_label',
+        'weight' => 21,
+      ),
+      'ical' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'search_index' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_ge_gbifs_attendee',
+    'label' => 'GBIFS attendee',
+    'required' => 0,
+    'settings' => array(
+      'mediafront' => array(
+        'custom' => '',
+        'field_type' => 0,
+        'media_type' => 'media',
+        'preview' => 0,
+        'thumbnail' => 0,
+      ),
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'entityreference',
+      'settings' => array(
+        'match_operator' => 'STARTS_WITH',
+        'path' => '',
+        'size' => 60,
+      ),
+      'type' => 'entityreference_autocomplete_tags',
+      'weight' => 15,
+    ),
+  );
+
+  // Exported field_instance: 'node-event-field_notes'
+  $field_instances['node-event-field_notes'] = array(
+    'bueditor_profile' => -1,
+    'bundle' => 'event',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 20,
+      ),
+      'ical' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'search_index' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_notes',
+    'label' => 'Notes',
+    'required' => 0,
+    'settings' => array(
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
+      'mediafront' => array(
+        'custom' => '',
+        'field_type' => 0,
+        'media_type' => 'media',
+        'preview' => 0,
+        'thumbnail' => 0,
+      ),
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'rows' => 5,
+      ),
+      'type' => 'text_textarea',
+      'weight' => 16,
+    ),
+  );
+
+  // Exported field_instance: 'node-event-field_public'
+  $field_instances['node-event-field_public'] = array(
+    'bundle' => 'event',
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 19,
+      ),
+      'ical' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'search_index' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_public',
+    'label' => 'Public',
+    'required' => 0,
+    'settings' => array(
+      'mediafront' => array(
+        'custom' => '',
+        'field_type' => 0,
+        'media_type' => 'media',
+        'preview' => 0,
+        'thumbnail' => 0,
+      ),
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'display_label' => 0,
+      ),
+      'type' => 'options_onoff',
+      'weight' => 14,
     ),
   );
 
@@ -117,8 +312,9 @@ function gbif_event_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'linkit' => array(
+        'button_text' => 'Search',
         'enable' => 0,
-        'insert_plugin' => '',
+        'profile' => '',
       ),
       'mediafront' => array(
         'custom' => '',
@@ -182,8 +378,9 @@ function gbif_event_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'linkit' => array(
+        'button_text' => 'Search',
         'enable' => 0,
-        'insert_plugin' => '',
+        'profile' => '',
       ),
       'mediafront' => array(
         'custom' => '',
@@ -202,7 +399,7 @@ function gbif_event_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 8,
+      'weight' => 33,
     ),
   );
 
@@ -279,7 +476,7 @@ function gbif_event_field_default_field_instances() {
         'year_range' => '-3:+3',
       ),
       'type' => 'date_popup',
-      'weight' => 12,
+      'weight' => 13,
     ),
   );
 
@@ -324,8 +521,9 @@ function gbif_event_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'linkit' => array(
+        'button_text' => 'Search',
         'enable' => 0,
-        'insert_plugin' => '',
+        'profile' => '',
       ),
       'mediafront' => array(
         'custom' => '',
@@ -344,7 +542,7 @@ function gbif_event_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 13,
+      'weight' => 14,
     ),
   );
 
@@ -389,8 +587,9 @@ function gbif_event_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'linkit' => array(
+        'button_text' => 'Search',
         'enable' => 0,
-        'insert_plugin' => '',
+        'profile' => '',
       ),
       'mediafront' => array(
         'custom' => '',
@@ -480,6 +679,7 @@ function gbif_event_field_default_field_instances() {
         'retroactive_update' => 0,
       ),
       'filefield_paths_enabled' => 1,
+      'image_field_caption' => 0,
       'max_filesize' => '',
       'max_resolution' => '',
       'mediafront' => array(
@@ -529,18 +729,24 @@ function gbif_event_field_default_field_instances() {
           'colorbox__featured_news_slideshow_image' => 0,
           'colorbox__large' => 0,
           'colorbox__linkit_thumb' => 0,
+          'colorbox__mainimage' => 0,
           'colorbox__medium' => 0,
+          'colorbox__rhimage' => 0,
           'colorbox__square_thumbnail' => 0,
           'colorbox__thumbnail' => 0,
+          'colorbox__uses_of_data___main' => 0,
           'icon_link' => 0,
           'image' => 0,
           'image_featured' => 0,
           'image_featured_news_slideshow_image' => 0,
           'image_large' => 0,
           'image_linkit_thumb' => 0,
+          'image_mainimage' => 0,
           'image_medium' => 0,
+          'image_rhimage' => 0,
           'image_square_thumbnail' => 0,
           'image_thumbnail' => 0,
+          'image_uses_of_data___main' => 0,
           'link' => 0,
         ),
         'insert_width' => '',
@@ -548,7 +754,7 @@ function gbif_event_field_default_field_instances() {
         'progress_indicator' => 'throbber',
       ),
       'type' => 'image_image',
-      'weight' => 20,
+      'weight' => 9,
     ),
   );
 
@@ -647,7 +853,7 @@ function gbif_event_field_default_field_instances() {
         'year_range' => '-3:+3',
       ),
       'type' => 'date_popup',
-      'weight' => 11,
+      'weight' => 12,
     ),
   );
 
@@ -712,7 +918,7 @@ function gbif_event_field_default_field_instances() {
       'module' => 'number',
       'settings' => array(),
       'type' => 'number',
-      'weight' => 4,
+      'weight' => 17,
     ),
   );
 
@@ -757,8 +963,9 @@ function gbif_event_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'linkit' => array(
+        'button_text' => 'Search',
         'enable' => 0,
-        'insert_plugin' => '',
+        'profile' => '',
       ),
       'mediafront' => array(
         'custom' => '',
@@ -777,7 +984,7 @@ function gbif_event_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 18,
+      'weight' => 35,
     ),
   );
 
@@ -822,8 +1029,9 @@ function gbif_event_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'linkit' => array(
+        'button_text' => 'Search',
         'enable' => 0,
-        'insert_plugin' => '',
+        'profile' => '',
       ),
       'mediafront' => array(
         'custom' => '',
@@ -842,7 +1050,7 @@ function gbif_event_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 9,
+      'weight' => 8,
     ),
   );
 
@@ -888,8 +1096,9 @@ function gbif_event_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'linkit' => array(
+        'button_text' => 'Search',
         'enable' => 0,
-        'insert_plugin' => '',
+        'profile' => '',
       ),
       'mediafront' => array(
         'custom' => '',
@@ -908,7 +1117,7 @@ function gbif_event_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 15,
+      'weight' => 16,
     ),
   );
 
@@ -968,7 +1177,7 @@ function gbif_event_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'taxonomy_autocomplete',
-      'weight' => 19,
+      'weight' => 34,
     ),
   );
 
@@ -1013,8 +1222,9 @@ function gbif_event_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'linkit' => array(
+        'button_text' => 'Search',
         'enable' => 0,
-        'insert_plugin' => '',
+        'profile' => '',
       ),
       'mediafront' => array(
         'custom' => '',
@@ -1033,7 +1243,7 @@ function gbif_event_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 10,
+      'weight' => 8,
     ),
   );
 
@@ -1143,25 +1353,31 @@ function gbif_event_field_default_field_instances() {
           'colorbox__featured_news_slideshow_image' => 0,
           'colorbox__large' => 0,
           'colorbox__linkit_thumb' => 0,
+          'colorbox__mainimage' => 0,
           'colorbox__medium' => 0,
+          'colorbox__rhimage' => 0,
           'colorbox__square_thumbnail' => 0,
           'colorbox__thumbnail' => 0,
+          'colorbox__uses_of_data___main' => 0,
           'icon_link' => 0,
           'image' => 0,
           'image_featured' => 0,
           'image_featured_news_slideshow_image' => 0,
           'image_large' => 0,
           'image_linkit_thumb' => 0,
+          'image_mainimage' => 0,
           'image_medium' => 0,
+          'image_rhimage' => 0,
           'image_square_thumbnail' => 0,
           'image_thumbnail' => 0,
+          'image_uses_of_data___main' => 0,
           'link' => 0,
         ),
         'insert_width' => '',
         'progress_indicator' => 'throbber',
       ),
       'type' => 'file_generic',
-      'weight' => 21,
+      'weight' => 10,
     ),
   );
 
@@ -1203,8 +1419,9 @@ function gbif_event_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'linkit' => array(
+        'button_text' => 'Search',
         'enable' => 0,
-        'insert_plugin' => '',
+        'profile' => '',
       ),
       'mediafront' => array(
         'custom' => '',
@@ -1223,7 +1440,7 @@ function gbif_event_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 17,
+      'weight' => 36,
     ),
   );
 
@@ -1268,8 +1485,9 @@ function gbif_event_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'linkit' => array(
+        'button_text' => 'Search',
         'enable' => 0,
-        'insert_plugin' => '',
+        'profile' => '',
       ),
       'mediafront' => array(
         'custom' => '',
@@ -1288,7 +1506,7 @@ function gbif_event_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 14,
+      'weight' => 15,
     ),
   );
 
@@ -1348,7 +1566,7 @@ function gbif_event_field_default_field_instances() {
         'apply_chosen' => '',
       ),
       'type' => 'options_select',
-      'weight' => 16,
+      'weight' => 17,
     ),
   );
 
@@ -1364,16 +1582,19 @@ function gbif_event_field_default_field_instances() {
   t('Event ID');
   t('Event image');
   t('Event resources');
+  t('GBIFS attendee');
   t('Language of event');
   t('Location');
+  t('Notes');
   t('Organising participant(s)');
   t('Participants');
+  t('Please only enter the city.');
+  t('Public');
   t('Resources');
   t('Status');
   t('Summary');
   t('Textual information of resources. HTML allowed.');
-  t('Textual information that actually shows in Location field. Please remember to provide country when possible.');
-  t('Textual information that actually shows on the event detail and teaser, as a cheaper way instead of computing from real date fields.');
+  t('Textual information that actually shows on the event detail and teaser. Leave this field blank if you want it to be calculated.');
   t('Venue');
   t('Venue country');
 

@@ -127,7 +127,7 @@ function gbif_pages_preprocess_node(&$variables) {
     // check if the body input format is markdown.
     $markdown = FALSE;
     foreach ($variables['body'] as $body) {
-      if ($body['format'] == 'markdown') {
+      if ($body['format'] == 'parsedown') {
         $markdown = TRUE;
       }
     }

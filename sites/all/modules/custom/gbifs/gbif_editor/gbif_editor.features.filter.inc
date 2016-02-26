@@ -90,15 +90,15 @@ function gbif_editor_filter_default_formats() {
     ),
   );
 
-  // Exported format: Markdown.
-  $formats['markdown'] = array(
-    'format' => 'markdown',
-    'name' => 'Markdown',
+  // Exported format: Parsedown.
+  $formats['parsedown'] = array(
+    'format' => 'parsedown',
+    'name' => 'Parsedown',
     'cache' => 1,
     'status' => 1,
     'weight' => 0,
     'filters' => array(
-      'filter_markdown' => array(
+      'parsedown' => array(
         'weight' => 0,
         'status' => 1,
         'settings' => array(),

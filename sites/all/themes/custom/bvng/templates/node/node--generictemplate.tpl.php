@@ -154,7 +154,7 @@
         </div>
       </div>
       <div class="row">
-        <?php if ($cchunks_content[$k]['format'] == 'markdown'): ?>
+        <?php if ($cchunks_content[$k]['format'] == 'parsedown'): ?>
           <div class="node-content markdown-layout col-xs-12">
         <?php else: ?>
           <div class="node-content col-xs-8">
@@ -169,9 +169,9 @@
             </div>
             <?php endif; ?>
           <?php endif; ?>
-  				<?php print check_markup(token_replace($cchunks_content[$k]['content']), 'full_html', '', FALSE); ?>
+  				<?php print check_markup(token_replace($cchunks_content[$k]['content']), $cchunks_content[$k]['format'], '', FALSE); ?>
         </div>
-          <?php if ($cchunks_content[$k]['format'] != 'markdown'): ?>
+          <?php if ($cchunks_content[$k]['format'] != 'parsedown'): ?>
             <div class="node-sidebar col-xs-3">
               <?php if (!empty($cchunks_sidebar[$k])): ?>
                 <?php print $cchunks_sidebar[$k]; ?>

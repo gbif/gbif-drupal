@@ -2498,9 +2498,9 @@ function gbif_roles_user_default_permissions() {
     'module' => 'filter',
   );
 
-  // Exported permission: 'use text format markdown'.
-  $permissions['use text format markdown'] = array(
-    'name' => 'use text format markdown',
+  // Exported permission: 'use text format parsedown'.
+  $permissions['use text format parsedown'] = array(
+    'name' => 'use text format parsedown',
     'roles' => array(
       'Administrator' => 'Administrator',
       'Code editor' => 'Code editor',

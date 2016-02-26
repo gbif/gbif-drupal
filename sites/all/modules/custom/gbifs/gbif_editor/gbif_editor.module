@@ -28,11 +28,16 @@ function gbif_editor_filter_default_formats_alter(&$formats) {
   _gbif_editor_bueditor_global_profile();
 }
 
+/**
+ * Programmatically create the bueditor global profile without CTools API support.
+ * Look up bueditor_plus_profiles() for getting the setting string.
+ * @throws Exception
+ */
 function _gbif_editor_bueditor_global_profile() {
   // Settings defined here.
   $fields = array(
     'name' => 'Global profile',
-    'data' => "a:6:{s:9:\"full_html\";a:2:{s:7:\"default\";s:1:\"0\";s:11:\"alternative\";s:1:\"0\";}s:13:\"filtered_html\";a:2:{s:7:\"default\";s:1:\"0\";s:11:\"alternative\";s:1:\"0\";}s:10:\"plain_text\";a:2:{s:7:\"default\";s:1:\"0\";s:11:\"alternative\";s:1:\"0\";}s:8:\"php_code\";a:2:{s:7:\"default\";s:1:\"0\";s:11:\"alternative\";s:1:\"0\";}s:8:\"raw_html\";a:2:{s:7:\"default\";s:1:\"0\";s:11:\"alternative\";s:1:\"0\";}s:8:\"markdown\";a:2:{s:7:\"default\";s:1:\"5\";s:11:\"alternative\";s:1:\"0\";}}",
+    'data' => "a:6:{s:9:\"full_html\";a:2:{s:7:\"default\";s:1:\"0\";s:11:\"alternative\";s:1:\"0\";}s:13:\"filtered_html\";a:2:{s:7:\"default\";s:1:\"0\";s:11:\"alternative\";s:1:\"0\";}s:10:\"plain_text\";a:2:{s:7:\"default\";s:1:\"0\";s:11:\"alternative\";s:1:\"0\";}s:8:\"php_code\";a:2:{s:7:\"default\";s:1:\"0\";s:11:\"alternative\";s:1:\"0\";}s:8:\"raw_html\";a:2:{s:7:\"default\";s:1:\"0\";s:11:\"alternative\";s:1:\"0\";}s:9:\"parsedown\";a:2:{s:7:\"default\";s:1:\"5\";s:11:\"alternative\";s:1:\"0\";}}",
   );
 
   if (db_table_exists('bueditor_plus_profiles')) {

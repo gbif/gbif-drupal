@@ -10,7 +10,7 @@
 function gbif_event_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'node-event-body'
+  // Exported field_instance: 'node-event-body'.
   $field_instances['node-event-body'] = array(
     'bueditor_profile' => -1,
     'bundle' => 'event',
@@ -82,7 +82,7 @@ function gbif_event_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-event-field_ge_gbifs_attendee'
+  // Exported field_instance: 'node-event-field_ge_gbifs_attendee'.
   $field_instances['node-event-field_ge_gbifs_attendee'] = array(
     'bundle' => 'event',
     'default_value' => NULL,
@@ -144,7 +144,7 @@ function gbif_event_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-event-field_notes'
+  // Exported field_instance: 'node-event-field_notes'.
   $field_instances['node-event-field_notes'] = array(
     'bueditor_profile' => -1,
     'bundle' => 'event',
@@ -209,7 +209,7 @@ function gbif_event_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-event-ge_audience'
+  // Exported field_instance: 'node-event-ge_audience'.
   $field_instances['node-event-ge_audience'] = array(
     'bundle' => 'event',
     'default_value' => NULL,
@@ -275,7 +275,7 @@ function gbif_event_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-event-ge_contact_info'
+  // Exported field_instance: 'node-event-ge_contact_info'.
   $field_instances['node-event-ge_contact_info'] = array(
     'bundle' => 'event',
     'default_value' => NULL,
@@ -341,7 +341,7 @@ function gbif_event_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-event-ge_date_ical'
+  // Exported field_instance: 'node-event-ge_date_ical'.
   $field_instances['node-event-ge_date_ical'] = array(
     'bundle' => 'event',
     'deleted' => 0,
@@ -418,7 +418,7 @@ function gbif_event_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-event-ge_date_text'
+  // Exported field_instance: 'node-event-ge_date_text'.
   $field_instances['node-event-ge_date_text'] = array(
     'bundle' => 'event',
     'default_value' => NULL,
@@ -484,7 +484,7 @@ function gbif_event_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-event-ge_desc_long'
+  // Exported field_instance: 'node-event-ge_desc_long'.
   $field_instances['node-event-ge_desc_long'] = array(
     'bundle' => 'event',
     'default_value' => NULL,
@@ -550,7 +550,7 @@ function gbif_event_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-event-ge_image'
+  // Exported field_instance: 'node-event-ge_image'.
   $field_instances['node-event-ge_image'] = array(
     'bundle' => 'event',
     'deleted' => 0,
@@ -696,7 +696,7 @@ function gbif_event_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-event-ge_ims_date'
+  // Exported field_instance: 'node-event-ge_ims_date'.
   $field_instances['node-event-ge_ims_date'] = array(
     'bundle' => 'event',
     'deleted' => 0,
@@ -795,7 +795,7 @@ function gbif_event_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-event-ge_ims_kp_id'
+  // Exported field_instance: 'node-event-ge_ims_kp_id'.
   $field_instances['node-event-ge_ims_kp_id'] = array(
     'bundle' => 'event',
     'default_value' => NULL,
@@ -860,7 +860,7 @@ function gbif_event_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-event-ge_language'
+  // Exported field_instance: 'node-event-ge_language'.
   $field_instances['node-event-ge_language'] = array(
     'bundle' => 'event',
     'default_value' => NULL,
@@ -926,7 +926,7 @@ function gbif_event_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-event-ge_lib_resources'
+  // Exported field_instance: 'node-event-ge_lib_resources'.
   $field_instances['node-event-ge_lib_resources'] = array(
     'bundle' => 'event',
     'default_value' => NULL,
@@ -992,7 +992,7 @@ function gbif_event_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-event-ge_location'
+  // Exported field_instance: 'node-event-ge_location'.
   $field_instances['node-event-ge_location'] = array(
     'bundle' => 'event',
     'default_value' => NULL,
@@ -1059,7 +1059,7 @@ function gbif_event_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-event-ge_organising_participants'
+  // Exported field_instance: 'node-event-ge_organising_participants'.
   $field_instances['node-event-ge_organising_participants'] = array(
     'bundle' => 'event',
     'default_value' => NULL,
@@ -1119,7 +1119,7 @@ function gbif_event_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-event-ge_participants'
+  // Exported field_instance: 'node-event-ge_participants'.
   $field_instances['node-event-ge_participants'] = array(
     'bundle' => 'event',
     'default_value' => NULL,
@@ -1185,7 +1185,7 @@ function gbif_event_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-event-ge_resources'
+  // Exported field_instance: 'node-event-ge_resources'.
   $field_instances['node-event-ge_resources'] = array(
     'bundle' => 'event',
     'deleted' => 0,
@@ -1319,7 +1319,7 @@ function gbif_event_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-event-ge_status'
+  // Exported field_instance: 'node-event-ge_status'.
   $field_instances['node-event-ge_status'] = array(
     'bundle' => 'event',
     'default_value' => NULL,
@@ -1382,7 +1382,7 @@ function gbif_event_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-event-ge_venue'
+  // Exported field_instance: 'node-event-ge_venue'.
   $field_instances['node-event-ge_venue'] = array(
     'bundle' => 'event',
     'default_value' => NULL,
@@ -1448,7 +1448,7 @@ function gbif_event_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-event-ge_venue_country'
+  // Exported field_instance: 'node-event-ge_venue_country'.
   $field_instances['node-event-ge_venue_country'] = array(
     'bundle' => 'event',
     'default_value' => NULL,

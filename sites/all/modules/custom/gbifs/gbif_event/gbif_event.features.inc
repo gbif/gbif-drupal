@@ -23,7 +23,19 @@ function gbif_event_ctools_plugin_api($module = NULL, $api = NULL) {
  * Implements hook_views_api().
  */
 function gbif_event_views_api($module = NULL, $api = NULL) {
-  return array("api" => "3.0");
+  return array(
+    'api' => 3.0,
+    'template path' => drupal_get_path('module', 'gbif_event' . '/theme'),
+  );
+}
+
+/**
+ * Implements hook_fe_date_custom_date_formats().
+ */
+function gbif_event_fe_date_custom_date_formats() {
+  $custom_date_formats = array();
+  $custom_date_formats['d M Y'] = 'd M Y';
+  return $custom_date_formats;
 }
 
 /**

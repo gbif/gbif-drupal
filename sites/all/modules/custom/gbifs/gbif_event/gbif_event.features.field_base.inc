@@ -10,7 +10,7 @@
 function gbif_event_field_default_field_bases() {
   $field_bases = array();
 
-  // Exported field_base: 'body'
+  // Exported field_base: 'body'.
   $field_bases['body'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -31,7 +31,7 @@ function gbif_event_field_default_field_bases() {
     'type' => 'text_with_summary',
   );
 
-  // Exported field_base: 'field_ge_gbifs_attendee'
+  // Exported field_base: 'field_ge_gbifs_attendee'.
   $field_bases['field_ge_gbifs_attendee'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -64,7 +64,7 @@ function gbif_event_field_default_field_bases() {
     'type' => 'entityreference',
   );
 
-  // Exported field_base: 'field_notes'
+  // Exported field_base: 'field_notes'.
   $field_bases['field_notes'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -83,7 +83,7 @@ function gbif_event_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'ge_audience'
+  // Exported field_base: 'ge_audience'.
   $field_bases['ge_audience'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -102,7 +102,7 @@ function gbif_event_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'ge_contact_info'
+  // Exported field_base: 'ge_contact_info'.
   $field_bases['ge_contact_info'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -121,7 +121,7 @@ function gbif_event_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'ge_date_ical'
+  // Exported field_base: 'ge_date_ical'.
   $field_bases['ge_date_ical'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -151,7 +151,7 @@ function gbif_event_field_default_field_bases() {
     'type' => 'datetime',
   );
 
-  // Exported field_base: 'ge_date_text'
+  // Exported field_base: 'ge_date_text'.
   $field_bases['ge_date_text'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -172,7 +172,7 @@ function gbif_event_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'ge_desc_long'
+  // Exported field_base: 'ge_desc_long'.
   $field_bases['ge_desc_long'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -191,7 +191,7 @@ function gbif_event_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'ge_image'
+  // Exported field_base: 'ge_image'.
   $field_bases['ge_image'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -213,7 +213,7 @@ function gbif_event_field_default_field_bases() {
     'type' => 'image',
   );
 
-  // Exported field_base: 'ge_ims_date'
+  // Exported field_base: 'ge_ims_date'.
   $field_bases['ge_ims_date'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -243,7 +243,7 @@ function gbif_event_field_default_field_bases() {
     'type' => 'datestamp',
   );
 
-  // Exported field_base: 'ge_ims_kp_id'
+  // Exported field_base: 'ge_ims_kp_id'.
   $field_bases['ge_ims_kp_id'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -258,7 +258,7 @@ function gbif_event_field_default_field_bases() {
     'type' => 'number_integer',
   );
 
-  // Exported field_base: 'ge_language'
+  // Exported field_base: 'ge_language'.
   $field_bases['ge_language'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -279,7 +279,7 @@ function gbif_event_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'ge_lib_resources'
+  // Exported field_base: 'ge_lib_resources'.
   $field_bases['ge_lib_resources'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -298,7 +298,7 @@ function gbif_event_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'ge_location'
+  // Exported field_base: 'ge_location'.
   $field_bases['ge_location'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -319,7 +319,7 @@ function gbif_event_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'ge_organising_participants'
+  // Exported field_base: 'ge_organising_participants'.
   $field_bases['ge_organising_participants'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -345,7 +345,7 @@ function gbif_event_field_default_field_bases() {
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'ge_participants'
+  // Exported field_base: 'ge_participants'.
   $field_bases['ge_participants'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -364,7 +364,7 @@ function gbif_event_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'ge_resources'
+  // Exported field_base: 'ge_resources'.
   $field_bases['ge_resources'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -387,7 +387,7 @@ function gbif_event_field_default_field_bases() {
     'type' => 'file',
   );
 
-  // Exported field_base: 'ge_status'
+  // Exported field_base: 'ge_status'.
   $field_bases['ge_status'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -408,7 +408,7 @@ function gbif_event_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'ge_venue'
+  // Exported field_base: 'ge_venue'.
   $field_bases['ge_venue'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -429,7 +429,7 @@ function gbif_event_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'ge_venue_country'
+  // Exported field_base: 'ge_venue_country'.
   $field_bases['ge_venue_country'] = array(
     'active' => 1,
     'cardinality' => 1,

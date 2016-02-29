@@ -330,17 +330,6 @@ function gbif_event_node_view($node, $view_mode, $langcode) {
 */
 
 /**
- * Implementation of hook_views_api().
- */
-function gbif_event_views_api() {
-	return array(
-		'api' => 3.0,
-		'path' => drupal_get_path('module', 'gbif_event') . '/views',
-		'template path' => drupal_get_path('module', 'gbif_event' . '/theme'),
-	);
-}
-
-/**
  * Manually set the highlighted_title here instead of in the theme. This reduces
  * dependency on the theme.
  * @param $page

@@ -1,10 +1,204 @@
 <?php
+/**
+ * @file
+ * gbif_event.views_default.inc
+ */
 
 /**
  * Implements hook_views_default_views().
  */
 function gbif_event_views_default_views() {
-	$views = array();
+  $export = array();
+
+  $view = new view();
+  $view->name = 'event_gbifs_admin';
+  $view->description = '';
+  $view->tag = 'default';
+  $view->base_table = 'node';
+  $view->human_name = 'Event - GBIFS admin';
+  $view->core = 7;
+  $view->api_version = '3.0';
+  $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+
+  /* Display: Master */
+  $handler = $view->new_display('default', 'Master', 'default');
+  $handler->display->display_options['title'] = 'Event - GBIFS admin';
+  $handler->display->display_options['use_more_always'] = FALSE;
+  $handler->display->display_options['access']['type'] = 'role';
+  $handler->display->display_options['access']['role'] = array(
+    3 => '3',
+    7 => '7',
+    8 => '8',
+  );
+  $handler->display->display_options['cache']['type'] = 'none';
+  $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['exposed_form']['type'] = 'basic';
+  $handler->display->display_options['pager']['type'] = 'full';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '20';
+  $handler->display->display_options['style_plugin'] = 'editableviews_table';
+  $handler->display->display_options['style_options']['columns'] = array(
+    'title' => 'title',
+    'ge_date_ical' => 'ge_date_ical',
+    'ge_location' => 'ge_location',
+    'ge_venue_country' => 'ge_venue_country',
+    'field_ge_gbifs_attendee_editable' => 'field_ge_gbifs_attendee_editable',
+  );
+  $handler->display->display_options['style_options']['default'] = 'ge_date_ical';
+  $handler->display->display_options['style_options']['info'] = array(
+    'title' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'ge_date_ical' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'ge_location' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'ge_venue_country' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_ge_gbifs_attendee_editable' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+  );
+  $handler->display->display_options['style_options']['save_messages'] = 'summary';
+  $handler->display->display_options['style_options']['batch_size'] = '10';
+  /* Field: Content: Title */
+  $handler->display->display_options['fields']['title']['id'] = 'title';
+  $handler->display->display_options['fields']['title']['table'] = 'node';
+  $handler->display->display_options['fields']['title']['field'] = 'title';
+  $handler->display->display_options['fields']['title']['label'] = '';
+  $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
+  $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
+  $handler->display->display_options['fields']['title']['element_type'] = '0';
+  $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['title']['element_default_classes'] = FALSE;
+  /* Field: Content: Add to calendar */
+  $handler->display->display_options['fields']['ge_date_ical']['id'] = 'ge_date_ical';
+  $handler->display->display_options['fields']['ge_date_ical']['table'] = 'field_data_ge_date_ical';
+  $handler->display->display_options['fields']['ge_date_ical']['field'] = 'ge_date_ical';
+  $handler->display->display_options['fields']['ge_date_ical']['label'] = 'Date';
+  $handler->display->display_options['fields']['ge_date_ical']['element_type'] = '0';
+  $handler->display->display_options['fields']['ge_date_ical']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['ge_date_ical']['element_default_classes'] = FALSE;
+  $handler->display->display_options['fields']['ge_date_ical']['settings'] = array(
+    'format_type' => 'day_month_year',
+    'fromto' => 'both',
+    'multiple_number' => '',
+    'multiple_from' => '',
+    'multiple_to' => '',
+    'show_repeat_rule' => 'show',
+  );
+  /* Field: Content: Location */
+  $handler->display->display_options['fields']['ge_location']['id'] = 'ge_location';
+  $handler->display->display_options['fields']['ge_location']['table'] = 'field_data_ge_location';
+  $handler->display->display_options['fields']['ge_location']['field'] = 'ge_location';
+  $handler->display->display_options['fields']['ge_location']['element_type'] = '0';
+  $handler->display->display_options['fields']['ge_location']['element_default_classes'] = FALSE;
+  /* Field: Content: Venue country */
+  $handler->display->display_options['fields']['ge_venue_country']['id'] = 'ge_venue_country';
+  $handler->display->display_options['fields']['ge_venue_country']['table'] = 'field_data_ge_venue_country';
+  $handler->display->display_options['fields']['ge_venue_country']['field'] = 'ge_venue_country';
+  $handler->display->display_options['fields']['ge_venue_country']['element_type'] = '0';
+  $handler->display->display_options['fields']['ge_venue_country']['element_default_classes'] = FALSE;
+  /* Field: Content: GBIFS attendee (editable) */
+  $handler->display->display_options['fields']['field_ge_gbifs_attendee_editable']['id'] = 'field_ge_gbifs_attendee_editable';
+  $handler->display->display_options['fields']['field_ge_gbifs_attendee_editable']['table'] = 'field_data_field_ge_gbifs_attendee';
+  $handler->display->display_options['fields']['field_ge_gbifs_attendee_editable']['field'] = 'field_ge_gbifs_attendee_editable';
+  $handler->display->display_options['fields']['field_ge_gbifs_attendee_editable']['label'] = 'GBIFS attendee';
+  $handler->display->display_options['fields']['field_ge_gbifs_attendee_editable']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_ge_gbifs_attendee_editable']['settings'] = array(
+    'link' => 0,
+  );
+  $handler->display->display_options['fields']['field_ge_gbifs_attendee_editable']['delta_offset'] = '0';
+  $handler->display->display_options['fields']['field_ge_gbifs_attendee_editable']['widget_type'] = 'entityreference_autocomplete_tags';
+  $handler->display->display_options['fields']['field_ge_gbifs_attendee_editable']['suppress_label'] = 1;
+  $handler->display->display_options['fields']['field_ge_gbifs_attendee_editable']['suppress_description'] = 0;
+  /* Field: Content: Notes (editable) */
+  $handler->display->display_options['fields']['field_notes_editable']['id'] = 'field_notes_editable';
+  $handler->display->display_options['fields']['field_notes_editable']['table'] = 'field_data_field_notes';
+  $handler->display->display_options['fields']['field_notes_editable']['field'] = 'field_notes_editable';
+  $handler->display->display_options['fields']['field_notes_editable']['label'] = 'Notes';
+  $handler->display->display_options['fields']['field_notes_editable']['element_type'] = '0';
+  $handler->display->display_options['fields']['field_notes_editable']['element_default_classes'] = FALSE;
+  $handler->display->display_options['fields']['field_notes_editable']['widget_type'] = '0';
+  $handler->display->display_options['fields']['field_notes_editable']['suppress_label'] = 1;
+  $handler->display->display_options['fields']['field_notes_editable']['suppress_description'] = 1;
+  /* Filter criterion: Content: Add to calendar -  start date (ge_date_ical) */
+  $handler->display->display_options['filters']['ge_date_ical_value']['id'] = 'ge_date_ical_value';
+  $handler->display->display_options['filters']['ge_date_ical_value']['table'] = 'field_data_ge_date_ical';
+  $handler->display->display_options['filters']['ge_date_ical_value']['field'] = 'ge_date_ical_value';
+  $handler->display->display_options['filters']['ge_date_ical_value']['operator'] = '>=';
+  $handler->display->display_options['filters']['ge_date_ical_value']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['ge_date_ical_value']['expose']['operator_id'] = 'ge_date_ical_value_op';
+  $handler->display->display_options['filters']['ge_date_ical_value']['expose']['label'] = 'Start date';
+  $handler->display->display_options['filters']['ge_date_ical_value']['expose']['operator'] = 'ge_date_ical_value_op';
+  $handler->display->display_options['filters']['ge_date_ical_value']['expose']['identifier'] = 'ge_date_ical_value';
+  $handler->display->display_options['filters']['ge_date_ical_value']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    8 => 0,
+    7 => 0,
+    10 => 0,
+    9 => 0,
+    5 => 0,
+    6 => 0,
+  );
+  $handler->display->display_options['filters']['ge_date_ical_value']['default_date'] = 'first day of January 2016';
+
+  /* Display: Page */
+  $handler = $view->new_display('page', 'Page', 'page');
+  $handler->display->display_options['path'] = 'admin/reports/event-gbifs-admin';
+  $handler->display->display_options['menu']['type'] = 'normal';
+  $handler->display->display_options['menu']['title'] = 'Event - GBIFS admin';
+  $handler->display->display_options['menu']['weight'] = '0';
+  $handler->display->display_options['menu']['name'] = 'management';
+  $handler->display->display_options['menu']['context'] = 0;
+  $handler->display->display_options['menu']['context_only_inline'] = 0;
+  $translatables['event_gbifs_admin'] = array(
+    t('Master'),
+    t('Event - GBIFS admin'),
+    t('more'),
+    t('Apply'),
+    t('Reset'),
+    t('Sort by'),
+    t('Asc'),
+    t('Desc'),
+    t('Items per page'),
+    t('- All -'),
+    t('Offset'),
+    t('« first'),
+    t('‹ previous'),
+    t('next ›'),
+    t('last »'),
+    t('Date'),
+    t('Location'),
+    t('Venue country'),
+    t('GBIFS attendee'),
+    t('Notes'),
+    t('Start date'),
+    t('Page'),
+  );
+  $export['event_gbifs_admin'] = $view;
 
   $view = new view();
   $view->name = 'events';
@@ -275,8 +469,7 @@ function gbif_event_views_default_views() {
     t('Feed'),
     t('Feed iCal'),
   );
+  $export['events'] = $view;
 
-	$views[] = $view;
-
-	return $views;
+  return $export;
 }

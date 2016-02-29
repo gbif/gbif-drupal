@@ -42,6 +42,7 @@ function gbif_event_views_default_views() {
     'ge_location' => 'ge_location',
     'ge_venue_country' => 'ge_venue_country',
     'field_ge_gbifs_attendee_editable' => 'field_ge_gbifs_attendee_editable',
+    'field_notes_editable' => 'field_notes_editable',
   );
   $handler->display->display_options['style_options']['default'] = 'ge_date_ical';
   $handler->display->display_options['style_options']['info'] = array(
@@ -78,7 +79,16 @@ function gbif_event_views_default_views() {
       'separator' => '',
       'empty_column' => 0,
     ),
+    'field_notes_editable' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
   );
+  $handler->display->display_options['style_options']['sticky'] = TRUE;
+  $handler->display->display_options['style_options']['caption'] = 'Event list, start from the beginning of 2016, whether public or not.';
   $handler->display->display_options['style_options']['save_messages'] = 'summary';
   $handler->display->display_options['style_options']['batch_size'] = '10';
   /* Field: Content: Title */
@@ -119,6 +129,7 @@ function gbif_event_views_default_views() {
   $handler->display->display_options['fields']['ge_venue_country']['field'] = 'ge_venue_country';
   $handler->display->display_options['fields']['ge_venue_country']['element_type'] = '0';
   $handler->display->display_options['fields']['ge_venue_country']['element_default_classes'] = FALSE;
+  $handler->display->display_options['fields']['ge_venue_country']['type'] = 'taxonomy_term_reference_plain';
   /* Field: Content: GBIFS attendee (editable) */
   $handler->display->display_options['fields']['field_ge_gbifs_attendee_editable']['id'] = 'field_ge_gbifs_attendee_editable';
   $handler->display->display_options['fields']['field_ge_gbifs_attendee_editable']['table'] = 'field_data_field_ge_gbifs_attendee';
@@ -142,6 +153,14 @@ function gbif_event_views_default_views() {
   $handler->display->display_options['fields']['field_notes_editable']['widget_type'] = '0';
   $handler->display->display_options['fields']['field_notes_editable']['suppress_label'] = 1;
   $handler->display->display_options['fields']['field_notes_editable']['suppress_description'] = 1;
+  /* Field: Content: Published */
+  $handler->display->display_options['fields']['status']['id'] = 'status';
+  $handler->display->display_options['fields']['status']['table'] = 'node';
+  $handler->display->display_options['fields']['status']['field'] = 'status';
+  $handler->display->display_options['fields']['status']['label'] = 'Public';
+  $handler->display->display_options['fields']['status']['element_type'] = '0';
+  $handler->display->display_options['fields']['status']['element_default_classes'] = FALSE;
+  $handler->display->display_options['fields']['status']['not'] = 0;
   /* Filter criterion: Content: Add to calendar -  start date (ge_date_ical) */
   $handler->display->display_options['filters']['ge_date_ical_value']['id'] = 'ge_date_ical_value';
   $handler->display->display_options['filters']['ge_date_ical_value']['table'] = 'field_data_ge_date_ical';
@@ -195,6 +214,7 @@ function gbif_event_views_default_views() {
     t('Venue country'),
     t('GBIFS attendee'),
     t('Notes'),
+    t('Public'),
     t('Start date'),
     t('Page'),
   );

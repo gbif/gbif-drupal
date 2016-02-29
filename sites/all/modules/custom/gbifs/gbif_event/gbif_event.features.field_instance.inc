@@ -209,68 +209,6 @@ function gbif_event_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-event-field_public'
-  $field_instances['node-event-field_public'] = array(
-    'bundle' => 'event',
-    'default_value' => array(
-      0 => array(
-        'value' => 0,
-      ),
-    ),
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'list',
-        'settings' => array(),
-        'type' => 'list_default',
-        'weight' => 19,
-      ),
-      'ical' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-      'search_index' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_public',
-    'label' => 'Public',
-    'required' => 0,
-    'settings' => array(
-      'mediafront' => array(
-        'custom' => '',
-        'field_type' => 0,
-        'media_type' => 'media',
-        'preview' => 0,
-        'thumbnail' => 0,
-      ),
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'options',
-      'settings' => array(
-        'display_label' => 0,
-      ),
-      'type' => 'options_onoff',
-      'weight' => 14,
-    ),
-  );
-
   // Exported field_instance: 'node-event-ge_audience'
   $field_instances['node-event-ge_audience'] = array(
     'bundle' => 'event',
@@ -1386,7 +1324,7 @@ function gbif_event_field_default_field_instances() {
     'bundle' => 'event',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => '',
+    'description' => 'The status to the audience, e.g., "in preparation", "canceled", "finished", etc.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -1589,12 +1527,12 @@ function gbif_event_field_default_field_instances() {
   t('Organising participant(s)');
   t('Participants');
   t('Please only enter the city.');
-  t('Public');
   t('Resources');
   t('Status');
   t('Summary');
   t('Textual information of resources. HTML allowed.');
   t('Textual information that actually shows on the event detail and teaser. Leave this field blank if you want it to be calculated.');
+  t('The status to the audience, e.g., "in preparation", "canceled", "finished", etc.');
   t('Venue');
   t('Venue country');
 

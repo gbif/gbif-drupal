@@ -110,8 +110,11 @@ function gbif_resource_orc_redirect() {
 			->fieldCondition('gr_kp_id', 'value', $_GET['doc_id'], '=')
 			->execute();
 		if (!empty($entities['node'])) {
-			$node = node_load(array_shift(array_keys($entities['node'])));
+			$keys = array_keys($entities['node']);
+      $shifted_keys = array_shift($keys);
+			$node = node_load($shifted_keys);
 			$url = 'resource/' . $node->nid;
+      unset($keys, $shifted_keys);
 			drupal_goto($url);
 		}
 		else {

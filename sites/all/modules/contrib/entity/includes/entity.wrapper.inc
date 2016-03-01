@@ -821,7 +821,12 @@ class EntityDrupalWrapper extends EntityStructureWrapper {
     }
     else {
       // This is not a property, so fallback on entity access.
-      return $this->entityAccess($op == 'edit' ? 'update' : 'view', $account);
+      if ($op == 'edit') {
+        // If the operation is "edit" determine if its actually a "create" for
+        // new un-saved entities, or an "update" for existing ones.
+        return $this->entityAccess($this->getIdentifier() ? 'update' : 'create', $account);
+      }
+      return $this->entityAccess('view', $account);
     }
   }
 

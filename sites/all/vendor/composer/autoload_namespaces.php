@@ -6,6 +6,12 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname(dirname($vendorDir)).'/default/files/composer';
 
 return array(
+    'Symfony\\Component\\DependencyInjection' => array($baseDir . '/../../../all/modules/contrib/service_container/lib'),
+    'ServiceContainer' => array($baseDir . '/../../../all/modules/contrib/service_container/lib'),
     'SensioLabs\\Security' => array($vendorDir . '/sensiolabs/security-checker'),
+    'Psr' => array($baseDir . '/../../../all/modules/contrib/service_container/lib'),
     'Parsedown' => array($vendorDir . '/erusev/parsedown'),
+    'Drupal\\Core\\' => array($baseDir . '/../../../all/modules/contrib/service_container/lib'),
+    'Drupal\\Component\\' => array($baseDir . '/../../../all/modules/contrib/service_container/lib'),
+    'Drupal' => array($baseDir . '/../../../all/modules/contrib/service_container/lib'),
 );

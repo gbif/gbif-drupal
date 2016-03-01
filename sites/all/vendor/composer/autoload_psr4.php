@@ -8,4 +8,6 @@ $baseDir = dirname(dirname($vendorDir)).'/default/files/composer';
 return array(
     'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
     'Symfony\\Component\\Console\\' => array($vendorDir . '/symfony/console'),
+    'Drupal\\service_container\\Tests\\' => array($baseDir . '/../../../all/modules/contrib/service_container/tests/src'),
+    'Drupal\\service_container\\' => array($baseDir . '/../../../all/modules/contrib/service_container/src'),
 );

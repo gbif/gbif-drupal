@@ -1,12 +1,15 @@
-[![Build Status](https://travis-ci.org/RESTful-Drupal/restful.svg?branch=7.x-2.x)](https://travis-ci.org/RESTful-Drupal/restful)
+**7.x-1.x** [![Build Status](https://travis-ci.org/RESTful-Drupal/restful.svg?branch=7.x-1.x)](https://travis-ci.org/RESTful-Drupal/restful)
+
+**7.x-2.x** [![Build Status](https://travis-ci.org/RESTful-Drupal/restful.svg?branch=7.x-2.x)](https://travis-ci.org/RESTful-Drupal/restful)
 
 # RESTful best practices for Drupal
 
 This module allows Drupal to be operated via RESTful HTTP requests, using best
 practices for security, performance, and usability.
 
+
 ## Concept
-Here are the differences between RESTful and other modules, such as RestWs and
+These are the differences between RESTful and other modules, such as RestWs and
 Services Entity:
 
 * RESTful requires explicitly declaring the exposed API. When enabling
@@ -27,8 +30,8 @@ control.
 
 ## Module dependencies
 
-  * [Entity API](https://drupal.org/project/entity), with the following patches:
-  * [Prevent notice in entity_metadata_no_hook_node_access() when node is not saved](https://drupal.org/node/2086225#comment-8768373)
+  * [Entity API](https://drupal.org/project/entity), with the following patch:
+  * [Prevent notice in entity_metadata_no_hook_node_access() when node is not saved](https://www.drupal.org/node/2086225#comment-9627407)
 
 ## Recipes
 Read even more examples on how to use the RESTful module in the [module documentation
@@ -48,43 +51,45 @@ name = RESTful custom
 description = Custom RESTful resource.
 core = 7.x
 dependencies[] = restful
-
-registry_autoload[] = PSR-4
 ```
 
-####restful\_custom/src/Plugin/resource/Custom__1_0.php
+####restful\_custom/restful\_custom.module
 ```php
-
-namespace Drupal\restful_custom\Plugin\resource;
-
 /**
- * Class Custom__1_0
- * @package Drupal\restful_custom\Plugin\resource
- *
- * @Resource(
- *   name = "custom:1.0",
- *   resource = "custom",
- *   label = "Custom",
- *   description = "My custom resource!",
- *   authenticationTypes = TRUE,
- *   authenticationOptional = TRUE,
- *   dataProvider = {
- *     "entityType": "node",
- *     "bundles": {
- *       "article"
- *     },
- *   },
- *   majorVersion = 1,
- *   minorVersion = 0
- * )
+ * Implements hook_ctools_plugin_directory().
  */
-class Custom__1_0 extends ResourceEntity implements ResourceInterface {
+ function restful_custom_ctools_plugin_directory($module, $plugin) {
+   if ($module == 'restful') {
+     return 'plugins/' . $plugin;
+   }
+ }
+```
+
+####restful\_custom/plugins/restful/articles.inc
+```php
+$plugin = array(
+  'label' => t('Articles'),
+  'resource' => 'articles',
+  'name' => 'articles',
+  'entity_type' => 'node',
+  'bundle' => 'article',
+  'description' => t('Export the article content type.'),
+  'class' => 'RestfulCustomResource',
+);
+```
+The `resource` key determines the root URL of the resource.  The `name` key must match
+the filename of the plugin: in this case, the name is `articles`, and therefore, the
+filename is `articles.inc`.
+
+####restful\_custom/plugins/restful/RestfulCustomResource.class.php
+```php
+class RestfulCustomResource extends RestfulEntityBaseNode {
 
   /**
-   * Overrides EntityNode::publicFields().
+   * Overrides RestfulEntityBaseNode::publicFieldsInfo().
    */
-  public function publicFields() {
-    $public_fields = parent::publicFields();
+  public function publicFieldsInfo() {
+    $public_fields = parent::publicFieldsInfo();
 
     $public_fields['body'] = array(
       'property' => 'body',
@@ -97,7 +102,7 @@ class Custom__1_0 extends ResourceEntity implements ResourceInterface {
 ```
 
 After declaring this plugin, the resource could be accessed at its root URL,
-which would be `http://example.com/api/v1.0/custom`.
+which would be `http://example.com/api/v1.0/articles`.
 
 ### Security, caching, output, and customization
 
@@ -109,36 +114,39 @@ See the [Defining a RESTful Plugin](./docs/plugin.md) document for more details.
 The following examples use the _articles_ resource from the _restful\_example_
 module.
 
+#### Getting the default RESTful handler for a resource
+
+```php
+// Get handler v1.0
+$handler = restful_get_restful_handler('articles');
+```
+
+
 #### Getting a specific version of a RESTful handler for a resource
 
 ```php
 // Get handler v1.1
-$handler = restful()->getResourceManager()->getPlugin('articles:1.1');
+$handler = restful_get_restful_handler('articles', 1, 1);
 ```
+
 
 #### Create and update an entity
 ```php
-$handler = restful()
-  ->getResourceManager()
-  ->getPlugin('articles:1.0');
+$handler = restful_get_restful_handler('articles');
 // POST method, to create.
-$result = restful()
-  ->getFormatterManager()
-  ->format($handler->doPost(array('label' => 'example title')));
+$result = $handler->post('', array('label' => 'example title'));
 $id = $result['id'];
 
 // PATCH method to update only the title.
 $request['label'] = 'new title';
-restful()
-  ->getFormatterManager()
-  ->format($handler->doPatch($id, $request));
+$handler->patch($id, $request);
 ```
+
 
 #### List entities
 ```php
-$handler = restful()->getResourceManager()->getPlugin('articles:1.0');
-$handler->setRequest(Request::create(''));
-$result = restful()->getFormatterManager()->format($handler->process(), 'json');
+$handler = restful_get_restful_handler('articles');
+$result = $handler->get();
 
 // Output:
 array(
@@ -157,11 +165,15 @@ array(
 );
 ```
 
+
 ### Sort, Filter, Range, and Sub Requests
+
 See the [Using your API within drupal](./docs/api_drupal.md) documentation for
 more details.
 
+
 ## Consuming your API
+
 The following examples use the _articles_ resource from the _restful\_example_
 module.
 
@@ -182,6 +194,7 @@ curl https://example.com/api/v1.1/articles/1
 
 
 #### View multiple articles at once
+
 ```shell
 # Handler v1.1
 curl https://example.com/api/articles/1,2 \
@@ -190,32 +203,19 @@ curl https://example.com/api/articles/1,2 \
 
 
 #### Returning autocomplete results
+
 ```shell
 curl https://example.com/api/articles?autocomplete[string]=mystring
 ```
 
 
 #### URL Query strings, HTTP headers, and HTTP requests
+
 See the [Consuming Your API](./docs/api_url.md) document for more details.
 
-## CORS
-RESTful provides support for preflight requests (see the
-[Wikipedia example](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing#Preflight_example)
-for more details).
-
-To configure the allowed domains, you can:
-
-  - Go to `admin/config/services/restful` and set _CORS Preflight_ to the
-allowed domain. This will apply globally unless overridden with the method
-below.
-  - Set the `allowOrigin` key in your resource definition (in the annotation)
-to the allowed domain. This setting will only apply to this resource.
-
-Bear in mind that this check is only performed to the top-level resource.
-If you are composing resources with competing `allowOrigin` settings, the
-top-level resource will be applied.
 
 ## Documenting your API
+
 Clients can access documentation about a resource by making an `OPTIONS` HTTP
 request to its root URL. The resource will respond with the field information
 in the body, and the information about the available output formats and the
@@ -223,6 +223,7 @@ permitted HTTP methods will be contained in the headers.
 
 
 ### Automatic documentation
+
 If your resource is an entity, then it will be partially self-documented,
 without you needing to do anything else. This information is automatically
 derived from the Entity API and Field API.
@@ -230,7 +231,7 @@ derived from the Entity API and Field API.
 Here is a snippet from a typical JSON response using only the automatic
 documentation:
 
-```json
+```javascript
 {
   "myfield": {
     "info": {
@@ -255,7 +256,7 @@ documentation:
 }
 ```
 
-Each field you've defined in `publicFields` will output an object similar
+Each field you've defined in `publicFieldsInfo` will output an object similar
 to the one listed above.
 
 
@@ -266,10 +267,11 @@ documentation for more details.
 
 
 ## Modules integration
-* [Entity validator 2.x](https://www.drupal.org/project/entity_validator): Integrate
-with a robust entity validation (RESTful 1.x requires Entity Validator 1.x).
+* [Entity validator](https://www.drupal.org/project/entity_validator): Integrate
+with a robust entity validation
 
 
 ## Credits
+
 * [Gizra](http://gizra.com)
-* [Mateu Aguiló Bosch](https://github.com/e0ipso)
+* [Mateu Aguiló Bosch](https://github.com/mateu-aguilo-bosch)

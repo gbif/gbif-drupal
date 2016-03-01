@@ -21,9 +21,6 @@ class RestfulUserLoginCookieTestCase extends RestfulCurlBaseTestCase {
    */
   protected $originalServer;
 
-  /**
-   * {@inheritdoc}
-   */
   public static function getInfo() {
     return array(
       'name' => 'Login endpoint',
@@ -32,19 +29,13 @@ class RestfulUserLoginCookieTestCase extends RestfulCurlBaseTestCase {
     );
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function setUp() {
+  function setUp() {
     parent::setUp('restful');
 
     $this->originalServer = $_SERVER;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function tearDown() {
+  function tearDown() {
     global $user;
     // Put back the user object.
     $user = $this->originalUser;
@@ -57,7 +48,7 @@ class RestfulUserLoginCookieTestCase extends RestfulCurlBaseTestCase {
   /**
    * Test login using curl via /api/login.
    */
-  public function testLogin() {
+  function testLogin() {
     global $user;
     // We need to hijack the global user object in order to force it to be an
     // anonymous user.

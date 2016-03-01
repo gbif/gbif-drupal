@@ -4,13 +4,16 @@ The RESTful module allows your resources to be used within Drupal itself. For
 example, you could define a resource, and then operate it within another
 custom module.
 
-In general, this is accomplished by using the resource manager in order to get a
+In general, this is accomplished by using `restful_get_restful_handler` to get a
 handler for your resource, and then calling methods such as `get` or `post` to
 make a request, which will operate the resource.
 
 The request itself can be customized by passing in an array of key/value pairs.
 
+
+
 ## Read Contexts
+
 The following keys apply to read contexts, in which you are using the `get`
 method to return results from a resource.
 
@@ -27,15 +30,11 @@ for sorting.
 If no sorting is specified the default sorting is by the entity ID.
 
 ```php
-$handler = restful()
-  ->getResourceManager()
-  ->getPlugin('articles:1.0');
+$handler = restful_get_restful_handler('articles');
 
 // Define the sorting by ID (descending) and label (ascending).
-$query['sort'] = '-id,label';
-$result = restful()
-  ->getFormatterManager()
-  ->format($handler->doGet('', $query));
+$request['sort'] = '-id,label';
+$result = $handler->get('', $request);
 
 // Output:
 array(
@@ -60,15 +59,10 @@ Use the `'filter'` key to filter the list. You can provide as many filters as
 you need.
 
 ```php
-$handler = restful()
-  ->getResourceManager()
-  ->getPlugin('articles:1.0');
-
+$handler = restful_get_restful_handler('articles');
 // Single value property.
-$query['filter'] = array('label' => 'abc');
-$result = restful()
-  ->getFormatterManager()
-  ->format($handler->doGet('', $query));
+$request['filter'] = array('label' => 'abc');
+$result = $handler->get('', $request);
 ```
 
 Bear in mind that for entity based resources, only those fields with a
@@ -81,17 +75,12 @@ will get all the articles with the integer multiple field that contains all 1, 3
 and 5.
 
 ```php
-$handler = restful()
-  ->getResourceManager()
-  ->getPlugin('articles:1.0');
-
+$handler = restful_get_restful_handler('articles');
 // Single value property.
-$query['filter'] = array('integer_multiple' => array(
+$request['filter'] = array('integer_multiple' => array(
   'values' => array(1, 3, 5),
 ));
-$result = restful()
-  ->getFormatterManager()
-  ->format($handler->doGet('', $query));
+$result = $handler->get('', $request);
 ```
 
 You can do more advanced filtering by providing values and operators. The
@@ -99,18 +88,13 @@ following example will get all the articles with an integer value more than 5
 and another equal to 10.
 
 ```php
-$handler = restful()
-  ->getResourceManager()
-  ->getPlugin('articles:1.0');
-
+$handler = restful_get_restful_handler('articles');
 // Single value property.
-$query['filter'] = array('integer_multiple' => array(
+$request['filter'] = array('integer_multiple' => array(
   'values' => array(5, 10),
   'operator' => array('>', '='),
 ));
-$result = restful()
-  ->getFormatterManager()
-  ->format($handler->doGet('', $query));
+$result = $handler->get('', $request);
 ```
 
 ### Autocomplete
@@ -123,11 +107,9 @@ The following is the API equivalent of
 `https://example.com?autocomplete[string]=foo&autocomplete[operator]=STARTS_WITH`
 
 ```php
-$handler = restful()
-  ->getResourceManager()
-  ->getPlugin('articles:1.0');
+$handler = restful_get_restful_handler('articles');
 
-$query = array(
+$request = array(
   'autocomplete' => array(
     'string' => 'foo',
     // Optional, defaults to "CONTAINS".
@@ -135,7 +117,7 @@ $query = array(
   ),
 );
 
-$handler->get('', $query);
+$handler->get('', $request);
 ```
 
 
@@ -145,13 +127,10 @@ want to show. This value will always be limited by the `$range` variable in your
  resource class. This variable defaults to 50.
 
 ```php
-$handler = restful()
-  ->getResourceManager()
-  ->getPlugin('articles:1.0');
-
+$handler = restful_get_restful_handler('articles');
 // Single value property.
-$query['range'] = 25;
-$result = $handler->get('', $query);
+$request['range'] = 25;
+$result = $handler->get('', $request);
 ```
 
 ## Write Contexts
@@ -165,18 +144,16 @@ typical example would be a node referencing a new taxonomy term. For example if
 there was a taxonomy reference or entity reference field called ``field_tags``
 on the  Article bundle (node) with an ``articles`` and a Tags bundle (taxonomy
 term) with a ``tags`` resource, we would define the relation via the
-``ResourceEntity::publicFields()``
+``RestfulEntityBase::publicFieldsInfo()``
 
 ```php
-public function publicFields() {
-  $public_fields = parent::publicFields();
+public function publicFieldsInfo() {
+  $public_fields = parent::publicFieldsInfo();
   // ...
   $public_fields['tags'] = array(
     'property' => 'field_tags',
     'resource' => array(
-      'name' => 'tags',
-      'minorVersion' => 1,
-      'majorVersion' => 0,
+      'tags' => 'tags',
     ),
   );
   // ...
@@ -188,58 +165,34 @@ public function publicFields() {
 And create both entities with a single request:
 
 ```php
-$handler = restful()
-  ->getResourceManager()
-  ->getPlugin('articles:1.0');
-
-$parsed_body = array(
+$handler = restful_get_restful_handler('articles');
+$request = array(
   'label' => 'parent',
   'body' => 'Drupal',
   'tags' => array(
     array(
       // Create a new term.
-      'body' => array(
-        'label' => 'child1',
-      ),
-      'request' => array(
-        'method' => 'POST',
-        'headers' => array(
-          'X-CSRF-Token' => 'my-csrf-token',
-        ),
-      ),
+      'label' => 'child1',
     ),
     array(
       // PATCH an existing term.
-      'body' => array(
-        'label' => 'new title by PATCH',
-      ),
-      'id' => 12,
-      'request' => array(
-        'method' => 'PATCH',
-      ),
+      'label' => 'new title by PATCH',
     ),
     array(
-      // PATCH an existing term.
-      'body' => array(
-        'label' => 'new title by PUT',
+      '__application' => array(
+        'method' => \RestfulInterface::PUT,
       ),
-      'id' => 9,
-      'request' => array(
-        'method' => 'PUT',
-      ),
-    ),
-    // Use an existing item.
-    array(
-      'id' => 21,
+      // PUT an existing term.
+      'label' => 'new title by PUT',
     ),
   ),
 );
 
-$handler->doPost($parsed_body);
+$handler->post('', $request);
 ```
 
 
 ## Error handling
 If an error occurs while using the API within Drupal, a custom exception is
 thrown.  All the exceptions thrown by the RESTful module extend the
-`\Drupal\restful\Exception\RestfulException` class.
+`\RestfulException` class.

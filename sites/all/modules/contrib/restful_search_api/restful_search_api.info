@@ -1,0 +1,19 @@
+name = RESTful Search API
+description = Integration for RESTful of Search API.
+dependencies[] = restful
+dependencies[] = search_api
+core = 7.x
+
+; Files
+files[] = include/RestfulDataProviderSearchAPI.php
+files[] = include/RestfulDataProviderSearchAPIInterface.php
+
+; Tests
+files[] = tests/RestfulSearchAPISearchTestCase.test
+
+; Information added by Drupal.org packaging script on 2015-02-16
+version = "7.x-1.0-beta1"
+core = "7.x"
+project = "restful_search_api"
+datestamp = "1424074382"
+

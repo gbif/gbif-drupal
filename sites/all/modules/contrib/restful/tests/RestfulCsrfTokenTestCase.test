@@ -5,22 +5,7 @@
  * Contains RestfulCsrfTokenTestCase
  */
 
-use Drupal\restful\Http\RequestInterface;
-use Drupal\restful\Http\Request;
-
 class RestfulCsrfTokenTestCase extends RestfulCurlBaseTestCase {
-
-  /**
-   * Write operations.
-   *
-   * @var string[]
-   */
-  protected $writeOperations = array(
-    RequestInterface::METHOD_POST,
-    RequestInterface::METHOD_PUT,
-    RequestInterface::METHOD_PATCH,
-    RequestInterface::METHOD_DELETE,
-  );
 
   /**
    * Holds the current value of the $_SERVER super global.
@@ -29,9 +14,6 @@ class RestfulCsrfTokenTestCase extends RestfulCurlBaseTestCase {
    */
   protected $originalServer;
 
-  /**
-   * {@inheritdoc}
-   */
   public static function getInfo() {
     return array(
       'name' => 'CSRF token',
@@ -40,18 +22,21 @@ class RestfulCsrfTokenTestCase extends RestfulCurlBaseTestCase {
     );
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function setUp() {
+  function setUp() {
     parent::setUp('restful_example');
   }
 
   /**
    * Test the validation of a CSRF token for authenticated users.
    */
-  public function testCsrfToken() {
+  function testCsrfToken() {
     global $user;
+    $write_operations = array(
+      \RestfulInterface::POST,
+      \RestfulInterface::PUT,
+      \RestfulInterface::PATCH,
+      \RestfulInterface::DELETE
+    );
 
     $permissions = array(
       'create article content',
@@ -63,15 +48,15 @@ class RestfulCsrfTokenTestCase extends RestfulCurlBaseTestCase {
     $user = $account;
 
     // Check CSRF is not checked for read operations.
-    $this->checkCsrfRequest(array(RequestInterface::METHOD_GET), FALSE);
+    $this->checkCsrfRequest(array(\RestfulInterface::GET), FALSE);
 
-    $this->checkCsrfRequest($this->writeOperations, TRUE);
+    $this->checkCsrfRequest($write_operations, TRUE);
   }
 
   /**
    * Test the validation of a CSRF token for anonymous users.
    */
-  public function testCsrfTokenAnon() {
+  function testCsrfTokenAnon() {
     global $user;
     $user = drupal_anonymous_user();
 
@@ -83,7 +68,13 @@ class RestfulCsrfTokenTestCase extends RestfulCurlBaseTestCase {
     );
     user_role_change_permissions(DRUPAL_ANONYMOUS_RID, $permissions);
 
-    $this->checkCsrfRequest($this->writeOperations, FALSE, FALSE);
+    $write_operations = array(
+      \RestfulInterface::POST,
+      \RestfulInterface::PUT,
+      \RestfulInterface::PATCH,
+      \RestfulInterface::DELETE
+    );
+    $this->checkCsrfRequest($write_operations, FALSE, FALSE);
   }
 
   /**
@@ -101,13 +92,11 @@ class RestfulCsrfTokenTestCase extends RestfulCurlBaseTestCase {
     $params['@role'] = $auth_user ? 'authenticated' : 'anonymous';
 
     foreach ($methods as $method) {
-      $request = Request::isReadMethod($method) ? array() : array('label' => $this->randomName());
+      $request = \RestfulBase::isReadMethod($method) ? array() : array('label' => $this->randomName());
       $params['@method'] = $method;
 
       // No CSRF token.
-      $result = $this->httpRequest($this->getPath($method), $method, $request, array(
-        'Content-Type' => 'application/x-www-form-urlencoded',
-      ), FALSE);
+      $result = $this->httpRequest($this->getPath($method), $method, $request, array(), FALSE);
       if ($csrf_required) {
         $params['@code'] = 400;
         $this->assertEqual($result['code'], $params['@code'], format_string('@code on @method without CSRF token for @role user.', $params));
@@ -117,10 +106,7 @@ class RestfulCsrfTokenTestCase extends RestfulCurlBaseTestCase {
       }
 
       // Invalid CSRF token.
-      $result = $this->httpRequest($this->getPath($method), $method, $request, array(
-        'Content-Type' => 'application/x-www-form-urlencoded',
-        'X-CSRF-Token' => 'invalidToken',
-      ), FALSE);
+      $result = $this->httpRequest($this->getPath($method), $method, $request, array('X-CSRF-Token' => 'invalidToken'), FALSE);
       if ($csrf_required) {
         $params['@code'] = 403;
         $this->assertEqual($result['code'], $params['@code'], format_string('@code on @method with invalid CSRF token for @role user.', $params));
@@ -130,9 +116,7 @@ class RestfulCsrfTokenTestCase extends RestfulCurlBaseTestCase {
       }
 
       // Valid CSRF token.
-      $result = $this->httpRequest($this->getPath($method), $method, $request, array(
-        'Content-Type' => 'application/x-www-form-urlencoded',
-      ));
+      $result = $this->httpRequest($this->getPath($method), $method, $request);
       $this->assertTrue($result['code'] >= 200 && $result['code'] <= 204, format_string('@method allowed with CSRF token for @role user.', $params));
     }
   }
@@ -149,7 +133,7 @@ class RestfulCsrfTokenTestCase extends RestfulCurlBaseTestCase {
    *   The path for the request.
    */
   protected function getPath($method) {
-    if ($method == RequestInterface::METHOD_POST) {
+    if ($method == \RestfulInterface::POST) {
       return 'api/v1.0/articles';
     }
     $settings = array(

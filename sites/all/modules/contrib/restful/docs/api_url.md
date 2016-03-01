@@ -7,74 +7,6 @@ You can manipulate the resources using different HTTP request types
 (e.g. `POST`, `GET`, `DELETE`), HTTP headers, and special query strings
 passed in the URL itself.
 
-## Write operations
-Write operations can be performed via the POTS (to create items), PUT or PATCH
-(to update items) HTTP methods.
-
-### Basic example
-The following request will create an article using the articles resource:
-
-```http
-POST /articles HTTP/1.1
-Content-Type: application/json
-Accept: application/json
-
-{
-  "title": "My article",
-  "body": "<p>This is a short one</p>",
-  "tags": [1, 6, 12]
-}
-```
-
-Note how we are setting the properties that we want to set using JSON. The
-provided payload format needs to match the contents of the `Content-Type` header
-(in this case _application/json_).
-
-It's also worth noting that when settings reference fields with multiple values,
-you can submit an array of IDs or a string of IDs separated by comas.
-
-### Advanced example
-You use sub-requests to manipulate (create or alter) the relationships in a single request.The following example will:
-
-  1. Update the title of the article to be _To TDD or Not_.
-  1. Update the contents of tag 6 to replace it with the provided content.
-  1. Create a new tag and assign it to the updated article.
-
-```
-PATCH /articles/1 HTTP/1.1
-Content-Type: application/vnd.api+json
-Accept: application/vnd.api+json
-
-{
-  "title": "To TDD or Not",
-  "tags": [
-    {
-      "id": "6",
-      "body": {
-        "label": "Batman!",
-        "description": "The gadget owner."
-      },
-      "request": {
-        "method": "PATCH"
-      }
-    },
-    {
-      "body": {
-        "label": "everything",
-        "description": "I can only say: 42."
-      },
-      "request": {
-        "method": "POST",
-        "headers": {"Authorization": "Basic Yoasdkk1="}
-      }
-    }
-  ]
-}
-```
-
-See the
-[extension specification](https://gist.github.com/e0ipso/cc95bfce66a5d489bb8a)
-for an example using JSON API.
 
 ## Getting information about the resource
 
@@ -85,14 +17,10 @@ about that resource, in addition to the data itself.
 
 ``` shell
 curl https://example.com/api/
-``
-This will output all the available **latest** resources (of course, if you have
-enabled the "Discovery Resource" option). For example, if there are 3 different
-api version plugins for content type Article (1.0, 1.1, 2.0) it will display the
-latest only (2.0 in this case).
+```
+This will output all the available **latest** resources (of course, if you have enabled the "Discovery Resource" option). For example, if there are 3 different api version plugins for content type Article (1.0, 1.1, 2.0) it will display the latest only (2.0 in this case).
 
-If you want to display all the versions of all the resources declared add the
-query **?all=true** like this.
+If you want to display all the versions of all the resources declared add the query **?all=true** like this.
 
 ``` shell
 curl https://example.com/api?all=true
@@ -143,8 +71,8 @@ for examples of the types of information returned by such a request.
 ## Returning specific fields
 Using the ``?fields`` query string, you can declare which fields should be
 returned.  Note that you can only return fields already being returned by
-`publicFields()`.  This is used, for example, if you have many fields
-in `publicFields()`, but your client only needs a few specific ones.
+`publicFieldsInfo()`.  This is used, for example, if you have many fields
+in `publicFieldsInfo()`, but your client only needs a few specific ones.
 
 ```shell
 # Handler v1.0
@@ -200,6 +128,21 @@ and another equal to 10.
 curl https://example.com/api/articles?filter[integer_multiple][value][0]=5&filter[integer_multiple][value][1]=10&filter[integer_multiple][operator][0]=">"&filter[integer_multiple][operator][0]="="
 ```
 
+## Applying a query sort
+RESTful allows specifying of a sort property to the database query used to generate the list.
+
+```php
+# Handler v1.0
+curl https://example.com/api/v1/articles?sort=label
+```
+
+The sort order will default to ascending, however it can be set to descending by prepending a minus (-) sign the sort parameter value.
+
+```shell
+# Handler v1.0
+curl https://example.com/api/v1/articles?sort=-label
+```
+
 ## Loading by an alternate ID.
 Some times you need to load an entity by an alternate ID that is not the regular
 entity ID, for example a unique ID title. All that you need to do is provide the
@@ -234,7 +177,7 @@ you to make sure that that field is unique. Note that in case that more tha one
 entity matches the provided ID the first record will be loaded.
 
 ## Working with authentication providers
-RESTful comes with ``cookie``, ``base_auth`` (user name and password in the HTTP
+Restful comes with ``cookie``, ``base_auth`` (user name and password in the HTTP
 header) authentications providers, as well as a "RESTful token auth" module that
  has a `token` authentication provider.
 
@@ -243,14 +186,12 @@ HTTP ``X-CSRF-Token`` header on all writing requests (POST, PUT and DELETE).
 You can retrieve the token from ``/api/session/token`` with a standard HTTP
 GET request.
 
-See [this](https://github.com/Gizra/angular-restful-auth) AngularJs example that
-shows a login from a fully decoupled web app to a Drupal backend.
+See [this](https://github.com/Gizra/angular-restful-auth) AngularJs example that shows a login from a fully decoupled web app
+to a Drupal backend.
 
-Note: If you use basic auth under .htaccess password you might hit a flood
-exception, as the server is sending the .htaccess user name and password as the
-authentication. In such a case you may set the ``restful_skip_basic_auth`` to
-TRUE, in order to avoid using it. This will allow enabling and disabling the
-basic auth on different environments.
+Note: If you use basic auth under .htaccess password you might hit a flood exception, as the server is sending the .htaccess user name and password
+ as the authentication. In such a case you may set the ``restful_skip_basic_auth`` to TRUE, in order to avoid using it. This will allow
+ enabling and disabling the basic auth on different environments.
 
 ```bash
 # (Change username and password)
@@ -259,7 +200,7 @@ curl -u "username:password" https://example.com/api/login
 # Response has access token.
 {"access_token":"YOUR_TOKEN"}
 
-# Call a "protected" with token resource (Articles resource version 1.3 in "RESTful example")
+# Call a "protected" with token resource (Articles resource version 1.3 in "Restful example")
 curl https://example.com/api/v1.3/articles/1?access_token=YOUR_TOKEN
 
 # Or use access-token instead of access_token for ensuring header is not going to be
@@ -267,9 +208,55 @@ curl https://example.com/api/v1.3/articles/1?access_token=YOUR_TOKEN
 curl -H "access-token: YOUR_TOKEN" https://example.com/api/v1.3/articles/1
 ```
 
+## Change request formatter
+
+By default Restful module allows for any **Content-type** requests by setting the ```Accept: */*```. This means that you can make requests in the format you want (of course if this format is available on the restful plugins). 
+
+For example let's say that we want to get a request in ```xml``` while by default we get the requests in ```hal+json```. All we have to do is set a Header parameter like this ```Accept: application/xml```.
+
+```shell
+curl -H 'Accept:application/xml' https://example.com/api/articles
+```
+
+And will return data in xml formatter.
+
+```xml
+<?xml version="1.0"?>
+<api>
+  <articles>
+    <item0>
+      <id>1</id>
+      <label>Article title</label>
+      <_links>
+          <self>
+            <href>http://example.com/api/articles/1</href>
+          </self>
+        </_links>
+    </item0>
+    <item1>
+      <id>2</id>
+      <label>Article title</label>
+      <_links>
+          <self>
+            <href>http://example.com/api/articles/2</href>
+          </self>
+        </_links>
+    </item1>
+    <count>3</count>
+    <_links>
+      <self>
+        <title>Self</title>
+        <href>http://example.com/api/articles</href>
+      </self>
+    </_links>
+</api>
+
+```
+
+
 ## Error handling
 If an error occurs when operating the REST endpoint via URL, A valid JSON object
-with ``code``, ``message`` and ``description`` would be returned.
+ with ``code``, ``message`` and ``description`` would be returned.
 
 The RESTful module adheres to the [Problem Details for HTTP
 APIs](http://tools.ietf.org/html/draft-nottingham-http-problem-06) draft to

@@ -5,15 +5,8 @@
  * Contains RestfulTokenAuthenticationTestCase.
  */
 
-use Drupal\restful\Exception\BadRequestException;
-use Drupal\restful\Exception\UnauthorizedException;
-use Drupal\restful\Http\Request;
-
 class RestfulTokenAuthenticationTestCase extends DrupalWebTestCase {
 
-  /**
-   * {@inheritdoc}
-   */
   public static function getInfo() {
     return array(
       'name' => 'Token Authentication',
@@ -22,11 +15,8 @@ class RestfulTokenAuthenticationTestCase extends DrupalWebTestCase {
     );
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function setUp() {
-    parent::setUp('restful_example', 'restful_token_auth', 'restful_token_auth_test');
+  function setUp() {
+    parent::setUp('restful_example', 'restful_token_auth', 'entityreference');
   }
 
   /**
@@ -47,89 +37,58 @@ class RestfulTokenAuthenticationTestCase extends DrupalWebTestCase {
     $node1 = $this->drupalCreateNode($settings);
     $id= $node1->nid;
 
-    $resource_manager = restful()->getResourceManager();
-    $formatter = restful()->getFormatterManager()->getPlugin('single_json');
     // Get a token for the user, using the handler.
-    $handler = $resource_manager->getPlugin('access_token:1.0');
-    $formatter->setResource($handler);
-    $result = $formatter->prepare($handler->doGet());
+    $handler = restful_get_restful_handler('access_token');
+    $result = $handler->get();
     $access_token = $result['access_token'];
     $refresh_token = $result['refresh_token'];
     $this->assertNotNull($access_token);
     $this->assertNotNull($refresh_token);
 
     // Assert the token did not change.
-    $result = $formatter->prepare($handler->doGet());
+    $result = $handler->get();
     $this->assertEqual($access_token, $result['access_token'], 'Access token did not change.');
 
     // Get a "protected" resource without the access token.
-    $handler = $resource_manager->getPlugin('articles:1.3');
-    $handler->setRequest(Request::create('api/v1.3/articles'));
-    $handler->setPath('');
-    $formatter->setResource($handler);
+    $handler = restful_get_restful_handler('articles', 1, 3);
     try {
-      // Reset the account to trigger the auth process.
-      $handler->setAccount(NULL);
-      $handler->getAccount();
+      $handler->get($id);
       $this->fail('"Unauthorized" exception not thrown.');
     }
-    catch (UnauthorizedException $e) {
+    catch (\RestfulUnauthorizedException $e) {
       $this->pass('"Unauthorized" exception was thrown.');
     }
 
     // Get a "protected" resource with invalid access token.
-    $handler->setRequest(Request::create('api/v1.3/articles', array(
-      'access_token' => 'invalid',
-    )));
     try {
-      // Reset the account to trigger the auth process.
-      $handler->setAccount(NULL);
-      $handler->getAccount();
+      $handler->get($id, array('access_token' => 'invalid'));
       $this->fail('"Unauthorized" exception not thrown.');
     }
-    catch (UnauthorizedException $e) {
+    catch (\RestfulUnauthorizedException $e) {
       $this->pass('"Unauthorized" exception was thrown.');
     }
 
     // Get a "protected" resource with refresh token as access token.
-    $handler->setRequest(Request::create('api/v1.3/articles/' . $id, array(
-      'access_token' => 'invalid',
-    )));
-    $handler->setPath($id);
     try {
-      // Reset the account to trigger the auth process.
-      $handler->setAccount(NULL);
-      $handler->getAccount();
+      $handler->get($id, array('access_token' => $refresh_token));
       $this->fail('"Unauthorized" exception not thrown.');
     }
-    catch (UnauthorizedException $e) {
+    catch (\RestfulUnauthorizedException $e) {
       $this->pass('"Unauthorized" exception was thrown.');
     }
 
     // Get a "protected" resource with refresh token.
-    $handler->setRequest(Request::create('api/v1.3/articles/' . $id, array(
-      'refresh_token' => $refresh_token,
-    )));
-    $handler->setPath($id);
     try {
-      // Reset the account to trigger the auth process.
-      $handler->setAccount(NULL);
-      $handler->getAccount();
+      $handler->get($id, array('refresh_token' => $refresh_token));
       $this->fail('"Unauthorized" exception not thrown.');
     }
-    catch (UnauthorizedException $e) {
+    catch (\RestfulUnauthorizedException $e) {
       $this->pass('"Unauthorized" exception was thrown.');
     }
 
     // Get a "protected" resource with the access token.
-    $response = restful()
-      ->getFormatterManager()
-      ->negotiateFormatter(NULL)
-      ->prepare($handler->doGet($id, array('access_token' => $access_token)));
-    $handler->setAccount(NULL);
-    $handler->getAccount();
-    // Validate the returned content.
-    $result = $response['data'][0];
+    $response = $handler->get($id, array('access_token' => $access_token));
+    $result = $response[0];
     $this->assertEqual($result['label'], $title1, 'Article resource can be accessed with valid access token.');
 
     // Set the expiration token to the past.
@@ -150,21 +109,17 @@ class RestfulTokenAuthenticationTestCase extends DrupalWebTestCase {
     $token->expire = REQUEST_TIME - 60 * 24;
     $token->save();
 
+    // Clear the restful handler, to make sure the user set by RESTful is
+    // cleared.
+    drupal_static_reset('restful_get_restful_handler');
     // Make a GET request to trigger a deletion of the token.
-    $handler = $resource_manager->getPlugin('articles:1.3');
-    $formatter->setResource($handler);
+    $handler = restful_get_restful_handler('articles', 1, 3);
 
-    $handler->setRequest(Request::create('api/v1.3/articles/' . $id, array(
-      'access_token' => $access_token,
-    )));
-    $handler->setPath($id);
     try {
-      // Reset the account to trigger the auth process.
-      $handler->setAccount(NULL);
-      $handler->getAccount();
+      $handler->get($id, array('access_token' => $access_token));
       $this->fail('"Unauthorized" exception not thrown for expired token.');
     }
-    catch (UnauthorizedException $e) {
+    catch (\RestfulUnauthorizedException $e) {
       $this->pass('"Unauthorized" exception was thrown for expired token.');
     }
 
@@ -180,21 +135,19 @@ class RestfulTokenAuthenticationTestCase extends DrupalWebTestCase {
     $this->assertFalse($count, 'The token was deleted.');
 
     // Test the refresh capabilities.
-    $handler = $resource_manager->getPlugin('refresh_token:1.0');
-    $formatter->setResource($handler);
-    $result = $formatter->prepare($handler->doGet($refresh_token));
+    $handler = restful_get_restful_handler('refresh_token');
+    $result = $handler->get($refresh_token);
     $this->assertNotNull($result['access_token'], 'A new access token granted for a valid refresh token.');
     $this->assertNotNull($result['refresh_token'], 'A new refresh token granted for a valid refresh token.');
     $this->assertNotEqual($refresh_token, $result['refresh_token']);
 
     // Test invalid refresh token.
     try {
-      $handler->doGet('invalid');
+      $handler->get('invalid');
       $this->fail('"Bad Request" exception not thrown.');
     }
-    catch (BadRequestException $e) {
+    catch (\RestfulBadRequestException $e) {
       $this->pass('"Bad Request" exception was thrown.');
     }
   }
-
 }

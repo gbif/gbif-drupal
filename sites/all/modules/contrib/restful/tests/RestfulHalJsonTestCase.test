@@ -5,10 +5,6 @@
  * Contains RestfulHalJsonTestCase
  */
 
-use Drupal\restful\Http\RequestInterface;
-use Drupal\restful\Http\Request;
-use Drupal\restful\Http\HttpHeaderBag;
-
 class RestfulHalJsonTestCase extends RestfulCurlBaseTestCase {
 
   public static function getInfo() {
@@ -19,7 +15,7 @@ class RestfulHalJsonTestCase extends RestfulCurlBaseTestCase {
     );
   }
 
-  public function setUp() {
+  function setUp() {
     parent::setUp('restful_example', 'restful_test', 'entityreference');
 
     restful_test_add_fields();
@@ -28,27 +24,15 @@ class RestfulHalJsonTestCase extends RestfulCurlBaseTestCase {
   /**
    * Test embedded resources.
    */
-  public function testHalEmbeddedResources() {
+  function testHalEmbeddedResources() {
     $user1 = $this->drupalCreateUser();
-    /* @var \Entity $entity1 */
-    $entity1 = entity_create('entity_test', array(
-      'name' => 'main',
-      'uid' => $user1->uid,
-    ));
+    $entity1 = entity_create('entity_test', array('name' => 'main', 'uid' => $user1->uid));
     $entity1->save();
 
-    /* @var \Entity $entity2 */
-    $entity2 = entity_create('entity_test', array(
-      'name' => 'main',
-      'uid' => $user1->uid,
-    ));
+    $entity2 = entity_create('entity_test', array('name' => 'main', 'uid' => $user1->uid));
     $entity2->save();
 
-    $entity3 = entity_create('entity_test', array(
-      'name' => 'main',
-      'uid' => $user1->uid,
-    ));
-    /* @var \EntityDrupalWrapper $wrapper */
+    $entity3 = entity_create('entity_test', array('name' => 'main', 'uid' => $user1->uid));
     $wrapper = entity_metadata_wrapper('entity_test', $entity3);
 
     $text1 = $this->randomName();
@@ -64,22 +48,12 @@ class RestfulHalJsonTestCase extends RestfulCurlBaseTestCase {
 
     $wrapper->save();
 
-    $handler = restful()->getResourceManager()->getPlugin('main:1.1');
-    $headers = new HttpHeaderBag(array(
+    $response = $this->httpRequest('api/main/' . $wrapper->getIdentifier(), \RestfulInterface::GET, NULL, array(
       'X-API-Version' => 'v1.1',
       'Accept' => 'application/hal+json',
     ));
-    $handler->setRequest(Request::create('api/main/' . $wrapper->getIdentifier(), array(), RequestInterface::METHOD_GET, $headers));
-    $handler->setPath($wrapper->getIdentifier());
-    $response = $handler->process();
-    $formatter_manager = restful()->getFormatterManager();
-    $formatter_manager->setResource($handler);
-    $formatter_result = $formatter_manager->format($response);
-    $results = drupal_json_decode($formatter_result);
-    $this->assertEqual(2, count($results['_embedded']));
-    $this->assertEqual($wrapper->entity_reference_multiple->count(), count($results['_embedded']['hal:entity_reference_multiple_resource']));
-    $this->assertEqual($entity1->pid, count($results['_embedded']['hal:entity_reference_single_resource']['id']));
-
+    $results = drupal_json_decode($response['body']);
+    $this->assertEqual($wrapper->entity_reference_multiple->count() + 1, count($results['_embedded']['hal:main']));
   }
 
 }

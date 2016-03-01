@@ -1,39 +1,22 @@
 # Defining a RESTful Plugin
 
-## Resources with multiple bundles
-One of the things that your API design should have is entity uniformity. That
-means that you should be able to describe the contents of a single item with a
-schema. That in turn, refers to the ability to set expectation in the fields that
-are going to be present for a given item, by explaining «I'm going to have fields
-a, b and c and they are all strings».
-
-If you have a resource for a Drupal entity type (ex: a node) that should output
-different bundles (ex: article and page), then you have to make sure that you
-only expose fields that are common to the both of them so the resulting payload
-is uniform. Another way to expose them, in case that you need to expose different
-fields, is to treat them as references. In that case you would have a public
-field per bundle that contains a reference to each specific bundle (one for the
-page and another one for the article, linked to the page and article resources).
-You will need to set the field class manually for that field. See an example of
-that in [EntityTests__1_0](../tests/modules/restful_test/src/Plugin/resource/entity_test/EntityTests__1_0.php).
-
 ## Defining the exposed fields
 By default the RESTful module will expose the ID, label and URL of the entity.
 You probably want to expose more than that. To do so you will need to implement
-the `publicFields` method defining the names in the output array and how
+the `publicFieldsInfo` method defining the names in the output array and how
 those are mapped to the queried entity. For instance the following example will
 retrieve the basic fields plus the body, tags and images from an article node.
 The RESTful module will know to use the `MyArticlesResource` class because your
 plugin definition will say so.
 
 ```php
-class MyArticles__1_0 extends ResourceEntity {
+class MyArticlesResource extends \RestfulEntityBase {
 
   /**
-   * Overrides ResourceEntity::publicFields().
+   * Overrides \RestfulEntityBase::publicFieldsInfo().
    */
-  public function publicFields() {
-    $public_fields = parent::publicFields();
+  public function publicFieldsInfo() {
+    $public_fields = parent::publicFieldsInfo();
 
     $public_fields['body'] = array(
       'property' => 'body',
@@ -63,12 +46,14 @@ class MyArticles__1_0 extends ResourceEntity {
 ```
 
 See [the inline documentation](https://github.com/RESTful-Drupal/restful/blob/7.x-1.x/plugins/restful/RestfulEntityBase.php)
-for `publicFields` to get more details on exposing field data to your
+for `publicFieldsInfo` to get more details on exposing field data to your
 resource.
 
 If you need even more flexibility, you can use the `'callback'` key to name a
 custom function to compute the field data.
 
+For the DB query data provider, in case you want to filter a column of a query
+with joins, see [this](https://github.com/RESTful-Drupal/restful/blob/7.x-1.x/modules/restful_example/plugins/restful/db_query/node_user/1.0/RestfulExampleNodeUserResource.class.php) example.
 
 ## Defining a view mode
 You can leverage Drupal core's view modes to render an entity and expose it as a
@@ -76,10 +61,10 @@ resource with RESTful. All you need is to set up a view mode that renders the
 output you want to expose and tell RESTful to use it. This simplifies the
 workflow of exposing your resource a lot, since you don't even need to create a
 resource class, but it also offers you less features that are configured in the
-`publicFields` method.
+`publicFieldsInfo` method.
 
 Use this method when you don't need any of the extra features that are added via
-`publicFields` (like the discovery metadata, image styles for images,
+`publicFieldsInfo` (like the discovery metadata, image styles for images,
 process callbacks, custom access callbacks for properties, etc.). This is also a
 good way to stub a resource really quick and then move to the more fine grained
 method.
@@ -129,7 +114,7 @@ You can also define default sort fields in your plugin, by overriding
 `defaultSortInfo()` in your class definition.
 
 This method should return an associative array, with each element having a key
-that matches a field from `publicFields()`, and a value of either 'ASC' or
+that matches a field from `publicFieldsInfo()`, and a value of either 'ASC' or
 'DESC'. Bear in mind that for entity based resources, only those fields with a
 `'property'` (matching to an entity property or a Field API field) can be used
 for sorting.
@@ -193,8 +178,8 @@ reference or taxonomy term reference) or a reference property (e.g. the ``uid``
 property on the node entity) to the resource it belongs to.
 
 ```php
-public function publicFields() {
-  $public_fields = parent::publicFields();
+public function publicFieldsInfo() {
+  $public_fields = parent::publicFieldsInfo();
   // ...
   $public_fields['user'] = array(
     'property' => 'author',
@@ -204,7 +189,7 @@ public function publicFields() {
       // The name of the resource to map to.
       'name' => 'users',
       // Determines if the entire resource should appear, or only the ID.
-      'fullView' => TRUE,
+      'full_view' => TRUE,
     ),
   );
   // ...
@@ -212,9 +197,9 @@ public function publicFields() {
 }
 ```
 
-Note that when you use the ``resource`` property, behind the scenes RESTful  
-initializes a second handler and calls that resource. In order to pass information  
-to the second handler (e.g. the access token), we pipe the original request  
+Note that when you use the ``resource`` property, behind the scenes RESTful
+initializes a second handler and calls that resource. In order to pass information
+to the second handler (e.g. the access token), we pipe the original request
 array with some parameters removed. If you need to strip further parameters you can
 override ``\RestfulBase::getRequestForSubRequest``.
 
@@ -314,7 +299,7 @@ $plugin = array(
     // Expiration logic. Defaults to CACHE_PERMANENT (optional).
     'expire' => CACHE_TEMPORARY,
     // Enable cache invalidation for entity based resources. Defaults to TRUE (optional).
-    'simpleInvalidate' => TRUE,
+    'simple_invalidate' => TRUE,
     // Use a different cache backend for this resource. Defaults to variable_get('cache_default_class', 'DrupalDatabaseCache') (optional).
     'class' => 'MemCacheDrupal',
     // Account cache granularity. Instead of caching per user you can choose to cache per role. Default: DRUPAL_CACHE_PER_USER.
@@ -368,7 +353,7 @@ a configuration array. The following is taken from the example resource articles
       'limits' => array(
         'authenticated user' => 3,
         'anonymous user' => 2,
-        'administrator' => \Drupal\restful\RateLimit\RateLimitManager::UNLIMITED_RATE_LIMIT,
+        'administrator' => \RestfulRateLimitManager::UNLIMITED_RATE_LIMIT,
       ),
     ),
   ),

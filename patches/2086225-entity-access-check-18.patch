@@ -1,0 +1,36 @@
+diff --git a/includes/entity.wrapper.inc b/includes/entity.wrapper.inc
+index 06b89ad..e1a761c 100644
+--- a/includes/entity.wrapper.inc
++++ b/includes/entity.wrapper.inc
+@@ -821,7 +821,12 @@ class EntityDrupalWrapper extends EntityStructureWrapper {
+     }
+     else {
+       // This is not a property, so fallback on entity access.
+-      return $this->entityAccess($op == 'edit' ? 'update' : 'view', $account);
++      if ($op == 'edit') {
++        // If the operation is "edit" determine if its actually a "create" for
++        // new un-saved entities, or an "update" for existing ones.
++        return $this->entityAccess($this->getIdentifier() ? 'update' : 'create', $account);
++      }
++      return $this->entityAccess('view', $account);
+     }
+   }
+ 
+diff --git a/modules/callbacks.inc b/modules/callbacks.inc
+index 26f802e..21e89e5 100644
+--- a/modules/callbacks.inc
++++ b/modules/callbacks.inc
+@@ -670,9 +670,11 @@ function entity_metadata_field_file_validate_item($items, $context) {
+ function entity_metadata_no_hook_node_access($op, $node = NULL, $account = NULL) {
+   // First deal with the case where a $node is provided.
+   if (isset($node)) {
+-    if ($op == 'create') {
++    if (empty($node->vid) && in_array($op, array('create', 'update'))) {
++      // This is a new node or the original node.
+       if (isset($node->type)) {
+-        return node_access($op, $node->type, $account);
++        $op = !empty($node->is_new) && $node->is_new ? 'create' : 'update';
++        return node_access($op, $op == 'create' ? $node->type : $node, $account);
+       }
+       else {
+         throw new EntityMalformedException('Permission to create a node was requested but no node type was given.');

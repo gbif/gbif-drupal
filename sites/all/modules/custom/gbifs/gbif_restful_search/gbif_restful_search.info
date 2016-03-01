@@ -1,0 +1,13 @@
+name = GBIF Restful Search
+description = Support the search interface of GBIF Content API
+core = 7.x
+package = GBIFS
+version = 7.x-0.1
+project = GBIF Portal
+
+dependencies[] = entity
+dependencies[] = search_api
+dependencies[] = restful_search_api
+
+features[features_api][] = api:2
+features[search_api_index][] = node_index

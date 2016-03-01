@@ -5,9 +5,6 @@
  * Contains RestfulCreateTaxonomyTermTestCase
  */
 
-use Drupal\restful\Http\Request;
-use Drupal\restful\Http\RequestInterface;
-
 class RestfulCreateTaxonomyTermTestCase extends DrupalWebTestCase {
 
   public static function getInfo() {
@@ -18,30 +15,23 @@ class RestfulCreateTaxonomyTermTestCase extends DrupalWebTestCase {
     );
   }
 
-  public function setUp() {
+  function setUp() {
     parent::setUp('restful_test');
   }
 
   /**
    * Test the creation of a taxonomy term entity type.
    */
-  public function testCreate() {
-    $resource_manager = restful()->getResourceManager();
+  function testCreate() {
     $user1 = $this->drupalCreateUser(array('create article content'));
     $this->drupalLogin($user1);
 
-    $handler = $resource_manager->getPlugin('test_tags:1.0');
+    $handler = restful_get_restful_handler('test_tags');
     $handler->setAccount($user1);
 
     $text1 = $this->randomName();
     $request = array('label' => $text1);
-
-    $handler->setRequest(Request::create('', array(), RequestInterface::METHOD_POST, NULL, FALSE, NULL, array(), array(), array(), $request));
-    $handler->setPath('');
-    $result = drupal_json_decode(restful()
-      ->getFormatterManager()
-      ->format($handler->process(), 'json'));
-    $result = $result['data'];
+    $result = $handler->post('', $request);
 
     $id = $result[0]['id'];
     $this->assertTrue($id, 'Term was created by a non-admin user.');

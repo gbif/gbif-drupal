@@ -43,11 +43,12 @@ function gbif_event_views_default_views() {
     'ge_venue_country' => 'ge_venue_country',
     'field_ge_gbifs_attendee_editable' => 'field_ge_gbifs_attendee_editable',
     'field_notes_editable' => 'field_notes_editable',
+    'status' => 'status',
   );
   $handler->display->display_options['style_options']['default'] = 'ge_date_ical';
   $handler->display->display_options['style_options']['info'] = array(
     'title' => array(
-      'sortable' => 0,
+      'sortable' => 1,
       'default_sort_order' => 'asc',
       'align' => '',
       'separator' => '',
@@ -61,14 +62,14 @@ function gbif_event_views_default_views() {
       'empty_column' => 0,
     ),
     'ge_location' => array(
-      'sortable' => 0,
+      'sortable' => 1,
       'default_sort_order' => 'asc',
       'align' => '',
       'separator' => '',
       'empty_column' => 0,
     ),
     'ge_venue_country' => array(
-      'sortable' => 0,
+      'sortable' => 1,
       'default_sort_order' => 'asc',
       'align' => '',
       'separator' => '',
@@ -86,6 +87,13 @@ function gbif_event_views_default_views() {
       'separator' => '',
       'empty_column' => 0,
     ),
+    'status' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
   );
   $handler->display->display_options['style_options']['sticky'] = TRUE;
   $handler->display->display_options['style_options']['caption'] = 'Event list, start from the beginning of 2016, whether public or not.';
@@ -95,7 +103,6 @@ function gbif_event_views_default_views() {
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
-  $handler->display->display_options['fields']['title']['label'] = '';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
   $handler->display->display_options['fields']['title']['element_type'] = '0';
@@ -178,11 +185,35 @@ function gbif_event_views_default_views() {
     8 => 0,
     7 => 0,
     10 => 0,
+    11 => 0,
     9 => 0,
     5 => 0,
     6 => 0,
   );
   $handler->display->display_options['filters']['ge_date_ical_value']['default_date'] = 'first day of January 2016';
+  /* Filter criterion: Content: Add to calendar - end date (ge_date_ical:value2) */
+  $handler->display->display_options['filters']['ge_date_ical_value2']['id'] = 'ge_date_ical_value2';
+  $handler->display->display_options['filters']['ge_date_ical_value2']['table'] = 'field_data_ge_date_ical';
+  $handler->display->display_options['filters']['ge_date_ical_value2']['field'] = 'ge_date_ical_value2';
+  $handler->display->display_options['filters']['ge_date_ical_value2']['operator'] = '<=';
+  $handler->display->display_options['filters']['ge_date_ical_value2']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['ge_date_ical_value2']['expose']['operator_id'] = 'ge_date_ical_value2_op';
+  $handler->display->display_options['filters']['ge_date_ical_value2']['expose']['label'] = 'End date';
+  $handler->display->display_options['filters']['ge_date_ical_value2']['expose']['operator'] = 'ge_date_ical_value2_op';
+  $handler->display->display_options['filters']['ge_date_ical_value2']['expose']['identifier'] = 'ge_date_ical_value2';
+  $handler->display->display_options['filters']['ge_date_ical_value2']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    8 => 0,
+    7 => 0,
+    10 => 0,
+    11 => 0,
+    9 => 0,
+    5 => 0,
+    6 => 0,
+  );
+  $handler->display->display_options['filters']['ge_date_ical_value2']['default_date'] = 'last day of December 2016';
 
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page');
@@ -209,6 +240,7 @@ function gbif_event_views_default_views() {
     t('‹ previous'),
     t('next ›'),
     t('last »'),
+    t('Title'),
     t('Date'),
     t('Location'),
     t('Venue country'),
@@ -216,6 +248,7 @@ function gbif_event_views_default_views() {
     t('Notes'),
     t('Public'),
     t('Start date'),
+    t('End date'),
     t('Page'),
   );
   $export['event_gbifs_admin'] = $view;

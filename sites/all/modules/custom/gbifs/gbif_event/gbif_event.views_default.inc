@@ -96,7 +96,7 @@ function gbif_event_views_default_views() {
     ),
   );
   $handler->display->display_options['style_options']['sticky'] = TRUE;
-  $handler->display->display_options['style_options']['caption'] = 'Event list, start from the beginning of 2016, whether public or not.';
+  $handler->display->display_options['style_options']['caption'] = 'Default view shows complete event list from start of 2016';
   $handler->display->display_options['style_options']['save_messages'] = 'summary';
   $handler->display->display_options['style_options']['batch_size'] = '10';
   /* Field: Content: Title */

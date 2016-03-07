@@ -989,6 +989,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'create event content',
     'roles' => array(
       'Editor' => 'Editor',
+      'Office admin' => 'Office admin',
       'Publisher' => 'Publisher',
     ),
     'module' => 'node',
@@ -1009,6 +1010,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'create generictemplate content',
     'roles' => array(
       'Editor' => 'Editor',
+      'Office admin' => 'Office admin',
       'Publisher' => 'Publisher',
     ),
     'module' => 'node',
@@ -1059,6 +1061,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'create resource content',
     'roles' => array(
       'Editor' => 'Editor',
+      'Office admin' => 'Office admin',
       'Publisher' => 'Publisher',
       'TDWG DQIG' => 'TDWG DQIG',
     ),
@@ -1071,6 +1074,7 @@ function gbif_roles_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Editor' => 'Editor',
+      'Office admin' => 'Office admin',
       'Publisher' => 'Publisher',
     ),
     'module' => 'path',
@@ -1137,6 +1141,7 @@ function gbif_roles_user_default_permissions() {
   $permissions['delete any event content'] = array(
     'name' => 'delete any event content',
     'roles' => array(
+      'Office admin' => 'Office admin',
       'Publisher' => 'Publisher',
     ),
     'module' => 'node',
@@ -1250,6 +1255,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'delete own event content',
     'roles' => array(
       'Editor' => 'Editor',
+      'Office admin' => 'Office admin',
       'Publisher' => 'Publisher',
     ),
     'module' => 'node',
@@ -1270,6 +1276,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'delete own generictemplate content',
     'roles' => array(
       'Editor' => 'Editor',
+      'Office admin' => 'Office admin',
       'Publisher' => 'Publisher',
     ),
     'module' => 'node',
@@ -1320,6 +1327,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'delete own resource content',
     'roles' => array(
       'Editor' => 'Editor',
+      'Office admin' => 'Office admin',
       'Publisher' => 'Publisher',
       'TDWG DQIG' => 'TDWG DQIG',
     ),
@@ -1589,6 +1597,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'edit any event content',
     'roles' => array(
       'Editor' => 'Editor',
+      'Office admin' => 'Office admin',
       'Publisher' => 'Publisher',
     ),
     'module' => 'node',
@@ -1616,6 +1625,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'edit any generictemplate content',
     'roles' => array(
       'Editor' => 'Editor',
+      'Office admin' => 'Office admin',
       'Publisher' => 'Publisher',
     ),
     'module' => 'node',
@@ -1704,6 +1714,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'edit any resource content',
     'roles' => array(
       'Editor' => 'Editor',
+      'Office admin' => 'Office admin',
       'Publisher' => 'Publisher',
       'TDWG DQIG' => 'TDWG DQIG',
     ),
@@ -1812,6 +1823,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'edit own event content',
     'roles' => array(
       'Editor' => 'Editor',
+      'Office admin' => 'Office admin',
       'Publisher' => 'Publisher',
     ),
     'module' => 'node',
@@ -1839,6 +1851,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'edit own generictemplate content',
     'roles' => array(
       'Editor' => 'Editor',
+      'Office admin' => 'Office admin',
       'Publisher' => 'Publisher',
     ),
     'module' => 'node',
@@ -1927,6 +1940,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'edit own resource content',
     'roles' => array(
       'Editor' => 'Editor',
+      'Office admin' => 'Office admin',
       'Publisher' => 'Publisher',
       'TDWG DQIG' => 'TDWG DQIG',
     ),
@@ -2753,6 +2767,7 @@ function gbif_roles_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Editor' => 'Editor',
+      'Office admin' => 'Office admin',
       'Publisher' => 'Publisher',
       'TDWG DQIG' => 'TDWG DQIG',
     ),
@@ -2774,6 +2789,7 @@ function gbif_roles_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Editor' => 'Editor',
+      'Office admin' => 'Office admin',
       'Publisher' => 'Publisher',
       'TDWG DQIG' => 'TDWG DQIG',
     ),

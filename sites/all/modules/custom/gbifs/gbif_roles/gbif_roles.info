@@ -366,6 +366,7 @@ features[user_permission][] = view the administration theme
 features[user_role][] = Administrator
 features[user_role][] = Code editor
 features[user_role][] = Editor
+features[user_role][] = Office admin
 features[user_role][] = Publisher
 features[user_role][] = REGISTRY_ADMIN
 features[user_role][] = REGISTRY_EDITOR

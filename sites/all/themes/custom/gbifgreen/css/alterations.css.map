@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AAAA,aAAc;EACZ,WAAW,EAAE,SAAS",
+"sources": ["../scss/alterations.scss"],
+"names": [],
+"file": "alterations.css"
+}

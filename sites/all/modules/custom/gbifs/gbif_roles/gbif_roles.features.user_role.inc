@@ -28,6 +28,12 @@ function gbif_roles_user_default_roles() {
     'weight' => 4,
   );
 
+  // Exported role: Office admin.
+  $roles['Office admin'] = array(
+    'name' => 'Office admin',
+    'weight' => 6,
+  );
+
   // Exported role: Publisher.
   $roles['Publisher'] = array(
     'name' => 'Publisher',
@@ -37,19 +43,19 @@ function gbif_roles_user_default_roles() {
   // Exported role: REGISTRY_ADMIN.
   $roles['REGISTRY_ADMIN'] = array(
     'name' => 'REGISTRY_ADMIN',
-    'weight' => 7,
+    'weight' => 8,
   );
 
   // Exported role: REGISTRY_EDITOR.
   $roles['REGISTRY_EDITOR'] = array(
     'name' => 'REGISTRY_EDITOR',
-    'weight' => 8,
+    'weight' => 9,
   );
 
   // Exported role: TDWG DQIG.
   $roles['TDWG DQIG'] = array(
     'name' => 'TDWG DQIG',
-    'weight' => 6,
+    'weight' => 7,
   );
 
   return $roles;

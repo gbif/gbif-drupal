@@ -747,7 +747,11 @@ td.checkbox input.form-checkbox {
   width: 20px;
   background: transparent url("../images/toggles.png") no-repeat 0 0; }
 
-input.form-text.form-autocomplete {
+.view-event-gbifs-admin table td.views-field-field-ge-gbif-attendee-editable .views-row-edit-static {
+  display: none; }
+.view-event-gbifs-admin table td.views-field-field-ge-gbif-attendee-editable .field-name-field-ge-gbif-attendee label {
+  display: none; }
+.view-event-gbifs-admin table td.views-field-field-ge-gbif-attendee-editable .field-name-field-ge-gbif-attendee input.form-text {
   width: 300px; }
 
 /*# sourceMappingURL=shiny.css.map */

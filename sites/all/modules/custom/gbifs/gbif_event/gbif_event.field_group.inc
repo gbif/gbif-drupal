@@ -80,13 +80,13 @@ function gbif_event_field_group_info() {
     'label' => 'Event',
     'weight' => '3',
     'children' => array(
-      0 => 'group_secretariat_admin',
+      0 => 'group_date_time',
       1 => 'group_description',
-      2 => 'group_people',
-      3 => 'group_date_time',
-      4 => 'group_location',
-      5 => 'group_host',
-      6 => 'group_resources',
+      2 => 'group_host',
+      3 => 'group_location',
+      4 => 'group_people',
+      5 => 'group_resources',
+      6 => 'group_secretariat_admin',
     ),
     'format_type' => 'tabs',
     'format_settings' => array(
@@ -229,9 +229,8 @@ function gbif_event_field_group_info() {
     'weight' => '34',
     'children' => array(
       0 => 'ge_ims_kp_id',
-      1 => 'field_public',
-      2 => 'field_notes',
-      3 => 'field_ge_gbifs_attendee',
+      1 => 'field_notes',
+      2 => 'field_ge_gbif_attendee',
     ),
     'format_type' => 'tab',
     'format_settings' => array(

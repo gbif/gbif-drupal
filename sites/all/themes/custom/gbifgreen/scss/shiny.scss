@@ -672,6 +672,21 @@ td.checkbox input.form-checkbox {
   background: transparent url("../images/toggles.png") no-repeat 0 0;
 }
 
-input.form-text.form-autocomplete {
-  width: 300px;
+// Events GBIFS-admin view
+.view-event-gbifs-admin {
+  table {
+    td.views-field-field-ge-gbif-attendee-editable {
+      .views-row-edit-static {
+        display: none;
+      }
+      .field-name-field-ge-gbif-attendee {
+        label {
+          display: none;
+        }
+        input.form-text {
+          width: 300px;
+        }
+      }
+    }
+  }
 }

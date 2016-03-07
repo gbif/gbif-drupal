@@ -82,8 +82,8 @@ function gbif_event_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-event-field_ge_gbifs_attendee'.
-  $field_instances['node-event-field_ge_gbifs_attendee'] = array(
+  // Exported field_instance: 'node-event-field_ge_gbif_attendee'.
+  $field_instances['node-event-field_ge_gbif_attendee'] = array(
     'bundle' => 'event',
     'default_value' => NULL,
     'deleted' => 0,
@@ -91,11 +91,9 @@ function gbif_event_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'entityreference',
-        'settings' => array(
-          'link' => FALSE,
-        ),
-        'type' => 'entityreference_label',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
         'weight' => 21,
       ),
       'ical' => array(
@@ -118,10 +116,15 @@ function gbif_event_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'node',
-    'field_name' => 'field_ge_gbifs_attendee',
-    'label' => 'GBIFS attendee',
+    'field_name' => 'field_ge_gbif_attendee',
+    'label' => 'GBIF attendee',
     'required' => 0,
     'settings' => array(
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
       'mediafront' => array(
         'custom' => '',
         'field_type' => 0,
@@ -129,18 +132,17 @@ function gbif_event_field_default_field_instances() {
         'preview' => 0,
         'thumbnail' => 0,
       ),
+      'text_processing' => 0,
       'user_register_form' => FALSE,
     ),
     'widget' => array(
       'active' => 1,
-      'module' => 'entityreference',
+      'module' => 'text',
       'settings' => array(
-        'match_operator' => 'STARTS_WITH',
-        'path' => '',
         'size' => 60,
       ),
-      'type' => 'entityreference_autocomplete_tags',
-      'weight' => 15,
+      'type' => 'text_textfield',
+      'weight' => 37,
     ),
   );
 
@@ -205,7 +207,7 @@ function gbif_event_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 16,
+      'weight' => 38,
     ),
   );
 
@@ -856,7 +858,7 @@ function gbif_event_field_default_field_instances() {
       'module' => 'number',
       'settings' => array(),
       'type' => 'number',
-      'weight' => 17,
+      'weight' => 39,
     ),
   );
 
@@ -1520,7 +1522,7 @@ function gbif_event_field_default_field_instances() {
   t('Event ID');
   t('Event image');
   t('Event resources');
-  t('GBIFS attendee');
+  t('GBIF attendee');
   t('Language of event');
   t('Location');
   t('Notes');

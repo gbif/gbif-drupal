@@ -137,19 +137,15 @@ function gbif_event_views_default_views() {
   $handler->display->display_options['fields']['ge_venue_country']['element_type'] = '0';
   $handler->display->display_options['fields']['ge_venue_country']['element_default_classes'] = FALSE;
   $handler->display->display_options['fields']['ge_venue_country']['type'] = 'taxonomy_term_reference_plain';
-  /* Field: Content: GBIFS attendee (editable) */
-  $handler->display->display_options['fields']['field_ge_gbifs_attendee_editable']['id'] = 'field_ge_gbifs_attendee_editable';
-  $handler->display->display_options['fields']['field_ge_gbifs_attendee_editable']['table'] = 'field_data_field_ge_gbifs_attendee';
-  $handler->display->display_options['fields']['field_ge_gbifs_attendee_editable']['field'] = 'field_ge_gbifs_attendee_editable';
-  $handler->display->display_options['fields']['field_ge_gbifs_attendee_editable']['label'] = 'GBIFS attendee';
-  $handler->display->display_options['fields']['field_ge_gbifs_attendee_editable']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_ge_gbifs_attendee_editable']['settings'] = array(
-    'link' => 0,
-  );
-  $handler->display->display_options['fields']['field_ge_gbifs_attendee_editable']['delta_offset'] = '0';
-  $handler->display->display_options['fields']['field_ge_gbifs_attendee_editable']['widget_type'] = 'entityreference_autocomplete_tags';
-  $handler->display->display_options['fields']['field_ge_gbifs_attendee_editable']['suppress_label'] = 1;
-  $handler->display->display_options['fields']['field_ge_gbifs_attendee_editable']['suppress_description'] = 0;
+  /* Field: Content: GBIF attendee (editable) */
+  $handler->display->display_options['fields']['field_ge_gbif_attendee_editable']['id'] = 'field_ge_gbif_attendee_editable';
+  $handler->display->display_options['fields']['field_ge_gbif_attendee_editable']['table'] = 'field_data_field_ge_gbif_attendee';
+  $handler->display->display_options['fields']['field_ge_gbif_attendee_editable']['field'] = 'field_ge_gbif_attendee_editable';
+  $handler->display->display_options['fields']['field_ge_gbif_attendee_editable']['label'] = 'GBIF attendee';
+  $handler->display->display_options['fields']['field_ge_gbif_attendee_editable']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_ge_gbif_attendee_editable']['widget_type'] = 'text_textfield';
+  $handler->display->display_options['fields']['field_ge_gbif_attendee_editable']['suppress_label'] = 0;
+  $handler->display->display_options['fields']['field_ge_gbif_attendee_editable']['suppress_description'] = 0;
   /* Field: Content: Notes (editable) */
   $handler->display->display_options['fields']['field_notes_editable']['id'] = 'field_notes_editable';
   $handler->display->display_options['fields']['field_notes_editable']['table'] = 'field_data_field_notes';
@@ -244,7 +240,7 @@ function gbif_event_views_default_views() {
     t('Date'),
     t('Location'),
     t('Venue country'),
-    t('GBIFS attendee'),
+    t('GBIF attendee'),
     t('Notes'),
     t('Public'),
     t('Start date'),

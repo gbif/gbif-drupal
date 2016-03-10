@@ -5,7 +5,7 @@
  * Contains GbifRestfulNewsResource__2_0.
  */
 
-class GbifRestfulNewsResource__2_0 extends RestfulEntityBaseNode {
+class GbifRestfulNewsResource__0_1 extends RestfulEntityBaseNode {
   /**
    * Overrides \RestfulEntityBase::publicFieldsInfo().
    */

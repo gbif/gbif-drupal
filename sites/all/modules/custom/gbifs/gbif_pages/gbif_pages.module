@@ -219,7 +219,7 @@ function gbif_pages_form_alter(&$form, &$form_state, $form_id) {
  */
 function gbif_pages_page_build(&$page) {
 	$status = drupal_get_http_header("status");
-	$jobs_adverts = array('node/82115', 'node/82116', 'node/82117', 'node/82162');
+	$jobs_adverts = array('node/82115', 'node/82116', 'node/82117', 'node/82162', 'node/82621');
   $bid_updates = array('node/82183', 'node/82184', 'node/82185');
 	if ($status == '404 Not Found') {
 		// Do nothing.

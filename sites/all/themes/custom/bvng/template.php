@@ -91,6 +91,12 @@ function bvng_preprocess_page(&$variables) {
 					$altered_path = drupal_get_normal_path('newsroom/opportunities'); // node/242
 				}
 			  break;
+			case 'page':
+				$jobs_adverts = array('node/82621');
+				if (in_array($current_path, $jobs_adverts)) {
+					$altered_path = drupal_get_normal_path('newsroom/opportunities'); // node/242
+				}
+				break;
 		}
 	}
 	elseif (drupal_match_path($current_path, 'user') || drupal_match_path($current_path, 'user/*')) {

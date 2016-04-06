@@ -1,0 +1,11 @@
+name = GBIF Media
+description = Media configurations
+core = 7.x
+package = GBIFS
+version = 7.x-0.1
+dependencies[] = image
+features[features_api][] = api:2
+features[image][] = masthead__mobile
+features[image][] = masthead__narrow
+features[image][] = masthead__normal
+features[image][] = masthead__wide

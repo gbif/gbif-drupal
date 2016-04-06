@@ -38,7 +38,7 @@ class GbifRestfulNewsResource__0_1 extends RestfulEntityBaseNode {
     // fields
     $public_fields['images'] = array(
       'property' => 'field_uni_images',
-      'image_styles' => array('focal_point_for_news'),
+      'image_styles' => array('focal_point_for_news', 'masthead__mobile', 'masthead__narrow', 'masthead__normal', 'masthead__wide'),
     );
     $public_fields['researcherLocation'] = array(
       'property' => 'field_researcher_location',

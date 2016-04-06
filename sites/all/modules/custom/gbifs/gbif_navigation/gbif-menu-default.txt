@@ -102,9 +102,10 @@ Home {"url":"<front>","hidden":true}
 -Frequently Asked Questions {"url":"<front>","hidden":true, "description": "Contact us on <a href=\"mailto:helpdesk@gbif.org\">helpdesk@gbif.org<\/a> for more assistance"}
 --Data use {"url":"faq\/data-use"}
 -Terms of use {"url":"<front>","hidden":true, "description": "Licensing agreements and disclaimers relating to access and use of GBIF-mediated data"}
---Licences {"url":"terms\/licences"}
+--Privacy policy {"url":"terms\/privacy-policy"}
 --Data sharing {"url":"terms\/licences\/data-sharing"}
 --Data use {"url":"terms\/licences\/data-use"}
+--Licences {"url":"terms\/licences"}
 --Disclaimer {"url":"terms\/disclaimer"}
 -Biodiversity Information for Development {"url":"<front>","hidden":true, "description": "Enhancing capacity, availability and use of biodiversity information for policy and human well-being"}
 --BID {"url":"bid"}

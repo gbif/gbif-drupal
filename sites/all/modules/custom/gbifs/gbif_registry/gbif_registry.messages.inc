@@ -6,12 +6,12 @@
 function _gbif_registry_notify_endorsing_node_manager($message, $params, $options) {
 
   $message['subject'] = t('@test_envEndorsement request from @organisation-title', array(
-    '@test_env' => (isset($params['test_environment']) == TRUE) ? '[TEST] ' : '',
+    '@test_env' => ($params['test_environment'] == TRUE) ? '[TEST] ' : '',
     '@organisation-title' => $params['org']['title']
   ), $options);
 
   // Note that the message body is an array, not a string.
-  if (isset($params['test_environment']) == TRUE) {
+  if ($params['test_environment'] == TRUE) {
     $message['body'][] = t("====================================\nThis is a test message. Please ignore.\nWe are sorry for the interruption.\n====================================", array(), $options);
   }
   $message['body'][] = t('Dear Node Manager,', array(), $options);
@@ -31,12 +31,12 @@ function _gbif_registry_notify_endorsing_node_manager($message, $params, $option
 
 function _gbif_registry_notify_eoi_contact($message, $params, $options) {
   $message['subject'] = t('@test_envExpression of Interest from @org-title received', array(
-    '@test_env' => (isset($params['test_environment']) == TRUE) ? '[TEST] ' : '',
+    '@test_env' => ($params['test_environment'] == TRUE) ? '[TEST] ' : '',
     '@org-title' => $params['org']['title']
   ), $options);
 
   // Note that the message body is an array, not a string.
-  if (isset($params['test_environment']) == TRUE) {
+  if ($params['test_environment'] == TRUE) {
     $message['body'][] = t("====================================\nThis is a test message. Please ignore.\nWe are sorry for the interruption.\n====================================", array(), $options);
   }
   $message['body'][] = t('Dear @title @firstName @lastName,', array('@title' => $params['contact']['title'], '@firstName' => $params['contact']['firstName'], '@lastName' => $params['contact']['lastName']), $options);
@@ -56,11 +56,11 @@ function _gbif_registry_notify_eoi_contact($message, $params, $options) {
 
 function _gbif_registry_notify_helpdesk($message, $params, $options) {
   $message['subject'] = t('@test_envNew expression of interest', array(
-    '@test_env' => (isset($params['test_environment']) == TRUE) ? '[TEST] ' : '',
+    '@test_env' => ($params['test_environment'] == TRUE) ? '[TEST] ' : '',
   ), $options);
 
   // message body
-  if (isset($params['test_environment']) == TRUE) {
+  if ($params['test_environment'] == TRUE) {
     $message['body'][] = t("====================================\nThis is a test message. Please ignore.\nWe are sorry for the interruption.\n====================================", array(), $options);
   }
   $message['body'][] = t('Hi Helpdesk manager,', array(), $options);
@@ -173,7 +173,7 @@ function _gbif_registry_detail_of_submission(&$message, $params, $options) {
 
 function _gbif_registry_weekly_reminder(&$message, $params, $options) {
 	$message['subject'] = t('@test_envWeekly reminder for the pending endorsement request', array(
-    '@test_env' => (isset($params['test_environment']) == TRUE) ? '[TEST] ' : '',
+    '@test_env' => ($params['test_environment'] == TRUE) ? '[TEST] ' : '',
   ), $options);
 
 	// Note that the message body is an array, not a string.

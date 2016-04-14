@@ -6,7 +6,7 @@ $plugin = array(
   'label' => t('Search'),
   'description' => t('Provides basic info doing Search API searches.'),
   'data_provider_options' => array(
-    'search_index' => 'node_index',
+    'search_index' => 'news_index',
   ),
   'class' => 'RestfulSearchAPISearch',
   'authentication_types' => TRUE,

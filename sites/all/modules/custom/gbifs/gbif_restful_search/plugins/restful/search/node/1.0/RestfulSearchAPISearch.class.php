@@ -46,6 +46,9 @@ class RestfulSearchAPISearch extends \RestfulDataProviderSearchAPI implements \R
       'language' => array(
         'property' => 'language',
       ),
+      'status' => array(
+        'property' => 'status',
+      ),
     );
   }
 

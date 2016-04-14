@@ -36,7 +36,7 @@ function gbif_restful_search_default_search_api_index() {
           "settings" : { "default" : "1", "bundles" : [] }
         },
         "search_api_alter_node_access" : { "status" : 0, "weight" : "0", "settings" : [] },
-        "search_api_alter_node_status" : { "status" : 0, "weight" : "0", "settings" : [] },
+        "search_api_alter_node_status" : { "status" : 1, "weight" : "0", "settings" : [] },
         "search_api_alter_language_control" : {
           "status" : 0,
           "weight" : "0",
@@ -175,7 +175,7 @@ function gbif_restful_search_default_search_api_index() {
           "settings" : { "default" : "1", "bundles" : [] }
         },
         "search_api_alter_node_access" : { "status" : 0, "weight" : "0", "settings" : [] },
-        "search_api_alter_node_status" : { "status" : 0, "weight" : "0", "settings" : [] },
+        "search_api_alter_node_status" : { "status" : 1, "weight" : "0", "settings" : [] },
         "search_api_alter_language_control" : {
           "status" : 0,
           "weight" : "0",

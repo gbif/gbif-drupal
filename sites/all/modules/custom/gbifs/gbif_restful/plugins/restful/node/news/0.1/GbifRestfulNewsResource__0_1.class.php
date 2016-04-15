@@ -37,9 +37,6 @@ class GbifRestfulNewsResource__0_1 extends RestfulEntityBaseNode {
     $public_fields['created'] = array(
       'property' => 'created',
     );
-    $public_fields['updated'] = array(
-      'property' => 'updated',
-    );
 
     // fields
     $public_fields['images'] = array(

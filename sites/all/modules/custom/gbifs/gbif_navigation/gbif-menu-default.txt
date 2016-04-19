@@ -9,10 +9,9 @@ Data {"url":"<front>"}
 --Summary {"url":"publishing-data\/summary", "description": "How and why you should make biodiversity datasets accessible through GBIF"}
 --Quick guide {"url":"publishing-data\/quick-guide"}
 --Benefits {"url":"publishing-data\/benefits"}
+--Requirements {"url":"publishing-data\/requirements"}
 --Endorsement {"url":"publishing-data\/endorsement"}
---Request endorsement {"url":"publishing-data\/request-endorsement"}
 --Data papers {"url":"publishing-data\/data-papers"}
---Resources {"url":"publishing-data\/resources"}
 -Using Data {"url":"using-data\/summary", "description": "How data accessed through GBIF are used in research and policy"}
 --Summary {"url":"using-data\/summary", "description": "How data accessed through GBIF are used in research and policy"}
 --Science relevance {"url":"using-data\/science-relevance"}
@@ -107,6 +106,9 @@ Home {"url":"<front>","hidden":true}
 --Data use {"url":"terms\/licences\/data-use"}
 --Licences {"url":"terms\/licences"}
 --Disclaimer {"url":"terms\/disclaimer"}
+-Publishing data {"url":"<front>", "description": "How and why you should make biodiversity datasets accessible through GBIF"}
+--Request endorsement {"url":"publishing-data\/request-endorsement"}
+--Resources {"url":"publishing-data\/resources"}
 -Biodiversity Information for Development {"url":"<front>","hidden":true, "description": "Enhancing capacity, availability and use of biodiversity information for policy and human well-being"}
 --BID {"url":"bid"}
 -Login to GBIF {"url":"<front>"}

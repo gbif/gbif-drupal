@@ -9,7 +9,7 @@ Data {"url":"<front>"}
 --Summary {"url":"publishing-data\/summary", "description": "How and why you should make biodiversity datasets accessible through GBIF"}
 --Quick guide {"url":"publishing-data\/quick-guide"}
 --Benefits {"url":"publishing-data\/benefits"}
---Requirements {"url":"publishing-data\/requirements"}
+--Quality {"url":"publishing-data\/quality"}
 --Endorsement {"url":"publishing-data\/endorsement"}
 --Data papers {"url":"publishing-data\/data-papers"}
 -Using Data {"url":"using-data\/summary", "description": "How data accessed through GBIF are used in research and policy"}

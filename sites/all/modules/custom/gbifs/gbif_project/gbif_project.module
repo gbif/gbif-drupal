@@ -666,8 +666,9 @@ function _gbif_project_get_partner_link($entity) {
     if (count($entity->field_url) > 0) {
       $link = l($entity->field_url[LANGUAGE_NONE][0]['title'], $entity->field_url[LANGUAGE_NONE][0]['url']);
     }
-    else {
-      $link = $entity->field_url[LANGUAGE_NONE][0]['title'];
+    // If the organisation itself doesn't have a valid URL, the title string is provided instead.
+    elseif (count($entity->field_url) == 0) {
+      $link = $entity->title;
     }
   }
   return $link;

@@ -642,10 +642,11 @@ function _gbif_project_get_partner_link($entity) {
     // @todo the gbif_participant type can't be fully utilised by entity wrapper. To investigate.
     $iso2 = $entity->gp_iso2[LANGUAGE_NONE][0]['value'];
     $participant_id = $entity->gp_id[LANGUAGE_NONE][0]['value'];
-    $participants = _gbif_participant_participant_query($participant_id, $iso2, 'ALL');
+    $participants = _gbif_participant_participant_query($participant_id, $iso2);
     $participant = array_shift($participants);
-    $gbif_membership = $participant->gbif_membership;
-    if ($gbif_membership == 'Voting Participant' || $gbif_membership == 'Associate Country Participant' || $iso2 == 'TW') {
+    $participant_type = $participant['type'];
+    $participant_status = $participant['participationStatus'];
+    if ($participant_type == 'COUNTRY' || ($participant_type == 'OTHER' && $participant_status == 'ASSOCIATE' && $iso2 == 'TW')) {
       $partner_url = '/country/' . $iso2 . '/participation';
     }
     elseif ($gbif_membership == 'Other Associate Participant') {

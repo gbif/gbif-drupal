@@ -21,6 +21,11 @@ class GbifRestfulNewsResource__0_1 extends RestfulEntityBaseNode {
       'sub_property' => 'value',
     );
 
+    $public_fields['summary'] = array(
+      'property' => 'body',
+      'sub_property' => 'summary',
+    );
+
     // attributes
     $public_fields['language'] = array(
       'property' => 'language',

@@ -12,6 +12,10 @@ sites/*/private
 sites/drupaledit.gbif.org
 sites/staging.gbif.org
 
+# Ignore sites folders of envionments
+sites/drupaledit.gbif-dev.org
+sites/drupaledit.gbif-uat.org
+
 # Ignore default text files
 robots.txt
 /CHANGELOG.txt

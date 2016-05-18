@@ -909,7 +909,9 @@ function _gbif_participant_participant_query($participantID = NULL, $iso2 = NULL
     $participants = $participants['results'];
   }
   else {
-    $participants[] = $participants;
+		$temp_array = array();
+    $temp_array[] = $participants;
+    $participants = $temp_array;
   }
   $results = array();
 

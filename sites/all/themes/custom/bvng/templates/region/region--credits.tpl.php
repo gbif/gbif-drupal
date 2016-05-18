@@ -51,7 +51,7 @@
           <li><strong>Email</strong> info@gbif.org</li>
           <li><strong>Tel</strong> +45 35 32 14 70</li>
           <li><strong>Fax</strong> +45 35 32 14 80</li>
-          <li>You can also check the <a href='contact/directoryofcontacts#secretariat'>GBIF Directory</a></li>
+          <li>You can also check the <a href='/contact/directoryofcontacts#secretariat'>GBIF Directory</a></li>
         </ul>
       </li>
       <li>

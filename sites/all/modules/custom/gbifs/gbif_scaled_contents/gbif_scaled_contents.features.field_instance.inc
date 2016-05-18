@@ -754,7 +754,7 @@ function gbif_scaled_contents_field_default_field_instances() {
     'bundle' => 'news',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => '',
+    'description' => 'Pick an option so the news will be included in various BID news stream.',
     'display' => array(
       'default' => array(
         'label' => 'above',

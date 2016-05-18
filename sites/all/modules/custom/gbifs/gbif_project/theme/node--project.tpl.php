@@ -147,7 +147,8 @@ $programme_title = $field_programme_value->title;
 
             <?php
               $block = block_load('views', 'related_activities-related_news');
-              print render(_block_get_renderable_array(_block_render_blocks(array($block))));
+              $block_to_be_rendered = _block_get_renderable_array(_block_render_blocks(array($block)));
+              print render($block_to_be_rendered);
             ?>
 
             <?php if (isset($content['field_related_events'])): ?>

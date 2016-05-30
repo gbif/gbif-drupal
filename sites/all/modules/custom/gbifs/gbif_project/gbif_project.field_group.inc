@@ -54,6 +54,7 @@ function gbif_project_field_group_info() {
       1 => 'field_pj_funding_allocated',
       2 => 'field_pj_funding_delivered',
       3 => 'field_pj_matching_fund',
+      4 => 'field_pj_grant_type',
     ),
     'format_type' => 'tab',
     'format_settings' => array(
@@ -337,8 +338,7 @@ function gbif_project_field_group_info() {
     'label' => 'Tags',
     'weight' => '34',
     'children' => array(
-      0 => 'field_regions',
-      1 => 'gr_purpose',
+      0 => 'gr_purpose',
     ),
     'format_type' => 'tab',
     'format_settings' => array(

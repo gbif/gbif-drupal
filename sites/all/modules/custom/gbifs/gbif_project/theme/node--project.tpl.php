@@ -194,6 +194,10 @@ $programme_title = $field_programme_value->title;
               <?php print render($content['field_duration']); ?>
             <?php endif; ?>
 
+            <?php if (isset($content['field_pj_grant_type'])): ?>
+              <?php print render($content['field_pj_grant_type']); ?>
+            <?php endif; ?>
+
             <?php if (isset($content['field_pj_funding_allocated'])): ?>
               <?php print render($content['field_pj_funding_allocated']); ?>
             <?php endif; ?>

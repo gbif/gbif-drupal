@@ -212,7 +212,7 @@
   padding: 20px;
   h4 {
     margin-top: 0px;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: normal;
     text-transform: uppercase;
     text-shadow: 0 1px @cWhite;
@@ -227,6 +227,32 @@
   }
   .form-submit {
     margin-top: 10px;
+  }
+  .checkgroup {
+      margin: 15px 0;
+      color: @cGray70;
+      .checkbox {
+          font-size: 13px;
+      }
+      input {
+          margin-top: 3px;
+      }
+  }
+  input.disabled {
+      background-color: @brand-warning;
+      border-radius: 4px;
+      -moz-border-radius: 4px;
+      -webkit-border-radius: 4px;
+      color: @cWhite;
+      border: 1px solid @brand-warning;
+  }
+  input.submit {
+      background-color: @brand-primary;
+      border-radius: 4px;
+      -moz-border-radius: 4px;
+      -webkit-border-radius: 4px;
+      color: @cWhite;
+      border: 1px solid @brand-primary;
   }
 }
 

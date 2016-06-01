@@ -898,6 +898,10 @@ function gbif_participant_membership_types() {
 			'key' => 'former',
 			'title' => t('Former Participant')
 		),
+		array(
+			'key' => 'observer',
+			'title' => t('Observer Participant')
+		),
 	);
 	return $types;
 }

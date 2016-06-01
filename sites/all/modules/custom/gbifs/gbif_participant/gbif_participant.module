@@ -361,8 +361,10 @@ function gbif_participant_preprocess_page(&$variables) {
 					$variables['page']['menu']['menu_block_gbif_navigation_country_page']['#content'][$k]['#href'] = $new_path;
 				}
 				// If it's not a participant, take the participation menu tab away.
-				if (gettype($k) == 'integer' && $tab['#title'] == 'Participation' && count($results) == 0) {
-					unset($variables['page']['menu']['menu_block_gbif_navigation_country_page']['#content'][$k]);
+				if (gettype($k) == 'integer' && $tab['#title'] == 'Participation') {
+					if (count($results) == 0 || (count($results) == 1) && $results[0]['participationStatus'] == 'FORMER') {
+						unset($variables['page']['menu']['menu_block_gbif_navigation_country_page']['#content'][$k]);
+					}
 				}
 				// If on the list of publisher, highlight the tab with class '.back-menu'.
 				$current_path = current_path();

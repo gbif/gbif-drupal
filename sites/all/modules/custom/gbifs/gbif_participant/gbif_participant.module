@@ -362,7 +362,7 @@ function gbif_participant_preprocess_page(&$variables) {
 				}
 				// If it's not a participant, take the participation menu tab away.
 				if (gettype($k) == 'integer' && $tab['#title'] == 'Participation') {
-					if (count($results) == 0 || (count($results) == 1) && $results[0]['participationStatus'] == 'FORMER') {
+					if (count($results) == 0 || (count($results) == 1) && ($results[0]['participationStatus'] == 'FORMER' || $results[0]['participationStatus'] == 'OBSERVER')) {
 						unset($variables['page']['menu']['menu_block_gbif_navigation_country_page']['#content'][$k]);
 					}
 				}
@@ -900,7 +900,7 @@ function gbif_participant_membership_types() {
 		),
 		array(
 			'key' => 'observer',
-			'title' => t('Observer Participant')
+			'title' => t('Observer Country')
 		),
 	);
 	return $types;

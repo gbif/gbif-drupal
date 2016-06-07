@@ -1,0 +1,32 @@
+<?php
+/**
+ * @file
+ * Code for the GBIF Bibliography feature.
+ */
+
+include_once 'gbif_bibliography.features.inc';
+
+/**
+ * Implements hook_menu().
+ * @todo Access point for JSON call
+ */
+function gbif_bibliography_menu() {
+  $items = array();
+  $items['admin/config/gbif/mendeley/sync'] = array(
+    'title' => 'Mendeley sync',
+    'description' => t('Synchronise Mendeley citations.'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('gbif_bibliography_settings_form'),
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'gbif_bibliography.admin.inc',
+  );
+  return $items;
+}
+
+/**
+ * Sync citations from local JSON to Drupal DB
+ */
+function gbif_bibliography_sync() {
+
+}

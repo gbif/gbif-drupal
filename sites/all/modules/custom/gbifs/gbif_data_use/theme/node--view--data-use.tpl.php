@@ -83,25 +83,24 @@
 ?>
 <article id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?> clearfix"<?php print $attributes; ?>>
   <div class="node-featured">
-    <?php
-      if (!empty($field_uni_images)) {
-        $view_field = field_view_field('node', $node, 'field_uni_images', array('settings' => array('image_style' => 'featured')));
-        print render($view_field);
-      }
-    ?>
-    <?php if (!empty($title)): ?>
-      <h2<?php print $title_attributes; ?>><a href="<?php print $node_url; ?>"><?php print $title; ?></a></h2>
-    <?php endif; ?>
-        
-    <?php
+      <?php
+        if (!empty($field_uni_images)) {
+          $view_field = field_view_field('node', $node, 'field_uni_images', array('settings' => array('image_style' => 'featured')));
+          print render($view_field);
+        }
+      ?>
+
+      <?php if (!empty($title)): ?>
+        <h2<?php print $title_attributes; ?>><a href="<?php print $node_url; ?>"><?php print $title; ?></a></h2>
+      <?php endif; ?>
+
+      <?php
       // Hide comments, tags, and links now so that we can render them later.
       hide($content['comments']);
       hide($content['links']);
       hide($content['field_tags']);
       print render($content['body']);
-    ?> 
-    <footer>
-      <?php print $node->field_num_rs_used['und'][0]['safe_value']; ?>
-    </footer>
+      ?>
+    <footer><p><?php print $node->field_num_rs_used['und'][0]['safe_value']; ?></p></footer>
   </div>
 </article>

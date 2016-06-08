@@ -28,5 +28,20 @@ function gbif_bibliography_menu() {
  * Sync citations from local JSON to Drupal DB
  */
 function gbif_bibliography_sync() {
+  // Check if there is a local copy of Mendeley documents.
+  $documents_file_loc = file_build_uri('gbif_mendeley/documents.json');
+  $file_exists = file_exists(drupal_realpath($documents_file_loc));
 
+  $updated = variable_get('gbif_mendeley_detail_updated');
+
+  if ($file_exists == TRUE && $updated == TRUE) {
+    $documents = json_decode(file_get_contents(drupal_realpath($documents_file_loc)));
+
+    foreach ($documents as $doc) {
+      
+
+    }
+    
+    return 'done';
+  }
 }

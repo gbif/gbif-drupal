@@ -103,7 +103,11 @@
       </div>
       <?php endif; ?>
       <div class="row">
-        <div class="node-content col-xs-8">
+        <?php if ($markdown == TRUE): ?>
+          <div class="node-content markdown-layout col-xs-12">
+        <?php else: ?>
+          <div class="node-content col-xs-8">
+        <?php endif; ?>
 
           <?php if (user_is_logged_in()): ?>
           <div class="submitted">
@@ -117,11 +121,13 @@
           <?php print render($content['body']); ?>
 
         </div>
+        <?php if ($markdown == FALSE): ?>
         <div class="node-sidebar col-xs-3">
     			<?php if (!empty($node->field_image)): ?> 
     			<?php print render(field_view_field('node', $node, 'field_image', array('settings' => array('image_style' => 'mainimage')))); ?>
     			<?php endif; ?>
         </div>
+        <?php endif; ?>
       </div>
     </div>
   </div>
@@ -148,7 +154,11 @@
         </div>
       </div>
       <div class="row">
-        <div class="node-content col-xs-8">
+        <?php if ($cchunks_content[$k]['format'] == 'parsedown'): ?>
+          <div class="node-content markdown-layout col-xs-12">
+        <?php else: ?>
+          <div class="node-content col-xs-8">
+        <?php endif; ?>
           <?php if (empty($body) && $k == 0): // Show contextual links in the first cchunk well if body field is not used. ?>
             <?php if ($display_submitted && user_is_logged_in()): ?>
             <div class="submitted">
@@ -159,13 +169,15 @@
             </div>
             <?php endif; ?>
           <?php endif; ?>
-  				<?php print check_markup(token_replace($cchunks_content[$k]), 'full_html', '', FALSE); ?>
+  				<?php print check_markup(token_replace($cchunks_content[$k]['content']), $cchunks_content[$k]['format'], '', FALSE); ?>
         </div>
-        <div class="node-sidebar col-xs-3">
-          <?php if (!empty($cchunks_sidebar[$k])): ?>
-          <?php print $cchunks_sidebar[$k]; ?>
+          <?php if ($cchunks_content[$k]['format'] != 'parsedown'): ?>
+            <div class="node-sidebar col-xs-3">
+              <?php if (!empty($cchunks_sidebar[$k])): ?>
+                <?php print $cchunks_sidebar[$k]; ?>
+                <?php endif; ?>
+            </div>
           <?php endif; ?>
-        </div>
       </div>
 
   </article>

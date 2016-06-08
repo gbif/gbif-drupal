@@ -10,7 +10,7 @@
 function gbif_project_field_default_field_bases() {
   $field_bases = array();
 
-  // Exported field_base: 'field_acronym'
+  // Exported field_base: 'field_acronym'.
   $field_bases['field_acronym'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -31,7 +31,7 @@ function gbif_project_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_co_funder'
+  // Exported field_base: 'field_co_funder'.
   $field_bases['field_co_funder'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -68,7 +68,7 @@ function gbif_project_field_default_field_bases() {
     'type' => 'entityreference',
   );
 
-  // Exported field_base: 'field_duration'
+  // Exported field_base: 'field_duration'.
   $field_bases['field_duration'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -98,7 +98,7 @@ function gbif_project_field_default_field_bases() {
     'type' => 'datestamp',
   );
 
-  // Exported field_base: 'field_funding_statement'
+  // Exported field_base: 'field_funding_statement'.
   $field_bases['field_funding_statement'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -117,7 +117,7 @@ function gbif_project_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'field_gbif_membership'
+  // Exported field_base: 'field_gbif_membership'.
   $field_bases['field_gbif_membership'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -146,7 +146,7 @@ function gbif_project_field_default_field_bases() {
     'type' => 'list_text',
   );
 
-  // Exported field_base: 'field_image'
+  // Exported field_base: 'field_image'.
   $field_bases['field_image'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -168,7 +168,7 @@ function gbif_project_field_default_field_bases() {
     'type' => 'image',
   );
 
-  // Exported field_base: 'field_internal_notes'
+  // Exported field_base: 'field_internal_notes'.
   $field_bases['field_internal_notes'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -187,7 +187,7 @@ function gbif_project_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'field_iso2'
+  // Exported field_base: 'field_iso2'.
   $field_bases['field_iso2'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -208,7 +208,7 @@ function gbif_project_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_member_as_of'
+  // Exported field_base: 'field_member_as_of'.
   $field_bases['field_member_as_of'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -238,7 +238,7 @@ function gbif_project_field_default_field_bases() {
     'type' => 'datestamp',
   );
 
-  // Exported field_base: 'field_mou_2012_date'
+  // Exported field_base: 'field_mou_2012_date'.
   $field_bases['field_mou_2012_date'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -268,7 +268,7 @@ function gbif_project_field_default_field_bases() {
     'type' => 'datestamp',
   );
 
-  // Exported field_base: 'field_participant_id'
+  // Exported field_base: 'field_participant_id'.
   $field_bases['field_participant_id'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -283,7 +283,7 @@ function gbif_project_field_default_field_bases() {
     'type' => 'number_integer',
   );
 
-  // Exported field_base: 'field_pj_funding_allocated'
+  // Exported field_base: 'field_pj_funding_allocated'.
   $field_bases['field_pj_funding_allocated'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -298,7 +298,7 @@ function gbif_project_field_default_field_bases() {
     'type' => 'number_integer',
   );
 
-  // Exported field_base: 'field_pj_funding_delivered'
+  // Exported field_base: 'field_pj_funding_delivered'.
   $field_bases['field_pj_funding_delivered'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -313,7 +313,33 @@ function gbif_project_field_default_field_bases() {
     'type' => 'number_integer',
   );
 
-  // Exported field_base: 'field_pj_image'
+  // Exported field_base: 'field_pj_grant_type'.
+  $field_bases['field_pj_grant_type'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_pj_grant_type',
+    'indexes' => array(
+      'value' => array(
+        0 => 'value',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'list',
+    'settings' => array(
+      'allowed_values' => array(
+        'regional' => 'Regional grant',
+        'national' => 'National grant',
+        'small' => 'Small grant',
+      ),
+      'allowed_values_function' => '',
+    ),
+    'translatable' => 0,
+    'type' => 'list_text',
+  );
+
+  // Exported field_base: 'field_pj_image'.
   $field_bases['field_pj_image'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -335,7 +361,7 @@ function gbif_project_field_default_field_bases() {
     'type' => 'image',
   );
 
-  // Exported field_base: 'field_pj_matching_fund'
+  // Exported field_base: 'field_pj_matching_fund'.
   $field_bases['field_pj_matching_fund'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -350,7 +376,7 @@ function gbif_project_field_default_field_bases() {
     'type' => 'number_integer',
   );
 
-  // Exported field_base: 'field_pj_participants'
+  // Exported field_base: 'field_pj_participants'.
   $field_bases['field_pj_participants'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -388,7 +414,7 @@ function gbif_project_field_default_field_bases() {
     'type' => 'entityreference',
   );
 
-  // Exported field_base: 'field_pj_partners'
+  // Exported field_base: 'field_pj_partners'.
   $field_bases['field_pj_partners'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -426,7 +452,7 @@ function gbif_project_field_default_field_bases() {
     'type' => 'entityreference',
   );
 
-  // Exported field_base: 'field_programme_ef'
+  // Exported field_base: 'field_programme_ef'.
   $field_bases['field_programme_ef'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -463,7 +489,7 @@ function gbif_project_field_default_field_bases() {
     'type' => 'entityreference',
   );
 
-  // Exported field_base: 'field_programme_ef_image'
+  // Exported field_base: 'field_programme_ef_image'.
   $field_bases['field_programme_ef_image'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -485,33 +511,7 @@ function gbif_project_field_default_field_bases() {
     'type' => 'image',
   );
 
-  // Exported field_base: 'field_regions'
-  $field_bases['field_regions'] = array(
-    'active' => 1,
-    'cardinality' => -1,
-    'deleted' => 0,
-    'entity_types' => array(),
-    'field_name' => 'field_regions',
-    'indexes' => array(
-      'tid' => array(
-        0 => 'tid',
-      ),
-    ),
-    'locked' => 0,
-    'module' => 'taxonomy',
-    'settings' => array(
-      'allowed_values' => array(
-        0 => array(
-          'vocabulary' => 'regions',
-          'parent' => 0,
-        ),
-      ),
-    ),
-    'translatable' => 0,
-    'type' => 'taxonomy_term_reference',
-  );
-
-  // Exported field_base: 'field_related_events'
+  // Exported field_base: 'field_related_events'.
   $field_bases['field_related_events'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -548,7 +548,7 @@ function gbif_project_field_default_field_bases() {
     'type' => 'entityreference',
   );
 
-  // Exported field_base: 'field_related_news'
+  // Exported field_base: 'field_related_news'.
   $field_bases['field_related_news'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -585,7 +585,7 @@ function gbif_project_field_default_field_bases() {
     'type' => 'entityreference',
   );
 
-  // Exported field_base: 'field_related_projects'
+  // Exported field_base: 'field_related_projects'.
   $field_bases['field_related_projects'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -622,7 +622,7 @@ function gbif_project_field_default_field_bases() {
     'type' => 'entityreference',
   );
 
-  // Exported field_base: 'field_related_resources'
+  // Exported field_base: 'field_related_resources'.
   $field_bases['field_related_resources'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -651,7 +651,7 @@ function gbif_project_field_default_field_bases() {
     'type' => 'link_field',
   );
 
-  // Exported field_base: 'field_short_name'
+  // Exported field_base: 'field_short_name'.
   $field_bases['field_short_name'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -672,7 +672,7 @@ function gbif_project_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_status'
+  // Exported field_base: 'field_status'.
   $field_bases['field_status'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -703,7 +703,7 @@ function gbif_project_field_default_field_bases() {
     'type' => 'list_text',
   );
 
-  // Exported field_base: 'field_subtitle'
+  // Exported field_base: 'field_subtitle'.
   $field_bases['field_subtitle'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -724,7 +724,7 @@ function gbif_project_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_title_for_display'
+  // Exported field_base: 'field_title_for_display'.
   $field_bases['field_title_for_display'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -745,7 +745,7 @@ function gbif_project_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_url'
+  // Exported field_base: 'field_url'.
   $field_bases['field_url'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -774,7 +774,7 @@ function gbif_project_field_default_field_bases() {
     'type' => 'link_field',
   );
 
-  // Exported field_base: 'pj_call'
+  // Exported field_base: 'pj_call'.
   $field_bases['pj_call'] = array(
     'active' => 1,
     'cardinality' => 1,

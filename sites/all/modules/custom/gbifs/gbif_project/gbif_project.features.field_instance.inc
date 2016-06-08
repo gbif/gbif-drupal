@@ -10,7 +10,7 @@
 function gbif_project_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'node-call-body'
+  // Exported field_instance: 'node-call-body'.
   $field_instances['node-call-body'] = array(
     'bundle' => 'call',
     'default_value' => NULL,
@@ -54,7 +54,7 @@ function gbif_project_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-call-field_acronym'
+  // Exported field_instance: 'node-call-field_acronym'.
   $field_instances['node-call-field_acronym'] = array(
     'bundle' => 'call',
     'default_value' => NULL,
@@ -106,7 +106,7 @@ function gbif_project_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-call-field_title_for_display'
+  // Exported field_instance: 'node-call-field_title_for_display'.
   $field_instances['node-call-field_title_for_display'] = array(
     'bundle' => 'call',
     'default_value' => NULL,
@@ -158,7 +158,7 @@ function gbif_project_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-dir_organization-body'
+  // Exported field_instance: 'node-dir_organization-body'.
   $field_instances['node-dir_organization-body'] = array(
     'bundle' => 'dir_organization',
     'default_value' => NULL,
@@ -215,7 +215,7 @@ function gbif_project_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-dir_organization-field_funding_statement'
+  // Exported field_instance: 'node-dir_organization-field_funding_statement'.
   $field_instances['node-dir_organization-field_funding_statement'] = array(
     'bundle' => 'dir_organization',
     'default_value' => NULL,
@@ -267,7 +267,7 @@ function gbif_project_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-dir_organization-field_image'
+  // Exported field_instance: 'node-dir_organization-field_image'.
   $field_instances['node-dir_organization-field_image'] = array(
     'bundle' => 'dir_organization',
     'deleted' => 0,
@@ -368,18 +368,24 @@ function gbif_project_field_default_field_instances() {
           'colorbox__featured_news_slideshow_image' => 0,
           'colorbox__large' => 0,
           'colorbox__linkit_thumb' => 0,
+          'colorbox__mainimage' => 0,
           'colorbox__medium' => 0,
+          'colorbox__rhimage' => 0,
           'colorbox__square_thumbnail' => 0,
           'colorbox__thumbnail' => 0,
+          'colorbox__uses_of_data___main' => 0,
           'icon_link' => 0,
           'image' => 0,
           'image_featured' => 0,
           'image_featured_news_slideshow_image' => 0,
           'image_large' => 0,
           'image_linkit_thumb' => 0,
+          'image_mainimage' => 0,
           'image_medium' => 0,
+          'image_rhimage' => 0,
           'image_square_thumbnail' => 0,
           'image_thumbnail' => 0,
+          'image_uses_of_data___main' => 0,
           'link' => 0,
         ),
         'insert_width' => '',
@@ -391,7 +397,7 @@ function gbif_project_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-dir_organization-field_url'
+  // Exported field_instance: 'node-dir_organization-field_url'.
   $field_instances['node-dir_organization-field_url'] = array(
     'bundle' => 'dir_organization',
     'default_value' => NULL,
@@ -460,7 +466,7 @@ function gbif_project_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-programme-body'
+  // Exported field_instance: 'node-programme-body'.
   $field_instances['node-programme-body'] = array(
     'bundle' => 'programme',
     'default_value' => NULL,
@@ -516,7 +522,7 @@ function gbif_project_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-programme-field_acronym'
+  // Exported field_instance: 'node-programme-field_acronym'.
   $field_instances['node-programme-field_acronym'] = array(
     'bundle' => 'programme',
     'default_value' => NULL,
@@ -568,7 +574,7 @@ function gbif_project_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-programme-field_co_funder'
+  // Exported field_instance: 'node-programme-field_co_funder'.
   $field_instances['node-programme-field_co_funder'] = array(
     'bundle' => 'programme',
     'default_value' => NULL,
@@ -622,7 +628,7 @@ function gbif_project_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-programme-field_programme_ef_image'
+  // Exported field_instance: 'node-programme-field_programme_ef_image'.
   $field_instances['node-programme-field_programme_ef_image'] = array(
     'bundle' => 'programme',
     'default_value' => array(),
@@ -727,11 +733,14 @@ function gbif_project_field_default_field_instances() {
           'colorbox__funder_image' => 0,
           'colorbox__large' => 0,
           'colorbox__linkit_thumb' => 0,
+          'colorbox__mainimage' => 0,
           'colorbox__medium' => 0,
           'colorbox__programme_image_for_landing_page' => 0,
+          'colorbox__rhimage' => 0,
           'colorbox__square_thumbnail' => 0,
           'colorbox__teaser_thumbmail' => 0,
           'colorbox__thumbnail' => 0,
+          'colorbox__uses_of_data___main' => 0,
           'icon_link' => 0,
           'image' => 0,
           'image_featured' => 0,
@@ -741,11 +750,14 @@ function gbif_project_field_default_field_instances() {
           'image_funder_image' => 0,
           'image_large' => 0,
           'image_linkit_thumb' => 0,
+          'image_mainimage' => 0,
           'image_medium' => 0,
           'image_programme_image_for_landing_page' => 0,
+          'image_rhimage' => 0,
           'image_square_thumbnail' => 0,
           'image_teaser_thumbmail' => 0,
           'image_thumbnail' => 0,
+          'image_uses_of_data___main' => 0,
           'link' => 0,
         ),
         'insert_width' => '',
@@ -757,7 +769,61 @@ function gbif_project_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-programme-field_related_news'
+  // Exported field_instance: 'node-programme-field_related_events'.
+  $field_instances['node-programme-field_related_events'] = array(
+    'bundle' => 'programme',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => FALSE,
+        ),
+        'type' => 'entityreference_label',
+        'weight' => 10,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_related_events',
+    'label' => 'Related events',
+    'required' => 0,
+    'settings' => array(
+      'mediafront' => array(
+        'custom' => '',
+        'field_type' => 0,
+        'media_type' => 'media',
+        'preview' => 0,
+        'thumbnail' => 0,
+      ),
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'entityreference',
+      'settings' => array(
+        'match_operator' => 'CONTAINS',
+        'path' => '',
+        'references_dialog_add' => 0,
+        'references_dialog_edit' => 0,
+        'references_dialog_search' => 0,
+        'references_dialog_search_view' => '',
+        'size' => 60,
+      ),
+      'type' => 'entityreference_autocomplete',
+      'weight' => 9,
+    ),
+  );
+
+  // Exported field_instance: 'node-programme-field_related_news'.
   $field_instances['node-programme-field_related_news'] = array(
     'bundle' => 'programme',
     'default_value' => NULL,
@@ -811,7 +877,7 @@ function gbif_project_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-programme-field_related_resources'
+  // Exported field_instance: 'node-programme-field_related_resources'.
   $field_instances['node-programme-field_related_resources'] = array(
     'bundle' => 'programme',
     'default_value' => NULL,
@@ -880,7 +946,7 @@ function gbif_project_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-programme-field_subtitle'
+  // Exported field_instance: 'node-programme-field_subtitle'.
   $field_instances['node-programme-field_subtitle'] = array(
     'bundle' => 'programme',
     'default_value' => NULL,
@@ -932,7 +998,7 @@ function gbif_project_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-programme-field_title_for_display'
+  // Exported field_instance: 'node-programme-field_title_for_display'.
   $field_instances['node-programme-field_title_for_display'] = array(
     'bundle' => 'programme',
     'default_value' => NULL,
@@ -984,7 +1050,7 @@ function gbif_project_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-programme-gr_file'
+  // Exported field_instance: 'node-programme-gr_file'.
   $field_instances['node-programme-gr_file'] = array(
     'bundle' => 'programme',
     'deleted' => 0,
@@ -1077,22 +1143,28 @@ function gbif_project_field_default_field_instances() {
           'colorbox__featured_news_slideshow_image' => 0,
           'colorbox__large' => 0,
           'colorbox__linkit_thumb' => 0,
+          'colorbox__mainimage' => 0,
           'colorbox__medium' => 0,
           'colorbox__programme_image_for_landing_page' => 0,
+          'colorbox__rhimage' => 0,
           'colorbox__square_thumbnail' => 0,
           'colorbox__teaser_thumbmail' => 0,
           'colorbox__thumbnail' => 0,
+          'colorbox__uses_of_data___main' => 0,
           'icon_link' => 0,
           'image' => 0,
           'image_featured' => 0,
           'image_featured_news_slideshow_image' => 0,
           'image_large' => 0,
           'image_linkit_thumb' => 0,
+          'image_mainimage' => 0,
           'image_medium' => 0,
           'image_programme_image_for_landing_page' => 0,
+          'image_rhimage' => 0,
           'image_square_thumbnail' => 0,
           'image_teaser_thumbmail' => 0,
           'image_thumbnail' => 0,
+          'image_uses_of_data___main' => 0,
           'link' => 0,
         ),
         'insert_width' => '',
@@ -1103,7 +1175,7 @@ function gbif_project_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-project-body'
+  // Exported field_instance: 'node-project-body'.
   $field_instances['node-project-body'] = array(
     'bundle' => 'project',
     'default_value' => array(
@@ -1167,7 +1239,7 @@ function gbif_project_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-project-field_co_funder'
+  // Exported field_instance: 'node-project-field_co_funder'.
   $field_instances['node-project-field_co_funder'] = array(
     'bundle' => 'project',
     'default_value' => NULL,
@@ -1217,11 +1289,11 @@ function gbif_project_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'entityreference_autocomplete',
-      'weight' => 35,
+      'weight' => 40,
     ),
   );
 
-  // Exported field_instance: 'node-project-field_duration'
+  // Exported field_instance: 'node-project-field_duration'.
   $field_instances['node-project-field_duration'] = array(
     'bundle' => 'project',
     'deleted' => 0,
@@ -1284,7 +1356,7 @@ function gbif_project_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-project-field_internal_notes'
+  // Exported field_instance: 'node-project-field_internal_notes'.
   $field_instances['node-project-field_internal_notes'] = array(
     'bundle' => 'project',
     'default_value' => NULL,
@@ -1336,7 +1408,7 @@ function gbif_project_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-project-field_pj_funding_allocated'
+  // Exported field_instance: 'node-project-field_pj_funding_allocated'.
   $field_instances['node-project-field_pj_funding_allocated'] = array(
     'bundle' => 'project',
     'default_value' => NULL,
@@ -1364,7 +1436,7 @@ function gbif_project_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_pj_funding_allocated',
-    'label' => 'GBIF funding allocated',
+    'label' => 'Funding allocated',
     'required' => 0,
     'settings' => array(
       'max' => '',
@@ -1385,11 +1457,11 @@ function gbif_project_field_default_field_instances() {
       'module' => 'number',
       'settings' => array(),
       'type' => 'number',
-      'weight' => 32,
+      'weight' => 37,
     ),
   );
 
-  // Exported field_instance: 'node-project-field_pj_funding_delivered'
+  // Exported field_instance: 'node-project-field_pj_funding_delivered'.
   $field_instances['node-project-field_pj_funding_delivered'] = array(
     'bundle' => 'project',
     'default_value' => NULL,
@@ -1438,11 +1510,55 @@ function gbif_project_field_default_field_instances() {
       'module' => 'number',
       'settings' => array(),
       'type' => 'number',
-      'weight' => 33,
+      'weight' => 38,
     ),
   );
 
-  // Exported field_instance: 'node-project-field_pj_image'
+  // Exported field_instance: 'node-project-field_pj_grant_type'.
+  $field_instances['node-project-field_pj_grant_type'] = array(
+    'bundle' => 'project',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 29,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_pj_grant_type',
+    'label' => 'Grant type',
+    'required' => 0,
+    'settings' => array(
+      'mediafront' => array(
+        'custom' => '',
+        'field_type' => 0,
+        'media_type' => 'media',
+        'preview' => 0,
+        'thumbnail' => 0,
+      ),
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_buttons',
+      'weight' => 36,
+    ),
+  );
+
+  // Exported field_instance: 'node-project-field_pj_image'.
   $field_instances['node-project-field_pj_image'] = array(
     'bundle' => 'project',
     'deleted' => 0,
@@ -1544,11 +1660,14 @@ function gbif_project_field_default_field_instances() {
           'colorbox__funder_image' => 0,
           'colorbox__large' => 0,
           'colorbox__linkit_thumb' => 0,
+          'colorbox__mainimage' => 0,
           'colorbox__medium' => 0,
           'colorbox__programme_image_for_landing_page' => 0,
+          'colorbox__rhimage' => 0,
           'colorbox__square_thumbnail' => 0,
           'colorbox__teaser_thumbmail' => 0,
           'colorbox__thumbnail' => 0,
+          'colorbox__uses_of_data___main' => 0,
           'icon_link' => 0,
           'image' => 0,
           'image_featured' => 0,
@@ -1556,11 +1675,14 @@ function gbif_project_field_default_field_instances() {
           'image_funder_image' => 0,
           'image_large' => 0,
           'image_linkit_thumb' => 0,
+          'image_mainimage' => 0,
           'image_medium' => 0,
           'image_programme_image_for_landing_page' => 0,
+          'image_rhimage' => 0,
           'image_square_thumbnail' => 0,
           'image_teaser_thumbmail' => 0,
           'image_thumbnail' => 0,
+          'image_uses_of_data___main' => 0,
           'link' => 0,
         ),
         'insert_width' => '',
@@ -1572,7 +1694,7 @@ function gbif_project_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-project-field_pj_matching_fund'
+  // Exported field_instance: 'node-project-field_pj_matching_fund'.
   $field_instances['node-project-field_pj_matching_fund'] = array(
     'bundle' => 'project',
     'default_value' => NULL,
@@ -1621,11 +1743,11 @@ function gbif_project_field_default_field_instances() {
       'module' => 'number',
       'settings' => array(),
       'type' => 'number',
-      'weight' => 34,
+      'weight' => 39,
     ),
   );
 
-  // Exported field_instance: 'node-project-field_pj_participants'
+  // Exported field_instance: 'node-project-field_pj_participants'.
   $field_instances['node-project-field_pj_participants'] = array(
     'bundle' => 'project',
     'default_value' => NULL,
@@ -1679,7 +1801,7 @@ function gbif_project_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-project-field_pj_partners'
+  // Exported field_instance: 'node-project-field_pj_partners'.
   $field_instances['node-project-field_pj_partners'] = array(
     'bundle' => 'project',
     'default_value' => NULL,
@@ -1733,7 +1855,7 @@ function gbif_project_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-project-field_programme_ef'
+  // Exported field_instance: 'node-project-field_programme_ef'.
   $field_instances['node-project-field_programme_ef'] = array(
     'bundle' => 'project',
     'default_value' => NULL,
@@ -1788,51 +1910,7 @@ function gbif_project_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-project-field_regions'
-  $field_instances['node-project-field_regions'] = array(
-    'bundle' => 'project',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
-        'weight' => 15,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_regions',
-    'label' => 'GBIF Regions',
-    'required' => 0,
-    'settings' => array(
-      'mediafront' => array(
-        'custom' => '',
-        'field_type' => 0,
-        'media_type' => 'media',
-        'preview' => 0,
-        'thumbnail' => 0,
-      ),
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'options',
-      'settings' => array(),
-      'type' => 'options_buttons',
-      'weight' => 13,
-    ),
-  );
-
-  // Exported field_instance: 'node-project-field_related_events'
+  // Exported field_instance: 'node-project-field_related_events'.
   $field_instances['node-project-field_related_events'] = array(
     'bundle' => 'project',
     'default_value' => NULL,
@@ -1886,7 +1964,7 @@ function gbif_project_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-project-field_related_news'
+  // Exported field_instance: 'node-project-field_related_news'.
   $field_instances['node-project-field_related_news'] = array(
     'bundle' => 'project',
     'default_value' => NULL,
@@ -1940,7 +2018,7 @@ function gbif_project_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-project-field_related_projects'
+  // Exported field_instance: 'node-project-field_related_projects'.
   $field_instances['node-project-field_related_projects'] = array(
     'bundle' => 'project',
     'default_value' => NULL,
@@ -1994,7 +2072,7 @@ function gbif_project_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-project-field_related_resources'
+  // Exported field_instance: 'node-project-field_related_resources'.
   $field_instances['node-project-field_related_resources'] = array(
     'bundle' => 'project',
     'default_value' => NULL,
@@ -2063,7 +2141,7 @@ function gbif_project_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-project-field_status'
+  // Exported field_instance: 'node-project-field_status'.
   $field_instances['node-project-field_status'] = array(
     'bundle' => 'project',
     'default_value' => array(
@@ -2113,7 +2191,7 @@ function gbif_project_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-project-field_title_for_display'
+  // Exported field_instance: 'node-project-field_title_for_display'.
   $field_instances['node-project-field_title_for_display'] = array(
     'bundle' => 'project',
     'default_value' => NULL,
@@ -2165,7 +2243,7 @@ function gbif_project_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-project-gr_file'
+  // Exported field_instance: 'node-project-gr_file'.
   $field_instances['node-project-gr_file'] = array(
     'bundle' => 'project',
     'default_value' => array(),
@@ -2259,22 +2337,28 @@ function gbif_project_field_default_field_instances() {
           'colorbox__featured_news_slideshow_image' => 0,
           'colorbox__large' => 0,
           'colorbox__linkit_thumb' => 0,
+          'colorbox__mainimage' => 0,
           'colorbox__medium' => 0,
           'colorbox__programme_image_for_landing_page' => 0,
+          'colorbox__rhimage' => 0,
           'colorbox__square_thumbnail' => 0,
           'colorbox__teaser_thumbmail' => 0,
           'colorbox__thumbnail' => 0,
+          'colorbox__uses_of_data___main' => 0,
           'icon_link' => 0,
           'image' => 0,
           'image_featured' => 0,
           'image_featured_news_slideshow_image' => 0,
           'image_large' => 0,
           'image_linkit_thumb' => 0,
+          'image_mainimage' => 0,
           'image_medium' => 0,
           'image_programme_image_for_landing_page' => 0,
+          'image_rhimage' => 0,
           'image_square_thumbnail' => 0,
           'image_teaser_thumbmail' => 0,
           'image_thumbnail' => 0,
+          'image_uses_of_data___main' => 0,
           'link' => 0,
         ),
         'insert_width' => '',
@@ -2285,7 +2369,7 @@ function gbif_project_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-project-gr_purpose'
+  // Exported field_instance: 'node-project-gr_purpose'.
   $field_instances['node-project-gr_purpose'] = array(
     'bundle' => 'project',
     'default_value' => NULL,
@@ -2329,7 +2413,7 @@ function gbif_project_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-project-pj_call'
+  // Exported field_instance: 'node-project-pj_call'.
   $field_instances['node-project-pj_call'] = array(
     'bundle' => 'project',
     'default_value' => NULL,
@@ -2384,7 +2468,7 @@ function gbif_project_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-participant-field_gbif_membership'
+  // Exported field_instance: 'taxonomy_term-participant-field_gbif_membership'.
   $field_instances['taxonomy_term-participant-field_gbif_membership'] = array(
     'bundle' => 'participant',
     'default_value' => array(),
@@ -2424,7 +2508,7 @@ function gbif_project_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-participant-field_iso2'
+  // Exported field_instance: 'taxonomy_term-participant-field_iso2'.
   $field_instances['taxonomy_term-participant-field_iso2'] = array(
     'bundle' => 'participant',
     'default_value' => NULL,
@@ -2470,7 +2554,7 @@ function gbif_project_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-participant-field_member_as_of'
+  // Exported field_instance: 'taxonomy_term-participant-field_member_as_of'.
   $field_instances['taxonomy_term-participant-field_member_as_of'] = array(
     'bundle' => 'participant',
     'deleted' => 0,
@@ -2527,7 +2611,7 @@ function gbif_project_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-participant-field_mou_2012_date'
+  // Exported field_instance: 'taxonomy_term-participant-field_mou_2012_date'.
   $field_instances['taxonomy_term-participant-field_mou_2012_date'] = array(
     'bundle' => 'participant',
     'deleted' => 0,
@@ -2584,7 +2668,7 @@ function gbif_project_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-participant-field_participant_id'
+  // Exported field_instance: 'taxonomy_term-participant-field_participant_id'.
   $field_instances['taxonomy_term-participant-field_participant_id'] = array(
     'bundle' => 'participant',
     'default_value' => NULL,
@@ -2631,7 +2715,7 @@ function gbif_project_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-participant-field_short_name'
+  // Exported field_instance: 'taxonomy_term-participant-field_short_name'.
   $field_instances['taxonomy_term-participant-field_short_name'] = array(
     'bundle' => 'participant',
     'default_value' => NULL,
@@ -2677,7 +2761,7 @@ function gbif_project_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-participant-field_url'
+  // Exported field_instance: 'taxonomy_term-participant-field_url'.
   $field_instances['taxonomy_term-participant-field_url'] = array(
     'bundle' => 'participant',
     'default_value' => NULL,
@@ -2758,12 +2842,12 @@ function gbif_project_field_default_field_instances() {
   t('For \'teaser\' view like <a href="newsroom/news">news list</a> for each of the news, please provide content in "summary", otherwise the first 300 words will be digested from this \'description\' field.');
   t('For organisations that are not GBIF participant, we create a new organisation and refer to it here.');
   t('Funder');
+  t('Funding allocated');
   t('Funding statement');
   t('GBIF Membership');
   t('GBIF Participants');
-  t('GBIF Regions');
-  t('GBIF funding allocated');
   t('GBIF funding delivered');
+  t('Grant type');
   t('Image');
   t('Internal notes');
   t('Internal notes that won\'t be exposed to site visitors. Create a new one each time a remark is made, by starting with who and when.');

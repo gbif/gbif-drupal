@@ -97,7 +97,12 @@
           </header>
         </div>
         <div class="row">
+
+          <?php if ($markdown == TRUE): ?>
+          <div class="node-content markdown-layout col-xs-12">
+          <?php else: ?>
           <div class="node-content col-xs-8">
+          <?php endif; ?>
 
             <?php if (user_is_logged_in()): ?>
             <div class="submitted">
@@ -117,15 +122,16 @@
 							$body = render($content['body']);
               print render($content['body']);
             ?>
-            <?php if (!empty($content['field_tags']) || !empty($content['links'])): ?>
+            <?php if (!empty($content['field_tags']) || !empty($content['links']) || $markdown == FALSE): ?>
             <footer>
               <?php print render($content['field_tags']); ?>
               <?php print render($content['links']); ?>
-              <?php print $node_footer; ?>
+              <?php if (isset($node_footer)) print $node_footer; ?>
             </footer>
             <?php endif; ?>
             <?php print render($content['comments']); ?>
           </div>
+          <?php if ($markdown == FALSE): ?>
           <div class="node-sidebar col-xs-3">
 						<?php if (isset($content['service_links'])): ?>
 							<?php print render($content['service_links']); ?>
@@ -134,22 +140,9 @@
               print $sidebar;
             ?>
           </div>
+          <?php endif; ?>
         </div>
       </article>
     </div>
   </div>
 </div>
-<?php if (!empty($next_node) && in_array($type, array('newsarticle', 'featurreddataset', 'usesofdata'))): ?>
-<div class="container well well-lg well-margin-bottom">
-  <div class="row">
-    <article class="col-xs-12 node-next">
-      <div class="row">
-      	<header class="next-header col-xs-12">
-      		<h3>Next <?php print render($type_title); ?> Story</h3>
-      		<h2><?php print $next_node_link; ?></h2>
-      	</header>
-      </div>
-    </article>
-  </div>
-</div>
-<?php endif; ?>

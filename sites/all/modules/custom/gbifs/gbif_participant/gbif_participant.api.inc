@@ -52,3 +52,36 @@ function _gbif_participant_api_occurrence() {
 	$env = variable_get('environment_settings');
 	return $env['gbif_api_base_url'] . '/v' . $env['gbif_api_version'] . '/occurrence';
 }
+
+function _gbif_participant_api_enumeration_country() {
+  $env = variable_get('environment_settings');
+  return $env['gbif_api_base_url'] . '/v' . $env['gbif_api_version'] . '/enumeration/country';
+}
+
+function _gbif_participant_api_participants() {
+  return '/participant?limit=300';
+}
+
+function _gbif_participant_api_participant() {
+  return '/participant';
+}
+
+function _gbif_participant_api_node() {
+  return '/node';
+}
+
+function _gbif_participant_api_person() {
+  return '/person';
+}
+
+function _gbif_participant_api_person_role() {
+  return '/person_role?limit=100';
+}
+
+function _gbif_participant_api_committee() {
+  return '/committee';
+}
+
+function _gbif_participant_api_report() {
+  return '/report';
+}

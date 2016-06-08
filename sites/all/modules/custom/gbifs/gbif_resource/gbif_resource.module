@@ -38,17 +38,6 @@ function gbif_resource_menu() {
     'type' => MENU_NORMAL_ITEM,
     'weight' => 30,
   );
-  /* Disabled admin page since we no longer need to sync from the FileMaker.
-  $items['admin/config/gbif/resource'] = array(
-    'title' => 'GBIF resource',
-    'description' => t('Configure GBIF resource related features.'),
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('gbif_resource_settings_form'),
-    'access arguments' => array('administer site configuration'),
-    'type' => MENU_NORMAL_ITEM,
-    'file' => 'gbif_resource.admin.inc',
-  );
-  */
 	return $items;
 }
 
@@ -69,7 +58,9 @@ function gbif_resource_redirect() {
 				->fieldCondition('gr_old_resource_nid', 'value', $arg[1], '=')
 				->execute();
 			if (!empty($entities['node'])) {
-				$node = node_load(array_shift(array_keys($entities['node'])));
+				$keys = array_keys($entities['node']);
+        $shifted_keys = array_shift($keys);
+				$node = node_load($shifted_keys);
 				$url = 'resource/' . $node->nid;
 				drupal_goto($url);
 			}
@@ -119,8 +110,11 @@ function gbif_resource_orc_redirect() {
 			->fieldCondition('gr_kp_id', 'value', $_GET['doc_id'], '=')
 			->execute();
 		if (!empty($entities['node'])) {
-			$node = node_load(array_shift(array_keys($entities['node'])));
+			$keys = array_keys($entities['node']);
+      $shifted_keys = array_shift($keys);
+			$node = node_load($shifted_keys);
 			$url = 'resource/' . $node->nid;
+      unset($keys, $shifted_keys);
 			drupal_goto($url);
 		}
 		else {
@@ -353,10 +347,10 @@ function gbif_resource_preprocess_views_view_field(&$vars) {
 			// check if there is a value
 			if (count($vars['row']->$view_field) != 0) {
 				$lang_code = $vars['row']->_field_data['nid']['entity']->language;
-				$link_title = t('Download') . ' ' . $vars['row']->_field_data['nid']['entity']->gr_file[$lang_code][0]['description'];
+				$link_title = t('Download') . ' ' . $vars['row']->_field_data['nid']['entity']->gr_file['und'][0]['description'];
         // Try locating file path with different $lang_code, which may be stored
         // inconsistently.
-        $file_uri = $vars['row']->_field_data['nid']['entity']->gr_file[$lang_code][0]['uri']; // pay attention to i18n code here.
+        $file_uri = $vars['row']->_field_data['nid']['entity']->gr_file['und'][0]['uri']; // gr_file is not internationalized.
 				$link_path = 'system/files_force' . substr($file_uri, 8); // Strip off file schema.
 				$img = theme_image(
 					array(
@@ -373,7 +367,7 @@ function gbif_resource_preprocess_views_view_field(&$vars) {
 				$link = l($img, $link_path, array(
 					'html' => TRUE,
 					'attributes' => array(
-						'type' => $vars['row']->_field_data['nid']['entity']->gr_file[$lang_code][0]['filemime'],
+						'type' => $vars['row']->_field_data['nid']['entity']->gr_file['und'][0]['filemime'], // gr_file is not internationalized.
 					),
 					'query' => array(
 						'download' => 1,

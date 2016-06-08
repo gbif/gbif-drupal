@@ -28,7 +28,7 @@ $block_tools = module_invoke('views','block_view','resources-block_tools');
 					<p class="field-content">{{org.summary}}</p>
 					<p ng-bind-html="org.endorsedText"></p>
 				</div>
-				<div class="views-field"><img class="org-logo" src="/{{org.logoUrl}}" ng-hide="{{org.noLogo}}"></div>
+				<div class="views-field"><img class="org-logo" src="{{org.logoUrl}}" ng-hide="{{org.noLogo}}"></div>
 			</div>
       <p class="more text-right"><a href="<?php print $env['data_portal_base_url']; ?>/publisher/search">more data publishers</a></p>
     </section>

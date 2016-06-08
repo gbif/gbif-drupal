@@ -35,20 +35,31 @@
 		$paragraph .= l($dataset['publishingOrganizationTitle'], $env['data_portal_base_url'] . '/publisher/' . $dataset['publishingOrganizationKey']) . '.';
 	?>
 <?php break; ?>
-	<?php case 'METADATA': ?>
-		<?php
+<?php case 'METADATA': ?>
+	<?php
 		$title_link = l($dataset['title'], $env['data_portal_base_url'] . '/dataset/' . $dataset['key']);
 		$paragraph = $dataset['type_formatted'] . '. ';
 		$paragraph .= $dataset['updated'] . '. ';
 		$paragraph .= t('Published by ');
 		$paragraph .= l($dataset['publishingOrganizationTitle'], $env['data_portal_base_url'] . '/publisher/' . $dataset['publishingOrganizationKey']) . '.';
-		?>
-		<?php break; ?>
+	?>
+<?php break; ?>
+<?php case 'SAMPLING_EVENT': ?>
+  <?php
+    $title_link = l($dataset['title'], $env['data_portal_base_url'] . '/dataset/' . $dataset['key']);
+    $paragraph = $dataset['type_formatted'] . '. ';
+    $paragraph .= $dataset['updated'] . '. ';
+    $paragraph .= t('Published by ');
+    $paragraph .= l($dataset['publishingOrganizationTitle'], $env['data_portal_base_url'] . '/publisher/' . $dataset['publishingOrganizationKey']) . '.';
+  ?>
+<?php break; ?>
 <?php endswitch; ?>
+<?php if (isset($title_link)): ?>
 	<li>
 		<?php print $title_link; ?><br>
 		<p><?php print $paragraph; ?></p>
 	</li>
+<?php endif; ?>
 	<?php
 		/**
 		 *	Reset the variables here then when something is missing it'll be obvious.

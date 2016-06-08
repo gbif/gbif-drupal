@@ -8,7 +8,7 @@
  * Implements hook_field_group_info().
  */
 function gbif_project_field_group_info() {
-  $export = array();
+  $field_groups = array();
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -35,7 +35,7 @@ function gbif_project_field_group_info() {
       ),
     ),
   );
-  $export['group_funding|node|programme|form'] = $field_group;
+  $field_groups['group_funding|node|programme|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -54,6 +54,7 @@ function gbif_project_field_group_info() {
       1 => 'field_pj_funding_allocated',
       2 => 'field_pj_funding_delivered',
       3 => 'field_pj_matching_fund',
+      4 => 'field_pj_grant_type',
     ),
     'format_type' => 'tab',
     'format_settings' => array(
@@ -65,7 +66,7 @@ function gbif_project_field_group_info() {
       ),
     ),
   );
-  $export['group_funding|node|project|form'] = $field_group;
+  $field_groups['group_funding|node|project|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -92,7 +93,7 @@ function gbif_project_field_group_info() {
       ),
     ),
   );
-  $export['group_miscellaneous|node|project|form'] = $field_group;
+  $field_groups['group_miscellaneous|node|project|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -107,9 +108,9 @@ function gbif_project_field_group_info() {
     'label' => 'Node details',
     'weight' => '6',
     'children' => array(
-      0 => 'group_related_docs_and_info',
-      1 => 'group_funding',
-      2 => 'group_related_activities',
+      0 => 'group_funding',
+      1 => 'group_related_activities',
+      2 => 'group_related_docs_and_info',
     ),
     'format_type' => 'tabs',
     'format_settings' => array(
@@ -119,7 +120,7 @@ function gbif_project_field_group_info() {
       ),
     ),
   );
-  $export['group_node_details|node|programme|form'] = $field_group;
+  $field_groups['group_node_details|node|programme|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -150,7 +151,7 @@ function gbif_project_field_group_info() {
       ),
     ),
   );
-  $export['group_node_details|node|project|form'] = $field_group;
+  $field_groups['group_node_details|node|project|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -178,7 +179,7 @@ function gbif_project_field_group_info() {
       ),
     ),
   );
-  $export['group_participant_partner|node|project|form'] = $field_group;
+  $field_groups['group_participant_partner|node|project|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -209,7 +210,7 @@ function gbif_project_field_group_info() {
       ),
     ),
   );
-  $export['group_programme|node|project|form'] = $field_group;
+  $field_groups['group_programme|node|project|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -225,6 +226,7 @@ function gbif_project_field_group_info() {
     'weight' => '9',
     'children' => array(
       0 => 'field_related_news',
+      1 => 'field_related_events',
     ),
     'format_type' => 'tab',
     'format_settings' => array(
@@ -236,7 +238,7 @@ function gbif_project_field_group_info() {
       ),
     ),
   );
-  $export['group_related_activities|node|programme|form'] = $field_group;
+  $field_groups['group_related_activities|node|programme|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -265,7 +267,7 @@ function gbif_project_field_group_info() {
       ),
     ),
   );
-  $export['group_related_activities|node|project|form'] = $field_group;
+  $field_groups['group_related_activities|node|project|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -293,7 +295,7 @@ function gbif_project_field_group_info() {
       ),
     ),
   );
-  $export['group_related_docs_and_info|node|programme|form'] = $field_group;
+  $field_groups['group_related_docs_and_info|node|programme|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -321,7 +323,7 @@ function gbif_project_field_group_info() {
       ),
     ),
   );
-  $export['group_related_docs_and_info|node|project|form'] = $field_group;
+  $field_groups['group_related_docs_and_info|node|project|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -336,8 +338,7 @@ function gbif_project_field_group_info() {
     'label' => 'Tags',
     'weight' => '34',
     'children' => array(
-      0 => 'field_regions',
-      1 => 'gr_purpose',
+      0 => 'gr_purpose',
     ),
     'format_type' => 'tab',
     'format_settings' => array(
@@ -349,7 +350,18 @@ function gbif_project_field_group_info() {
       ),
     ),
   );
-  $export['group_tags|node|project|form'] = $field_group;
+  $field_groups['group_tags|node|project|form'] = $field_group;
 
-  return $export;
+  // Translatables
+  // Included for use with string extractors like potx.
+  t('Funding');
+  t('Miscellaneous');
+  t('Node details');
+  t('Participant / partner');
+  t('Programme');
+  t('Related activities');
+  t('Related documents and information');
+  t('Tags');
+
+  return $field_groups;
 }

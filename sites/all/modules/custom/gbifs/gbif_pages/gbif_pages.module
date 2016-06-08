@@ -122,6 +122,19 @@ function gbif_pages_preprocess_page(&$variables) {
 
 }
 
+function gbif_pages_preprocess_node(&$variables) {
+  if ($variables['type'] == 'page' || $variables['type'] == 'generictemplate') {
+    // check if the body input format is markdown.
+    $markdown = FALSE;
+    foreach ($variables['body'] as $body) {
+      if ($body['format'] == 'parsedown') {
+        $markdown = TRUE;
+      }
+    }
+    $variables['markdown'] = $markdown;
+  }
+}
+
 /**
  * Override for search_view().
  * @see modules/search/search_pages.inc.
@@ -206,7 +219,7 @@ function gbif_pages_form_alter(&$form, &$form_state, $form_id) {
  */
 function gbif_pages_page_build(&$page) {
 	$status = drupal_get_http_header("status");
-	$jobs_adverts = array('node/82115', 'node/82116', 'node/82117', 'node/82162');
+	$jobs_adverts = array('node/82115', 'node/82116', 'node/82117', 'node/82162', 'node/82621');
   $bid_updates = array('node/82183', 'node/82184', 'node/82185');
 	if ($status == '404 Not Found') {
 		// Do nothing.

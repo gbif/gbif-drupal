@@ -11,9 +11,28 @@ function gbif_event_ctools_plugin_api($module = NULL, $api = NULL) {
   if ($module == "context" && $api == "context") {
     return array("version" => "3");
   }
+  if ($module == "field_group" && $api == "field_group") {
+    return array("version" => "1");
+  }
   if ($module == "strongarm" && $api == "strongarm") {
     return array("version" => "1");
   }
+}
+
+/**
+ * Implements hook_views_api().
+ */
+function gbif_event_views_api($module = NULL, $api = NULL) {
+  return array("api" => "3.0");
+}
+
+/**
+ * Implements hook_fe_date_custom_date_formats().
+ */
+function gbif_event_fe_date_custom_date_formats() {
+  $custom_date_formats = array();
+  $custom_date_formats['d M Y'] = 'd M Y';
+  return $custom_date_formats;
 }
 
 /**

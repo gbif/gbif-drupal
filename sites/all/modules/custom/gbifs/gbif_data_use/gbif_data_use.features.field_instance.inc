@@ -119,60 +119,6 @@ function gbif_data_use_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-data_use-field_content_facebook'
-  $field_instances['node-data_use-field_content_facebook'] = array(
-    'bundle' => 'data_use',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'text',
-        'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 28,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_content_facebook',
-    'label' => 'Content Facebook',
-    'required' => 0,
-    'settings' => array(
-      'display_summary' => 0,
-      'linkit' => array(
-        'button_text' => 'Search',
-        'enable' => 0,
-        'profile' => '',
-      ),
-      'mediafront' => array(
-        'custom' => '',
-        'field_type' => 0,
-        'media_type' => 'media',
-        'preview' => 0,
-        'thumbnail' => 0,
-      ),
-      'text_processing' => 1,
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'text',
-      'settings' => array(
-        'rows' => 20,
-        'summary_rows' => 5,
-      ),
-      'type' => 'text_textarea_with_summary',
-      'weight' => 6,
-    ),
-  );
-
   // Exported field_instance: 'node-data_use-field_content_gbits'
   $field_instances['node-data_use-field_content_gbits'] = array(
     'bundle' => 'data_use',
@@ -268,58 +214,6 @@ function gbif_data_use_field_default_field_instances() {
       'settings' => array(),
       'type' => 'options_buttons',
       'weight' => 28,
-    ),
-  );
-
-  // Exported field_instance: 'node-data_use-field_content_tweet'
-  $field_instances['node-data_use-field_content_tweet'] = array(
-    'bundle' => 'data_use',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'text',
-        'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 2,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_content_tweet',
-    'label' => 'Content tweet',
-    'required' => 0,
-    'settings' => array(
-      'linkit' => array(
-        'button_text' => 'Search',
-        'enable' => 0,
-        'profile' => '',
-      ),
-      'mediafront' => array(
-        'custom' => '',
-        'field_type' => 0,
-        'media_type' => 'media',
-        'preview' => 0,
-        'thumbnail' => 0,
-      ),
-      'text_processing' => 0,
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'text',
-      'settings' => array(
-        'size' => 140,
-      ),
-      'type' => 'text_textfield',
-      'weight' => 5,
     ),
   );
 
@@ -488,6 +382,58 @@ function gbif_data_use_field_default_field_instances() {
       ),
       'type' => 'text_textfield',
       'weight' => 9,
+    ),
+  );
+
+  // Exported field_instance: 'node-data_use-field_facebook_message'
+  $field_instances['node-data_use-field_facebook_message'] = array(
+    'bundle' => 'data_use',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 29,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_facebook_message',
+    'label' => 'Facebook message',
+    'required' => 0,
+    'settings' => array(
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
+      'mediafront' => array(
+        'custom' => '',
+        'field_type' => 0,
+        'media_type' => 'media',
+        'preview' => 0,
+        'thumbnail' => 0,
+      ),
+      'text_processing' => 1,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'rows' => 5,
+      ),
+      'type' => 'text_textarea',
+      'weight' => 4,
     ),
   );
 
@@ -750,6 +696,56 @@ function gbif_data_use_field_default_field_instances() {
       'settings' => array(),
       'type' => 'options_buttons',
       'weight' => 16,
+    ),
+  );
+
+  // Exported field_instance: 'node-data_use-field_post_to_facebook'
+  $field_instances['node-data_use-field_post_to_facebook'] = array(
+    'bundle' => 'data_use',
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 30,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_post_to_facebook',
+    'label' => 'Post to Facebook',
+    'required' => 0,
+    'settings' => array(
+      'mediafront' => array(
+        'custom' => '',
+        'field_type' => 0,
+        'media_type' => 'media',
+        'preview' => 0,
+        'thumbnail' => 0,
+      ),
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'display_label' => 0,
+      ),
+      'type' => 'options_onoff',
+      'weight' => 3,
     ),
   );
 
@@ -1571,15 +1567,14 @@ function gbif_data_use_field_default_field_instances() {
   t('Body');
   t('Capacity enhancement');
   t('Citation information');
-  t('Content Facebook');
   t('Content GBits');
   t('Content stream');
-  t('Content tweet');
   t('Country');
   t('Data source');
   t('Data type');
   t('Data use');
   t('Dataset UUID');
+  t('Facebook message');
   t('GBIF area');
   t('Images');
   t('Informatics');
@@ -1588,6 +1583,7 @@ function gbif_data_use_field_default_field_instances() {
   t('Location of Researchers');
   t('Number of resources used');
   t('Organizations');
+  t('Post to Facebook');
   t('Programme');
   t('Purpose');
   t('Related GBIF resources');

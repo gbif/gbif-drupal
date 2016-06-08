@@ -5,7 +5,6 @@
  */
 
 include_once 'gbif_event.features.inc';
-include_once drupal_get_path('module', 'gbif_event') . '/gbif_event.admin.inc';
 
 /**
  * Implements hook_menu().
@@ -17,15 +16,6 @@ function gbif_event_menu() {
 		'page callback' => 'gbif_event_redirect',
 		'access callback' => TRUE,
 		'type' => MENU_CALLBACK,
-	);
-	$items['admin/config/gbif/event'] = array(
-		'title' => 'GBIF event',
-		'description' => t('Configure GBIF event related features.'),
-		'page callback' => 'drupal_get_form',
-		'page arguments' => array('gbif_event_settings_form'),
-		'access arguments' => array('administer site configuration'),
-		'type' => MENU_NORMAL_ITEM,
-		'file' => 'gbif_event.admin.inc',
 	);
 	return $items;
 }
@@ -340,17 +330,6 @@ function gbif_event_node_view($node, $view_mode, $langcode) {
 */
 
 /**
- * Implementation of hook_views_api().
- */
-function gbif_event_views_api() {
-	return array(
-		'api' => 3.0,
-		'path' => drupal_get_path('module', 'gbif_event') . '/views',
-		'template path' => drupal_get_path('module', 'gbif_event' . '/theme'),
-	);
-}
-
-/**
  * Manually set the highlighted_title here instead of in the theme. This reduces
  * dependency on the theme.
  * @param $page
@@ -365,44 +344,6 @@ function gbif_event_page_build(&$page) {
 			'name' => t('GBIF Newsroom'),
 			'description' => t('News and events from around the GBIF community'),
 		);
-	}
-}
-
-function gbif_event_sync($form_state) {
-	if (!empty($form_state['values']['cron_reset'])) {
-		variable_set('gbif_ims_sync_next_execution', 0);
-	}
-	$interval = variable_get('gbif_ims_sync_interval', 3 * 60 * 60);
-
-	if (time() >= variable_get('gbif_ims_sync_next_execution', 0)) {
-		$start_time = new DateTime();
-		$sync_success = _gbif_event_sync();
-		$end_time = new DateTime();
-		$time = $end_time->diff($start_time);
-		$time_spent = "This task took ";
-		if ($time->y > 0) {$time_spent .= $time->y.' years, ';}
-		if ($time->m > 0) {$time_spent .= $time->m.' months, ';}
-		if ($time->d > 0) {$time_spent .= $time->d.' days, ';}
-		if ($time->h > 0) {$time_spent .= $time->h.' hours, ';}
-		if ($time->i > 0) {$time_spent .= $time->i.' minutes, ';}
-		if ($time->s > 0) {$time_spent .= $time->s.' seconds ';}
-		$time_spent .= "to complete.";
-
-		// Should examine the result before informing via the UI.
-		if ($sync_success == TRUE) {
-			watchdog('gbif_event', 'Event update executed at %time', array('%time' => date_iso8601(time(0))), WATCHDOG_INFO);
-			variable_set('gbif_ims_sync_next_execution', time() + $interval);
-			return t('Synchronisation finished.') . ' ' . $time_spent;
-		}
-		else {
-			watchdog('gbif_event', 'IMS synchronisation failed at %time', array('%time' => date_iso8601(time(0))), WATCHDOG_CRITICAL);
-			return t('Event updated.') . ' ' . $time_spent;
-		}
-	}
-	else {
-		$next_time = variable_get('gbif_ims_sync_next_execution');
-		watchdog('gbif_event', "Event update didn't run because current interval is not expired yet. Next run is at %next.", array('%next' => date_iso8601($next_time)), WATCHDOG_INFO);
-		return t("Event update didn't run because current interval is not expired yet. Next run is at %next.", array('%next' => date_iso8601($next_time)));
 	}
 }
 
@@ -423,15 +364,4 @@ function gbif_event_redirect() {
 			drupal_goto('event/' . $nid, array(), 301);
 		}
 	}
-}
-
-function _ge_required_tables() {
-	$tables = array(
-		'gbif_ims_event',
-		'gbif_ims_event_status',
-		'gbif_ims_city',
-		'gbif_ims_event_w_list_people',
-		'gbif_ims_event_w_list_resources',
-	);
-	return $tables;
 }

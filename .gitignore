@@ -12,6 +12,10 @@ sites/*/private
 sites/drupaledit.gbif.org
 sites/staging.gbif.org
 
+# Ignore sites folders of envionments
+sites/drupaledit.gbif-dev.org
+sites/drupaledit.gbif-uat.org
+
 # Ignore default text files
 robots.txt
 /CHANGELOG.txt
@@ -26,6 +30,7 @@ sites/example.sites.php
 sites/all/README.txt
 sites/all/modules/README.txt
 sites/all/themes/README.txt
+sites/all/libraries/README.txt
 
 # Ignore everything but the "sites" folder ( for non core developer )
 web.config

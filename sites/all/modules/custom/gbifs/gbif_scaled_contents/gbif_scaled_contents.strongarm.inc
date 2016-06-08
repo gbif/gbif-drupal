@@ -89,10 +89,6 @@ function gbif_scaled_contents_strongarm() {
     'group_regions|node|dataset|form' => FALSE,
     'group_topics_tags|node|dataset|form' => FALSE,
     'group_cnt_management|node|news|form' => FALSE,
-    'group_content|node|news|form' => FALSE,
-    'group_body|node|news|form' => FALSE,
-    'group_gbits|node|news|form' => FALSE,
-    'group_social_media|node|news|form' => FALSE,
   );
   $export['default_field_group'] = $strongarm;
 
@@ -130,16 +126,16 @@ function gbif_scaled_contents_strongarm() {
     'extra_fields' => array(
       'form' => array(
         'metatags' => array(
-          'weight' => '13',
+          'weight' => '12',
         ),
         'title' => array(
           'weight' => '0',
         ),
         'path' => array(
-          'weight' => '12',
+          'weight' => '11',
         ),
         'redirect' => array(
-          'weight' => '11',
+          'weight' => '10',
         ),
         'twitter' => array(
           'weight' => '2',
@@ -154,7 +150,7 @@ function gbif_scaled_contents_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'language_content_type_news';
-  $strongarm->value = '0';
+  $strongarm->value = '1';
   $export['language_content_type_news'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -754,7 +750,7 @@ function gbif_scaled_contents_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'transliteration_file_lowercase';
-  $strongarm->value = 1;
+  $strongarm->value = 0;
   $export['transliteration_file_lowercase'] = $strongarm;
 
   $strongarm = new stdClass();

@@ -10,8 +10,9 @@
 function gbif_event_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'node-event-body'
+  // Exported field_instance: 'node-event-body'.
   $field_instances['node-event-body'] = array(
+    'bueditor_profile' => -1,
     'bundle' => 'event',
     'default_value' => NULL,
     'deleted' => 0,
@@ -54,6 +55,11 @@ function gbif_event_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'display_summary' => 1,
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
       'mediafront' => array(
         'custom' => '',
         'field_type' => 0,
@@ -68,7 +74,7 @@ function gbif_event_field_default_field_instances() {
       'active' => 1,
       'module' => 'text',
       'settings' => array(
-        'rows' => 20,
+        'rows' => 10,
         'summary_rows' => 5,
       ),
       'type' => 'text_textarea_with_summary',
@@ -76,7 +82,136 @@ function gbif_event_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-event-ge_audience'
+  // Exported field_instance: 'node-event-field_ge_gbif_attendee'.
+  $field_instances['node-event-field_ge_gbif_attendee'] = array(
+    'bundle' => 'event',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 21,
+      ),
+      'ical' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'search_index' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_ge_gbif_attendee',
+    'label' => 'GBIF attendee',
+    'required' => 0,
+    'settings' => array(
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
+      'mediafront' => array(
+        'custom' => '',
+        'field_type' => 0,
+        'media_type' => 'media',
+        'preview' => 0,
+        'thumbnail' => 0,
+      ),
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 37,
+    ),
+  );
+
+  // Exported field_instance: 'node-event-field_notes'.
+  $field_instances['node-event-field_notes'] = array(
+    'bueditor_profile' => -1,
+    'bundle' => 'event',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 20,
+      ),
+      'ical' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'search_index' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_notes',
+    'label' => 'Notes',
+    'required' => 0,
+    'settings' => array(
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
+      'mediafront' => array(
+        'custom' => '',
+        'field_type' => 0,
+        'media_type' => 'media',
+        'preview' => 0,
+        'thumbnail' => 0,
+      ),
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'rows' => 5,
+      ),
+      'type' => 'text_textarea',
+      'weight' => 38,
+    ),
+  );
+
+  // Exported field_instance: 'node-event-ge_audience'.
   $field_instances['node-event-ge_audience'] = array(
     'bundle' => 'event',
     'default_value' => NULL,
@@ -117,8 +252,9 @@ function gbif_event_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'linkit' => array(
+        'button_text' => 'Search',
         'enable' => 0,
-        'insert_plugin' => '',
+        'profile' => '',
       ),
       'mediafront' => array(
         'custom' => '',
@@ -141,7 +277,7 @@ function gbif_event_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-event-ge_contact_info'
+  // Exported field_instance: 'node-event-ge_contact_info'.
   $field_instances['node-event-ge_contact_info'] = array(
     'bundle' => 'event',
     'default_value' => NULL,
@@ -182,8 +318,9 @@ function gbif_event_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'linkit' => array(
+        'button_text' => 'Search',
         'enable' => 0,
-        'insert_plugin' => '',
+        'profile' => '',
       ),
       'mediafront' => array(
         'custom' => '',
@@ -202,11 +339,11 @@ function gbif_event_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 8,
+      'weight' => 33,
     ),
   );
 
-  // Exported field_instance: 'node-event-ge_date_ical'
+  // Exported field_instance: 'node-event-ge_date_ical'.
   $field_instances['node-event-ge_date_ical'] = array(
     'bundle' => 'event',
     'deleted' => 0,
@@ -279,11 +416,11 @@ function gbif_event_field_default_field_instances() {
         'year_range' => '-3:+3',
       ),
       'type' => 'date_popup',
-      'weight' => 12,
+      'weight' => 13,
     ),
   );
 
-  // Exported field_instance: 'node-event-ge_date_text'
+  // Exported field_instance: 'node-event-ge_date_text'.
   $field_instances['node-event-ge_date_text'] = array(
     'bundle' => 'event',
     'default_value' => NULL,
@@ -324,8 +461,9 @@ function gbif_event_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'linkit' => array(
+        'button_text' => 'Search',
         'enable' => 0,
-        'insert_plugin' => '',
+        'profile' => '',
       ),
       'mediafront' => array(
         'custom' => '',
@@ -344,11 +482,11 @@ function gbif_event_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 13,
+      'weight' => 14,
     ),
   );
 
-  // Exported field_instance: 'node-event-ge_desc_long'
+  // Exported field_instance: 'node-event-ge_desc_long'.
   $field_instances['node-event-ge_desc_long'] = array(
     'bundle' => 'event',
     'default_value' => NULL,
@@ -389,8 +527,9 @@ function gbif_event_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'linkit' => array(
+        'button_text' => 'Search',
         'enable' => 0,
-        'insert_plugin' => '',
+        'profile' => '',
       ),
       'mediafront' => array(
         'custom' => '',
@@ -413,7 +552,7 @@ function gbif_event_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-event-ge_image'
+  // Exported field_instance: 'node-event-ge_image'.
   $field_instances['node-event-ge_image'] = array(
     'bundle' => 'event',
     'deleted' => 0,
@@ -480,6 +619,7 @@ function gbif_event_field_default_field_instances() {
         'retroactive_update' => 0,
       ),
       'filefield_paths_enabled' => 1,
+      'image_field_caption' => 0,
       'max_filesize' => '',
       'max_resolution' => '',
       'mediafront' => array(
@@ -529,7 +669,9 @@ function gbif_event_field_default_field_instances() {
           'colorbox__featured_news_slideshow_image' => 0,
           'colorbox__large' => 0,
           'colorbox__linkit_thumb' => 0,
+          'colorbox__mainimage' => 0,
           'colorbox__medium' => 0,
+          'colorbox__rhimage' => 0,
           'colorbox__square_thumbnail' => 0,
           'colorbox__thumbnail' => 0,
           'icon_link' => 0,
@@ -538,7 +680,9 @@ function gbif_event_field_default_field_instances() {
           'image_featured_news_slideshow_image' => 0,
           'image_large' => 0,
           'image_linkit_thumb' => 0,
+          'image_mainimage' => 0,
           'image_medium' => 0,
+          'image_rhimage' => 0,
           'image_square_thumbnail' => 0,
           'image_thumbnail' => 0,
           'link' => 0,
@@ -548,11 +692,11 @@ function gbif_event_field_default_field_instances() {
         'progress_indicator' => 'throbber',
       ),
       'type' => 'image_image',
-      'weight' => 20,
+      'weight' => 9,
     ),
   );
 
-  // Exported field_instance: 'node-event-ge_ims_date'
+  // Exported field_instance: 'node-event-ge_ims_date'.
   $field_instances['node-event-ge_ims_date'] = array(
     'bundle' => 'event',
     'deleted' => 0,
@@ -647,11 +791,11 @@ function gbif_event_field_default_field_instances() {
         'year_range' => '-3:+3',
       ),
       'type' => 'date_popup',
-      'weight' => 11,
+      'weight' => 12,
     ),
   );
 
-  // Exported field_instance: 'node-event-ge_ims_kp_id'
+  // Exported field_instance: 'node-event-ge_ims_kp_id'.
   $field_instances['node-event-ge_ims_kp_id'] = array(
     'bundle' => 'event',
     'default_value' => NULL,
@@ -712,11 +856,11 @@ function gbif_event_field_default_field_instances() {
       'module' => 'number',
       'settings' => array(),
       'type' => 'number',
-      'weight' => 4,
+      'weight' => 39,
     ),
   );
 
-  // Exported field_instance: 'node-event-ge_language'
+  // Exported field_instance: 'node-event-ge_language'.
   $field_instances['node-event-ge_language'] = array(
     'bundle' => 'event',
     'default_value' => NULL,
@@ -757,8 +901,9 @@ function gbif_event_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'linkit' => array(
+        'button_text' => 'Search',
         'enable' => 0,
-        'insert_plugin' => '',
+        'profile' => '',
       ),
       'mediafront' => array(
         'custom' => '',
@@ -777,11 +922,11 @@ function gbif_event_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 18,
+      'weight' => 35,
     ),
   );
 
-  // Exported field_instance: 'node-event-ge_lib_resources'
+  // Exported field_instance: 'node-event-ge_lib_resources'.
   $field_instances['node-event-ge_lib_resources'] = array(
     'bundle' => 'event',
     'default_value' => NULL,
@@ -822,8 +967,9 @@ function gbif_event_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'linkit' => array(
+        'button_text' => 'Search',
         'enable' => 0,
-        'insert_plugin' => '',
+        'profile' => '',
       ),
       'mediafront' => array(
         'custom' => '',
@@ -842,11 +988,11 @@ function gbif_event_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 9,
+      'weight' => 8,
     ),
   );
 
-  // Exported field_instance: 'node-event-ge_location'
+  // Exported field_instance: 'node-event-ge_location'.
   $field_instances['node-event-ge_location'] = array(
     'bundle' => 'event',
     'default_value' => NULL,
@@ -888,8 +1034,9 @@ function gbif_event_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'linkit' => array(
+        'button_text' => 'Search',
         'enable' => 0,
-        'insert_plugin' => '',
+        'profile' => '',
       ),
       'mediafront' => array(
         'custom' => '',
@@ -908,11 +1055,11 @@ function gbif_event_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 15,
+      'weight' => 16,
     ),
   );
 
-  // Exported field_instance: 'node-event-ge_organising_participants'
+  // Exported field_instance: 'node-event-ge_organising_participants'.
   $field_instances['node-event-ge_organising_participants'] = array(
     'bundle' => 'event',
     'default_value' => NULL,
@@ -968,11 +1115,11 @@ function gbif_event_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'taxonomy_autocomplete',
-      'weight' => 19,
+      'weight' => 34,
     ),
   );
 
-  // Exported field_instance: 'node-event-ge_participants'
+  // Exported field_instance: 'node-event-ge_participants'.
   $field_instances['node-event-ge_participants'] = array(
     'bundle' => 'event',
     'default_value' => NULL,
@@ -1013,8 +1160,9 @@ function gbif_event_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'linkit' => array(
+        'button_text' => 'Search',
         'enable' => 0,
-        'insert_plugin' => '',
+        'profile' => '',
       ),
       'mediafront' => array(
         'custom' => '',
@@ -1033,11 +1181,11 @@ function gbif_event_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 10,
+      'weight' => 8,
     ),
   );
 
-  // Exported field_instance: 'node-event-ge_resources'
+  // Exported field_instance: 'node-event-ge_resources'.
   $field_instances['node-event-ge_resources'] = array(
     'bundle' => 'event',
     'deleted' => 0,
@@ -1143,7 +1291,9 @@ function gbif_event_field_default_field_instances() {
           'colorbox__featured_news_slideshow_image' => 0,
           'colorbox__large' => 0,
           'colorbox__linkit_thumb' => 0,
+          'colorbox__mainimage' => 0,
           'colorbox__medium' => 0,
+          'colorbox__rhimage' => 0,
           'colorbox__square_thumbnail' => 0,
           'colorbox__thumbnail' => 0,
           'icon_link' => 0,
@@ -1152,7 +1302,9 @@ function gbif_event_field_default_field_instances() {
           'image_featured_news_slideshow_image' => 0,
           'image_large' => 0,
           'image_linkit_thumb' => 0,
+          'image_mainimage' => 0,
           'image_medium' => 0,
+          'image_rhimage' => 0,
           'image_square_thumbnail' => 0,
           'image_thumbnail' => 0,
           'link' => 0,
@@ -1161,16 +1313,16 @@ function gbif_event_field_default_field_instances() {
         'progress_indicator' => 'throbber',
       ),
       'type' => 'file_generic',
-      'weight' => 21,
+      'weight' => 10,
     ),
   );
 
-  // Exported field_instance: 'node-event-ge_status'
+  // Exported field_instance: 'node-event-ge_status'.
   $field_instances['node-event-ge_status'] = array(
     'bundle' => 'event',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => '',
+    'description' => 'The status to the audience, e.g., "in preparation", "canceled", "finished", etc.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -1203,8 +1355,9 @@ function gbif_event_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'linkit' => array(
+        'button_text' => 'Search',
         'enable' => 0,
-        'insert_plugin' => '',
+        'profile' => '',
       ),
       'mediafront' => array(
         'custom' => '',
@@ -1223,11 +1376,11 @@ function gbif_event_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 17,
+      'weight' => 36,
     ),
   );
 
-  // Exported field_instance: 'node-event-ge_venue'
+  // Exported field_instance: 'node-event-ge_venue'.
   $field_instances['node-event-ge_venue'] = array(
     'bundle' => 'event',
     'default_value' => NULL,
@@ -1268,8 +1421,9 @@ function gbif_event_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'linkit' => array(
+        'button_text' => 'Search',
         'enable' => 0,
-        'insert_plugin' => '',
+        'profile' => '',
       ),
       'mediafront' => array(
         'custom' => '',
@@ -1288,11 +1442,11 @@ function gbif_event_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 14,
+      'weight' => 15,
     ),
   );
 
-  // Exported field_instance: 'node-event-ge_venue_country'
+  // Exported field_instance: 'node-event-ge_venue_country'.
   $field_instances['node-event-ge_venue_country'] = array(
     'bundle' => 'event',
     'default_value' => NULL,
@@ -1348,7 +1502,7 @@ function gbif_event_field_default_field_instances() {
         'apply_chosen' => '',
       ),
       'type' => 'options_select',
-      'weight' => 16,
+      'weight' => 17,
     ),
   );
 
@@ -1364,16 +1518,19 @@ function gbif_event_field_default_field_instances() {
   t('Event ID');
   t('Event image');
   t('Event resources');
+  t('GBIF attendee');
   t('Language of event');
   t('Location');
+  t('Notes');
   t('Organising participant(s)');
   t('Participants');
+  t('Please only enter the city.');
   t('Resources');
   t('Status');
   t('Summary');
   t('Textual information of resources. HTML allowed.');
-  t('Textual information that actually shows in Location field. Please remember to provide country when possible.');
-  t('Textual information that actually shows on the event detail and teaser, as a cheaper way instead of computing from real date fields.');
+  t('Textual information that actually shows on the event detail and teaser. Leave this field blank if you want it to be calculated.');
+  t('The status to the audience, e.g., "in preparation", "canceled", "finished", etc.');
   t('Venue');
   t('Venue country');
 

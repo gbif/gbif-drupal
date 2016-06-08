@@ -86,18 +86,41 @@ function gbif_scaled_contents_preprocess_views_view(&$variables) {
         'title' => t('Subscribe to this list'),
         'attributes' => array(),
       ));
-      $icon = l($icon, $feed_url . '/feed', array('html' => TRUE));
+      $icon = l($icon, $feed_url, array('html' => TRUE));
       $variables['feed_icon'] = $icon;
-
       break;
   }
 }
 
 /**
- * Implements hook_form_FORM_ID_alter().
+ * Implements hook_form_alter().
  */
-function gbif_scaled_contents_form_news_node_form_alter(&$form, &$form_state) {
-  $form['field_legacy_nid']['#disabled'] = TRUE;
+function gbif_scaled_contents_form_alter(&$form, &$form_state, $form_id) {
+  if (in_array($form_id, array('news_node_form', 'data_use_node_form', 'dataset_node_form'))) {
+    $form['field_legacy_nid']['#disabled'] = TRUE;
+    $form['#group_children']['twitter'] = 'group_social_media';
+    $form['twitter']['#group'] = 'group_social_media';
+    $form['language']['#required'] = TRUE;
+    if ($form['language']['#default_value'] == 'und') {
+      $form['language']['#default_value'] = NULL;
+    }
+  }
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ * Make sure that our form alter is called AFTER the same hook provided in twitter
+ */
+function gbif_scaled_contents_module_implements_alter(&$implementations, $hook) {
+  if ($hook == 'form_alter') {
+    // Move my_module_rdf_mapping() to the end of the list. module_implements()
+    // iterates through $implementations with a foreach loop which PHP iterates
+    // in the order that the items were added, so to move an item to the end of
+    // the array, we remove it and then add it.
+    $group = $implementations['gbif_scaled_contents'];
+    unset($implementations['gbif_scaled_contents']);
+    $implementations['gbif_scaled_contents'] = $group;
+  }
 }
 
 /**
@@ -380,4 +403,139 @@ function drush_gbif_scaled_contents_tx_generate() {
     echo "  ),\n";
   }
   echo ");\n";
+}
+
+/**
+ * Implements hook_views_pre_build().
+ * For altering views title.
+ */
+function gbif_scaled_contents_views_pre_build(&$view) {
+  if ($view->current_display == 'json_bid') {
+    if (count($view->args) > 0) {
+      $rss_titles = array(
+        'fr' => '',
+        'pt' => '',
+        'es' => '',
+      );
+      switch ($view->args[0]) {
+        case 'fr':
+        case 'FR':
+          break;
+        case 'pt':
+        case 'PT':
+          break;
+        case 'es':
+        case 'ES':
+          break;
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_path_update().
+ * To add a language-neutral entry to ensure URL alias works with language specified.
+ */
+function gbif_scaled_contents_path_update($path) {
+  // Check if an entry with the same language exists.
+  // And check if this is an update to an entry.
+  if (!in_array($path['language'], array('und', 'en'))) {
+    if ($path['alias'] == $path['original']['alias']) {
+      $result = db_select('url_alias', 'ua')
+        ->fields('ua', array('pid'))
+        ->condition('alias', $path['alias'])
+        ->condition('language', 'und')
+        ->execute()
+        ->rowCount();
+
+      if (!$result) {
+        $data = array(
+          'source' => $path['source'],
+          'alias' => $path['alias'],
+          'language' => 'und',
+        );
+        drupal_write_record('url_alias', $data);
+      }
+    }
+    // If new URL alias is different.
+    else {
+      $result = db_select('url_alias', 'ua')
+        ->fields('ua', array('pid'))
+        ->condition('alias', $path['original']['alias'])
+        ->condition('language', 'und')
+        ->execute()
+        ->fetchAssoc();
+
+      if (!$result) {
+        $data = array(
+          'source' => $path['source'],
+          'alias' => $path['alias'],
+          'language' => 'und',
+        );
+        drupal_write_record('url_alias', $data);
+      }
+      // Update the existing one.
+      else {
+        $updated = db_update('url_alias')
+          ->fields(array(
+            'alias' => $path['alias'],
+            'language' => 'und',
+          ))
+          ->condition('pid', $result['pid'])
+          ->execute();
+      }
+    }
+  }
+  else {
+    $result = db_select('url_alias', 'ua')
+      ->fields('ua', array('pid'))
+      ->condition('alias', $path['alias'])
+      ->condition('language', 'und')
+      ->execute()
+      ->fetchAssoc();
+
+    if (!empty($result)) {
+      // Only delete the LANGUAGE_NONE URL alias for multilingual enabled content types.
+      $path_elements = explode('/', $path['source']);
+      $nid = $path_elements[1];
+      $node = node_load($nid);
+      if (in_array($node->type, array('news', 'data_use', 'dataset'))) {
+        $deleted = db_delete('url_alias')
+          ->condition('pid', $result['pid'])
+          ->execute();
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_path_insert().
+ */
+function gbif_scaled_contents_path_insert($path) {
+  if (!in_array($path['language'], array('und', 'en'))) {
+    $data = array(
+      'source' => $path['source'],
+      'alias' => $path['alias'],
+      'language' => 'und',
+    );
+    drupal_write_record('url_alias', $data);
+  }
+}
+
+/**
+ * Implements hook_path_delete().
+ */
+function gbif_scaled_contents_path_delete($path) {
+  $result = db_select('url_alias', 'ua')
+    ->fields('ua', array('pid'))
+    ->condition('alias', $path['alias'])
+    ->condition('language', 'und')
+    ->execute()
+    ->fetchAssoc();
+
+  if (!empty($result)) {
+    $deleted = db_delete('url_alias')
+      ->condition('pid', $result['pid'])
+      ->execute();
+  }
 }

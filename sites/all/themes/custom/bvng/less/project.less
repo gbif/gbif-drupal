@@ -127,7 +127,8 @@
     
     .views-field-field-uni-images,
     .views-field-field-pj-image {
-      float: left;
+      display: inline-block;
+      vertical-align: top;
       margin: 0px 10px 10px 0px;
       padding-top: 5px;
       
@@ -135,11 +136,12 @@
         display: none;
       }
     }
-    
-    .views-field-title,
-    .views-field-body {
+
+    div.views-field-field-combined {
+      display: inline-block;
+      width: 80%;
     }
-    
+  
     .views-field-title {
       font-size: 17px;
       font-weight: bold;
@@ -166,19 +168,16 @@
     color: #555;
     min-height: 120px;
   }
+  
   .views-field-field-uni-images,
   .views-field-field-pj-image {
-    float: left;
+    display: inline-block;
     margin: 0px 10px 10px 0px;
     padding-top: 5px;
     
     .image-field-caption {
       display: none;
     }
-  }
-  
-  .views-field-title,
-  .views-field-body {
   }
   
   .views-field-title {

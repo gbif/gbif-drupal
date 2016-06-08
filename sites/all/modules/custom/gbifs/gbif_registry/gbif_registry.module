@@ -27,7 +27,7 @@ module_load_include('inc', 'gbif_registry', 'gbif_registry.messages');
  * Implements hook_menu().
  */
 function gbif_registry_menu() {
-	$items['publishing-data/how-to-publish'] = array(
+	$items['publishing-data/request-endorsement'] = array(
 		'title' => t('Data holder: Expression of interest'),
 		'description' => 'The landing page for the eoi form.',
 		'page callback' => 'gbif_registry_eoi_form',
@@ -83,11 +83,15 @@ function gbif_registry_cron() {
 
       $module = 'gbif_registry';
       $key = 'reminder';
+			// Send the reminder to only the admin if it's from UAT or DEV environment.
       $to = (is_int(strpos($env['data_portal_base_url'], 'gbif-dev')) !== TRUE && is_int(strpos($env['data_portal_base_url'], 'gbif-uat')) !== TRUE) ? EMAIL_HELPDESK : EMAIL_ADMIN;
       $language = language_default();
       $params = $item['raw_json'];
       $params['mgt_url'] = $drupal_edit_base_url . '/admin/config/gbif/registry/eoi';
-      $params['test_environment'] = TRUE;
+
+			// messaging behaviour will adjust according to the environment.
+			$params['test_environment'] = ($env['data_portal_base_url'] == 'http://www.gbif-dev.org' || $env['data_portal_base_url'] == 'http://www.gbif-uat.org' ) ? TRUE : FALSE;
+
       $from = 'helpdesk@gbif.org';
       $send = TRUE;
       $result = drupal_mail($module, $key, $to, $language, $params, $from, $send);
@@ -494,8 +498,8 @@ function gbif_registry_build_string_to_sign($options) {
 	$string_to_sign = '';
 	$string_to_sign .= $options['method'];
 	$string_to_sign .= "\n" . $options['headers'][HEADER_ORIGINAL_REQUEST_URL];
-	$string_to_sign .= "\n" . $options['headers'][HEADER_CONTENT_TYPE];
-	$string_to_sign .= "\n" . $options['headers'][HEADER_CONTENT_MD5];
+	$string_to_sign .= (isset($options['headers'][HEADER_CONTENT_TYPE])) ? "\n" . $options['headers'][HEADER_CONTENT_TYPE] : '';
+	$string_to_sign .= (isset($options['headers'][HEADER_CONTENT_MD5])) ? "\n" . $options['headers'][HEADER_CONTENT_MD5] : '';
 	$string_to_sign .= "\n" . $options['headers'][HEADER_GBIF_USER];
 	return $string_to_sign;
 }

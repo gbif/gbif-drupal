@@ -12,7 +12,7 @@ function _gbif_registry_notify_endorsing_node_manager($message, $params, $option
 
   // Note that the message body is an array, not a string.
   if ($params['test_environment'] == TRUE) {
-    $message['body'][] = t("====================================\nThis is test message. Please ignore.\nWe are sorry for interrupting.\n====================================", array(), $options);
+    $message['body'][] = t("====================================\nThis is a test message. Please ignore.\nWe are sorry for the interruption.\n====================================", array(), $options);
   }
   $message['body'][] = t('Dear Node Manager,', array(), $options);
   $message['body'][] = t("The organization '@organization-title' has submitted an expression of interest in registering as a new publisher in the GBIF network and has requested endorsement by the @node-name.", array('@organization-title' => $params['org']['title'], '@node-name' => $params['endorsement']['endorsingParticipant']['title']), $options);
@@ -37,7 +37,7 @@ function _gbif_registry_notify_eoi_contact($message, $params, $options) {
 
   // Note that the message body is an array, not a string.
   if ($params['test_environment'] == TRUE) {
-    $message['body'][] = t("====================================\nThis is test message. Please ignore.\nWe are sorry for interrupting.\n====================================", array(), $options);
+    $message['body'][] = t("====================================\nThis is a test message. Please ignore.\nWe are sorry for the interruption.\n====================================", array(), $options);
   }
   $message['body'][] = t('Dear @title @firstName @lastName,', array('@title' => $params['contact']['title'], '@firstName' => $params['contact']['firstName'], '@lastName' => $params['contact']['lastName']), $options);
   $message['body'][] = t('This email acknowledges receipt of your Expression of interest in publishing biodiversity data on GBIF.org on behalf of @org-title.', array('@org-title' => $params['org']['title']), $options);
@@ -61,7 +61,7 @@ function _gbif_registry_notify_helpdesk($message, $params, $options) {
 
   // message body
   if ($params['test_environment'] == TRUE) {
-    $message['body'][] = t("====================================\nThis is test message. Please ignore.\nWe are sorry for interrupting.\n====================================", array(), $options);
+    $message['body'][] = t("====================================\nThis is a test message. Please ignore.\nWe are sorry for the interruption.\n====================================", array(), $options);
   }
   $message['body'][] = t('Hi Helpdesk manager,', array(), $options);
   $message['body'][] = t('We have just received an Expression of interest from a potential new data publisher, @organization-title.', array('@organization-title' => $params['org']['title']), $options);
@@ -180,6 +180,26 @@ function _gbif_registry_weekly_reminder(&$message, $params, $options) {
 	$message['body'][] = t('Hi Helpdesk master,', array(), $options);
 	$message['body'][] = t('There is a pending request asking for endorsement from @org-title.', array('@org-title' => $params['org']['title']), $options);
 	$message['body'][] = t('Please follow up and take relevant action at !link.', array('!link' => $params['mgt_url']), $options);
+  if (!empty($params['endorsement']['endorsingParticipant'])) {
+    $node_manager = 'the Node Manager';
+    $email = 'his/her email';
+    foreach ($params['endorsement']['endorsingParticipant']['contacts'] as $contact) {
+      if ($contact['type'] == 'NODE_MANAGER') {
+        $node_manager = $contact['firstName'] . ' ' . $contact['lastName'];
+        $email = $contact['email'][0];
+      }
+    }
+    $message['body'][] = t('This data publisher is seeking endorsement from @participant. Please contact @node_manager with @email.',
+      array(
+        '@participant' => $params['endorsement']['endorsingParticipant']['participantTitle'],
+        '@node_manager' => $node_manager,
+        '@email' => $email,
+      )
+    );
+  }
+  elseif ($params['endorsement']['beEndorsedByType'] == 'nc') {
+    $message['body'][] = t('This data publisher is seeking endorsement from the Participant Node Manager Committee.');
+  }
 	$message['body'][] = t('Cheers,');
 	$message['body'][] = t('Portal Drupal');
 

@@ -402,7 +402,7 @@
 	                var countryParticipants = [];
 	                var validType = ['COUNTRY'];
 	                initialResults.forEach(function (element, index, array) {
-	                  if (validType.indexOf(element.type) !== -1 ) countryParticipants.push(element);
+	                  if (validType.indexOf(element.type) !== -1 && element.participationStatus != 'FORMER' && element.participationStatus != 'OBSERVER') countryParticipants.push(element);
 	                  // Chinese Taipei has a hybrid status so an exception here.
 	                  if (element.participantTitle == 'Chinese Taipei') countryParticipants.push(element);
 	                });
@@ -645,7 +645,7 @@
 	  .factory('RegistryOrgService', ['$http', function($http) {
 	    return {
 	      list: function() {
-	        return $http.get('http://api.gbif.org/v1/organization', {params: {limit: 900}});
+	        return $http.get('http://api.gbif.org/v1/organization', {params: {limit: 1500}});
 	      }
 	    };
 	  }])

@@ -365,7 +365,7 @@ function bvng_preprocess_node(&$variables)
               $link = array(
                 '#theme' => 'link',
                 '#text' => $elinks_link['title'],
-                '#path' => $elinks_link['display_url'],
+                '#path' => $elinks_link['url'],
                 '#options' => array('attributes' => $elinks_link['attributes'], 'html' => FALSE),
                 '#prefix' => '<li>',
                 '#suffix' => '</li>',

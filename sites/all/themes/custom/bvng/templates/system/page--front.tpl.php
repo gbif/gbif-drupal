@@ -111,11 +111,6 @@ $env = variable_get('environment_settings');
 								<?php if (!empty($page['navigation'])): ?>
 								<?php print render($page['navigation']); ?>
 								<?php endif; ?>
-
-								<!-- $primary_nav is kept for compatibility reason. -->
-								<?php if (!empty($primary_nav)): ?>
-								<?php print render($primary_nav); ?>
-								<?php endif; ?>
 							</nav>
 						</div>
 					<?php endif; ?>

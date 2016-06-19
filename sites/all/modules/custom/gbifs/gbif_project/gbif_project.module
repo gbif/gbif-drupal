@@ -117,9 +117,11 @@ function gbif_project_field_widget_form_alter(&$element, &$form_state, $context)
  * Implements hook_form_BASE_FORM_ID_alter().
  */
 function gbif_project_form_node_form_alter(&$form, &$form_state) {
-  if ($form['#node_edit_form'] && $form['field_programme_ef']['und'][0]['target_id']['#default_value'] != "BID: Biodiversity Information for Development (82243)") {
-    // Hide the grant type field if not BID project.
-    $form['field_pj_grant_type']['#access'] = FALSE;
+  if (isset($form['#node_edit_form']) && isset($form['field_programme_ef'])) {
+    if ($form['field_programme_ef']['und'][0]['target_id']['#default_value'] != "BID: Biodiversity Information for Development (82243)") {
+      // Hide the grant type field if not BID project.
+      $form['field_pj_grant_type']['#access'] = FALSE;
+    }
   }
 }
 

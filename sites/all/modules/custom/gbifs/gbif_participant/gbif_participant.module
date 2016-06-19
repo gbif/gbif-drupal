@@ -1669,6 +1669,9 @@ function _gp_participant_list_page() {
 
 	// Prepare quick links and lists according to membership type.
 	$types = gbif_participant_membership_types();
+	// Exclude former participant and observer from the list
+	$types = array_slice($types, 0, 4);
+
 	$lists = array();
 	foreach ($types as &$type) {
 		$type['url'] = 'participation/participant-list';

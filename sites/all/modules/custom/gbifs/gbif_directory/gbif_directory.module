@@ -216,9 +216,15 @@ function _gd_get_node_committee_list($group) {
       $person['role'] = str_replace(' ', '', $person['role']);
       $person['role'] = str_replace(',', '', $person['role']);
       $chairs[] = $person;
+
+      // Chairs should still be listed as Node Managers
+      $person['role'] = 'NODE_MANAGER';
+      $node_managers[] = $person;
     }
     else {
-      $node_managers[] = $person;
+      if ($person['participantMembership'] != 'Observer' && $person['participantMembership'] != 'Former participant') {
+        $node_managers[] = $person;
+      }
     }
 
     unset($person_detail, $node_detail, $participant_detail);

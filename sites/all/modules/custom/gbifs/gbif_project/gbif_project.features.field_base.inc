@@ -313,6 +313,32 @@ function gbif_project_field_default_field_bases() {
     'type' => 'number_integer',
   );
 
+  // Exported field_base: 'field_pj_grant_type'.
+  $field_bases['field_pj_grant_type'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_pj_grant_type',
+    'indexes' => array(
+      'value' => array(
+        0 => 'value',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'list',
+    'settings' => array(
+      'allowed_values' => array(
+        'regional' => 'Regional grant',
+        'national' => 'National grant',
+        'small' => 'Small grant',
+      ),
+      'allowed_values_function' => '',
+    ),
+    'translatable' => 0,
+    'type' => 'list_text',
+  );
+
   // Exported field_base: 'field_pj_image'.
   $field_bases['field_pj_image'] = array(
     'active' => 1,

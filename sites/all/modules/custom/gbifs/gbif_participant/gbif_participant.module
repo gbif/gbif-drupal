@@ -361,8 +361,10 @@ function gbif_participant_preprocess_page(&$variables) {
 					$variables['page']['menu']['menu_block_gbif_navigation_country_page']['#content'][$k]['#href'] = $new_path;
 				}
 				// If it's not a participant, take the participation menu tab away.
-				if (gettype($k) == 'integer' && $tab['#title'] == 'Participation' && count($results) == 0) {
-					unset($variables['page']['menu']['menu_block_gbif_navigation_country_page']['#content'][$k]);
+				if (gettype($k) == 'integer' && $tab['#title'] == 'Participation') {
+					if (count($results) == 0 || (count($results) == 1) && ($results[0]['participationStatus'] == 'FORMER' || $results[0]['participationStatus'] == 'OBSERVER')) {
+						unset($variables['page']['menu']['menu_block_gbif_navigation_country_page']['#content'][$k]);
+					}
 				}
 				// If on the list of publisher, highlight the tab with class '.back-menu'.
 				$current_path = current_path();
@@ -539,16 +541,16 @@ function gbif_participant_page_build(&$page) {
 
 			$title = gbif_participant_country_lookup($json->country, 'iso2', 'title');
 			if ($json->country == 'TW') {
-				$slogan = t('A GBIF Associate Participant Economy from !region', array('!region' => $region));
+				$slogan = t('A GBIF Associate Participant Economy from !region', array('!region' => $region)) . '<br>';
 			}
 			else {
-				$slogan = t('A GBIF !gbif_membership from !region', array('!gbif_membership' => _gp_reader_friendly_membership_type($gbif_membership), '!region' => $region));
+				$slogan = t('A GBIF !gbif_membership from !region', array('!gbif_membership' => _gp_reader_friendly_membership_type($gbif_membership), '!region' => $region)) . '<br>';
 			}
 		}
 		if (arg(2) == 'summary') {
 			drupal_set_title($title . ' - ' . $slogan);
 		}
-		$slogan .=  '<br>' . t('Names of countries, territories and islands are based on the !url standard.', array('!url' => l('ISO 3166-1', 'https://www.iso.org/obp/ui/#search')));
+		$slogan .=  t('Names of countries, territories and islands are based on the !url standard.', array('!url' => l('ISO 3166-1', 'https://www.iso.org/obp/ui/#search')));
 		$page['highlighted_title'] = array(
 			'name' => $title,
 			'description' => $slogan,
@@ -891,6 +893,14 @@ function gbif_participant_membership_types() {
 		array(
 			'key' => 'affiliate',
 			'title' => t('GBIF Affiliate')
+		),
+		array(
+			'key' => 'former',
+			'title' => t('Former Participant')
+		),
+		array(
+			'key' => 'observer',
+			'title' => t('Observer Country')
 		),
 	);
 	return $types;
@@ -1446,12 +1456,17 @@ function _gp_print_data_trends($iso2, $mode) {
 function _gp_trend_availability($iso2, $mode) {
 	// find the country index
 	$file = drupal_realpath(file_build_uri('gbif_analytics/countries_' . $mode . '.json'));
+	$figure_folder = ($mode == 'about') ? 'about' : 'publishedBy';
 
 	if (file_exists(drupal_realpath($file)) == TRUE) {
 		$json = json_decode(file_get_contents(file_create_url($file)), true); // true required to return an array
 		foreach($json as $country) {
 			if($country['iso'] == $iso2) {
-				return TRUE;
+				// further check if the figure is indeed available in the filesystem
+				$figure_directory = file_build_uri('gbif_analytics/country/' . $iso2 . '/' . $figure_folder . '/figure');
+				if (file_prepare_directory($figure_directory)) {
+					return TRUE;
+				}
 			}
 		}
 	}
@@ -1654,6 +1669,9 @@ function _gp_participant_list_page() {
 
 	// Prepare quick links and lists according to membership type.
 	$types = gbif_participant_membership_types();
+	// Exclude former participant and observer from the list
+	$types = array_slice($types, 0, 4);
+
 	$lists = array();
 	foreach ($types as &$type) {
 		$type['url'] = 'participation/participant-list';
@@ -1743,7 +1761,7 @@ function _gp_print_publications($iso2) {
 	$output = array();
 	$intro_title = t('Uses of GBIF in scientific research');
 	$intro_para = t('Peer-reviewed research citing GBIF as a data source, with at least one author from !country.', array('!country' => gbif_participant_country_lookup($iso2, 'iso2', 'title'))) . '<br>';
-	$intro_para .= t('Extracted from the !mendeley.', array('!mendeley' => l('Mendeley GBIF Public Library', 'http://www.mendeley.com/groups/1068301/gbif-public-library/')));
+	$intro_para .= t('For all researches, please visit our "!literature" page.', array('!literature' => l('Peer-reviewed publications', '/mendeley')));
 	$list_title = t('List of publications');
 
 	// Get mendeley json for the country.

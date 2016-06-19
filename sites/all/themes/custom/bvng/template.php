@@ -18,8 +18,7 @@ include_once('templates/system/button.func.php');
  * Implements hook_theme().
  * @see http://www.danpros.com/2013/01/creating-custom-user-login-page-in.html
  */
-function bvng_theme()
-{
+function bvng_theme() {
   $items = array();
   // create custom user-login.tpl.php
   $items['user_login'] = array(
@@ -53,8 +52,7 @@ function bvng_theme()
 /**
  * Implements template_preprocess().
  */
-function bvng_preprocess(&$variables, $hook)
-{
+function bvng_preprocess(&$variables, $hook) {
   // Make the environmental settings available to the theme layer and javascript.
   $env = variable_get('environment_settings');
   $variables['data_portal_base_url'] = $env['data_portal_base_url'];
@@ -68,8 +66,7 @@ function bvng_preprocess(&$variables, $hook)
 /**
  * Implements template_preprocess_html().
  */
-function bvng_preprocess_html(&$variables)
-{
+function bvng_preprocess_html(&$variables) {
   if (drupal_is_front_page()) {
     $variables['head_title'] = t('Free and Open Access to Biodiversity Data | GBIF.org');
   }
@@ -83,8 +80,7 @@ function bvng_preprocess_html(&$variables)
  * @see http://www.dibe.gr/blog/set-path-determining-active-trail-drupal-7-menu
  * @see https://drupal.org/node/1292590 for setting active user menu.
  */
-function bvng_preprocess_page(&$variables)
-{
+function bvng_preprocess_page(&$variables) {
   $current_path = current_path();
 
   if (!empty($variables['node']->type)) {
@@ -159,8 +155,7 @@ function bvng_preprocess_page(&$variables)
 /**
  * Implements template_preprocess_region().
  */
-function bvng_preprocess_region(&$variables)
-{
+function bvng_preprocess_region(&$variables) {
   $current_path = current_path();
   // capture if this is a node page, and if yes, determine the node type.
   $args = arg();
@@ -216,61 +211,9 @@ function bvng_preprocess_region(&$variables)
 }
 
 /**
- * Implements template_preprocess_block().
- */
-function bvng_preprocess_block(&$variables)
-{
-  $current_path = current_path();
-
-  // Preprocess for system main block.
-  if ($variables['block']->module == 'system' && $variables['block']->delta == 'main') {
-
-    // Use our own template for generic taxonomy term page.
-    if (strpos($current_path, 'taxonomy/term') !== FALSE) {
-      array_push($variables['theme_hook_suggestions'], 'block__system__main__taxonomy' . '__generic');
-      // Add RSS feed icon.
-      $alt = _bvng_get_title_data($count = NULL);
-      $icon = theme_image(array(
-        'path' => drupal_get_path('theme', 'bvng') . '/images/rss-feed.gif',
-        'width' => 28,
-        'height' => 28,
-        'alt' => (isset($alt['title'])) ? $alt['title'] : '',
-        'title' => t('Subscribe to this list'),
-        'attributes' => array(),
-      ));
-      $icon = l($icon, $current_path . '/feed', array('html' => TRUE));
-      $variables['elements']['#block']->icon = $icon;
-
-      // Set title of the main block according to the number of node items.
-      if (isset($variables['elements']['nodes'])) {
-        $node_count = _bvng_node_count($variables['elements']['nodes']);
-        $block_title = format_plural($node_count,
-          'Displaying 1 item',
-          'Displaying @count items',
-          array());
-        $variables['elements']['#block']->title = $block_title;
-      }
-    }
-
-    // If it's 404 not found.
-    $status = drupal_get_http_header("status");
-    if ($status == '404 Not Found') {
-      array_push($variables['theme_hook_suggestions'], 'block__system__main__404');
-      $suggested_text = '';
-      $suggested_text .= '<p>' . t('We are sorry for the inconvenience.') . '</p>';
-      $suggested_text .= '<p>' . t('Did you try searching? Use the search field at the top-right of this page.') . '</p>';
-      $suggested_text .= '<p>' . t('You may be following an out-dated link based on GBIF’s previous portal. Please use the "Feedback" button to let us know what you are looking for. Thank you.') . '</p>';
-      $variables['content'] = $suggested_text;
-
-    }
-  }
-}
-
-/**
  * Implements hook_preprocess_node().
  */
-function bvng_preprocess_node(&$variables)
-{
+function bvng_preprocess_node(&$variables) {
 
   // Add theme hook suggestion for nodes of taxonomy/term/%
   if (strpos(current_path(), 'taxonomy/term') !== FALSE) {
@@ -365,7 +308,7 @@ function bvng_preprocess_node(&$variables)
               $link = array(
                 '#theme' => 'link',
                 '#text' => $elinks_link['title'],
-                '#path' => $elinks_link['display_url'],
+                '#path' => $elinks_link['url'],
                 '#options' => array('attributes' => $elinks_link['attributes'], 'html' => FALSE),
                 '#prefix' => '<li>',
                 '#suffix' => '</li>',
@@ -420,8 +363,7 @@ function bvng_preprocess_node(&$variables)
   }
 }
 
-function bvng_preprocess_field(&$variables)
-{
+function bvng_preprocess_field(&$variables) {
   if (isset($variables['element']) && $variables['element']['#field_name'] == 'body') {
     $variables['classes_array'][] = 'clearfix';
   }
@@ -430,8 +372,7 @@ function bvng_preprocess_field(&$variables)
 /**
  * Implements template_preprocess_search_result().
  */
-function bvng_preprocess_search_result(&$variables)
-{
+function bvng_preprocess_search_result(&$variables) {
   if (isset($variables)) {
     $date_formatted = format_date($variables['result']['date'], 'custom', 'F jS, Y ');
     $variables['result']['date_formatted'] = $date_formatted;
@@ -440,8 +381,7 @@ function bvng_preprocess_search_result(&$variables)
 }
 
 // gbif_pages_form_alter() in gbif_pages will return 0 for drupal_is_front_page() no matter what.
-function bvng_form_alter(&$variables)
-{
+function bvng_form_alter(&$variables) {
   if (drupal_is_front_page() && $variables['#id'] == 'search-block-form--2') {
     $variables['actions']['submit']['#attributes']['class'][0] = 'search-btn-fp';
     $variables['search_block_form']['#attributes']['title'] = 'Search news items and information pages...';
@@ -452,8 +392,7 @@ function bvng_form_alter(&$variables)
 /**
  * Implements template_preprocess_user_profile().
  */
-function bvng_preprocess_user_profile(&$variables)
-{
+function bvng_preprocess_user_profile(&$variables) {
   if (isset($variables)) {
     $user = user_load($variables['user']->uid);
     $name = _bvng_get_field_value('user', $user, 'field_firstname');
@@ -470,8 +409,7 @@ function bvng_preprocess_user_profile(&$variables)
   }
 }
 
-function bvng_preprocess_user_register_form(&$variables)
-{
+function bvng_preprocess_user_register_form(&$variables) {
   if (isset($variables)) {
 
     $notice_icon = '<div class="notice-icon"></div>';
@@ -487,15 +425,13 @@ function bvng_preprocess_user_register_form(&$variables)
   }
 }
 
-function bvng_preprocess_user_pass(&$variables)
-{
+function bvng_preprocess_user_pass(&$variables) {
   if (isset($variables)) {
     unset($variables['form']['actions']['submit']);
   }
 }
 
-function bvng_js_alter(&$js)
-{
+function bvng_js_alter(&$js) {
   if ($js) {
     foreach ($js as $data => $attr) {
       if ($attr['group'] == 100) {
@@ -508,8 +444,7 @@ function bvng_js_alter(&$js)
 /**
  * Overrides the presentation of ge_date_ical field.
  */
-function bvng_field__ge_date_ical($variables)
-{
+function bvng_field__ge_date_ical($variables) {
   $output = '';
 
   // Render only the items.
@@ -531,8 +466,7 @@ function bvng_field__ge_date_ical($variables)
  * @param $node_type
  * @return string
  */
-function _bvng_well_types($current_path, $node_type = NULL)
-{
+function _bvng_well_types($current_path, $node_type = NULL) {
 
   $status = drupal_get_http_header("status");
 
@@ -582,8 +516,7 @@ function _bvng_well_types($current_path, $node_type = NULL)
 /**
  * Theme our own feed icon.
  */
-function bvng_feed_icon($variables)
-{
+function bvng_feed_icon($variables) {
   $text = t('Subscribe to !feed-title', array('!feed-title' => $variables['title']));
   if ($image = theme('image', array('path' => drupal_get_path('theme', 'bvng') . '/images/feed-icon.png', 'width' => 30, 'height' => 30, 'alt' => $text))) {
     return l($image, $variables['url'], array('html' => TRUE, 'attributes' => array('class' => array('feed-icon'), 'title' => $text)));
@@ -593,8 +526,7 @@ function bvng_feed_icon($variables)
 /**
  * Theme our own ical feed icon.
  */
-function bvng_feed_ical_icon($variables)
-{
+function bvng_feed_ical_icon($variables) {
   $text = t('Add !feed-title to my calendar', array('!feed-title' => $variables['title']));
   if ($image = theme('image', array('path' => drupal_get_path('theme', 'bvng') . '/images/ical-icon.png', 'width' => 30, 'height' => 30, 'alt' => $text))) {
     return l($image, $variables['url'], array('html' => TRUE, 'attributes' => array('class' => array('feed-ical-icon'), 'title' => $text)));
@@ -607,8 +539,7 @@ function bvng_feed_ical_icon($variables)
  *
  * The description is retrieved from the description of the menu item.
  */
-function _bvng_get_title_data($node_count = NULL, $user = NULL, $node = NULL)
-{
+function _bvng_get_title_data($node_count = NULL, $user = NULL, $node = NULL) {
   $status = drupal_get_http_header("status");
   $current_path = current_path();
 
@@ -753,8 +684,7 @@ function _bvng_get_title_data($node_count = NULL, $user = NULL, $node = NULL)
   }
 }
 
-function _bvng_get_tag_links(&$field_items, &$item_list)
-{
+function _bvng_get_tag_links(&$field_items, &$item_list) {
   $terms = taxonomy_term_load_multiple($field_items);
   foreach ($terms as $term) {
     $uri = taxonomy_term_uri($term);
@@ -763,8 +693,7 @@ function _bvng_get_tag_links(&$field_items, &$item_list)
   }
 }
 
-function _bvng_get_regional_links()
-{
+function _bvng_get_regional_links() {
   $regions = variable_get('gbif_region_definition');
   $links = '';
   $links = '<ul class="filter-list">';
@@ -778,8 +707,7 @@ function _bvng_get_regional_links()
   return $links;
 }
 
-function _bvng_get_more_search_options($tid = NULL, $search_string = NULL)
-{
+function _bvng_get_more_search_options($tid = NULL, $search_string = NULL) {
   $env = variable_get('environment_settings');
   $data_portal_base_url = $env['data_portal_base_url'];
   $term = taxonomy_term_load($tid);
@@ -825,8 +753,7 @@ function _bvng_get_more_search_options($tid = NULL, $search_string = NULL)
 /**
  * Helper function for the styling of external wells.
  */
-function _bvng_get_container_well()
-{
+function _bvng_get_container_well() {
   $well = array();
   $well['normal'] = array(
     'top' => '<div class="container well well-lg well-margin-top well-margin-bottom">' . "\n" . '<div class="row">' . "\n" . '<div class="col-xs-12">',
@@ -846,8 +773,7 @@ function _bvng_get_container_well()
  * If there is only one value per language, return the value directly.
  * Otherwise return the array.
  */
-function _bvng_get_field_value($entity_type, $entity, $field_name, $langcode = NULL)
-{
+function _bvng_get_field_value($entity_type, $entity, $field_name, $langcode = NULL) {
   $field = field_get_items($entity_type, $entity, $field_name, $langcode);
   if ($field === FALSE) {
     return FALSE;
@@ -865,8 +791,7 @@ function _bvng_get_field_value($entity_type, $entity, $field_name, $langcode = N
  * @param  The node array in page element array.
  * @return (int) $count.
  */
-function _bvng_node_count($nodes)
-{
+function _bvng_node_count($nodes) {
   // Chuck off non-node children.
   if (is_array($nodes)) {
     foreach ($nodes as $idx => $node) {
@@ -880,8 +805,7 @@ function _bvng_node_count($nodes)
 /**
  *
  */
-function _bvng_load_javascript()
-{
+function _bvng_load_javascript() {
   /* Load javascripts.
    */
   $env = variable_get('environment_settings');
@@ -900,8 +824,7 @@ function _bvng_load_javascript()
 /**
  *
  */
-function _bvng_get_destination()
-{
+function _bvng_get_destination() {
   $destination = &drupal_static(__FUNCTION__);
 
   if (isset($destination)) {
@@ -926,8 +849,7 @@ function _bvng_get_destination()
  * Implements theme_facetapi_link_inactive().
  * @link https://www.drupal.org/node/1615430#comment-8809877
  */
-function bvng_facetapi_link_inactive($variables)
-{
+function bvng_facetapi_link_inactive($variables) {
   // Builds accessible markup.
   // @see http://drupal.org/node/1316580
   $accessible_vars = array(
@@ -959,8 +881,7 @@ function bvng_facetapi_link_inactive($variables)
  * Implements theme_file_force_file_link().
  * @param $variables
  */
-function bvng_file_force_file_link($variables)
-{
+function bvng_file_force_file_link($variables) {
   $file = $variables['file'];
   $icon_directory = $variables['icon_directory'];
 

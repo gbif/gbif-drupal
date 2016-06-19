@@ -234,6 +234,15 @@ function _prev_next_add($nid) {
                                           FROM {node}
                                           WHERE nid = :nid", 0, 1,
                                           array(':nid' => $nid))->fetchField();
+        $prev_nid = db_query_range("SELECT nid
+                                    FROM {node}
+                                    $join
+                                    WHERE (($search_criteria = :value
+                                    AND nid < :nid)
+                                    OR $search_criteria < :value)
+                                    AND status = 1
+                                    $cond ORDER BY $search_criteria DESC,nid DESC", 0, 1,
+                                    array(':value' => $criteria_value, ':nid' => $nid))->fetchField();
         $next_nid = db_query_range("SELECT nid
                                     FROM {node}
                                     $join
@@ -244,32 +253,23 @@ function _prev_next_add($nid) {
                                     $cond ORDER BY
                                     $search_criteria ASC,nid ASC", 0, 1,
                                     array(':value' => $criteria_value, ':nid' => $nid))->fetchField();
-        $prev_nid = db_query_range("SELECT nid
-                                    FROM {node}
-                                    $join
-                                    WHERE (($search_criteria = :value
-                                    AND nid < :nid)
-                                    OR $search_criteria < :value)
-                                    AND status = 1
-                                    $cond ORDER BY $search_criteria DESC,nid DESC", 0, 1,
-                                    array(':value' => $criteria_value, ':nid' => $nid))->fetchField();
       }
       else {
         $prev_nid = db_query_range("SELECT nid
-                                    FROM {node}
-                                    $join
-                                    WHERE nid > :nid
-                                    AND status = 1
-                                    $cond
-                                    ORDER BY nid ASC", 0, 1,
-                                    array(':nid' => $nid))->fetchField();
-        $next_nid = db_query_range("SELECT nid
                                     FROM {node}
                                     $join
                                     WHERE nid < :nid
                                     AND status = 1
                                     $cond
                                     ORDER BY nid DESC", 0, 1,
+                                    array(':nid' => $nid))->fetchField();
+        $next_nid = db_query_range("SELECT nid
+                                    FROM {node}
+                                    $join
+                                    WHERE nid > :nid
+                                    AND status = 1
+                                    $cond
+                                    ORDER BY nid ASC", 0, 1,
                                     array(':nid' => $nid))->fetchField();
         }
       }
@@ -284,9 +284,9 @@ function _prev_next_add($nid) {
       if ($prev_nid) {
         db_update('prev_next_node')
           ->fields(array(
-            'next_nid' => ($nid) ? $nid : 0,
+            'prev_nid' => ($prev_nid) ? $prev_nid : 0,
           ))
-          ->condition('nid', $prev_nid)
+          ->condition('nid', $nid)
           ->execute();
       }
     }
@@ -339,8 +339,8 @@ function _prev_next_modify_pointing_nodes($nid) {
                     FROM {prev_next_node}
                     WHERE next_nid = :next_nid",
                     array(':next_nid' => $nid))->fetchField();
-  //if ($next) _prev_next_add($next);
-  if ($next) _prev_next_add($nid);
+  // if ($next) _prev_next_add($nid);
+  if ($next) _prev_next_add($next);
 }
 
 /**

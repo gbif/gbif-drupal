@@ -1289,7 +1289,7 @@ function gbif_project_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'entityreference_autocomplete',
-      'weight' => 35,
+      'weight' => 40,
     ),
   );
 
@@ -1457,7 +1457,7 @@ function gbif_project_field_default_field_instances() {
       'module' => 'number',
       'settings' => array(),
       'type' => 'number',
-      'weight' => 32,
+      'weight' => 37,
     ),
   );
 
@@ -1510,7 +1510,51 @@ function gbif_project_field_default_field_instances() {
       'module' => 'number',
       'settings' => array(),
       'type' => 'number',
-      'weight' => 33,
+      'weight' => 38,
+    ),
+  );
+
+  // Exported field_instance: 'node-project-field_pj_grant_type'.
+  $field_instances['node-project-field_pj_grant_type'] = array(
+    'bundle' => 'project',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 29,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_pj_grant_type',
+    'label' => 'Grant type',
+    'required' => 0,
+    'settings' => array(
+      'mediafront' => array(
+        'custom' => '',
+        'field_type' => 0,
+        'media_type' => 'media',
+        'preview' => 0,
+        'thumbnail' => 0,
+      ),
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_buttons',
+      'weight' => 36,
     ),
   );
 
@@ -1699,7 +1743,7 @@ function gbif_project_field_default_field_instances() {
       'module' => 'number',
       'settings' => array(),
       'type' => 'number',
-      'weight' => 34,
+      'weight' => 39,
     ),
   );
 
@@ -2803,6 +2847,7 @@ function gbif_project_field_default_field_instances() {
   t('GBIF Membership');
   t('GBIF Participants');
   t('GBIF funding delivered');
+  t('Grant type');
   t('Image');
   t('Internal notes');
   t('Internal notes that won\'t be exposed to site visitors. Create a new one each time a remark is made, by starting with who and when.');

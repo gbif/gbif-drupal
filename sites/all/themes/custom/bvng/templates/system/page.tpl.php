@@ -107,11 +107,6 @@ $logo_path_png = '/' . path_to_theme() . '/images/GBIF-2015-full-ie8-fallback.pn
       				<?php if (!empty($page['navigation'])): ?>
       				  <?php print render($page['navigation']); ?>
       				<?php endif; ?>
-
-      				<!-- $primary_nav is kept for compatibility reason. -->
-      				<?php if (!empty($primary_nav)): ?>
-      				<?php print render($primary_nav); ?>
-      				<?php endif; ?>
       			</nav>
       		</div>
       		<?php endif; ?>

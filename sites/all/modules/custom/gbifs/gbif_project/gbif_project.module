@@ -707,7 +707,7 @@ function _gbif_project_get_partner_link($entity) {
  */
 function gbif_project_views_pre_view(&$view, &$display_id, &$args) {
   if ($view->name == 'related_projects' && $display_id == 'page_related_projects') {
-    if (in_array($args[0], ['bid', 'bifa', 'cesp'])) {
+    if (in_array($args[0], ['bid', 'bifa', 'capacity-support'])) {
       switch ($args[0]) {
         case 'bid':
           $view->args[0] = 82243;
@@ -715,7 +715,7 @@ function gbif_project_views_pre_view(&$view, &$display_id, &$args) {
         case 'bifa':
           $view->args[0] = 82629;
           break;
-        case 'cesp':
+        case 'capacity-support':
           $view->args[0] = 82219;
           break;
       }

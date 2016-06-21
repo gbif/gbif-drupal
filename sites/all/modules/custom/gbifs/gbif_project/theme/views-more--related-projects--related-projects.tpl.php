@@ -20,7 +20,7 @@ if ($view->name == 'related_projects' && $view->current_display == 'related_proj
       $more_url = '/programme/bifa/all-projects';
       break;
     case '82219':
-      $more_url = '/programme/cesp/all-projects';
+      $more_url = '/programme/capacity-support/all-projects';
       break;
   }
 }

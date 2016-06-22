@@ -1,13 +1,12 @@
-name = RESTful Search API Example
-description = Shows how to create a resource backed by Search API.
-dependencies[] = restful_search_api
+name = GBIF RESTful Search API
+description = RESTful search interface for GBIF contents.
 core = 7.x
-
+package = GBIFS
+version = 7.x-0.2
+project = GBIF Portal
+dependencies[] = entity
+dependencies[] = restful_search_api
+dependencies[] = search_api
+features[features_api][] = api:2
+features[search_api_index][] = node_index
 registry_autoload[] = PSR-4
-
-; Information added by Drupal.org packaging script on 2016-04-28
-version = "7.x-2.0-beta1"
-core = "7.x"
-project = "restful_search_api"
-datestamp = "1461815344"
-

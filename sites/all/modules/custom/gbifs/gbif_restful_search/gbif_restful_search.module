@@ -1,16 +1,13 @@
 <?php
+/**
+ * @file
+ * Code for the GBIF RESTful Search API feature.
+ */
+
+include_once 'gbif_restful_search.features.inc';
 
 /**
  * @file
  * Module implementation file.
  */
 
-
-/**
- * Implements hook_ctools_plugin_directory().
- */
-function restful_search_api_example_ctools_plugin_directory($module, $plugin) {
-  if ($module == 'restful') {
-    return 'plugins/' . $plugin;
-  }
-}

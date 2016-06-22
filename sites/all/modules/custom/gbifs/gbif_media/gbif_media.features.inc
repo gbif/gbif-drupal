@@ -29,9 +29,9 @@ function gbif_media_image_default_styles() {
     ),
   );
 
-  // Exported image style: masthead__narrow.
-  $styles['masthead__narrow'] = array(
-    'label' => 'Masthead narrow',
+  // Exported image style: masthead__tablet.
+  $styles['masthead__tablet'] = array(
+    'label' => 'Masthead tablet',
     'effects' => array(
       18 => array(
         'name' => 'focal_point_scale_and_crop',
@@ -48,9 +48,9 @@ function gbif_media_image_default_styles() {
     ),
   );
 
-  // Exported image style: masthead__normal.
-  $styles['masthead__normal'] = array(
-    'label' => 'Masthead normal',
+  // Exported image style: masthead__laptop.
+  $styles['masthead__laptop'] = array(
+    'label' => 'Masthead laptop',
     'effects' => array(
       19 => array(
         'name' => 'focal_point_scale_and_crop',
@@ -67,9 +67,9 @@ function gbif_media_image_default_styles() {
     ),
   );
 
-  // Exported image style: masthead__wide.
-  $styles['masthead__wide'] = array(
-    'label' => 'Masthead wide',
+  // Exported image style: masthead__desktop.
+  $styles['masthead__desktop'] = array(
+    'label' => 'Masthead desktop',
     'effects' => array(
       20 => array(
         'name' => 'focal_point_scale_and_crop',

@@ -67,10 +67,6 @@ Community {"url":"<front>"}
 --Literature {"url":"mendeley"}
 --Key information {"url":"resources\/key-information"}
 --Logos {"url":"resources\/logos"}
---For publishers {"url":"resources\/for-publishers"}
---For users {"url":"resources\/for-users"}
---For GBIF delegations {"url":"resources\/for-delegations"}
---For nodes {"url":"resources\/for-nodes"}
 About {"url":"<front>"}
 -What is GBIF {"url":"what-is-gbif", "description": "A short description of the Global Biodiversity Information Facility"}
 --What is GBIF? {"url":"what-is-gbif"}
@@ -79,10 +75,6 @@ About {"url":"<front>"}
 --Literature {"url":"mendeley"}
 --Key information {"url":"resources\/key-information"}
 --Logos {"url":"resources\/logos"}
---For publishers {"url":"resources\/for-publishers"}
---For users {"url":"resources\/for-users"}
---For GBIF delegations {"url":"resources\/for-delegations"}
---For nodes {"url":"resources\/for-nodes"}
 -Awards {"url":"about\/awards", "description": "Bringing biodiversity information to life"}
 --Awards {"url":"about\/awards"}
 -Governance {"url":"governance\/governing-board", "description": "How decisions, advice, management and funding are organized in GBIF"}

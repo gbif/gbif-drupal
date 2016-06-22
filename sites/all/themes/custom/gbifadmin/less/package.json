@@ -1,0 +1,17 @@
+{
+  "name": "less",
+  "version": "1.0.0",
+  "description": "The following files are simply duplicates from the Bootstrap library. With modifications in were to reference the imports. In theory, you could replace them if you update the Bootstrap framework by copying them from that framework again. Just make sure to modify the import paths to reference the `./bootstrap/less` folder: ``` ./less/bootstrap.less ./less/responsive.less ./less/variables.less ```",
+  "main": "Gruntfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "devDependencies": {
+    "grunt": "~0.4.5",
+    "grunt-contrib-less": "~0.11.0",
+    "grunt-contrib-watch": "~0.6.1",
+    "matchdep":"~0.3.0"
+  },
+  "license": "ISC"
+}

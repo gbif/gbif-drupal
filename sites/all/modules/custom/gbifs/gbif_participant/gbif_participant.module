@@ -1669,6 +1669,9 @@ function _gp_participant_list_page() {
 
 	// Prepare quick links and lists according to membership type.
 	$types = gbif_participant_membership_types();
+	// Exclude former participant and observer from the list
+	$types = array_slice($types, 0, 4);
+
 	$lists = array();
 	foreach ($types as &$type) {
 		$type['url'] = 'participation/participant-list';
@@ -1758,7 +1761,7 @@ function _gp_print_publications($iso2) {
 	$output = array();
 	$intro_title = t('Uses of GBIF in scientific research');
 	$intro_para = t('Peer-reviewed research citing GBIF as a data source, with at least one author from !country.', array('!country' => gbif_participant_country_lookup($iso2, 'iso2', 'title'))) . '<br>';
-	$intro_para .= t('Extracted from the !mendeley.', array('!mendeley' => l('Mendeley GBIF Public Library', 'http://www.mendeley.com/groups/1068301/gbif-public-library/')));
+	$intro_para .= t('For all researches, please visit our "!literature" page.', array('!literature' => l('Peer-reviewed publications', '/mendeley')));
 	$list_title = t('List of publications');
 
 	// Get mendeley json for the country.

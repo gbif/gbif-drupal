@@ -95,7 +95,7 @@
   </section>
 
   <section class="sidebar-filter col-xs-3">
-    <?php print $filter_links; ?>
+    <?php if (isset($filter_links)) print $filter_links; ?>
   </section>
 
 <?php if ($footer): ?>

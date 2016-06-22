@@ -12,6 +12,7 @@ include_once 'gbif_project.features.inc';
 function gbif_project_menu() {
   $items = array();
   // Menu link for full list browsing.
+  /*
   $items['programme'] = array(
     'type' => MENU_NORMAL_ITEM,
     'title' => 'Programme',
@@ -19,6 +20,7 @@ function gbif_project_menu() {
     'access callback' => TRUE,
     'weight' => 30,
   );
+  */
   return $items;
 }
 
@@ -117,9 +119,11 @@ function gbif_project_field_widget_form_alter(&$element, &$form_state, $context)
  * Implements hook_form_BASE_FORM_ID_alter().
  */
 function gbif_project_form_node_form_alter(&$form, &$form_state) {
-  if ($form['#node_edit_form'] && $form['field_programme_ef']['und'][0]['target_id']['#default_value'] != "BID: Biodiversity Information for Development (82243)") {
-    // Hide the grant type field if not BID project.
-    $form['field_pj_grant_type']['#access'] = FALSE;
+  if (isset($form['#node_edit_form']) && isset($form['field_programme_ef'])) {
+    if ($form['field_programme_ef']['und'][0]['target_id']['#default_value'] != "BID: Biodiversity Information for Development (82243)") {
+      // Hide the grant type field if not BID project.
+      $form['field_pj_grant_type']['#access'] = FALSE;
+    }
   }
 }
 
@@ -131,12 +135,22 @@ function gbif_project_preprocess_page(&$variables) {
   if (isset($variables['page']['menu']['menu_block_gbif_navigation_menu_tabs'])) {
     // for project node
     if (isset($variables['node']) && $variables['node']->type == 'project') {
+      $programme_acronym = $variables['node']->field_programme_ef['und'][0]['entity']->field_acronym['und'][0]['value'];
+      $back_menu_url = 'programme/capacity-support';
+      switch ($programme_acronym) {
+        case 'BID':
+          $back_menu_url = 'programme/bid';
+          break;
+        case 'BIFA':
+          $back_menu_url = 'programme/bifa';
+          break;
+      }
       foreach ($variables['page']['menu']['menu_block_gbif_navigation_menu_tabs']['#content'] as $k => $tab) {
         if (gettype($k) == 'integer') {
           $path = explode('/', $tab['#href']);
           $nid = $path[1];
           $url_alias = drupal_get_path_alias($tab['#href']);
-          if ($url_alias == 'programme/capacity-support') {
+          if ($url_alias == $back_menu_url) {
             $variables['page']['menu']['menu_block_gbif_navigation_menu_tabs']['#content'][$k]['#attributes']['class'][] = 'back-menu';
           }
         }
@@ -144,12 +158,21 @@ function gbif_project_preprocess_page(&$variables) {
     }
     // for project view
     elseif (strpos($current_path, 'all-projects') !== FALSE) {
+      $back_menu_url = 'programme/capacity-support';
+      switch (arg(1)) {
+        case 'bid':
+          $back_menu_url = 'programme/bid';
+          break;
+        case 'bifa':
+          $back_menu_url = 'programme/bifa';
+          break;
+      }
       foreach ($variables['page']['menu']['menu_block_gbif_navigation_menu_tabs']['#content'] as $k => $tab) {
         if (gettype($k) == 'integer') {
           $path = explode('/', $tab['#href']);
           $nid = $path[1];
           $url_alias = drupal_get_path_alias($tab['#href']);
-          if ($url_alias == 'programme/capacity-support') {
+          if ($url_alias == $back_menu_url) {
             $variables['page']['menu']['menu_block_gbif_navigation_menu_tabs']['#content'][$k]['#attributes']['class'][] = 'back-menu';
           }
         }
@@ -674,4 +697,28 @@ function _gbif_project_get_partner_link($entity) {
     }
   }
   return $link;
+}
+
+/**
+ * The PHP contextual validation for the
+ * @param $view
+ * @param $display_id
+ * @param $args
+ */
+function gbif_project_views_pre_view(&$view, &$display_id, &$args) {
+  if ($view->name == 'related_projects' && $display_id == 'page_related_projects') {
+    if (in_array($args[0], ['bid', 'bifa', 'capacity-support'])) {
+      switch ($args[0]) {
+        case 'bid':
+          $view->args[0] = 82243;
+          break;
+        case 'bifa':
+          $view->args[0] = 82629;
+          break;
+        case 'capacity-support':
+          $view->args[0] = 82219;
+          break;
+      }
+    }
+  }
 }

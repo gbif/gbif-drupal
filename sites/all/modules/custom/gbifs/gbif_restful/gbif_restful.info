@@ -1,8 +1,10 @@
-name = GBIF RESTful
-description = GBIF Content API.
+name = GBIF Restful
+description = RESTful interface for GBIF contents.
 core = 7.x
-version = 7.x-0.1
+version = 7.x-0.2
 project = GBIF Portal
 
 dependencies[] = restful
 
+registry_autoload[] = PSR-0
+registry_autoload[] = PSR-4

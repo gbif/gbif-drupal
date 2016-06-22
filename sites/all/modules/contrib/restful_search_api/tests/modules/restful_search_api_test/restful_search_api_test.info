@@ -3,9 +3,11 @@ description = Test module
 dependencies[] = restful_search_api
 core = 7.x
 
-; Information added by Drupal.org packaging script on 2015-02-16
-version = "7.x-1.0-beta1"
+registry_autoload[] = PSR-4
+
+; Information added by Drupal.org packaging script on 2016-04-28
+version = "7.x-2.0-beta1"
 core = "7.x"
 project = "restful_search_api"
-datestamp = "1424074382"
+datestamp = "1461815344"
 

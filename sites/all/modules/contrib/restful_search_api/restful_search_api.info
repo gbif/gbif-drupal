@@ -4,16 +4,14 @@ dependencies[] = restful
 dependencies[] = search_api
 core = 7.x
 
-; Files
-files[] = include/RestfulDataProviderSearchAPI.php
-files[] = include/RestfulDataProviderSearchAPIInterface.php
+registry_autoload[] = PSR-4
 
 ; Tests
 files[] = tests/RestfulSearchAPISearchTestCase.test
 
-; Information added by Drupal.org packaging script on 2015-02-16
-version = "7.x-1.0-beta1"
+; Information added by Drupal.org packaging script on 2016-04-28
+version = "7.x-2.0-beta1"
 core = "7.x"
 project = "restful_search_api"
-datestamp = "1424074382"
+datestamp = "1461815344"
 

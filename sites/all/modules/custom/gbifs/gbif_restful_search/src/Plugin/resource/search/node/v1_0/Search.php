@@ -37,46 +37,61 @@ class Search extends ResourceSearchBase implements ResourceInterface {
   /**
    * Overrides Resource::publicFields().
    */
-  public function publicFields() {
-    return array(
-      'entity_id' => array(
-        'property' => 'search_api_id',
-        'process_callbacks' => array(
-          'intVal',
-        ),
-      ),
-      'version_id' => array(
-        'property' => 'vid',
-        'process_callbacks' => array(
-          'intVal',
-        ),
-      ),
-      'relevance' => array(
-        'property' => 'search_api_relevance',
-      ),
-      'body' => array(
-        'property' => 'body',
-        'sub_property' => LANGUAGE_NONE . '::0::value',
-      ),
-      'title' => array(
-        'property' => 'title',
-      ),
-      'type' => array(
-        'property' => 'type',
-      ),
-      'promote' => array(
-        'property' => 'promote',
-      ),
-      'sticky' => array(
-        'property' => 'sticky',
-      ),
-      'language' => array(
-        'property' => 'language',
-      ),
-      'status' => array(
-        'property' => 'status',
+  protected function publicFields() {
+
+    $public_fields['entity_id'] = array(
+      'property' => 'search_api_id',
+      'process_callbacks' => array(
+        'intVal',
       ),
     );
-  }
 
+    $public_fields['version_id'] = array(
+      'property' => 'vid',
+      'process_callbacks' => array(
+        'intVal',
+      ),
+    );
+
+    $public_fields['relevance'] = array(
+      'property' => 'search_api_relevance',
+    );
+
+    $public_fields['summary'] = array(
+      'property' => 'body',
+      'sub_property' => LANGUAGE_NONE . '::0::summary',
+    );
+
+    $public_fields['body'] = array(
+      'property' => 'body',
+      'sub_property' => LANGUAGE_NONE . '::0::value',
+    );
+
+    $public_fields['title'] = array(
+      'property' => 'title',
+    );
+
+    $public_fields['type'] = array(
+      'property' => 'type',
+    );
+
+    $public_fields['promote'] = array(
+      'property' => 'promote',
+    );
+
+    $public_fields['sticky'] = array(
+      'property' => 'sticky',
+    );
+
+    $public_fields['language'] = array(
+      'property' => 'language',
+    );
+
+    $public_fields['status'] = array(
+      'property' => 'status',
+    );
+
+    return $public_fields;
+  }
+  
 }

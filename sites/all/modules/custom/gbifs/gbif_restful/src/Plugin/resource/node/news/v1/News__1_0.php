@@ -39,65 +39,6 @@ use Drupal\restful\Plugin\resource\ResourceNode;
 class News__1_0 extends ResourceNode implements ResourceInterface {
 
   /**
-   * Overrides Resource::controllersInfo().
-   */
-  public function controllersInfo() {
-    return array(
-      '' => array(
-        // GET returns a list of entities.
-        RequestInterface::METHOD_GET => 'index',
-        RequestInterface::METHOD_HEAD => 'index',
-        // POST.
-        RequestInterface::METHOD_POST => 'create',
-        RequestInterface::METHOD_OPTIONS => 'discover',
-      ),
-      // URL alias
-      '^[a-zA-Z]+.*$' => array(
-        RequestInterface::METHOD_GET => 'viewUrlAlias'
-      ),
-      // ID, or a list of IDs delimited by comma.
-      '^[0-9]+.*$' => array(
-        RequestInterface::METHOD_GET => 'view',
-        RequestInterface::METHOD_HEAD => 'view',
-        RequestInterface::METHOD_PUT => 'replace',
-        RequestInterface::METHOD_PATCH => 'update',
-        RequestInterface::METHOD_DELETE => 'remove',
-        RequestInterface::METHOD_OPTIONS => 'discover',
-      ),
-    );
-  }
-
-
-  /**
-   * Overrides Resource::versionedUrl().
-   * {@inheritdoc}
-   */
-  public function versionedUrl($path = '', $options = array(), $version_string = TRUE) {
-    // lookup URL Alias
-    if (is_numeric($path)) {
-      $path = drupal_get_path_alias('node/' . $path);
-    }
-
-    // Make the URL absolute by default.
-    $options += array('absolute' => TRUE);
-    $plugin_definition = $this->getPluginDefinition();
-    if (!empty($plugin_definition['menuItem'])) {
-      $url = variable_get('restful_hook_menu_base_path', 'api') . '/';
-      $url .= $plugin_definition['menuItem'] . '/' . $path;
-      return url(rtrim($url, '/'), $options);
-    }
-
-    $base_path = variable_get('restful_hook_menu_base_path', 'api');
-    $url = $base_path;
-    if ($version_string) {
-      $url .= '/v' . $plugin_definition['majorVersion'] . '.' . $plugin_definition['minorVersion'];
-    }
-    $url .= '/' . $plugin_definition['resource'] . '/' . $path;
-    return url(rtrim($url, '/'), $options);
-  }
-
-
-  /**
    * @param $path
    * @return array
    */
@@ -123,6 +64,16 @@ class News__1_0 extends ResourceNode implements ResourceInterface {
   protected function publicFields() {
     $public_fields = parent::publicFields();
 
+    unset($public_fields['self']);
+
+    $public_fields['type'] = array(
+      'property' => 'type',
+    );
+
+    $public_fields['targetUrl'] = array(
+      'callback' => '\Drupal\gbif_restful\Plugin\resource\node\news\v1\News__1_0::getTargetUrl'
+    );
+
     $public_fields['title'] = array(
       'property' => 'title',
     );
@@ -140,9 +91,6 @@ class News__1_0 extends ResourceNode implements ResourceInterface {
     // attributes
     $public_fields['language'] = array(
       'property' => 'language',
-    );
-    $public_fields['type'] = array(
-      'property' => 'type',
     );
     $public_fields['promote'] = array(
       'property' => 'promote',
@@ -251,10 +199,6 @@ class News__1_0 extends ResourceNode implements ResourceInterface {
       ),
     );
 
-    $public_fields['url_alias'] = array(
-      'callback' => '\Drupal\gbif_restful\Plugin\resource\node\news\v1\News__1_0::getUrlAlias'
-    );
-
     return $public_fields;
   }
 
@@ -286,7 +230,7 @@ class News__1_0 extends ResourceNode implements ResourceInterface {
     );
   }
 
-  public function getUrlAlias(DataInterpreterInterface $interpreter) {
+  public function getTargetUrl(DataInterpreterInterface $interpreter) {
     $wrapper = $interpreter->getWrapper();
     $nid = $wrapper->getIdentifier();
     $node = node_load($nid);

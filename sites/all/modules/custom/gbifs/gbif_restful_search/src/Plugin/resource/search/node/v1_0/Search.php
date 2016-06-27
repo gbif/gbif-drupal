@@ -86,7 +86,7 @@ class Search extends ResourceSearchBase implements ResourceInterface {
       'property' => 'search_api_relevance',
     );
 
-    $public_fields['self'] = array(
+    $public_fields['targetUrl'] = array(
       'callback' => 'Drupal\gbif_restful_search\Plugin\resource\search\node\v1_0\Search::getUrlAlias'
     );
 
@@ -127,6 +127,7 @@ class Search extends ResourceSearchBase implements ResourceInterface {
     return $public_fields;
   }
 
+  //@todo Consider redirection in this field
   public function getUrlAlias(DataInterpreterInterface $interpreter) {
     $wrapper = $interpreter->getWrapper();
     $nid = $wrapper->get('nid');

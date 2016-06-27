@@ -86,6 +86,10 @@ class Search extends ResourceSearchBase implements ResourceInterface {
       'property' => 'search_api_relevance',
     );
 
+    $public_fields['type'] = array(
+      'property' => 'type',
+    );
+
     $public_fields['targetUrl'] = array(
       'callback' => 'Drupal\gbif_restful_search\Plugin\resource\search\node\v1_0\Search::getUrlAlias'
     );
@@ -102,10 +106,6 @@ class Search extends ResourceSearchBase implements ResourceInterface {
 
     $public_fields['title'] = array(
       'property' => 'title',
-    );
-
-    $public_fields['type'] = array(
-      'property' => 'type',
     );
 
     $public_fields['promote'] = array(

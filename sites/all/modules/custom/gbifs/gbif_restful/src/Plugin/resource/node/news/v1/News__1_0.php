@@ -70,9 +70,13 @@ class News__1_0 extends ResourceNode implements ResourceInterface {
       'property' => 'type',
     );
 
-    $public_fields['targetUrl'] = array(
-      'callback' => '\Drupal\gbif_restful\Plugin\resource\node\news\v1\News__1_0::getTargetUrl'
-    );
+    $nid = arg(3);
+    $node = node_load($nid);
+    if ($node->path['alias'] != null) {
+      $public_fields['targetUrl'] = array(
+        'callback' => '\Drupal\gbif_restful\Plugin\resource\node\news\v1\News__1_0::getTargetUrl'
+      );
+    }
 
     $public_fields['title'] = array(
       'property' => 'title',

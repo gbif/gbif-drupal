@@ -99,7 +99,7 @@ class News__1_0 extends ResourceNode implements ResourceInterface {
 
   /**
    * @param $path
-   * @return array newsroom/news/first-bid-grants-for-africa
+   * @return array
    */
   public function viewUrlAlias($path) {
 

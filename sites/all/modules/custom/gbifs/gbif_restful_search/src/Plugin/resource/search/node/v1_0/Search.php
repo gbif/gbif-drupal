@@ -8,6 +8,7 @@
 namespace Drupal\gbif_restful_search\Plugin\resource\search\node\v1_0;
 use Drupal\restful\Plugin\resource\ResourceInterface;
 use Drupal\restful_search_api\Plugin\Resource\ResourceSearchBase;
+use Drupal\restful\Plugin\resource\DataInterpreter\DataInterpreterInterface;
 
 /**
  * Class Search
@@ -35,6 +36,34 @@ use Drupal\restful_search_api\Plugin\Resource\ResourceSearchBase;
 class Search extends ResourceSearchBase implements ResourceInterface {
 
   /**
+   * Overrides Resource::versionedUrl().
+   * {@inheritdoc}
+   */
+  public function versionedUrl($path = '', $options = array(), $version_string = TRUE) {
+    // lookup URL Alias
+    if (is_numeric($path)) {
+      $path = drupal_get_path_alias('node/' . $path);
+    }
+
+    // Make the URL absolute by default.
+    $options += array('absolute' => TRUE);
+    $plugin_definition = $this->getPluginDefinition();
+    if (!empty($plugin_definition['menuItem'])) {
+      $url = variable_get('restful_hook_menu_base_path', 'api') . '/';
+      $url .= $plugin_definition['menuItem'] . '/' . $path;
+      return url(rtrim($url, '/'), $options);
+    }
+
+    $base_path = variable_get('restful_hook_menu_base_path', 'api');
+    $url = $base_path;
+    if ($version_string) {
+      $url .= '/v' . $plugin_definition['majorVersion'] . '.' . $plugin_definition['minorVersion'];
+    }
+    $url .= '/' . $plugin_definition['resource'] . '/' . $path;
+    return url(rtrim($url, '/'), $options);
+  }
+
+  /**
    * Overrides Resource::publicFields().
    */
   protected function publicFields() {
@@ -55,6 +84,10 @@ class Search extends ResourceSearchBase implements ResourceInterface {
 
     $public_fields['relevance'] = array(
       'property' => 'search_api_relevance',
+    );
+
+    $public_fields['self'] = array(
+      'callback' => 'Drupal\gbif_restful_search\Plugin\resource\search\node\v1_0\Search::getUrlAlias'
     );
 
     $public_fields['summary'] = array(
@@ -93,5 +126,12 @@ class Search extends ResourceSearchBase implements ResourceInterface {
 
     return $public_fields;
   }
-  
+
+  public function getUrlAlias(DataInterpreterInterface $interpreter) {
+    $wrapper = $interpreter->getWrapper();
+    $nid = $wrapper->get('nid');
+    $node = node_load($nid);
+    return $node->path['alias'];
+  }
+
 }

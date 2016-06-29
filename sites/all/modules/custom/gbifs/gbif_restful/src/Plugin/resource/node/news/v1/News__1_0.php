@@ -7,8 +7,6 @@
 
 namespace Drupal\gbif_restful\Plugin\resource\node\news\v1;
 
-use Drupal\restful\Http\Request;
-use Drupal\restful\Http\RequestInterface;
 use Drupal\restful\Http\HttpHeader;
 use Drupal\restful\Plugin\resource\DataInterpreter\DataInterpreterInterface;
 use Drupal\restful\Plugin\resource\Field\ResourceFieldBase;

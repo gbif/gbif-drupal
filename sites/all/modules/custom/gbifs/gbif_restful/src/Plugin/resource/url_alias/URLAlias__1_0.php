@@ -11,7 +11,7 @@ use Drupal\restful\Plugin\resource\ResourceInterface;
 
 /**
  * Class URLAlias__1_0
- * @package Drupal\restful_tutorial\Plugin\resource\url_alias
+ * @package Drupal\gbif_restful\Plugin\resource\url_alias
  *
  * @Resource(
  *   name = "url_alias:1.0",

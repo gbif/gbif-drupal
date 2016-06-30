@@ -8,7 +8,6 @@ namespace Drupal\gbif_restful\Plugin\resource\lookup;
 
 use Drupal\restful\Plugin\resource\ResourceDbQuery;
 use Drupal\restful\Plugin\resource\ResourceInterface;
-use Drupal\restful\Http\Request as Request;
 use Drupal\restful\Http\RequestInterface;
 
 /**
@@ -41,56 +40,25 @@ class Lookup__1_0 extends ResourceDbQuery implements ResourceInterface {
    */
   protected function publicFields() {
 
-    $public_fields['pid'] = array(
+    $public_fields['nid'] = array(
       'property' => 'pid'
     );
 
-    $public_fields['alias'] = array(
+    $public_fields['type'] = array(
       'property' => 'alias',
     );
 
-    $public_fields['source'] = array(
+    $public_fields['targetUrl'] = array(
       'property' => 'source'
     );
 
     return $public_fields;
   }
 
-  /*
-  public function view($path) {
-    $array = array();
-
-    $redirect_results = db_select('redirect', 'r')
-      ->fields('r')
-      ->condition('source', $path, '=')
-      ->execute()
-      ->fetchAll();
-
-    $alias_results = db_select('url_alias', 'u')
-      ->fields('u')
-      ->condition('alias', $path, '=')
-      ->execute()
-      ->fetchAll();
-
-
-    return $array;
-
+  /**
+   * {@inheritdoc}
+   */
+  protected function dataProviderClassName() {
+    return '\Drupal\gbif_restful\Plugin\resource\DataProvider\DataProviderUrlLookup';
   }
-  */
-
-  public function getTargetUrl(RequestInterface $request) {
-    $text = '';
-    return $text;
-  }
-
-  public function getNid(RequestInterface $request) {
-    $text = '';
-    return $text;
-  }
-
-  public function getType(RequestInterface $request) {
-    $text = '';
-    return $text;
-  }
-
 }

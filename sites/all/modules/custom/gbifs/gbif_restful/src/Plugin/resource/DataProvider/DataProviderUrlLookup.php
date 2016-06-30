@@ -75,78 +75,85 @@ class DataProviderUrlLookup extends DataProvider implements DataProviderInterfac
     return new DataInterpreterArray($this->getAccount(), new ArrayWrapper((array) $identifier));
   }
 
+  protected $output = array();
+
   /**
    * {@inheritdoc}
    *
    * @param mixed $identifier
-   *   The search query.
-   *
    * @return array
-   *   If the provided search index does not exist.
-   *
-   * @throws \Drupal\restful\Exception\ServerConfigurationException If the provided search index does not exist.
    */
   public function view($identifier) {
-    $output = array();
+    $this->resolveUrl($identifier);
+    return $this->output;
+  }
+
+  public function resolveUrl($identifier) {
     $redirect_results = db_select('redirect', 'r')
       ->fields('r')
       ->condition('source', $identifier, '=')
       ->execute()
       ->fetchAll();
 
-    $alias_results = db_select('url_alias', 'u')
-      ->fields('u')
-      ->condition('alias', $identifier, '=')
-      ->execute()
-      ->fetchAll();
+    if (count($redirect_results) == 1) {
+      $redirect = $redirect_results[0]->redirect;
+      $redirect_slices = explode('/', $redirect);
 
-    $nid = '';
-    $type = '';
-    $target_url = '';
-    if (count($redirect_results) > 0) {
-      $source = $redirect_results[0]->redirect;
-      if (url_is_external($source) == FALSE) {
-        $source_exploded = explode('/', $source);
-        $nid = $source_exploded[1];
-        if (is_numeric($nid)) {
-          $node = node_load($nid);
-          $type = $node->type;
-          $target_url = drupal_get_path_alias($source);
-        }
+      if ($redirect_slices[0] == 'node') {
+        $id = $redirect_slices[1];
+        $node = node_load($id);
+        $this->output = array(
+          'id' => $id,
+          'type' => $node->type,
+          'targetUrl' => drupal_get_path_alias($redirect),
+        );
+      }
+      elseif ($redirect_slices[0] == 'taxonomy') {
+        $this->output = array(
+          'id' => $redirect_slices[2],
+          'type' => 'term',
+          'target_url' => drupal_get_path_alias($redirect),
+        );
+      }
+      elseif ($redirect_slices[0] == 'http:') {
+        $this->output = array(
+          'type' => 'external',
+          'target_url' => $redirect,
+        );
+      }
+      // if non of the case above, it's a redirect to another redirect.
+      else {
+        $this->resolveUrl($redirect);
       }
     }
-    else if (count($alias_results) > 0) {
-      $source = explode('/', $alias_results[0]->source);
-      $nid = $source[1];
-      $node = node_load($nid);
-      $type = $node->type;
-      $target_url = $alias_results[0]->alias;
+    elseif (count($redirect_results) > 1) {
+      $this->output = array(
+        'message' => 'Error to be handled by exception handler.'
+      );
     }
-    $output['nid'] = $nid;
-    $output['type'] = $type;
-    $output['targetUrl'] = $target_url;
+    elseif (count($redirect_results) == 0) {
+      $alias_results = db_select('url_alias', 'u')
+        ->fields('u')
+        ->condition('alias', $identifier, '=')
+        ->execute()
+        ->fetchAll();
 
-    return $output;
-  }
-
-  public function isUrlAlias($identifier) {
-    $alias_results = db_select('url_alias', 'u')
-      ->fields('u')
-      ->condition('alias', $identifier, '=')
-      ->execute()
-      ->fetchAll();
-
-    return (count($alias_results) > 0) ? $alias_results : FALSE;
-  }
-
-  public function isRedirect($identifier) {
-    $redirect_results = db_select('redirect', 'r')
-      ->fields('r')
-      ->condition('source', $identifier, '=')
-      ->execute()
-      ->fetchAll();
-
-    return (count($redirect_results) > 0) ? $redirect_results : FALSE;
+      if (count($alias_results) > 0) {
+        $source = explode('/', $alias_results[0]->source);
+        $id = $source[1];
+        $node = node_load($id);
+        $this->output = array(
+          'id' => $id,
+          'type' => $node->type,
+          'targetUrl' => $alias_results[0]->alias,
+        );
+      }
+    }
+    else {
+      $this->output = array(
+        'message' => 'Failed to resolve the URL.'
+      );
+    }
   }
 
   /**

@@ -94,6 +94,10 @@ class Search extends ResourceSearchBase implements ResourceInterface {
       'callback' => 'Drupal\gbif_restful_search\Plugin\resource\search\node\v1_0\Search::getUrlAlias'
     );
 
+    $public_fields['title'] = array(
+      'property' => 'title',
+    );
+
     $public_fields['summary'] = array(
       'property' => 'body',
       'sub_property' => LANGUAGE_NONE . '::0::summary',
@@ -102,10 +106,6 @@ class Search extends ResourceSearchBase implements ResourceInterface {
     $public_fields['body'] = array(
       'property' => 'body',
       'sub_property' => LANGUAGE_NONE . '::0::value',
-    );
-
-    $public_fields['title'] = array(
-      'property' => 'title',
     );
 
     $public_fields['promote'] = array(
@@ -133,6 +133,34 @@ class Search extends ResourceSearchBase implements ResourceInterface {
     $nid = $wrapper->get('nid');
     $node = node_load($nid);
     return $node->path['alias'];
+  }
+
+  /**
+   * Process callback, Remove Drupal specific items from the image array.
+   *
+   * @param array $value
+   *   The image array.
+   *
+   * @return array
+   *   A cleaned image array.
+   */
+  public function imageProcess($value) {
+    if (ResourceFieldBase::isArrayNumeric($value)) {
+      $output = array();
+      foreach ($value as $item) {
+        $output[] = $this->imageProcess($item);
+      }
+      return $output;
+    }
+    return array(
+      'id' => $value['fid'],
+      'self' => file_create_url($value['uri']),
+      'filemime' => $value['filemime'],
+      'filesize' => $value['filesize'],
+      'width' => $value['width'],
+      'height' => $value['height'],
+      'styles' => $value['image_styles'],
+    );
   }
 
 }

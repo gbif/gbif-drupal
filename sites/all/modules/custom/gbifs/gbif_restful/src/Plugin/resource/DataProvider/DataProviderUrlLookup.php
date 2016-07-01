@@ -3,6 +3,8 @@
 /**
  * @file
  * Contains \Drupal\gbif_restful\Plugin\resource\DataProvider\DataProviderUrlLookup.
+ *
+ * @todo To complete with the exception handling. 1) Internal non-node path; 2) Non-existing path.
  */
 
 namespace Drupal\gbif_restful\Plugin\resource\DataProvider;
@@ -15,7 +17,6 @@ use Drupal\restful\Http\RequestInterface;
 use Drupal\restful\Plugin\resource\DataInterpreter\ArrayWrapper;
 use Drupal\restful\Plugin\resource\DataInterpreter\DataInterpreterArray;
 use Drupal\restful\Plugin\resource\DataProvider\DataProvider;
-use Drupal\restful\Plugin\resource\DataProvider\DataProviderInterface;
 use Drupal\restful\Plugin\resource\Field\ResourceFieldCollectionInterface;
 
 /**
@@ -23,7 +24,7 @@ use Drupal\restful\Plugin\resource\Field\ResourceFieldCollectionInterface;
  *
  * @package Drupal\restful_search_api\Plugin\resource\DataProvider
  */
-class DataProviderUrlLookup extends DataProvider implements DataProviderInterface {
+class DataProviderUrlLookup extends DataProvider implements DataProviderUrlLookupInterface {
 
   /**
    * {@inheritdoc}
@@ -88,6 +89,14 @@ class DataProviderUrlLookup extends DataProvider implements DataProviderInterfac
     return $this->output;
   }
 
+  /**
+   * {@inheritdoc}
+   *
+   * 1) Check if the URL is an old URL therefore has a redirection.
+   * 2) Resolve to the internal node/[id], taxonomy/term/[id], or external http: site.
+   * 3) Offer the current URL alias as targetUrl, which is specified by editors.
+   *
+   */
   public function resolveUrl($identifier) {
     $redirect_results = db_select('redirect', 'r')
       ->fields('r')

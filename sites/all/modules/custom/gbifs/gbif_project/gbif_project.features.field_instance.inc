@@ -486,6 +486,7 @@ function gbif_project_field_default_field_instances() {
           'lessLink' => '<a href="#" class="readmore-pane-to-close"><span>Close</span></a>',
           'maxHeight' => 400,
           'moreLink' => '<a href="#" class="readmore-pane-to-open"><span>Read more</span></a>',
+          'sectionCSS' => 'display: block; width: 100%;',
           'speed' => 900,
           'startOpen' => 0,
         ),

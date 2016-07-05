@@ -16,6 +16,7 @@ function gbif_roles_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Editor' => 'Editor',
+      'GBIFS Staff' => 'GBIFS Staff',
       'Publisher' => 'Publisher',
       'TDWG DQIG' => 'TDWG DQIG',
     ),
@@ -28,6 +29,7 @@ function gbif_roles_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Editor' => 'Editor',
+      'GBIFS Staff' => 'GBIFS Staff',
       'Publisher' => 'Publisher',
       'TDWG DQIG' => 'TDWG DQIG',
     ),
@@ -107,6 +109,16 @@ function gbif_roles_user_default_permissions() {
       'Publisher' => 'Publisher',
     ),
     'module' => 'dashboard',
+  );
+
+  // Exported permission: 'access gbifs office reports'.
+  $permissions['access gbifs office reports'] = array(
+    'name' => 'access gbifs office reports',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'GBIFS Staff' => 'GBIFS Staff',
+    ),
+    'module' => 'gbif_roles',
   );
 
   // Exported permission: 'access own authorizations'.

@@ -119,7 +119,7 @@ function gbif_maintenance_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'scheduled_maintenance_message';
-  $strongarm->value = '';
+  $strongarm->value = 'Due to major infrastructure improvements at Københavns Universitet, our host institution, we expect a lengthy disruption of all GBIF servers and services beginning on Monday, 1 December 2014, at 7:00 GMT. While we anticipate the restoration of services by 12:00 GMT, the work could take longer. We apologize for any inconvenience, but please plan accordingly.';
   $export['scheduled_maintenance_message'] = $strongarm;
 
   $strongarm = new stdClass();

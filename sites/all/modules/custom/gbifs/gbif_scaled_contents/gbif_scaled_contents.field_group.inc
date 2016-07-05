@@ -367,6 +367,7 @@ function gbif_scaled_contents_field_group_info() {
     'children' => array(
       0 => 'tx_tags',
       1 => 'tx_topic',
+      2 => 'field_featured_search_terms',
     ),
     'format_type' => 'tab',
     'format_settings' => array(

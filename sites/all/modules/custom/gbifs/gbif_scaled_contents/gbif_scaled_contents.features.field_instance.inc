@@ -437,6 +437,53 @@ function gbif_scaled_contents_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-news-field_featured_search_terms'.
+  $field_instances['node-news-field_featured_search_terms'] = array(
+    'bundle' => 'news',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'The terms provided in this field will be used to highlight this content node when a search is performed using these terms as keywords.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 31,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_featured_search_terms',
+    'label' => 'Featured search terms',
+    'required' => 0,
+    'settings' => array(
+      'mediafront' => array(
+        'custom' => '',
+        'field_type' => 0,
+        'media_type' => 'media',
+        'preview' => 0,
+        'thumbnail' => 0,
+      ),
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'taxonomy',
+      'settings' => array(
+        'autocomplete_path' => 'taxonomy/autocomplete',
+        'size' => 60,
+      ),
+      'type' => 'taxonomy_autocomplete',
+      'weight' => 30,
+    ),
+  );
+
   // Exported field_instance: 'node-news-field_gbif_area'.
   $field_instances['node-news-field_gbif_area'] = array(
     'bundle' => 'news',
@@ -1474,7 +1521,7 @@ function gbif_scaled_contents_field_default_field_instances() {
     'bundle' => 'news',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => '',
+    'description' => 'This field is used for generic free tagging. Tags put here don\'t have weighted value as those in "featured search terms".',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -1512,7 +1559,7 @@ function gbif_scaled_contents_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'taxonomy_autocomplete',
-      'weight' => 12,
+      'weight' => 32,
     ),
   );
 
@@ -1556,7 +1603,7 @@ function gbif_scaled_contents_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_buttons',
-      'weight' => 11,
+      'weight' => 31,
     ),
   );
 
@@ -1575,6 +1622,7 @@ function gbif_scaled_contents_field_default_field_instances() {
   t('Data use');
   t('Dataset UUID');
   t('Facebook message');
+  t('Featured search terms');
   t('GBIF area');
   t('Images');
   t('Informatics');
@@ -1591,7 +1639,9 @@ function gbif_scaled_contents_field_default_field_instances() {
   t('Study area');
   t('Tags');
   t('The UUID or dataset key that is associated with a GBIF indexed dataset, if any.');
+  t('The terms provided in this field will be used to highlight this content node when a search is performed using these terms as keywords.');
   t('The text used in a blue footer box when featuring data use articles.');
+  t('This field is used for generic free tagging. Tags put here don\'t have weighted value as those in "featured search terms".');
   t('Topic');
   t('UN region');
 

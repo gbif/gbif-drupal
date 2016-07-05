@@ -48,23 +48,6 @@ function gbif_pages_library() {
 }
 
 /**
- * Implementation of hook_views_api().
- */
-function gbif_pages_views_api() {
-  return array(
-    'api' => 3.0,
-    'path' => drupal_get_path('module', 'gbif_pages') . '/views'
-  );
-}
-
-function gbif_pages_views_register() {
-	$views = array(
-		'taxonomy_term_json',
-	);
-	return $views;
-}
-
-/**
  * Build custom term pages with associated views.
  *
  * The logic assumes one view per term page. In case we need to

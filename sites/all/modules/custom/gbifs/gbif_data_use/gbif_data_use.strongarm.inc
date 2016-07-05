@@ -79,6 +79,9 @@ function gbif_data_use_strongarm() {
         'redirect' => array(
           'weight' => '30',
         ),
+        'twitter' => array(
+          'weight' => '1',
+        ),
       ),
       'display' => array(),
     ),

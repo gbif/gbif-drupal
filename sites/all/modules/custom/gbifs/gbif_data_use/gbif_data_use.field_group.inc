@@ -8,7 +8,7 @@
  * Implements hook_field_group_info().
  */
 function gbif_data_use_field_group_info() {
-  $export = array();
+  $field_groups = array();
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -35,7 +35,7 @@ function gbif_data_use_field_group_info() {
       ),
     ),
   );
-  $export['group_annotations|node|data_use|form'] = $field_group;
+  $field_groups['group_annotations|node|data_use|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -67,7 +67,7 @@ function gbif_data_use_field_group_info() {
       ),
     ),
   );
-  $export['group_attributes|node|data_use|form'] = $field_group;
+  $field_groups['group_attributes|node|data_use|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -94,7 +94,7 @@ function gbif_data_use_field_group_info() {
       ),
     ),
   );
-  $export['group_body|node|data_use|form'] = $field_group;
+  $field_groups['group_body|node|data_use|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -121,7 +121,7 @@ function gbif_data_use_field_group_info() {
       ),
     ),
   );
-  $export['group_citations|node|data_use|form'] = $field_group;
+  $field_groups['group_citations|node|data_use|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -148,7 +148,7 @@ function gbif_data_use_field_group_info() {
       ),
     ),
   );
-  $export['group_cnt_management|node|data_use|form'] = $field_group;
+  $field_groups['group_cnt_management|node|data_use|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -176,7 +176,7 @@ function gbif_data_use_field_group_info() {
       ),
     ),
   );
-  $export['group_content|node|data_use|form'] = $field_group;
+  $field_groups['group_content|node|data_use|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -205,7 +205,7 @@ function gbif_data_use_field_group_info() {
       ),
     ),
   );
-  $export['group_data|node|data_use|form'] = $field_group;
+  $field_groups['group_data|node|data_use|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -238,7 +238,7 @@ function gbif_data_use_field_group_info() {
       ),
     ),
   );
-  $export['group_def_taxonomy|node|data_use|form'] = $field_group;
+  $field_groups['group_def_taxonomy|node|data_use|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -265,7 +265,7 @@ function gbif_data_use_field_group_info() {
       ),
     ),
   );
-  $export['group_gbif_cms_taxonomy|node|data_use|form'] = $field_group;
+  $field_groups['group_gbif_cms_taxonomy|node|data_use|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -292,7 +292,7 @@ function gbif_data_use_field_group_info() {
       ),
     ),
   );
-  $export['group_gbits|node|data_use|form'] = $field_group;
+  $field_groups['group_gbits|node|data_use|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -321,7 +321,7 @@ function gbif_data_use_field_group_info() {
       ),
     ),
   );
-  $export['group_regions|node|data_use|form'] = $field_group;
+  $field_groups['group_regions|node|data_use|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -350,7 +350,7 @@ function gbif_data_use_field_group_info() {
       ),
     ),
   );
-  $export['group_social_media|node|data_use|form'] = $field_group;
+  $field_groups['group_social_media|node|data_use|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -367,6 +367,7 @@ function gbif_data_use_field_group_info() {
     'children' => array(
       0 => 'tx_tags',
       1 => 'tx_topic',
+      2 => 'field_featured_search_terms',
     ),
     'format_type' => 'tab',
     'format_settings' => array(
@@ -378,7 +379,23 @@ function gbif_data_use_field_group_info() {
       ),
     ),
   );
-  $export['group_topics_tags|node|data_use|form'] = $field_group;
+  $field_groups['group_topics_tags|node|data_use|form'] = $field_group;
 
-  return $export;
+  // Translatables
+  // Included for use with string extractors like potx.
+  t('Attributes');
+  t('Body');
+  t('Citations');
+  t('Content');
+  t('Content annotations');
+  t('Content management');
+  t('Data');
+  t('Defined Taxonomy');
+  t('GBIF CMS Taxonomy');
+  t('GBits');
+  t('Regions');
+  t('Social media');
+  t('Topics and tags');
+
+  return $field_groups;
 }

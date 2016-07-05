@@ -244,6 +244,15 @@ function gbif_vocabularies_uuid_features_default_terms() {
     ),
   );
   $terms[] = array(
+    'name' => 'GBIF National Nodes of Chinese Taipei and Norway',
+    'description' => NULL,
+    'format' => NULL,
+    'weight' => 0,
+    'uuid' => '06017a61-331c-49bd-be16-3fdb0412ff93',
+    'vocabulary_machine_name' => 'countries',
+    'field_iso2' => array(),
+  );
+  $terms[] = array(
     'name' => 'Indonesian',
     'description' => NULL,
     'format' => 'plain_text',
@@ -790,9 +799,10 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'field_gbif_node_uuid' => array(),
   );
   $terms[] = array(
-    'name' => 'Congo, The Democratic Republic of the',
-    'description' => 'Congo, The Democratic Republic of the',
-    'format' => NULL,
+    'name' => 'Congo, Democratic Republic of the',
+    'description' => '<p>Congo, Democratic Republic of the</p>
+',
+    'format' => 'full_html',
     'weight' => 0,
     'uuid' => '12fd6a9c-8e7f-409d-aa0f-0439b65ad07b',
     'vocabulary_machine_name' => 'countries',
@@ -1141,9 +1151,10 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'field_term_attributes' => array(),
   );
   $terms[] = array(
-    'name' => 'Congo',
-    'description' => 'Congo',
-    'format' => NULL,
+    'name' => 'Congo, Republic of the',
+    'description' => '<p>Congo, Republic of the</p>
+',
+    'format' => 'full_html',
     'weight' => 0,
     'uuid' => '19fa362f-776b-4f71-9e77-ad7773365f22',
     'vocabulary_machine_name' => 'countries',
@@ -1523,6 +1534,16 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
+  );
+  $terms[] = array(
+    'name' => 'Phylogenetics',
+    'description' => NULL,
+    'format' => NULL,
+    'weight' => 0,
+    'uuid' => '23680faf-1cba-4709-9cf6-ecea4869c0d9',
+    'vocabulary_machine_name' => 'tags',
+    'field_ims_keyword_id' => array(),
+    'field_term_attributes' => array(),
   );
   $terms[] = array(
     'name' => 'EUBON',
@@ -2119,7 +2140,7 @@ function gbif_vocabularies_uuid_features_default_terms() {
     ),
   );
   $terms[] = array(
-    'name' => 'Sample-based data',
+    'name' => 'Sampling-event data',
     'description' => '',
     'format' => 'plain_text',
     'weight' => 0,
@@ -3254,6 +3275,16 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
+    'field_term_attributes' => array(),
+  );
+  $terms[] = array(
+    'name' => 'GGBN',
+    'description' => NULL,
+    'format' => NULL,
+    'weight' => 0,
+    'uuid' => '448afc8b-b7a0-482f-bc1b-4aacee1b8cf9',
+    'vocabulary_machine_name' => 'tags',
+    'field_ims_keyword_id' => array(),
     'field_term_attributes' => array(),
   );
   $terms[] = array(
@@ -6683,6 +6714,15 @@ function gbif_vocabularies_uuid_features_default_terms() {
     ),
   );
   $terms[] = array(
+    'name' => 'GBIF',
+    'description' => NULL,
+    'format' => NULL,
+    'weight' => 0,
+    'uuid' => '882197d0-49e2-4de4-ae61-914a7ec559d5',
+    'vocabulary_machine_name' => 'countries',
+    'field_iso2' => array(),
+  );
+  $terms[] = array(
     'name' => 'Zambia',
     'description' => 'Zambia',
     'format' => NULL,
@@ -7340,6 +7380,16 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'field_term_native_name' => array(),
   );
   $terms[] = array(
+    'name' => 'Pacific',
+    'description' => NULL,
+    'format' => NULL,
+    'weight' => 0,
+    'uuid' => '975ce8a1-4584-4830-82e4-6f54d22a6fda',
+    'vocabulary_machine_name' => 'tags',
+    'field_ims_keyword_id' => array(),
+    'field_term_attributes' => array(),
+  );
+  $terms[] = array(
     'name' => 'Palestinian Territory, Occupied',
     'description' => 'Palestinian Territory, Occupied',
     'format' => NULL,
@@ -7784,6 +7834,15 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
+  );
+  $terms[] = array(
+    'name' => 'Canadensys',
+    'description' => NULL,
+    'format' => NULL,
+    'weight' => 0,
+    'uuid' => 'a405df1c-6f97-4676-a48d-02d52a3667c2',
+    'vocabulary_machine_name' => 'countries',
+    'field_iso2' => array(),
   );
   $terms[] = array(
     'name' => 'Libyan Arab Jamahiriya',
@@ -8909,6 +8968,16 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'uuid' => 'c4614934-50fe-484f-ae23-c53e6478f05e',
     'vocabulary_machine_name' => 'organizations',
     'field_gbif_node_uuid' => array(),
+  );
+  $terms[] = array(
+    'name' => 'Mammals',
+    'description' => NULL,
+    'format' => NULL,
+    'weight' => 0,
+    'uuid' => 'c48952df-cce3-43a9-ab0c-44d29a818a25',
+    'vocabulary_machine_name' => 'tags',
+    'field_ims_keyword_id' => array(),
+    'field_term_attributes' => array(),
   );
   $terms[] = array(
     'name' => 'Polish',
@@ -10150,6 +10219,16 @@ function gbif_vocabularies_uuid_features_default_terms() {
     ),
   );
   $terms[] = array(
+    'name' => 'Atlantic',
+    'description' => NULL,
+    'format' => NULL,
+    'weight' => 0,
+    'uuid' => 'da7fc5c9-c8c9-498f-bddf-ee46dd09e82b',
+    'vocabulary_machine_name' => 'tags',
+    'field_ims_keyword_id' => array(),
+    'field_term_attributes' => array(),
+  );
+  $terms[] = array(
     'name' => 'Threatened species',
     'description' => 'Threatened species',
     'format' => 'plain_text',
@@ -10267,6 +10346,16 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
+  );
+  $terms[] = array(
+    'name' => 'Arctic',
+    'description' => NULL,
+    'format' => NULL,
+    'weight' => 0,
+    'uuid' => 'dd7b0423-42f2-46af-9f9c-3b341046e48d',
+    'vocabulary_machine_name' => 'tags',
+    'field_ims_keyword_id' => array(),
+    'field_term_attributes' => array(),
   );
   $terms[] = array(
     'name' => 'Mobile app',
@@ -10456,6 +10545,15 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
+  );
+  $terms[] = array(
+    'name' => 'Taiwan Biodiversity Information Facility and Japan Biodiversity Information Facility',
+    'description' => NULL,
+    'format' => NULL,
+    'weight' => 0,
+    'uuid' => 'e174b9bc-2e65-451d-ab15-b582042a638f',
+    'vocabulary_machine_name' => 'countries',
+    'field_iso2' => array(),
   );
   $terms[] = array(
     'name' => 'Jamaica',
@@ -10941,6 +11039,16 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
+  );
+  $terms[] = array(
+    'name' => 'ias',
+    'description' => NULL,
+    'format' => NULL,
+    'weight' => 0,
+    'uuid' => 'eb268b70-2132-4a25-9b47-307dc2f55a1b',
+    'vocabulary_machine_name' => 'tags',
+    'field_ims_keyword_id' => array(),
+    'field_term_attributes' => array(),
   );
   $terms[] = array(
     'name' => 'Western Sahara',
@@ -11846,6 +11954,16 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
+  );
+  $terms[] = array(
+    'name' => 'Non-commercial',
+    'description' => NULL,
+    'format' => NULL,
+    'weight' => 0,
+    'uuid' => 'fb12a9e1-ee47-4e88-ba1e-f1cd1d13cddf',
+    'vocabulary_machine_name' => 'internal_tags',
+    'field_ims_keyword_id' => array(),
+    'field_term_attributes' => array(),
   );
   $terms[] = array(
     'name' => 'Yoruba',

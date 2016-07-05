@@ -10,7 +10,7 @@
 function gbif_vocabularies_field_default_field_bases() {
   $field_bases = array();
 
-  // Exported field_base: 'field_gbif_node_uuid'
+  // Exported field_base: 'field_gbif_node_uuid'.
   $field_bases['field_gbif_node_uuid'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -31,7 +31,7 @@ function gbif_vocabularies_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_ims_keyword_id'
+  // Exported field_base: 'field_ims_keyword_id'.
   $field_bases['field_ims_keyword_id'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -46,7 +46,7 @@ function gbif_vocabularies_field_default_field_bases() {
     'type' => 'number_integer',
   );
 
-  // Exported field_base: 'field_term_acronym'
+  // Exported field_base: 'field_term_acronym'.
   $field_bases['field_term_acronym'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -67,7 +67,7 @@ function gbif_vocabularies_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_term_attributes'
+  // Exported field_base: 'field_term_attributes'.
   $field_bases['field_term_attributes'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -93,7 +93,7 @@ function gbif_vocabularies_field_default_field_bases() {
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'field_term_iso_639_1'
+  // Exported field_base: 'field_term_iso_639_1'.
   $field_bases['field_term_iso_639_1'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -114,7 +114,7 @@ function gbif_vocabularies_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_term_native_name'
+  // Exported field_base: 'field_term_native_name'.
   $field_bases['field_term_native_name'] = array(
     'active' => 1,
     'cardinality' => 1,

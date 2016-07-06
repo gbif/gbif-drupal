@@ -3,3 +3,15 @@
  * @file
  * Drupal needs this blank file.
  */
+
+/**
+ * Implements hook_permission().
+ */
+function gbif_roles_permission() {
+  return array(
+    'access gbifs office reports' => array(
+      'title' => t('Access internal office reports'),
+      'restrict access' => TRUE,
+    )
+  );
+}

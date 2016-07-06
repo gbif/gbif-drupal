@@ -10,7 +10,7 @@
 function gbif_vocabularies_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'taxonomy_term-countries-field_iso2'
+  // Exported field_instance: 'taxonomy_term-countries-field_iso2'.
   $field_instances['taxonomy_term-countries-field_iso2'] = array(
     'bundle' => 'countries',
     'default_value' => NULL,
@@ -56,7 +56,7 @@ function gbif_vocabularies_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-data_type-field_ims_keyword_id'
+  // Exported field_instance: 'taxonomy_term-data_type-field_ims_keyword_id'.
   $field_instances['taxonomy_term-data_type-field_ims_keyword_id'] = array(
     'bundle' => 'data_type',
     'default_value' => NULL,
@@ -103,7 +103,7 @@ function gbif_vocabularies_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-data_use-field_ims_keyword_id'
+  // Exported field_instance: 'taxonomy_term-data_use-field_ims_keyword_id'.
   $field_instances['taxonomy_term-data_use-field_ims_keyword_id'] = array(
     'bundle' => 'data_use',
     'default_value' => NULL,
@@ -150,7 +150,7 @@ function gbif_vocabularies_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-gbif_area-ge_ims_kp_id'
+  // Exported field_instance: 'taxonomy_term-gbif_area-ge_ims_kp_id'.
   $field_instances['taxonomy_term-gbif_area-ge_ims_kp_id'] = array(
     'bundle' => 'gbif_area',
     'default_value' => NULL,
@@ -197,7 +197,8 @@ function gbif_vocabularies_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-internal_tags-field_ims_keyword_id'
+  // Exported field_instance:
+  // 'taxonomy_term-internal_tags-field_ims_keyword_id'.
   $field_instances['taxonomy_term-internal_tags-field_ims_keyword_id'] = array(
     'bundle' => 'internal_tags',
     'default_value' => NULL,
@@ -245,7 +246,7 @@ function gbif_vocabularies_field_default_field_instances() {
   );
 
   // Exported field_instance:
-  // 'taxonomy_term-internal_tags-field_term_attributes'
+  // 'taxonomy_term-internal_tags-field_term_attributes'.
   $field_instances['taxonomy_term-internal_tags-field_term_attributes'] = array(
     'bundle' => 'internal_tags',
     'default_value' => NULL,
@@ -283,7 +284,7 @@ function gbif_vocabularies_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-language-field_term_iso_639_1'
+  // Exported field_instance: 'taxonomy_term-language-field_term_iso_639_1'.
   $field_instances['taxonomy_term-language-field_term_iso_639_1'] = array(
     'bundle' => 'language',
     'default_value' => NULL,
@@ -329,7 +330,7 @@ function gbif_vocabularies_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-language-field_term_native_name'
+  // Exported field_instance: 'taxonomy_term-language-field_term_native_name'.
   $field_instances['taxonomy_term-language-field_term_native_name'] = array(
     'bundle' => 'language',
     'default_value' => NULL,
@@ -375,7 +376,8 @@ function gbif_vocabularies_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-organizations-field_gbif_node_uuid'
+  // Exported field_instance:
+  // 'taxonomy_term-organizations-field_gbif_node_uuid'.
   $field_instances['taxonomy_term-organizations-field_gbif_node_uuid'] = array(
     'bundle' => 'organizations',
     'default_value' => NULL,
@@ -421,7 +423,7 @@ function gbif_vocabularies_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-purpose-field_ims_keyword_id'
+  // Exported field_instance: 'taxonomy_term-purpose-field_ims_keyword_id'.
   $field_instances['taxonomy_term-purpose-field_ims_keyword_id'] = array(
     'bundle' => 'purpose',
     'default_value' => NULL,
@@ -468,7 +470,7 @@ function gbif_vocabularies_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-tags-field_ims_keyword_id'
+  // Exported field_instance: 'taxonomy_term-tags-field_ims_keyword_id'.
   $field_instances['taxonomy_term-tags-field_ims_keyword_id'] = array(
     'bundle' => 'tags',
     'default_value' => NULL,
@@ -515,7 +517,7 @@ function gbif_vocabularies_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-tags-field_term_attributes'
+  // Exported field_instance: 'taxonomy_term-tags-field_term_attributes'.
   $field_instances['taxonomy_term-tags-field_term_attributes'] = array(
     'bundle' => 'tags',
     'default_value' => NULL,
@@ -553,7 +555,7 @@ function gbif_vocabularies_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-term_attribute-field_term_acronym'
+  // Exported field_instance: 'taxonomy_term-term_attribute-field_term_acronym'.
   $field_instances['taxonomy_term-term_attribute-field_term_acronym'] = array(
     'bundle' => 'term_attribute',
     'default_value' => NULL,

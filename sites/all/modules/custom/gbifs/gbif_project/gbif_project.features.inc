@@ -133,7 +133,7 @@ function gbif_project_image_default_styles() {
 function gbif_project_node_info() {
   $items = array(
     'call' => array(
-      'name' => t('Call'),
+      'name' => t('Call (CE support)'),
       'base' => 'node_content',
       'description' => t('A call is an announcement of inviting proposals under a programme.'),
       'has_title' => '1',
@@ -141,7 +141,7 @@ function gbif_project_node_info() {
       'help' => '',
     ),
     'dir_organization' => array(
-      'name' => t('Organization'),
+      'name' => t('Organization (CE support)'),
       'base' => 'node_content',
       'description' => t('Organization entity serve as an interim option for displaying funding statements and it\'s logo. This is to be synced with the future directory.'),
       'has_title' => '1',

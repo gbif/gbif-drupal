@@ -10,7 +10,7 @@
 function gbif_resource_field_default_field_bases() {
   $field_bases = array();
 
-  // Exported field_base: 'gr_abstract'
+  // Exported field_base: 'gr_abstract'.
   $field_bases['gr_abstract'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -29,7 +29,7 @@ function gbif_resource_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'gr_alternative_title'
+  // Exported field_base: 'gr_alternative_title'.
   $field_bases['gr_alternative_title'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -50,7 +50,7 @@ function gbif_resource_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'gr_audience'
+  // Exported field_base: 'gr_audience'.
   $field_bases['gr_audience'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -69,7 +69,7 @@ function gbif_resource_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'gr_author'
+  // Exported field_base: 'gr_author'.
   $field_bases['gr_author'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -88,7 +88,7 @@ function gbif_resource_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'gr_citation'
+  // Exported field_base: 'gr_citation'.
   $field_bases['gr_citation'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -107,7 +107,7 @@ function gbif_resource_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'gr_contributor'
+  // Exported field_base: 'gr_contributor'.
   $field_bases['gr_contributor'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -126,7 +126,7 @@ function gbif_resource_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'gr_data_type'
+  // Exported field_base: 'gr_data_type'.
   $field_bases['gr_data_type'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -152,7 +152,7 @@ function gbif_resource_field_default_field_bases() {
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'gr_date_of_publication'
+  // Exported field_base: 'gr_date_of_publication'.
   $field_bases['gr_date_of_publication'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -182,7 +182,7 @@ function gbif_resource_field_default_field_bases() {
     'type' => 'datetime',
   );
 
-  // Exported field_base: 'gr_file'
+  // Exported field_base: 'gr_file'.
   $field_bases['gr_file'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -205,7 +205,7 @@ function gbif_resource_field_default_field_bases() {
     'type' => 'file',
   );
 
-  // Exported field_base: 'gr_image'
+  // Exported field_base: 'gr_image'.
   $field_bases['gr_image'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -227,7 +227,7 @@ function gbif_resource_field_default_field_bases() {
     'type' => 'image',
   );
 
-  // Exported field_base: 'gr_kp_id'
+  // Exported field_base: 'gr_kp_id'.
   $field_bases['gr_kp_id'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -243,7 +243,7 @@ function gbif_resource_field_default_field_bases() {
     'type' => 'number_integer',
   );
 
-  // Exported field_base: 'gr_language'
+  // Exported field_base: 'gr_language'.
   $field_bases['gr_language'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -269,7 +269,7 @@ function gbif_resource_field_default_field_bases() {
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'gr_number_of_downloads'
+  // Exported field_base: 'gr_number_of_downloads'.
   $field_bases['gr_number_of_downloads'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -284,7 +284,7 @@ function gbif_resource_field_default_field_bases() {
     'type' => 'number_integer',
   );
 
-  // Exported field_base: 'gr_old_resource_nid'
+  // Exported field_base: 'gr_old_resource_nid'.
   $field_bases['gr_old_resource_nid'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -299,7 +299,7 @@ function gbif_resource_field_default_field_bases() {
     'type' => 'number_integer',
   );
 
-  // Exported field_base: 'gr_publisher'
+  // Exported field_base: 'gr_publisher'.
   $field_bases['gr_publisher'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -318,7 +318,7 @@ function gbif_resource_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'gr_purpose'
+  // Exported field_base: 'gr_purpose'.
   $field_bases['gr_purpose'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -344,7 +344,7 @@ function gbif_resource_field_default_field_bases() {
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'gr_resource_type'
+  // Exported field_base: 'gr_resource_type'.
   $field_bases['gr_resource_type'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -370,7 +370,7 @@ function gbif_resource_field_default_field_bases() {
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'gr_rights'
+  // Exported field_base: 'gr_rights'.
   $field_bases['gr_rights'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -389,7 +389,7 @@ function gbif_resource_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'gr_rights_holder'
+  // Exported field_base: 'gr_rights_holder'.
   $field_bases['gr_rights_holder'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -408,7 +408,7 @@ function gbif_resource_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'gr_short_title'
+  // Exported field_base: 'gr_short_title'.
   $field_bases['gr_short_title'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -429,7 +429,7 @@ function gbif_resource_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'gr_url'
+  // Exported field_base: 'gr_url'.
   $field_bases['gr_url'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -450,7 +450,7 @@ function gbif_resource_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'tx_about_gbif'
+  // Exported field_base: 'tx_about_gbif'.
   $field_bases['tx_about_gbif'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -476,7 +476,7 @@ function gbif_resource_field_default_field_bases() {
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'tx_audience'
+  // Exported field_base: 'tx_audience'.
   $field_bases['tx_audience'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -502,7 +502,7 @@ function gbif_resource_field_default_field_bases() {
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'tx_capacity_enhancement'
+  // Exported field_base: 'tx_capacity_enhancement'.
   $field_bases['tx_capacity_enhancement'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -528,7 +528,7 @@ function gbif_resource_field_default_field_bases() {
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'tx_data_use'
+  // Exported field_base: 'tx_data_use'.
   $field_bases['tx_data_use'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -554,7 +554,7 @@ function gbif_resource_field_default_field_bases() {
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'tx_informatics'
+  // Exported field_base: 'tx_informatics'.
   $field_bases['tx_informatics'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -580,7 +580,7 @@ function gbif_resource_field_default_field_bases() {
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'tx_internal_tags'
+  // Exported field_base: 'tx_internal_tags'.
   $field_bases['tx_internal_tags'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -606,7 +606,7 @@ function gbif_resource_field_default_field_bases() {
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'tx_tags'
+  // Exported field_base: 'tx_tags'.
   $field_bases['tx_tags'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -632,7 +632,7 @@ function gbif_resource_field_default_field_bases() {
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'tx_topic'
+  // Exported field_base: 'tx_topic'.
   $field_bases['tx_topic'] = array(
     'active' => 1,
     'cardinality' => -1,

@@ -10,7 +10,7 @@
 function gbif_scaled_contents_field_default_field_bases() {
   $field_bases = array();
 
-  // Exported field_base: 'field_citation_information'
+  // Exported field_base: 'field_citation_information'.
   $field_bases['field_citation_information'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -29,7 +29,7 @@ function gbif_scaled_contents_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'field_content_gbits'
+  // Exported field_base: 'field_content_gbits'.
   $field_bases['field_content_gbits'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -48,7 +48,7 @@ function gbif_scaled_contents_field_default_field_bases() {
     'type' => 'text_with_summary',
   );
 
-  // Exported field_base: 'field_content_stream'
+  // Exported field_base: 'field_content_stream'.
   $field_bases['field_content_stream'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -74,7 +74,7 @@ function gbif_scaled_contents_field_default_field_bases() {
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'field_country'
+  // Exported field_base: 'field_country'.
   $field_bases['field_country'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -100,7 +100,7 @@ function gbif_scaled_contents_field_default_field_bases() {
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'field_data_source'
+  // Exported field_base: 'field_data_source'.
   $field_bases['field_data_source'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -129,7 +129,7 @@ function gbif_scaled_contents_field_default_field_bases() {
     'type' => 'link_field',
   );
 
-  // Exported field_base: 'field_dataset_uuid'
+  // Exported field_base: 'field_dataset_uuid'.
   $field_bases['field_dataset_uuid'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -150,7 +150,33 @@ function gbif_scaled_contents_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_gbif_area'
+  // Exported field_base: 'field_featured_search_terms'.
+  $field_bases['field_featured_search_terms'] = array(
+    'active' => 1,
+    'cardinality' => -1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_featured_search_terms',
+    'indexes' => array(
+      'tid' => array(
+        0 => 'tid',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'taxonomy',
+    'settings' => array(
+      'allowed_values' => array(
+        0 => array(
+          'vocabulary' => 'featured_search_terms',
+          'parent' => 0,
+        ),
+      ),
+    ),
+    'translatable' => 0,
+    'type' => 'taxonomy_term_reference',
+  );
+
+  // Exported field_base: 'field_gbif_area'.
   $field_bases['field_gbif_area'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -176,7 +202,7 @@ function gbif_scaled_contents_field_default_field_bases() {
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'field_legacy_nid'
+  // Exported field_base: 'field_legacy_nid'.
   $field_bases['field_legacy_nid'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -191,7 +217,7 @@ function gbif_scaled_contents_field_default_field_bases() {
     'type' => 'number_integer',
   );
 
-  // Exported field_base: 'field_link_to_research'
+  // Exported field_base: 'field_link_to_research'.
   $field_bases['field_link_to_research'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -220,7 +246,7 @@ function gbif_scaled_contents_field_default_field_bases() {
     'type' => 'link_field',
   );
 
-  // Exported field_base: 'field_num_rs_used'
+  // Exported field_base: 'field_num_rs_used'.
   $field_bases['field_num_rs_used'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -241,7 +267,7 @@ function gbif_scaled_contents_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_organizations'
+  // Exported field_base: 'field_organizations'.
   $field_bases['field_organizations'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -267,7 +293,7 @@ function gbif_scaled_contents_field_default_field_bases() {
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'field_post_to_facebook'
+  // Exported field_base: 'field_post_to_facebook'.
   $field_bases['field_post_to_facebook'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -292,7 +318,7 @@ function gbif_scaled_contents_field_default_field_bases() {
     'type' => 'list_boolean',
   );
 
-  // Exported field_base: 'field_programme'
+  // Exported field_base: 'field_programme'.
   $field_bases['field_programme'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -318,7 +344,7 @@ function gbif_scaled_contents_field_default_field_bases() {
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'field_related_gbif_resources'
+  // Exported field_base: 'field_related_gbif_resources'.
   $field_bases['field_related_gbif_resources'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -347,7 +373,7 @@ function gbif_scaled_contents_field_default_field_bases() {
     'type' => 'link_field',
   );
 
-  // Exported field_base: 'field_researcher_location'
+  // Exported field_base: 'field_researcher_location'.
   $field_bases['field_researcher_location'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -373,7 +399,7 @@ function gbif_scaled_contents_field_default_field_bases() {
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'field_study_area'
+  // Exported field_base: 'field_study_area'.
   $field_bases['field_study_area'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -402,7 +428,7 @@ function gbif_scaled_contents_field_default_field_bases() {
     'type' => 'link_field',
   );
 
-  // Exported field_base: 'field_tx_data_type'
+  // Exported field_base: 'field_tx_data_type'.
   $field_bases['field_tx_data_type'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -428,7 +454,7 @@ function gbif_scaled_contents_field_default_field_bases() {
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'field_tx_purpose'
+  // Exported field_base: 'field_tx_purpose'.
   $field_bases['field_tx_purpose'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -454,7 +480,7 @@ function gbif_scaled_contents_field_default_field_bases() {
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'field_un_region'
+  // Exported field_base: 'field_un_region'.
   $field_bases['field_un_region'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -480,7 +506,7 @@ function gbif_scaled_contents_field_default_field_bases() {
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'field_uni_images'
+  // Exported field_base: 'field_uni_images'.
   $field_bases['field_uni_images'] = array(
     'active' => 1,
     'cardinality' => -1,

@@ -14,14 +14,14 @@ function gbif_project_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'additional_settings__active_tab_call';
-  $strongarm->value = 'edit-menu';
+  $strongarm->value = 'edit-submission';
   $export['additional_settings__active_tab_call'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'additional_settings__active_tab_dir_organization';
-  $strongarm->value = 'edit-menu';
+  $strongarm->value = 'edit-submission';
   $export['additional_settings__active_tab_dir_organization'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -301,16 +301,16 @@ function gbif_project_strongarm() {
     'extra_fields' => array(
       'form' => array(
         'metatags' => array(
-          'weight' => '9',
+          'weight' => '10',
         ),
         'title' => array(
           'weight' => '0',
         ),
         'path' => array(
-          'weight' => '8',
+          'weight' => '9',
         ),
         'redirect' => array(
-          'weight' => '7',
+          'weight' => '8',
         ),
       ),
       'display' => array(),
@@ -352,16 +352,16 @@ function gbif_project_strongarm() {
     'extra_fields' => array(
       'form' => array(
         'metatags' => array(
-          'weight' => '19',
+          'weight' => '7',
         ),
         'title' => array(
           'weight' => '0',
         ),
         'path' => array(
-          'weight' => '18',
+          'weight' => '6',
         ),
         'redirect' => array(
-          'weight' => '17',
+          'weight' => '5',
         ),
       ),
       'display' => array(),

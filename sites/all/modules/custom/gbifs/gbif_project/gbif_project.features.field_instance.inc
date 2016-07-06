@@ -486,6 +486,7 @@ function gbif_project_field_default_field_instances() {
           'lessLink' => '<a href="#" class="readmore-pane-to-close"><span>Close</span></a>',
           'maxHeight' => 400,
           'moreLink' => '<a href="#" class="readmore-pane-to-open"><span>Read more</span></a>',
+          'sectionCSS' => 'display: block; width: 100%;',
           'speed' => 900,
           'startOpen' => 0,
         ),
@@ -625,6 +626,53 @@ function gbif_project_field_default_field_instances() {
       ),
       'type' => 'entityreference_autocomplete',
       'weight' => 6,
+    ),
+  );
+
+  // Exported field_instance: 'node-programme-field_featured_search_terms'.
+  $field_instances['node-programme-field_featured_search_terms'] = array(
+    'bundle' => 'programme',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'The terms provided in this field will be used to highlight this content node when a search is performed using these terms as keywords.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 11,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_featured_search_terms',
+    'label' => 'Featured search terms',
+    'required' => 0,
+    'settings' => array(
+      'mediafront' => array(
+        'custom' => '',
+        'field_type' => 0,
+        'media_type' => 'media',
+        'preview' => 0,
+        'thumbnail' => 0,
+      ),
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'taxonomy',
+      'settings' => array(
+        'autocomplete_path' => 'taxonomy/autocomplete',
+        'size' => 60,
+      ),
+      'type' => 'taxonomy_autocomplete',
+      'weight' => 7,
     ),
   );
 
@@ -1353,6 +1401,53 @@ function gbif_project_field_default_field_instances() {
       ),
       'type' => 'date_popup',
       'weight' => 29,
+    ),
+  );
+
+  // Exported field_instance: 'node-project-field_featured_search_terms'.
+  $field_instances['node-project-field_featured_search_terms'] = array(
+    'bundle' => 'project',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'The terms provided in this field will be used to highlight this content node when a search is performed using these terms as keywords.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 30,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_featured_search_terms',
+    'label' => 'Featured search terms',
+    'required' => 0,
+    'settings' => array(
+      'mediafront' => array(
+        'custom' => '',
+        'field_type' => 0,
+        'media_type' => 'media',
+        'preview' => 0,
+        'thumbnail' => 0,
+      ),
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'taxonomy',
+      'settings' => array(
+        'autocomplete_path' => 'taxonomy/autocomplete',
+        'size' => 60,
+      ),
+      'type' => 'taxonomy_autocomplete',
+      'weight' => 4,
     ),
   );
 
@@ -2836,6 +2931,7 @@ function gbif_project_field_default_field_instances() {
   t('Description');
   t('Duration');
   t('Estimated Co-Funding');
+  t('Featured search terms');
   t('File');
   t('Files');
   t('Files that are attached to only this programme. For those that should be available via the resource library, they need to be created as a resource first, and then \'linked\' with the \'internal or external links\' field.');
@@ -2872,6 +2968,7 @@ function gbif_project_field_default_field_instances() {
   t('Status');
   t('Subtitle');
   t('The date will show only to month, not day.');
+  t('The terms provided in this field will be used to highlight this content node when a search is performed using these terms as keywords.');
   t('The text string as an attribute in the sidebar. E.g., CE2015.');
   t('The title used as a subtitle in a project page. E.g., Capacity enhancement 2015.');
   t('This field will show when the organization is referenced as a funding body.');

@@ -33,7 +33,7 @@ function gbif_pages_context_default_contexts() {
   // Translatables
   // Included for use with string extractors like potx.
   t('menu');
-  $export['jobs_menu'] = $context;
+  $export['jobs_adverts_menu'] = $context;
 
   return $export;
 }

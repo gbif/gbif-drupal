@@ -229,8 +229,8 @@ function gbif_event_field_group_info() {
     'weight' => '34',
     'children' => array(
       0 => 'ge_ims_kp_id',
-      1 => 'field_notes',
-      2 => 'field_ge_gbif_attendee',
+      1 => 'field_ge_gbif_attendee',
+      2 => 'field_notes',
     ),
     'format_type' => 'tab',
     'format_settings' => array(

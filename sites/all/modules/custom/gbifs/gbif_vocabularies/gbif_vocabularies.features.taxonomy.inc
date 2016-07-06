@@ -73,6 +73,14 @@ function gbif_vocabularies_taxonomy_default_vocabularies() {
       'module' => 'taxonomy',
       'weight' => -6,
     ),
+    'featured_search_terms' => array(
+      'name' => 'Featured search terms',
+      'machine_name' => 'featured_search_terms',
+      'description' => 'Terms that are available for a weighted search.',
+      'hierarchy' => 0,
+      'module' => 'taxonomy',
+      'weight' => 0,
+    ),
     'gbif_area' => array(
       'name' => 'GBIF area',
       'machine_name' => 'gbif_area',

@@ -82,6 +82,65 @@ function gbif_event_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-event-field_featured_search_terms'.
+  $field_instances['node-event-field_featured_search_terms'] = array(
+    'bundle' => 'event',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'The terms provided in this field will be used to highlight this content node when a search is performed using these terms as keywords.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 22,
+      ),
+      'ical' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'search_index' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_featured_search_terms',
+    'label' => 'Featured search terms',
+    'required' => 0,
+    'settings' => array(
+      'mediafront' => array(
+        'custom' => '',
+        'field_type' => 0,
+        'media_type' => 'media',
+        'preview' => 0,
+        'thumbnail' => 0,
+      ),
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'taxonomy',
+      'settings' => array(
+        'autocomplete_path' => 'taxonomy/autocomplete',
+        'size' => 60,
+      ),
+      'type' => 'taxonomy_autocomplete',
+      'weight' => 41,
+    ),
+  );
+
   // Exported field_instance: 'node-event-field_ge_gbif_attendee'.
   $field_instances['node-event-field_ge_gbif_attendee'] = array(
     'bundle' => 'event',
@@ -674,6 +733,7 @@ function gbif_event_field_default_field_instances() {
           'colorbox__rhimage' => 0,
           'colorbox__square_thumbnail' => 0,
           'colorbox__thumbnail' => 0,
+          'colorbox__uses_of_data___main' => 0,
           'icon_link' => 0,
           'image' => 0,
           'image_featured' => 0,
@@ -685,6 +745,7 @@ function gbif_event_field_default_field_instances() {
           'image_rhimage' => 0,
           'image_square_thumbnail' => 0,
           'image_thumbnail' => 0,
+          'image_uses_of_data___main' => 0,
           'link' => 0,
         ),
         'insert_width' => '',
@@ -1296,6 +1357,7 @@ function gbif_event_field_default_field_instances() {
           'colorbox__rhimage' => 0,
           'colorbox__square_thumbnail' => 0,
           'colorbox__thumbnail' => 0,
+          'colorbox__uses_of_data___main' => 0,
           'icon_link' => 0,
           'image' => 0,
           'image_featured' => 0,
@@ -1307,6 +1369,7 @@ function gbif_event_field_default_field_instances() {
           'image_rhimage' => 0,
           'image_square_thumbnail' => 0,
           'image_thumbnail' => 0,
+          'image_uses_of_data___main' => 0,
           'link' => 0,
         ),
         'insert_width' => '',
@@ -1518,6 +1581,7 @@ function gbif_event_field_default_field_instances() {
   t('Event ID');
   t('Event image');
   t('Event resources');
+  t('Featured search terms');
   t('GBIF attendee');
   t('Language of event');
   t('Location');
@@ -1531,6 +1595,7 @@ function gbif_event_field_default_field_instances() {
   t('Textual information of resources. HTML allowed.');
   t('Textual information that actually shows on the event detail and teaser. Leave this field blank if you want it to be calculated.');
   t('The status to the audience, e.g., "in preparation", "canceled", "finished", etc.');
+  t('The terms provided in this field will be used to highlight this content node when a search is performed using these terms as keywords.');
   t('Venue');
   t('Venue country');
 

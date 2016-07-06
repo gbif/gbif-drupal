@@ -10,7 +10,7 @@
 function gbif_resource_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'node-resource-body'
+  // Exported field_instance: 'node-resource-body'.
   $field_instances['node-resource-body'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -90,7 +90,72 @@ function gbif_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-gr_abstract'
+  // Exported field_instance: 'node-resource-field_featured_search_terms'.
+  $field_instances['node-resource-field_featured_search_terms'] = array(
+    'bundle' => 'resource',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'The terms provided in this field will be used to highlight this content node when a search is performed using these terms as keywords.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 30,
+      ),
+      'rss' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'search_index' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'search_result' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_featured_search_terms',
+    'label' => 'Featured search terms',
+    'required' => 0,
+    'settings' => array(
+      'mediafront' => array(
+        'custom' => '',
+        'field_type' => 0,
+        'media_type' => 'media',
+        'preview' => 0,
+        'thumbnail' => 0,
+      ),
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'taxonomy',
+      'settings' => array(
+        'autocomplete_path' => 'taxonomy/autocomplete',
+        'size' => 60,
+      ),
+      'type' => 'taxonomy_autocomplete',
+      'weight' => 31,
+    ),
+  );
+
+  // Exported field_instance: 'node-resource-gr_abstract'.
   $field_instances['node-resource-gr_abstract'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -170,7 +235,7 @@ function gbif_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-gr_alternative_title'
+  // Exported field_instance: 'node-resource-gr_alternative_title'.
   $field_instances['node-resource-gr_alternative_title'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -250,7 +315,7 @@ function gbif_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-gr_audience'
+  // Exported field_instance: 'node-resource-gr_audience'.
   $field_instances['node-resource-gr_audience'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -330,7 +395,7 @@ function gbif_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-gr_author'
+  // Exported field_instance: 'node-resource-gr_author'.
   $field_instances['node-resource-gr_author'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -410,7 +475,7 @@ function gbif_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-gr_citation'
+  // Exported field_instance: 'node-resource-gr_citation'.
   $field_instances['node-resource-gr_citation'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -490,7 +555,7 @@ function gbif_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-gr_contributor'
+  // Exported field_instance: 'node-resource-gr_contributor'.
   $field_instances['node-resource-gr_contributor'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -570,7 +635,7 @@ function gbif_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-gr_data_type'
+  // Exported field_instance: 'node-resource-gr_data_type'.
   $field_instances['node-resource-gr_data_type'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -644,7 +709,7 @@ function gbif_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-gr_date_of_publication'
+  // Exported field_instance: 'node-resource-gr_date_of_publication'.
   $field_instances['node-resource-gr_date_of_publication'] = array(
     'bundle' => 'resource',
     'deleted' => 0,
@@ -725,7 +790,7 @@ function gbif_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-gr_file'
+  // Exported field_instance: 'node-resource-gr_file'.
   $field_instances['node-resource-gr_file'] = array(
     'bundle' => 'resource',
     'deleted' => 0,
@@ -836,18 +901,24 @@ function gbif_resource_field_default_field_instances() {
           'colorbox__featured_news_slideshow_image' => 0,
           'colorbox__large' => 0,
           'colorbox__linkit_thumb' => 0,
+          'colorbox__mainimage' => 0,
           'colorbox__medium' => 0,
+          'colorbox__rhimage' => 0,
           'colorbox__square_thumbnail' => 0,
           'colorbox__thumbnail' => 0,
+          'colorbox__uses_of_data___main' => 0,
           'icon_link' => 0,
           'image' => 0,
           'image_featured' => 0,
           'image_featured_news_slideshow_image' => 0,
           'image_large' => 0,
           'image_linkit_thumb' => 0,
+          'image_mainimage' => 0,
           'image_medium' => 0,
+          'image_rhimage' => 0,
           'image_square_thumbnail' => 0,
           'image_thumbnail' => 0,
+          'image_uses_of_data___main' => 0,
           'link' => 0,
         ),
         'insert_width' => '',
@@ -858,7 +929,7 @@ function gbif_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-gr_image'
+  // Exported field_instance: 'node-resource-gr_image'.
   $field_instances['node-resource-gr_image'] = array(
     'bundle' => 'resource',
     'deleted' => 0,
@@ -949,6 +1020,7 @@ function gbif_resource_field_default_field_instances() {
         'retroactive_update' => 0,
       ),
       'filefield_paths_enabled' => 1,
+      'image_field_caption' => 0,
       'max_filesize' => '',
       'max_resolution' => '',
       'mediafront' => array(
@@ -998,18 +1070,24 @@ function gbif_resource_field_default_field_instances() {
           'colorbox__featured_news_slideshow_image' => 0,
           'colorbox__large' => 0,
           'colorbox__linkit_thumb' => 0,
+          'colorbox__mainimage' => 0,
           'colorbox__medium' => 0,
+          'colorbox__rhimage' => 0,
           'colorbox__square_thumbnail' => 0,
           'colorbox__thumbnail' => 0,
+          'colorbox__uses_of_data___main' => 0,
           'icon_link' => 0,
           'image' => 0,
           'image_featured' => 0,
           'image_featured_news_slideshow_image' => 0,
           'image_large' => 0,
           'image_linkit_thumb' => 0,
+          'image_mainimage' => 0,
           'image_medium' => 0,
+          'image_rhimage' => 0,
           'image_square_thumbnail' => 0,
           'image_thumbnail' => 0,
+          'image_uses_of_data___main' => 0,
           'link' => 0,
         ),
         'insert_width' => '',
@@ -1021,7 +1099,7 @@ function gbif_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-gr_kp_id'
+  // Exported field_instance: 'node-resource-gr_kp_id'.
   $field_instances['node-resource-gr_kp_id'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -1116,7 +1194,7 @@ function gbif_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-gr_language'
+  // Exported field_instance: 'node-resource-gr_language'.
   $field_instances['node-resource-gr_language'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -1190,7 +1268,7 @@ function gbif_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-gr_number_of_downloads'
+  // Exported field_instance: 'node-resource-gr_number_of_downloads'.
   $field_instances['node-resource-gr_number_of_downloads'] = array(
     'bundle' => 'resource',
     'default_value' => array(
@@ -1289,7 +1367,7 @@ function gbif_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-gr_old_resource_nid'
+  // Exported field_instance: 'node-resource-gr_old_resource_nid'.
   $field_instances['node-resource-gr_old_resource_nid'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -1360,7 +1438,7 @@ function gbif_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-gr_publisher'
+  // Exported field_instance: 'node-resource-gr_publisher'.
   $field_instances['node-resource-gr_publisher'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -1451,7 +1529,7 @@ function gbif_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-gr_purpose'
+  // Exported field_instance: 'node-resource-gr_purpose'.
   $field_instances['node-resource-gr_purpose'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -1525,7 +1603,7 @@ function gbif_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-gr_resource_type'
+  // Exported field_instance: 'node-resource-gr_resource_type'.
   $field_instances['node-resource-gr_resource_type'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -1599,7 +1677,7 @@ function gbif_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-gr_rights'
+  // Exported field_instance: 'node-resource-gr_rights'.
   $field_instances['node-resource-gr_rights'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -1679,7 +1757,7 @@ function gbif_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-gr_rights_holder'
+  // Exported field_instance: 'node-resource-gr_rights_holder'.
   $field_instances['node-resource-gr_rights_holder'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -1759,7 +1837,7 @@ function gbif_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-gr_short_title'
+  // Exported field_instance: 'node-resource-gr_short_title'.
   $field_instances['node-resource-gr_short_title'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -1829,7 +1907,7 @@ function gbif_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-gr_url'
+  // Exported field_instance: 'node-resource-gr_url'.
   $field_instances['node-resource-gr_url'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -1899,7 +1977,7 @@ function gbif_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-tx_about_gbif'
+  // Exported field_instance: 'node-resource-tx_about_gbif'.
   $field_instances['node-resource-tx_about_gbif'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -1961,7 +2039,7 @@ function gbif_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-tx_audience'
+  // Exported field_instance: 'node-resource-tx_audience'.
   $field_instances['node-resource-tx_audience'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -2023,7 +2101,7 @@ function gbif_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-tx_capacity_enhancement'
+  // Exported field_instance: 'node-resource-tx_capacity_enhancement'.
   $field_instances['node-resource-tx_capacity_enhancement'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -2085,7 +2163,7 @@ function gbif_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-tx_data_use'
+  // Exported field_instance: 'node-resource-tx_data_use'.
   $field_instances['node-resource-tx_data_use'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -2147,7 +2225,7 @@ function gbif_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-tx_informatics'
+  // Exported field_instance: 'node-resource-tx_informatics'.
   $field_instances['node-resource-tx_informatics'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -2209,7 +2287,7 @@ function gbif_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-tx_internal_tags'
+  // Exported field_instance: 'node-resource-tx_internal_tags'.
   $field_instances['node-resource-tx_internal_tags'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -2274,7 +2352,7 @@ function gbif_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-tx_tags'
+  // Exported field_instance: 'node-resource-tx_tags'.
   $field_instances['node-resource-tx_tags'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -2349,7 +2427,7 @@ function gbif_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-tx_topic'
+  // Exported field_instance: 'node-resource-tx_topic'.
   $field_instances['node-resource-tx_topic'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -2425,6 +2503,7 @@ function gbif_resource_field_default_field_instances() {
   t('Data use');
   t('Date of publication');
   t('Description');
+  t('Featured search terms');
   t('File');
   t('IMS ID');
   t('Image');
@@ -2441,6 +2520,7 @@ function gbif_resource_field_default_field_instances() {
   t('Rights holder');
   t('Short title');
   t('Tags');
+  t('The terms provided in this field will be used to highlight this content node when a search is performed using these terms as keywords.');
   t('Topic');
 
   return $field_instances;

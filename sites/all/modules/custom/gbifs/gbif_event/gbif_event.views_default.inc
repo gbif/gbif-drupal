@@ -28,6 +28,7 @@ function gbif_event_views_default_views() {
   $handler->display->display_options['access']['role'] = array(
     3 => '3',
     7 => '7',
+    12 => '12',
     8 => '8',
   );
   $handler->display->display_options['cache']['type'] = 'none';

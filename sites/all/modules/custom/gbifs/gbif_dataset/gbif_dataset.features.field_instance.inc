@@ -10,7 +10,7 @@
 function gbif_dataset_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'node-dataset-body'
+  // Exported field_instance: 'node-dataset-body'.
   $field_instances['node-dataset-body'] = array(
     'bundle' => 'dataset',
     'default_value' => NULL,
@@ -67,7 +67,7 @@ function gbif_dataset_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-dataset-field_citation_information'
+  // Exported field_instance: 'node-dataset-field_citation_information'.
   $field_instances['node-dataset-field_citation_information'] = array(
     'bundle' => 'dataset',
     'default_value' => NULL,
@@ -119,7 +119,7 @@ function gbif_dataset_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-dataset-field_content_gbits'
+  // Exported field_instance: 'node-dataset-field_content_gbits'.
   $field_instances['node-dataset-field_content_gbits'] = array(
     'bundle' => 'dataset',
     'default_value' => NULL,
@@ -173,7 +173,7 @@ function gbif_dataset_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-dataset-field_content_stream'
+  // Exported field_instance: 'node-dataset-field_content_stream'.
   $field_instances['node-dataset-field_content_stream'] = array(
     'bundle' => 'dataset',
     'default_value' => NULL,
@@ -217,7 +217,7 @@ function gbif_dataset_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-dataset-field_country'
+  // Exported field_instance: 'node-dataset-field_country'.
   $field_instances['node-dataset-field_country'] = array(
     'bundle' => 'dataset',
     'default_value' => NULL,
@@ -264,7 +264,7 @@ function gbif_dataset_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-dataset-field_data_source'
+  // Exported field_instance: 'node-dataset-field_data_source'.
   $field_instances['node-dataset-field_data_source'] = array(
     'bundle' => 'dataset',
     'default_value' => NULL,
@@ -333,7 +333,7 @@ function gbif_dataset_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-dataset-field_dataset_uuid'
+  // Exported field_instance: 'node-dataset-field_dataset_uuid'.
   $field_instances['node-dataset-field_dataset_uuid'] = array(
     'bundle' => 'dataset',
     'default_value' => NULL,
@@ -385,7 +385,7 @@ function gbif_dataset_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-dataset-field_facebook_message'
+  // Exported field_instance: 'node-dataset-field_facebook_message'.
   $field_instances['node-dataset-field_facebook_message'] = array(
     'bundle' => 'dataset',
     'default_value' => NULL,
@@ -437,7 +437,54 @@ function gbif_dataset_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-dataset-field_gbif_area'
+  // Exported field_instance: 'node-dataset-field_featured_search_terms'.
+  $field_instances['node-dataset-field_featured_search_terms'] = array(
+    'bundle' => 'dataset',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'The terms provided in this field will be used to highlight this content node when a search is performed using these terms as keywords.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 31,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_featured_search_terms',
+    'label' => 'Featured search terms',
+    'required' => 0,
+    'settings' => array(
+      'mediafront' => array(
+        'custom' => '',
+        'field_type' => 0,
+        'media_type' => 'media',
+        'preview' => 0,
+        'thumbnail' => 0,
+      ),
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'taxonomy',
+      'settings' => array(
+        'autocomplete_path' => 'taxonomy/autocomplete',
+        'size' => 60,
+      ),
+      'type' => 'taxonomy_autocomplete',
+      'weight' => 42,
+    ),
+  );
+
+  // Exported field_instance: 'node-dataset-field_gbif_area'.
   $field_instances['node-dataset-field_gbif_area'] = array(
     'bundle' => 'dataset',
     'default_value' => NULL,
@@ -481,7 +528,7 @@ function gbif_dataset_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-dataset-field_legacy_nid'
+  // Exported field_instance: 'node-dataset-field_legacy_nid'.
   $field_instances['node-dataset-field_legacy_nid'] = array(
     'bundle' => 'dataset',
     'default_value' => NULL,
@@ -534,7 +581,7 @@ function gbif_dataset_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-dataset-field_link_to_research'
+  // Exported field_instance: 'node-dataset-field_link_to_research'.
   $field_instances['node-dataset-field_link_to_research'] = array(
     'bundle' => 'dataset',
     'default_value' => NULL,
@@ -603,7 +650,7 @@ function gbif_dataset_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-dataset-field_num_rs_used'
+  // Exported field_instance: 'node-dataset-field_num_rs_used'.
   $field_instances['node-dataset-field_num_rs_used'] = array(
     'bundle' => 'dataset',
     'default_value' => NULL,
@@ -655,7 +702,7 @@ function gbif_dataset_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-dataset-field_organizations'
+  // Exported field_instance: 'node-dataset-field_organizations'.
   $field_instances['node-dataset-field_organizations'] = array(
     'bundle' => 'dataset',
     'default_value' => NULL,
@@ -699,7 +746,7 @@ function gbif_dataset_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-dataset-field_post_to_facebook'
+  // Exported field_instance: 'node-dataset-field_post_to_facebook'.
   $field_instances['node-dataset-field_post_to_facebook'] = array(
     'bundle' => 'dataset',
     'default_value' => array(
@@ -749,7 +796,7 @@ function gbif_dataset_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-dataset-field_programme'
+  // Exported field_instance: 'node-dataset-field_programme'.
   $field_instances['node-dataset-field_programme'] = array(
     'bundle' => 'dataset',
     'default_value' => NULL,
@@ -793,7 +840,7 @@ function gbif_dataset_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-dataset-field_related_gbif_resources'
+  // Exported field_instance: 'node-dataset-field_related_gbif_resources'.
   $field_instances['node-dataset-field_related_gbif_resources'] = array(
     'bundle' => 'dataset',
     'default_value' => NULL,
@@ -862,7 +909,7 @@ function gbif_dataset_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-dataset-field_researcher_location'
+  // Exported field_instance: 'node-dataset-field_researcher_location'.
   $field_instances['node-dataset-field_researcher_location'] = array(
     'bundle' => 'dataset',
     'default_value' => NULL,
@@ -909,7 +956,7 @@ function gbif_dataset_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-dataset-field_study_area'
+  // Exported field_instance: 'node-dataset-field_study_area'.
   $field_instances['node-dataset-field_study_area'] = array(
     'bundle' => 'dataset',
     'default_value' => NULL,
@@ -978,7 +1025,7 @@ function gbif_dataset_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-dataset-field_tx_data_type'
+  // Exported field_instance: 'node-dataset-field_tx_data_type'.
   $field_instances['node-dataset-field_tx_data_type'] = array(
     'bundle' => 'dataset',
     'default_value' => NULL,
@@ -1022,7 +1069,7 @@ function gbif_dataset_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-dataset-field_tx_purpose'
+  // Exported field_instance: 'node-dataset-field_tx_purpose'.
   $field_instances['node-dataset-field_tx_purpose'] = array(
     'bundle' => 'dataset',
     'default_value' => NULL,
@@ -1066,7 +1113,7 @@ function gbif_dataset_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-dataset-field_un_region'
+  // Exported field_instance: 'node-dataset-field_un_region'.
   $field_instances['node-dataset-field_un_region'] = array(
     'bundle' => 'dataset',
     'default_value' => NULL,
@@ -1113,7 +1160,7 @@ function gbif_dataset_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-dataset-field_uni_images'
+  // Exported field_instance: 'node-dataset-field_uni_images'.
   $field_instances['node-dataset-field_uni_images'] = array(
     'bundle' => 'dataset',
     'deleted' => 0,
@@ -1249,7 +1296,7 @@ function gbif_dataset_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-dataset-tx_about_gbif'
+  // Exported field_instance: 'node-dataset-tx_about_gbif'.
   $field_instances['node-dataset-tx_about_gbif'] = array(
     'bundle' => 'dataset',
     'default_value' => NULL,
@@ -1293,7 +1340,7 @@ function gbif_dataset_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-dataset-tx_audience'
+  // Exported field_instance: 'node-dataset-tx_audience'.
   $field_instances['node-dataset-tx_audience'] = array(
     'bundle' => 'dataset',
     'default_value' => NULL,
@@ -1337,7 +1384,7 @@ function gbif_dataset_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-dataset-tx_capacity_enhancement'
+  // Exported field_instance: 'node-dataset-tx_capacity_enhancement'.
   $field_instances['node-dataset-tx_capacity_enhancement'] = array(
     'bundle' => 'dataset',
     'default_value' => NULL,
@@ -1381,7 +1428,7 @@ function gbif_dataset_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-dataset-tx_data_use'
+  // Exported field_instance: 'node-dataset-tx_data_use'.
   $field_instances['node-dataset-tx_data_use'] = array(
     'bundle' => 'dataset',
     'default_value' => NULL,
@@ -1425,7 +1472,7 @@ function gbif_dataset_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-dataset-tx_informatics'
+  // Exported field_instance: 'node-dataset-tx_informatics'.
   $field_instances['node-dataset-tx_informatics'] = array(
     'bundle' => 'dataset',
     'default_value' => NULL,
@@ -1469,12 +1516,12 @@ function gbif_dataset_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-dataset-tx_tags'
+  // Exported field_instance: 'node-dataset-tx_tags'.
   $field_instances['node-dataset-tx_tags'] = array(
     'bundle' => 'dataset',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => '',
+    'description' => 'This field is used for generic free tagging. Tags put here don\'t have weighted value as those in "featured search terms".',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -1512,11 +1559,11 @@ function gbif_dataset_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'taxonomy_autocomplete',
-      'weight' => 12,
+      'weight' => 44,
     ),
   );
 
-  // Exported field_instance: 'node-dataset-tx_topic'
+  // Exported field_instance: 'node-dataset-tx_topic'.
   $field_instances['node-dataset-tx_topic'] = array(
     'bundle' => 'dataset',
     'default_value' => NULL,
@@ -1556,7 +1603,7 @@ function gbif_dataset_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_buttons',
-      'weight' => 11,
+      'weight' => 43,
     ),
   );
 
@@ -1575,6 +1622,7 @@ function gbif_dataset_field_default_field_instances() {
   t('Data use');
   t('Dataset UUID');
   t('Facebook message');
+  t('Featured search terms');
   t('GBIF area');
   t('Images');
   t('Informatics');
@@ -1590,7 +1638,9 @@ function gbif_dataset_field_default_field_instances() {
   t('Study area');
   t('Tags');
   t('The UUID or dataset key that is associated with a GBIF indexed dataset, if any.');
+  t('The terms provided in this field will be used to highlight this content node when a search is performed using these terms as keywords.');
   t('The text used in a blue footer box when featuring data use articles.');
+  t('This field is used for generic free tagging. Tags put here don\'t have weighted value as those in "featured search terms".');
   t('Topic');
   t('UN region');
 

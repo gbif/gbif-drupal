@@ -30,5 +30,10 @@ interface ResourceNodeGbifInterface extends ResourceInterface {
    *
    */
   public function imageProcess($value);
+
+  /*
+   * 
+   */
+  public function getSystemAttributes(DataInterpreterInterface $interpreter);
 }
 

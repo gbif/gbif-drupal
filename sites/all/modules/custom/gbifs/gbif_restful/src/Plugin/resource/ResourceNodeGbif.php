@@ -70,4 +70,23 @@ class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface
     return $node->path['alias'];
   }
 
+  public function getSystemAttributes(DataInterpreterInterface $interpreter) {
+    $wrapper = $interpreter->getWrapper();
+    $nid = $wrapper->getIdentifier();
+    $prev_node = node_load(prev_next_nid($nid, 'prev'));
+    $next_node = node_load(prev_next_nid($nid, 'next'));
+    $output = array(
+      'prev' => array(
+        'id' => $prev_node->nid,
+        'title' => $prev_node->title,
+        'targetUrl' => $prev_node->path['alias'],
+      ),
+      'next' => array(
+        'id' => $next_node->nid,
+        'title' => $next_node->title,
+        'targetUrl' => $next_node->path['alias'],
+      ),
+    );
+    return $output;
+  }
 }

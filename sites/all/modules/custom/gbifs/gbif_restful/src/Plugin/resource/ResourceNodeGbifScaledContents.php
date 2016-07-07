@@ -191,6 +191,10 @@ class ResourceNodeGbifScaledContents extends ResourceNodeGbif implements Resourc
       ),
     );
 
+    $public_fields['__system'] = array(
+      'callback' => 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::getSystemAttributes',
+    );
+
     return $public_fields;
   }
 

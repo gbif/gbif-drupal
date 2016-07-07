@@ -7,6 +7,7 @@
 
 namespace Drupal\gbif_restful\Plugin\resource;
 use Drupal\restful\Plugin\resource\DataInterpreter\DataInterpreterInterface;
+use MyProject\Proxies\__CG__\stdClass;
 
 class ResourceNodeGbifScaledContents extends ResourceNodeGbif implements ResourceNodeGbifInterface {
 
@@ -107,39 +108,75 @@ class ResourceNodeGbifScaledContents extends ResourceNodeGbif implements Resourc
     // taxonomy and tags
     $public_fields['gbifArea'] = array(
       'property' => 'field_gbif_area',
+      'process_callbacks' => array(
+        array($this, 'getTermValue')
+      ),
     );
     $public_fields['unRegion'] = array(
       'property' => 'field_un_region',
+      'process_callbacks' => array(
+        array($this, 'getTermValue')
+      ),
     );
     $public_fields['country'] = array(
       'property' => 'field_country',
+      'process_callbacks' => array(
+        array($this, 'getTermValue')
+      ),
     );
     $public_fields['tagsAboutGbif'] = array(
       'property' => 'tx_about_gbif',
+      'process_callbacks' => array(
+        array($this, 'getTermValue')
+      ),
     );
     $public_fields['tagsCapacityEnhancement'] = array(
       'property' => 'tx_capacity_enhancement',
+      'process_callbacks' => array(
+        array($this, 'getTermValue')
+      ),
     );
     $public_fields['tagsAudience'] = array(
       'property' => 'tx_audience',
+      'process_callbacks' => array(
+        array($this, 'getTermValue')
+      ),
     );
     $public_fields['tagsDataUse'] = array(
       'property' => 'tx_data_use',
+      'process_callbacks' => array(
+        array($this, 'getTermValue')
+      ),
     );
     $public_fields['tagsInformatics'] = array(
       'property' => 'tx_informatics',
+      'process_callbacks' => array(
+        array($this, 'getTermValue')
+      ),
     );
     $public_fields['tagsDataType'] = array(
       'property' => 'field_tx_data_type',
+      'process_callbacks' => array(
+        array($this, 'getTermValue')
+      ),
     );
     $public_fields['tagsPurpose'] = array(
       'property' => 'field_tx_purpose',
+      'process_callbacks' => array(
+        array($this, 'getTermValue')
+      ),
     );
     $public_fields['tagsTopic'] = array(
       'property' => 'tx_topic',
+      'process_callbacks' => array(
+        array($this, 'getTermValue')
+      ),
     );
     $public_fields['tags'] = array(
       'property' => 'tx_tags',
+      'process_callbacks' => array(
+        array($this, 'getTermValue')
+      ),
     );
 
     $public_fields['user'] = array(
@@ -157,4 +194,24 @@ class ResourceNodeGbifScaledContents extends ResourceNodeGbif implements Resourc
     return $public_fields;
   }
 
+  /**
+   * @param array $value
+   * @return array
+   */
+  public function getTermValue($value) {
+    $output = array();
+    $terms = taxonomy_term_load_multiple($value);
+    foreach ($terms as $term) {
+      $term->id = $term->tid;
+      unset($term->tid, $term->vid, $term->description, $term->format, $term->weight, $term->uuid, $term->vocabulary_machine_name, $term->field_iso2);
+      // legacy attributes
+      foreach (array('field_ims_keyword_id', 'ge_ims_kp_id') as $field) {
+        if (isset($term->$field)) {
+          unset($term->$field);
+        }
+      }
+      $output[] = $term;
+    }
+    return $output;
+  }
 }

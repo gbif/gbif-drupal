@@ -78,13 +78,19 @@ class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface
     $output = array(
       'prev' => array(
         'id' => $prev_node->nid,
+        'type' => $prev_node->type,
         'title' => $prev_node->title,
         'targetUrl' => $prev_node->path['alias'],
+        'thumbnail' => image_style_url('focal_point_for_news', $prev_node->field_uni_images['und'][0]['uri']),
+        'imageCaption' => $prev_node->field_uni_images['und'][0]['image_field_caption']['value'],
       ),
       'next' => array(
         'id' => $next_node->nid,
+        'type' => $next_node->type,
         'title' => $next_node->title,
         'targetUrl' => $next_node->path['alias'],
+        'thumbnail' => image_style_url('focal_point_for_news', $next_node->field_uni_images['und'][0]['uri']),
+        'imageCaption' => $next_node->field_uni_images['und'][0]['image_field_caption']['value'],
       ),
     );
     return $output;

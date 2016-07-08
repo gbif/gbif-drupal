@@ -7,7 +7,6 @@
 
 namespace Drupal\gbif_restful\Plugin\resource;
 use Drupal\restful\Plugin\resource\DataInterpreter\DataInterpreterInterface;
-use MyProject\Proxies\__CG__\stdClass;
 
 class ResourceNodeGbifScaledContents extends ResourceNodeGbif implements ResourceNodeGbifInterface {
 

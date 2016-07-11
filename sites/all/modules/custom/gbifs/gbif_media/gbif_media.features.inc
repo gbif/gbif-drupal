@@ -10,6 +10,44 @@
 function gbif_media_image_default_styles() {
   $styles = array();
 
+  // Exported image style: masthead__desktop.
+  $styles['masthead__desktop'] = array(
+    'label' => 'Masthead desktop',
+    'effects' => array(
+      1 => array(
+        'name' => 'focal_point_scale_and_crop',
+        'data' => array(
+          'width' => 1250,
+          'height' => 275,
+          'focal_point_advanced' => array(
+            'shift_x' => '',
+            'shift_y' => '',
+          ),
+        ),
+        'weight' => 1,
+      ),
+    ),
+  );
+
+  // Exported image style: masthead__laptop.
+  $styles['masthead__laptop'] = array(
+    'label' => 'Masthead laptop',
+    'effects' => array(
+      2 => array(
+        'name' => 'focal_point_scale_and_crop',
+        'data' => array(
+          'width' => 910,
+          'height' => 200,
+          'focal_point_advanced' => array(
+            'shift_x' => '',
+            'shift_y' => '',
+          ),
+        ),
+        'weight' => 1,
+      ),
+    ),
+  );
+
   // Exported image style: masthead__mobile.
   $styles['masthead__mobile'] = array(
     'label' => 'Masthead mobile',
@@ -48,34 +86,15 @@ function gbif_media_image_default_styles() {
     ),
   );
 
-  // Exported image style: masthead__laptop.
-  $styles['masthead__laptop'] = array(
-    'label' => 'Masthead laptop',
+  // Exported image style: prose_image_for_desktop.
+  $styles['prose_image_for_desktop'] = array(
+    'label' => 'Prose image for desktop',
     'effects' => array(
-      19 => array(
+      3 => array(
         'name' => 'focal_point_scale_and_crop',
         'data' => array(
-          'width' => 900,
-          'height' => 200,
-          'focal_point_advanced' => array(
-            'shift_x' => '',
-            'shift_y' => '',
-          ),
-        ),
-        'weight' => 1,
-      ),
-    ),
-  );
-
-  // Exported image style: masthead__desktop.
-  $styles['masthead__desktop'] = array(
-    'label' => 'Masthead desktop',
-    'effects' => array(
-      20 => array(
-        'name' => 'focal_point_scale_and_crop',
-        'data' => array(
-          'width' => 1040,
-          'height' => 230,
+          'width' => 965,
+          'height' => 400,
           'focal_point_advanced' => array(
             'shift_x' => '',
             'shift_y' => '',

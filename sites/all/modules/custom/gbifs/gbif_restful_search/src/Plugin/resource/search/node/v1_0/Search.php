@@ -9,6 +9,7 @@ namespace Drupal\gbif_restful_search\Plugin\resource\search\node\v1_0;
 use Drupal\restful\Plugin\resource\ResourceInterface;
 use Drupal\restful_search_api\Plugin\Resource\ResourceSearchBase;
 use Drupal\restful\Plugin\resource\DataInterpreter\DataInterpreterInterface;
+use Drupal\restful\Plugin\resource\Field\ResourceFieldBase;
 
 /**
  * Class Search
@@ -110,6 +111,18 @@ class Search extends ResourceSearchBase implements ResourceInterface {
       'sub_property' => LANGUAGE_NONE . '::0::value',
     );
 
+    // By checking that the field exists, we allow re-using this class on
+    // different tests, where different fields exist.
+    if (field_info_field('field_uni_images')) {
+      $public_fields['images'] = array(
+        'property' => 'field_uni_images',
+        'sub_property' => LANGUAGE_NONE,
+        'process_callbacks' => array(
+          array($this, 'Drupal\gbif_restful_search\Plugin\resource\search\node\v1_0\Search::imageProcess'),
+        ),
+      );
+    }
+
     $public_fields['promote'] = array(
       'property' => 'promote',
     );
@@ -171,7 +184,14 @@ class Search extends ResourceSearchBase implements ResourceInterface {
       'filesize' => $value['filesize'],
       'width' => $value['width'],
       'height' => $value['height'],
-      'styles' => $value['image_styles'],
+      'styles' => array(
+        'focal_point_for_news' => image_style_url('focal_point_for_news', $value['uri']),
+        'square_thumbnail' => image_style_url('square_thumbnail', $value['uri']),
+        'masthead__mobile' => image_style_url('masthead__mobile', $value['uri']),
+        'masthead__tablet' => image_style_url('masthead__tablet', $value['uri']),
+        'masthead__laptop' => image_style_url('masthead__laptop', $value['uri']),
+        'masthead__desktop' => image_style_url('masthead__desktop', $value['uri']),
+      ),
     );
   }
 

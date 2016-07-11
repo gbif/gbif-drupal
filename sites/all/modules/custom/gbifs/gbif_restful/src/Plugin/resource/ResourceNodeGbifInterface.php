@@ -24,7 +24,7 @@ interface ResourceNodeGbifInterface extends ResourceInterface {
   /**
    *
    */
-  public function getTargetUrl(DataInterpreterInterface $interpreter);
+  public static function getTargetUrl(DataInterpreterInterface $interpreter);
 
   /**
    *
@@ -34,6 +34,6 @@ interface ResourceNodeGbifInterface extends ResourceInterface {
   /*
    * 
    */
-  public function getSystemAttributes(DataInterpreterInterface $interpreter);
+  public static function getSystemAttributes(DataInterpreterInterface $interpreter);
 }
 

@@ -98,6 +98,8 @@ class Search extends ResourceSearchBase implements ResourceInterface {
       'property' => 'title',
     );
 
+    //@todo language handling.
+    //@see \Drupal\restful_search_api\Plugin\resource\Field\ResourceFieldSearchKey.
     $public_fields['summary'] = array(
       'property' => 'body',
       'sub_property' => LANGUAGE_NONE . '::0::summary',
@@ -128,11 +130,21 @@ class Search extends ResourceSearchBase implements ResourceInterface {
   }
 
   //@todo Consider redirection in this field
-  public function getUrlAlias(DataInterpreterInterface $interpreter) {
+  public static function getUrlAlias(DataInterpreterInterface $interpreter) {
     $wrapper = $interpreter->getWrapper();
     $nid = $wrapper->get('nid');
     $node = node_load($nid);
-    return $node->path['alias'];
+    if (property_exists($node, 'path')) {
+      if (isset($node->path['alias'])) {
+        return $node->path['alias'];
+      }
+      else {
+        return NULL;
+      }
+    }
+    else {
+      return NULL;
+    }
   }
 
   /**

@@ -63,14 +63,14 @@ class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface
   }
 
   //@todo Consider redirection in this field
-  public function getTargetUrl(DataInterpreterInterface $interpreter) {
+  public static function getTargetUrl(DataInterpreterInterface $interpreter) {
     $wrapper = $interpreter->getWrapper();
     $nid = $wrapper->getIdentifier();
     $node = node_load($nid);
     return $node->path['alias'];
   }
 
-  public function getSystemAttributes(DataInterpreterInterface $interpreter) {
+  public static function getSystemAttributes(DataInterpreterInterface $interpreter) {
     $wrapper = $interpreter->getWrapper();
     $nid = $wrapper->getIdentifier();
     $prev_node = node_load(prev_next_nid($nid, 'prev'));

@@ -39,6 +39,71 @@ class Event__1_0 extends ResourceNodeGbif implements ResourceNodeGbifInterface {
   protected function publicFields() {
     $public_fields = parent::publicFields();
 
+    $public_fields['description'] = array(
+      'property' => 'ge_desc_long',
+      'sub_property' => 'value',
+    );
+
+    $public_fields['date'] = array(
+      'property' => 'ge_date_ical',
+    );
+
+    $public_fields['dataText'] = array(
+      'property' => 'ge_date_text',
+    );
+
+    $public_fields['audience'] = array(
+      'property' => 'ge_audience',
+      'sub_property' => 'value',
+    );
+
+    $public_fields['participants'] = array(
+      'property' => 'ge_participants',
+      'sub_property' => 'value',
+    );
+
+    $public_fields['venue'] = array(
+      'property' => 'ge_venue',
+    );
+
+    $public_fields['location'] = array(
+      'property' => 'ge_location',
+    );
+
+    $public_fields['venueCountry'] = array(
+      'property' => 'ge_venue_country',
+    );
+
+    $public_fields['contact'] = array(
+      'property' => 'ge_contact_info',
+      'sub_property' => 'value',
+    );
+
+    $public_fields['organizingParticipant'] = array(
+      'property' => 'ge_organising_participants',
+    );
+
+    $public_fields['eventLanguage'] = array(
+      'property' => 'ge_language',
+    );
+
+    $public_fields['eventStatus'] = array(
+      'property' => 'ge_status',
+    );
+
+    $public_fields['eventResources'] = array(
+      'property' => 'ge_lib_resources',
+      'sub_property' => 'value',
+    );
+
+    $public_fields['eventImage'] = array(
+      'property' => 'ge_image',
+    );
+
+    $public_fields['eventResourcesFile'] = array(
+      'property' => 'ge_resources',
+    );
+
     return $public_fields;
   }
 

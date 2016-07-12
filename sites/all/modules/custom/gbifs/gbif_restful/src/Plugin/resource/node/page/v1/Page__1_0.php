@@ -39,6 +39,10 @@ class Page__1_0 extends ResourceNodeGbif implements ResourceNodeGbifInterface {
   protected function publicFields() {
     $public_fields = parent::publicFields();
 
+    $public_fields['featuredSearchTerms'] = array(
+      'property' => 'field_featured_search_terms',
+    );
+
     return $public_fields;
   }
 

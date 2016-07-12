@@ -44,6 +44,7 @@ class Event__1_0 extends ResourceNodeGbif implements ResourceNodeGbifInterface {
       'sub_property' => 'value',
     );
 
+    // date field
     $public_fields['date'] = array(
       'property' => 'ge_date_ical',
     );
@@ -100,6 +101,7 @@ class Event__1_0 extends ResourceNodeGbif implements ResourceNodeGbifInterface {
       'property' => 'ge_image',
     );
 
+    // file field
     $public_fields['eventResourcesFile'] = array(
       'property' => 'ge_resources',
     );

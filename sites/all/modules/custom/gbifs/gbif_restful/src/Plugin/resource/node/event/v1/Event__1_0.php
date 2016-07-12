@@ -71,6 +71,7 @@ class Event__1_0 extends ResourceNodeGbif implements ResourceNodeGbifInterface {
       'property' => 'ge_location',
     );
 
+    // @todo Single value term field
     $public_fields['venueCountry'] = array(
       'property' => 'ge_venue_country',
     );
@@ -82,6 +83,9 @@ class Event__1_0 extends ResourceNodeGbif implements ResourceNodeGbifInterface {
 
     $public_fields['organizingParticipant'] = array(
       'property' => 'ge_organising_participants',
+      'process_callbacks' => array(
+        array($this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::getTermValue')
+      ),
     );
 
     $public_fields['eventLanguage'] = array(
@@ -99,11 +103,16 @@ class Event__1_0 extends ResourceNodeGbif implements ResourceNodeGbifInterface {
 
     $public_fields['eventImage'] = array(
       'property' => 'ge_image',
+      'process_callbacks' => array(
+        array($this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::imageProcess'),
+      ),
     );
 
-    // file field
     $public_fields['eventResourcesFile'] = array(
       'property' => 'ge_resources',
+      'process_callbacks' => array(
+        array($this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::fileProcess'),
+      ),
     );
 
     return $public_fields;

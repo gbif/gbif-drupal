@@ -54,6 +54,17 @@ class Programme__1_0 extends ResourceNodeGbif implements ResourceNodeGbifInterfa
     // image field
     $public_fields['image'] = array(
       'property' => 'field_programme_ef_image',
+      'process_callbacks' => array(
+        array($this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::imageProcess'),
+      ),
+      'image_styles' => array(
+        'focal_point_for_news',
+        'square_thumbnail',
+        'masthead__mobile',
+        'masthead__tablet',
+        'masthead__laptop',
+        'masthead__desktop',
+      ),
     );
 
     // entity reference
@@ -78,6 +89,9 @@ class Programme__1_0 extends ResourceNodeGbif implements ResourceNodeGbifInterfa
 
     $public_fields['file'] = array(
       'property' => 'gr_file',
+      'process_callbacks' => array(
+        array($this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::fileProcess'),
+      ),
     );
 
     return $public_fields;

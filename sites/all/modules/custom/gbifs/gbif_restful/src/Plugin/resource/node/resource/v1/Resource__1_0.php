@@ -101,56 +101,91 @@ class Resource__1_0 extends ResourceNodeGbif implements ResourceNodeGbifInterfac
       'property' => 'gr_number_of_downloads',
     );
 
+    // @todo single value term
     $public_fields['resourceType'] = array(
       'property' => 'gr_resource_type',
     );
 
+    // @todo single value term
     $public_fields['resourceLanguage'] = array(
       'property' => 'gr_language',
     );
 
     $public_fields['purpose'] = array(
       'property' => 'gr_purpose',
+      'process_callbacks' => array(
+        array($this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::getTermValue')
+      ),
     );
 
     $public_fields['dataType'] = array(
       'property' => 'gr_data_type',
+      'process_callbacks' => array(
+        array($this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::getTermValue')
+      ),
     );
 
     $public_fields['tags'] = array(
       'property' => 'tx_tags',
+      'process_callbacks' => array(
+        array($this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::getTermValue')
+      ),
     );
 
     $public_fields['tagsAudience'] = array(
       'property' => 'tx_audience',
+      'process_callbacks' => array(
+        array($this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::getTermValue')
+      ),
     );
 
     $public_fields['tagsDataUse'] = array(
       'property' => 'tx_data_use',
+      'process_callbacks' => array(
+        array($this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::getTermValue')
+      ),
     );
 
     $public_fields['tagsTopic'] = array(
       'property' => 'tx_topic',
+      'process_callbacks' => array(
+        array($this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::getTermValue')
+      ),
     );
 
     $public_fields['tagsAboutGbif'] = array(
       'property' => 'tx_about_gbif',
+      'process_callbacks' => array(
+        array($this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::getTermValue')
+      ),
     );
 
     $public_fields['tagsCapacityEnhancement'] = array(
       'property' => 'tx_capacity_enhancement',
+      'process_callbacks' => array(
+        array($this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::getTermValue')
+      ),
     );
 
     $public_fields['tagsInformatics'] = array(
       'property' => 'tx_informatics',
+      'process_callbacks' => array(
+        array($this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::getTermValue')
+      ),
     );
 
     $public_fields['image'] = array(
       'property' => 'gr_image',
+      'process_callbacks' => array(
+        array($this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::imageProcess'),
+      ),
     );
 
     $public_fields['file'] = array(
       'property' => 'gr_file',
+      'process_callbacks' => array(
+        array($this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::fileProcess'),
+      ),
     );
 
     $public_fields['resourceUrl'] = array(

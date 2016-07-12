@@ -38,6 +38,9 @@ class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface
 
     $public_fields['featuredSearchTerms'] = array(
       'property' => 'field_featured_search_terms',
+      'process_callbacks' => array(
+        array($this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::getTermValue')
+      ),
     );
 
     $public_fields['title'] = array(
@@ -110,12 +113,40 @@ class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface
     }
     return array(
       'id' => $value['fid'],
-      'self' => file_create_url($value['uri']),
+      'original' => file_create_url($value['uri']),
       'filemime' => $value['filemime'],
       'filesize' => $value['filesize'],
       'width' => $value['width'],
       'height' => $value['height'],
       'styles' => $value['image_styles'],
+    );
+  }
+
+  /**
+   * Process callback, Remove Drupal specific items from the file array.
+   *
+   * @param array $value
+   *   The file array.
+   *
+   * @return array
+   *   A cleaned image array.
+   */
+  public function fileProcess($value) {
+    if (ResourceFieldBase::isArrayNumeric($value)) {
+      $output = array();
+      foreach ($value as $item) {
+        $output[] = $this->fileProcess($item);
+      }
+      return $output;
+    }
+    return array(
+      'id' => $value['fid'],
+      'original' => file_create_url($value['uri']),
+      'description' => $value['description'],
+      'filename' => $value['filename'],
+      'filemime' => $value['filemime'],
+      'filesize' => $value['filesize'],
+      'timestamp' => $value['timestamp'],
     );
   }
 
@@ -152,4 +183,26 @@ class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface
     );
     return $output;
   }
+
+  /**
+   * @param array $value
+   * @return array
+   */
+  public function getTermValue($value) {
+    $output = array();
+    $terms = taxonomy_term_load_multiple($value);
+    foreach ($terms as $term) {
+      $term->id = $term->tid;
+      unset($term->tid, $term->vid, $term->description, $term->format, $term->weight, $term->uuid, $term->vocabulary_machine_name, $term->field_iso2);
+      // legacy attributes
+      foreach (array('field_ims_keyword_id', 'ge_ims_kp_id') as $field) {
+        if (isset($term->$field)) {
+          unset($term->$field);
+        }
+      }
+      $output[] = $term;
+    }
+    return $output;
+  }
+
 }

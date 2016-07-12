@@ -67,6 +67,9 @@ class Project__1_0 extends ResourceNodeGbif implements ResourceNodeGbifInterface
 
     $public_fields['image'] = array(
       'property' => 'field_pj_image',
+      'process_callbacks' => array(
+        array($this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::imageProcess'),
+      ),
     );
 
     $public_fields['grantType'] = array(
@@ -103,10 +106,16 @@ class Project__1_0 extends ResourceNodeGbif implements ResourceNodeGbifInterface
 
     $public_fields['purpose'] = array(
       'property' => 'gr_purpose',
+      'process_callbacks' => array(
+        array($this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::getTermValue'),
+      ),
     );
 
     $public_fields['file'] = array(
       'property' => 'gr_file',
+      'process_callbacks' => array(
+        array($this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::fileProcess'),
+      ),
     );
 
     return $public_fields;

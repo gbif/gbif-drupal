@@ -14,6 +14,59 @@ use Drupal\restful\Plugin\resource\DataInterpreter\DataInterpreterInterface;
 
 class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface {
 
+
+  /**
+   * Overrides ResourceNode::publicFields().
+   */
+  protected function publicFields() {
+    $public_fields = parent::publicFields();
+
+    unset($public_fields['self']);
+    unset($public_fields['label']);
+
+    $public_fields['type'] = array(
+      'property' => 'type',
+    );
+
+    $nid = arg(3);
+    $node = node_load($nid);
+    if ($node->path['alias'] != null) {
+      $public_fields['targetUrl'] = array(
+        'callback' => 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::getTargetUrl',
+      );
+    }
+
+    $public_fields['title'] = array(
+      'property' => 'title',
+    );
+
+    $public_fields['summary'] = array(
+      'property' => 'body',
+      'sub_property' => 'summary',
+    );
+
+    $public_fields['body'] = array(
+      'property' => 'body',
+      'sub_property' => 'value',
+    );
+
+    // attributes
+    $public_fields['language'] = array(
+      'property' => 'language',
+    );
+    $public_fields['promote'] = array(
+      'property' => 'promote',
+    );
+    $public_fields['sticky'] = array(
+      'property' => 'sticky',
+    );
+    $public_fields['created'] = array(
+      'property' => 'created',
+    );
+
+    return $public_fields;
+  }
+
   /**
    * @param $path
    * @return array

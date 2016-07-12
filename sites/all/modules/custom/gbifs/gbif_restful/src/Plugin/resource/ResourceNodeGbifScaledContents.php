@@ -17,6 +17,7 @@ class ResourceNodeGbifScaledContents extends ResourceNodeGbif implements Resourc
     $public_fields = parent::publicFields();
 
     unset($public_fields['self']);
+    unset($public_fields['label']);
 
     $public_fields['type'] = array(
       'property' => 'type',

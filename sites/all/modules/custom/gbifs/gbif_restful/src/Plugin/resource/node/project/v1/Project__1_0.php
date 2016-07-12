@@ -43,6 +43,12 @@ class Project__1_0 extends ResourceNodeGbif implements ResourceNodeGbifInterface
       'property' => 'field_title_for_display',
     );
 
+    unset($public_fields['body']);
+    $public_fields['description'] = array(
+      'property' => 'body',
+      'sub_property' => 'value',
+    );
+
     $public_fields['programme'] = array(
       'property' => 'field_programme_ef',
     );
@@ -101,10 +107,6 @@ class Project__1_0 extends ResourceNodeGbif implements ResourceNodeGbifInterface
 
     $public_fields['file'] = array(
       'property' => 'gr_file',
-    );
-
-    $public_fields['featuredSearchTerms'] = array(
-      'property' => 'field_featured_search_terms',
     );
 
     return $public_fields;

@@ -31,6 +31,10 @@ class ResourceNodeGbifScaledContents extends ResourceNodeGbif implements Resourc
       );
     }
 
+    $public_fields['featuredSearchTerms'] = array(
+      'property' => 'field_featured_search_terms',
+    );
+
     $public_fields['title'] = array(
       'property' => 'title',
     );

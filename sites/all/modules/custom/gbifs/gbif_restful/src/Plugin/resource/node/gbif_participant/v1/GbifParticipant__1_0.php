@@ -103,10 +103,6 @@ class GbifParticipant__1_0 extends ResourceNodeGbif implements ResourceNodeGbifI
       'property' => 'gp_quick_links',
     );
 
-    $public_fields['featuredSearchTerms'] = array(
-      'property' => 'field_featured_search_terms',
-    );
-
     return $public_fields;
   }
 

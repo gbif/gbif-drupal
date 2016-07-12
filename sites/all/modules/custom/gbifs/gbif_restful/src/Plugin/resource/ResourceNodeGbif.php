@@ -36,6 +36,10 @@ class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface
       );
     }
 
+    $public_fields['featuredSearchTerms'] = array(
+      'property' => 'field_featured_search_terms',
+    );
+
     $public_fields['title'] = array(
       'property' => 'title',
     );

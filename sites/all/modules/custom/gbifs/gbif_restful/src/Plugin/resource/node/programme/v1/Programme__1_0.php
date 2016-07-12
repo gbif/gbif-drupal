@@ -80,10 +80,6 @@ class Programme__1_0 extends ResourceNodeGbif implements ResourceNodeGbifInterfa
       'property' => 'gr_file',
     );
 
-    $public_fields['featuredSearchTerms'] = array(
-      'property' => 'field_featured_search_terms',
-    );
-
     return $public_fields;
   }
 

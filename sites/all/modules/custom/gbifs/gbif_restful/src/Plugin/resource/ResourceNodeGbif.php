@@ -28,15 +28,9 @@ class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface
       'property' => 'type',
     );
 
-    $nid = arg(3);
-    $node = node_load($nid);
-    if (property_exists($node, 'path')) {
-      if (isset($node->path['alias'])) {
-        $public_fields['targetUrl'] = array(
-          'callback' => 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::getTargetUrl',
-        );
-      }
-    }
+    $public_fields['targetUrl'] = array(
+      'callback' => 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::getTargetUrl',
+    );
 
     $public_fields['featuredSearchTerms'] = array(
       'property' => 'field_featured_search_terms',
@@ -155,12 +149,11 @@ class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface
     );
   }
 
-  //@todo Consider redirection in this field
   public static function getTargetUrl(DataInterpreterInterface $interpreter) {
     $wrapper = $interpreter->getWrapper();
     $nid = $wrapper->getIdentifier();
-    $node = node_load($nid);
-    return $node->path['alias'];
+    $alias = drupal_get_path_alias('node/' . $nid);
+    return $alias;
   }
 
   public static function getSystemAttributes(DataInterpreterInterface $interpreter) {
@@ -174,16 +167,16 @@ class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface
         'type' => $prev_node->type,
         'title' => $prev_node->title,
         'targetUrl' => $prev_node->path['alias'],
-        'thumbnail' => image_style_url('focal_point_for_news', $prev_node->field_uni_images['und'][0]['uri']),
-        'imageCaption' => $prev_node->field_uni_images['und'][0]['image_field_caption']['value'],
+        'thumbnail' => (isset($prev_node->field_uni_images['und'])) ? image_style_url('focal_point_for_news', $prev_node->field_uni_images['und'][0]['uri']) : NULL,
+        'imageCaption' => (isset($prev_node->field_uni_images['und'])) ? $prev_node->field_uni_images['und'][0]['image_field_caption']['value'] : NULL,
       ),
       'next' => array(
         'id' => $next_node->nid,
         'type' => $next_node->type,
         'title' => $next_node->title,
         'targetUrl' => $next_node->path['alias'],
-        'thumbnail' => image_style_url('focal_point_for_news', $next_node->field_uni_images['und'][0]['uri']),
-        'imageCaption' => $next_node->field_uni_images['und'][0]['image_field_caption']['value'],
+        'thumbnail' => (isset($next_node->field_uni_images['und'])) ? image_style_url('focal_point_for_news', $next_node->field_uni_images['und'][0]['uri']) : NULL,
+        'imageCaption' => (isset($next_node->field_uni_images['und'])) ? $next_node->field_uni_images['und'][0]['image_field_caption']['value'] : NULL,
       ),
     );
     return $output;

@@ -111,15 +111,18 @@ class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface
       }
       return $output;
     }
-    return array(
+    $output = array(
       'id' => $value['fid'],
       'original' => file_create_url($value['uri']),
       'filemime' => $value['filemime'],
       'filesize' => $value['filesize'],
       'width' => $value['width'],
       'height' => $value['height'],
-      'styles' => $value['image_styles'],
     );
+    if (isset($value['image_styles'])) {
+      $output['styles'] = $value['image_styles'];
+    }
+    return $output;
   }
 
   /**
@@ -188,14 +191,17 @@ class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface
    * @param array $value
    * @return array
    */
-  public function getTermValue($value) {
+  public static function getTermValue($value) {
     $output = array();
+    if (!is_array($value)) {
+      $value = array($value);
+    }
     $terms = taxonomy_term_load_multiple($value);
     foreach ($terms as $term) {
       $term->id = $term->tid;
       unset($term->tid, $term->vid, $term->description, $term->format, $term->weight, $term->uuid, $term->vocabulary_machine_name, $term->field_iso2);
       // legacy attributes
-      foreach (array('field_ims_keyword_id', 'ge_ims_kp_id') as $field) {
+      foreach (array('field_ims_keyword_id', 'ge_ims_kp_id', 'field_term_iso_639_1', 'field_term_native_name') as $field) {
         if (isset($term->$field)) {
           unset($term->$field);
         }

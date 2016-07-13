@@ -74,6 +74,9 @@ class Event__1_0 extends ResourceNodeGbif implements ResourceNodeGbifInterface {
     // @todo Single value term field
     $public_fields['venueCountry'] = array(
       'property' => 'ge_venue_country',
+      'process_callbacks' => array(
+        array($this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::getTermValue')
+      ),
     );
 
     $public_fields['contact'] = array(

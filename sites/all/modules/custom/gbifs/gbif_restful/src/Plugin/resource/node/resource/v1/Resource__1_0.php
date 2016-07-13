@@ -101,14 +101,18 @@ class Resource__1_0 extends ResourceNodeGbif implements ResourceNodeGbifInterfac
       'property' => 'gr_number_of_downloads',
     );
 
-    // @todo single value term
     $public_fields['resourceType'] = array(
       'property' => 'gr_resource_type',
+      'process_callbacks' => array(
+        array($this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::getTermValue')
+      ),
     );
 
-    // @todo single value term
     $public_fields['resourceLanguage'] = array(
       'property' => 'gr_language',
+      'process_callbacks' => array(
+        array($this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::getTermValue')
+      ),
     );
 
     $public_fields['purpose'] = array(

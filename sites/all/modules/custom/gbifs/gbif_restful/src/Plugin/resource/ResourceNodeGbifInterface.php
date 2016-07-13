@@ -35,5 +35,10 @@ interface ResourceNodeGbifInterface extends ResourceInterface {
    * 
    */
   public static function getSystemAttributes(DataInterpreterInterface $interpreter);
+
+  /*
+   *
+   */
+  public static function getTermValue($value);
 }
 

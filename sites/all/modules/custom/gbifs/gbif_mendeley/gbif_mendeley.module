@@ -989,6 +989,14 @@ function gbif_mendeley_group_counts() {
 							$group_by_year[$doc->year]++;
 						}
 					}
+					else {
+						if (!isset($group_by_year['year_missing'])) {
+							$group_by_year['year_missing'] = 1;
+						} else {
+							$group_by_year['year_missing']++;
+						}
+
+					}
 
 				}
 

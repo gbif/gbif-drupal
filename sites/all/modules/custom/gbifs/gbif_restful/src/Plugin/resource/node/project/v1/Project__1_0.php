@@ -51,10 +51,16 @@ class Project__1_0 extends ResourceNodeGbif implements ResourceNodeGbifInterface
 
     $public_fields['programme'] = array(
       'property' => 'field_programme_ef',
+      'process_callbacks' => array(
+        array($this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::getEntityValue')
+      ),
     );
 
     $public_fields['call'] = array(
       'property' => 'pj_call',
+      'process_callbacks' => array(
+        array($this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::getEntityValue')
+      ),
     );
 
     $public_fields['duration'] = array(
@@ -78,26 +84,44 @@ class Project__1_0 extends ResourceNodeGbif implements ResourceNodeGbifInterface
 
     $public_fields['funder'] = array(
       'property' => 'field_co_funder',
+      'process_callbacks' => array(
+        array($this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::getEntityValue')
+      ),
     );
 
     $public_fields['gbifParticipants'] = array(
       'property' => 'field_pj_participants',
+      'process_callbacks' => array(
+        array($this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::getEntityValue')
+      ),
     );
 
     $public_fields['partners'] = array(
       'property' => 'field_pj_partners',
+      'process_callbacks' => array(
+        array($this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::getEntityValue')
+      ),
     );
 
     $public_fields['relatedNews'] = array(
       'property' => 'field_related_news',
+      'process_callbacks' => array(
+        array($this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::getEntityValue')
+      ),
     );
 
     $public_fields['relatedEvents'] = array(
       'property' => 'field_related_events',
+      'process_callbacks' => array(
+        array($this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::getEntityValue')
+      ),
     );
 
     $public_fields['relatedProjects'] = array(
       'property' => 'field_related_projects',
+      'process_callbacks' => array(
+        array($this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::getEntityValue')
+      ),
     );
 
     $public_fields['relatedResources'] = array(

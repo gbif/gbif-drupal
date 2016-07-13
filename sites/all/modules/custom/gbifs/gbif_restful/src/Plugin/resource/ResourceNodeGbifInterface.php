@@ -40,5 +40,10 @@ interface ResourceNodeGbifInterface extends ResourceInterface {
    *
    */
   public static function getTermValue($value);
+
+  /*
+   *
+   */
+  public static function getEntityValue($value);
 }
 

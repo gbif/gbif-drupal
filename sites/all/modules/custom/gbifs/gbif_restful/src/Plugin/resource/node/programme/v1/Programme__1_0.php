@@ -70,16 +70,25 @@ class Programme__1_0 extends ResourceNodeGbif implements ResourceNodeGbifInterfa
     // entity reference
     $public_fields['funder'] = array(
       'property' => 'field_co_funder',
+      'process_callbacks' => array(
+        array($this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::getEntityValue')
+      ),
     );
 
     // entity reference
     $public_fields['relatedNews'] = array(
       'property' => 'field_related_news',
+      'process_callbacks' => array(
+        array($this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::getEntityValue')
+      ),
     );
 
     // entity reference
     $public_fields['relatedEvents'] = array(
       'property' => 'field_related_events',
+      'process_callbacks' => array(
+        array($this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::getEntityValue')
+      ),
     );
 
     // link field

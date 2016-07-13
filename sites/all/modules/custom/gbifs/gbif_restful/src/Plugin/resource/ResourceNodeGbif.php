@@ -211,4 +211,25 @@ class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface
     return $output;
   }
 
+  /**
+   *
+   */
+  public static function getEntityValue($value) {
+    $output = array();
+    if (!is_array($value)) {
+      $value = array($value);
+    }
+    $entities = entity_load('node', $value);
+    foreach ($entities as $nid => $entity) {
+      $item = array();
+      $item['id'] = $nid;
+      $item['type'] = $entity->type;
+      $item['created'] = $entity->created;
+      $item['title'] = $entity->title;
+      $item['language'] = $entity->language;
+      $output[] = $item;
+    }
+    return $output;
+  }
+
 }

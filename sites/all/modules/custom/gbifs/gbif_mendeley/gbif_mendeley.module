@@ -519,7 +519,9 @@ function gbif_mendeley_page_router() {
   elseif ((count($args) == 4 || count($args) == 3) && $args[1] == 'year') {
     $documents = json_decode(file_get_contents(file_build_uri('gbif_mendeley/documents.json')), TRUE);
     $documents_by_year = gbif_mendeley_group_docs_by_year($documents);
-    $documents = $documents_by_year[$args[2]];
+    if (is_numeric($args[2])) {
+			$documents = $documents_by_year[$args[2]];
+    }
     $count = count($documents);
 
     if (isset($args[3]) && $args[3] == 'count') {
@@ -611,7 +613,9 @@ function gbif_mendeley_page_router() {
 function gbif_mendeley_group_docs_by_year($documents) {
   $documents_by_year = array();
   foreach ($documents as $key => $item) {
-    $documents_by_year[$item['year']][$key] = $item;
+  	if (isset($item['year'])) {
+			$documents_by_year[$item['year']][$key] = $item;
+  	}
   }
   ksort($documents_by_year, SORT_NUMERIC);
   return $documents_by_year;
@@ -978,10 +982,12 @@ function gbif_mendeley_group_counts() {
 					if (isset($doc->month)) $month_field++;
 					if (isset($doc->day)) $day_field++;
 
-					if (!isset($group_by_year[$doc->year])) {
-						$group_by_year[$doc->year] = 1;
-					} else {
-						$group_by_year[$doc->year]++;
+					if (isset($doc->year)) {
+						if (!isset($group_by_year[$doc->year])) {
+							$group_by_year[$doc->year] = 1;
+						} else {
+							$group_by_year[$doc->year]++;
+						}
 					}
 
 				}

@@ -30,10 +30,12 @@ class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface
 
     $nid = arg(3);
     $node = node_load($nid);
-    if ($node->path['alias'] != null) {
-      $public_fields['targetUrl'] = array(
-        'callback' => 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::getTargetUrl',
-      );
+    if (property_exists($node, 'path')) {
+      if (isset($node->path['alias'])) {
+        $public_fields['targetUrl'] = array(
+          'callback' => 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::getTargetUrl',
+        );
+      }
     }
 
     $public_fields['featuredSearchTerms'] = array(
@@ -230,6 +232,17 @@ class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface
       $output[] = $item;
     }
     return $output;
+  }
+
+  /**
+   *
+   */
+  public static function getDateValue($value) {
+    if (!is_array($value)) {
+      return $value;
+    }
+    unset($value['db']);
+    return $value;
   }
 
 }

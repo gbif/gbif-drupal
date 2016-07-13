@@ -45,5 +45,10 @@ interface ResourceNodeGbifInterface extends ResourceInterface {
    *
    */
   public static function getEntityValue($value);
+
+  /*
+   *
+   */
+  public static function getDateValue($value);
 }
 

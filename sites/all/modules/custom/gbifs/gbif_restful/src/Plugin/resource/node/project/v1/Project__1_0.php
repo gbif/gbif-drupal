@@ -65,6 +65,9 @@ class Project__1_0 extends ResourceNodeGbif implements ResourceNodeGbifInterface
 
     $public_fields['duration'] = array(
       'property' => 'field_duration',
+      'process_callbacks' => array(
+        array($this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::getDateValue')
+      ),
     );
 
     $public_fields['status'] = array(

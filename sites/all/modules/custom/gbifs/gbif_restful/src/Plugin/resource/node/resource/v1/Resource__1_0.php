@@ -95,6 +95,9 @@ class Resource__1_0 extends ResourceNodeGbif implements ResourceNodeGbifInterfac
 
     $public_fields['dateOfPublication'] = array(
       'property' => 'gr_date_of_publication',
+      'process_callbacks' => array(
+        array($this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::getDateValue')
+      ),
     );
 
     $public_fields['numberOfDownloads'] = array(

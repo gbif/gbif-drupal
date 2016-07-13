@@ -52,6 +52,9 @@ class GbifParticipant__1_0 extends ResourceNodeGbif implements ResourceNodeGbifI
     // date field
     $public_fields['nodeEstablished'] = array(
       'property' => 'gp_node_established',
+      'process_callbacks' => array(
+        array($this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::getDateValue')
+      ),
     );
 
     $public_fields['hasMandate'] = array(

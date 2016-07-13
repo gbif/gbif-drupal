@@ -47,6 +47,9 @@ class Event__1_0 extends ResourceNodeGbif implements ResourceNodeGbifInterface {
     // date field
     $public_fields['date'] = array(
       'property' => 'ge_date_ical',
+      'process_callbacks' => array(
+        array($this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::getDateValue')
+      ),
     );
 
     $public_fields['dataText'] = array(

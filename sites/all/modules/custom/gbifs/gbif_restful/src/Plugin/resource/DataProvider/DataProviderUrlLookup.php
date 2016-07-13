@@ -121,13 +121,13 @@ class DataProviderUrlLookup extends DataProvider implements DataProviderUrlLooku
         $this->output = array(
           'id' => $redirect_slices[2],
           'type' => 'term',
-          'target_url' => drupal_get_path_alias($redirect),
+          'targetUrl' => drupal_get_path_alias($redirect),
         );
       }
       elseif ($redirect_slices[0] == 'http:') {
         $this->output = array(
           'type' => 'external',
-          'target_url' => $redirect,
+          'targetUrl' => $redirect,
         );
       }
       // if non of the case above, it's a redirect to another redirect.
@@ -136,9 +136,25 @@ class DataProviderUrlLookup extends DataProvider implements DataProviderUrlLooku
       }
     }
     elseif (count($redirect_results) > 1) {
-      $this->output = array(
-        'message' => 'Error to be handled by exception handler.'
-      );
+      // find out which one resolves to node.
+      $found = FALSE;
+      foreach ($redirect_results as $result) {
+        $redirect = explode('/', $result->redirect);
+        if ($redirect[0] == 'node' && is_numeric($redirect[1])) {
+          $found = TRUE;
+          $node = node_load($redirect[1]);
+          $this->output = array(
+            'id' => $node->nid,
+            'type' => $node->type,
+            'targetUrl' => drupal_get_path_alias($redirect[0] . '/' . $redirect[1]),
+          );
+        }
+      }
+      if ($found == FALSE) {
+        $this->output = array(
+          'message' => 'Error to be handled by exception handler.'
+        );
+      }
     }
     elseif (count($redirect_results) == 0) {
       $alias_results = db_select('url_alias', 'u')

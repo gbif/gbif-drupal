@@ -290,6 +290,9 @@ class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface
           return array($this->getDataProvider()->view($ids[0]));
         }
       }
+      else {
+        return array($this->getDataProvider()->view($ids[0]));
+      }
     }
     else {
       return $this->getDataProvider()->viewMultiple($ids);

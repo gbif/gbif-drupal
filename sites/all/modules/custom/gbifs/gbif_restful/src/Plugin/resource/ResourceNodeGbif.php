@@ -4,13 +4,14 @@
  * @file
  * Contains Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif.
  */
-
 namespace Drupal\gbif_restful\Plugin\resource;
 
 use Drupal\restful\Http\HttpHeader;
 use Drupal\restful\Plugin\resource\ResourceNode;
 use Drupal\restful\Plugin\resource\Field\ResourceFieldBase;
 use Drupal\restful\Plugin\resource\DataInterpreter\DataInterpreterInterface;
+use \EntityFieldQuery;
+use MyProject\Proxies\__CG__\stdClass;
 
 class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface {
 
@@ -179,6 +180,12 @@ class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface
         'imageCaption' => (isset($next_node->field_uni_images['und'])) ? $next_node->field_uni_images['und'][0]['image_field_caption']['value'] : NULL,
       ),
     );
+
+    // Get translated copies only for News.
+    $node = node_load($nid);
+    if ($node->type == 'news') {
+      $output['translated_copies'] = ResourceNodeGbif::getTranslatedNids($nid);
+    }
     return $output;
   }
 
@@ -238,4 +245,78 @@ class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface
     return $value;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function view($path) {
+    // TODO: Compare this with 1.x logic.
+    $ids = explode(static::IDS_SEPARATOR, $path);
+
+    // REST requires a canonical URL for every resource.
+    $canonical_path = $this->getDataProvider()->canonicalPath($path);
+    restful()
+      ->getResponse()
+      ->getHeaders()
+      ->add(HttpHeader::create('Link', $this->versionedUrl($canonical_path, array(), FALSE) . '; rel="canonical"'));
+
+    // If there is only one ID then use 'view'. Else, use 'viewMultiple'. The
+    // difference between the two is that 'view' allows access denied
+    // exceptions.
+    if (count($ids) == 1) {
+      // attempt to resolve locale param
+      // @todo validate the locale param.
+      $params = drupal_get_query_parameters();
+      if (isset($params['locale'])) {
+        $query = new EntityFieldQuery();
+        $query->entityCondition('entity_type', 'node');
+        $query->fieldCondition('field_translation_source', 'target_id', $ids[0], '=');
+        $results = $query->execute();
+        if (count($results) > 0 && isset($results['node'])) {
+          foreach ($results['node'] as $nid => $simple_obj) {
+            $node = node_load($nid);
+            if (property_exists($node, 'language') && $node->language == $params['locale']) {
+              $localized_version = array($nid);
+            }
+          }
+
+          if (isset($localized_version)) {
+            return array($this->getDataProvider()->view($localized_version[0]));
+          }
+          else {
+            return array($this->getDataProvider()->view($ids[0]));
+          }
+        }
+        else {
+          return array($this->getDataProvider()->view($ids[0]));
+        }
+      }
+    }
+    else {
+      return $this->getDataProvider()->viewMultiple($ids);
+    }
+  }
+
+  /**
+   *
+   */
+  private static function getTranslatedNids($nid) {
+    $nid_results = array();
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'node');
+    $query->fieldCondition('field_translation_source', 'target_id', $nid, '=');
+    $results = $query->execute();
+    if (count($results) > 0 && isset($results['node'])) {
+      foreach($results['node'] as $k => $node) {
+        $node_loaded = node_load($k);
+        $obj = array(
+          'id' => $k,
+          'type' => $node_loaded->type,
+          'language' => $node_loaded->language,
+        );
+
+        $nid_results[] = $obj;
+      }
+    }
+    return $nid_results;
+  }
 }

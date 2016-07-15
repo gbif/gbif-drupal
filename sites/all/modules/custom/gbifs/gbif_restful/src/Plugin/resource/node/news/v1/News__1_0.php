@@ -32,4 +32,19 @@ use Drupal\gbif_restful\Plugin\resource\ResourceNodeGbifScaledContents;
  */
 class News__1_0 extends ResourceNodeGbifScaledContents {
 
+  /**
+   * Overrides ResourceNode::publicFields().
+   */
+  protected function publicFields() {
+    $public_fields = parent::publicFields();
+
+    $public_fields['translationSource'] = array(
+      'property' => 'field_translation_source',
+      'process_callbacks' => array(
+        array($this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::getEntityValue')
+      ),
+    );
+
+    return $public_fields;
+  }
 }

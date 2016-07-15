@@ -21,7 +21,7 @@ function gbif_scaled_contents_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Content annotations',
-    'weight' => '8',
+    'weight' => '4',
     'children' => array(
       0 => 'group_attributes',
       1 => 'group_citations',
@@ -161,7 +161,7 @@ function gbif_scaled_contents_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Content',
-    'weight' => '1',
+    'weight' => '2',
     'children' => array(
       0 => 'group_body',
       1 => 'group_cnt_management',
@@ -251,7 +251,7 @@ function gbif_scaled_contents_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'GBIF CMS Taxonomy',
-    'weight' => '9',
+    'weight' => '5',
     'children' => array(
       0 => 'group_def_taxonomy',
       1 => 'group_regions',

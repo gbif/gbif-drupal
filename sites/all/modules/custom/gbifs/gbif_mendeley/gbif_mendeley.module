@@ -515,14 +515,23 @@ function gbif_mendeley_page_router() {
 		return theme('mendeley_publications', array('html' => $html));
 	}
   // Documents by year, prepared for output.
+  // /mendeley/year/2012/count, may be inconsistent
   elseif ((count($args) == 4 || count($args) == 3) && $args[1] == 'year') {
     $documents = json_decode(file_get_contents(file_build_uri('gbif_mendeley/documents.json')), TRUE);
     $documents_by_year = gbif_mendeley_group_docs_by_year($documents);
-    $documents = $documents_by_year[$args[2]];
+    if (is_numeric($args[2])) {
+			$documents = $documents_by_year[$args[2]];
+    }
     $count = count($documents);
 
     if (isset($args[3]) && $args[3] == 'count') {
       $result = $count;
+    }
+    // /mendeley/year/group-count
+    elseif (isset($args[2]) && $args[2] == 'group-count') {
+    	$stats = gbif_mendeley_group_counts();
+    	$result = $stats;
+
     }
     else {
       if ($count == 0) {
@@ -604,7 +613,9 @@ function gbif_mendeley_page_router() {
 function gbif_mendeley_group_docs_by_year($documents) {
   $documents_by_year = array();
   foreach ($documents as $key => $item) {
-    $documents_by_year[$item['year']][$key] = $item;
+  	if (isset($item['year'])) {
+			$documents_by_year[$item['year']][$key] = $item;
+  	}
   }
   ksort($documents_by_year, SORT_NUMERIC);
   return $documents_by_year;
@@ -945,4 +956,69 @@ function _gbif_mendeley_get_more_use_cases() {
 	}
 	$links .= '</ul>';
 	return $links;
+}
+
+function gbif_mendeley_group_counts() {
+	// Prepare the uri for storing retrieved documents
+	$documents_file_loc = file_build_uri('gbif_mendeley/documents.json');
+	$documents_exist = file_exists($documents_file_loc);
+
+	if ($documents_exist == TRUE) {
+		$documents = json_decode(file_get_contents(drupal_realpath($documents_file_loc)));
+
+		$total = 0;
+		$year_field = 0;
+		$month_field = 0;
+		$day_field = 0;
+		$group_by_year = array();
+
+		foreach ($documents as $i => $doc) {
+
+			if (isset($doc->tags)) {
+				if (in_array('GBIF_used', $doc->tags)) {
+
+					$total++;
+					if (isset($doc->year)) $year_field++;
+					if (isset($doc->month)) $month_field++;
+					if (isset($doc->day)) $day_field++;
+
+					if (isset($doc->year)) {
+						if (!isset($group_by_year[$doc->year])) {
+							$group_by_year[$doc->year] = 1;
+						} else {
+							$group_by_year[$doc->year]++;
+						}
+					}
+					else {
+						if (!isset($group_by_year['year_missing'])) {
+							$group_by_year['year_missing'] = 1;
+						} else {
+							$group_by_year['year_missing']++;
+						}
+
+					}
+
+				}
+
+			}
+
+		}
+
+		ksort($group_by_year);
+
+		$output = array(
+			'total_gbif_used' => $total,
+			'year_available' => $year_field,
+			'month_available' => $month_field,
+			'day_available' => $day_field,
+			'group_by_year' => $group_by_year,
+		);
+
+		return $output;
+
+	}
+	else {
+		return 'Documents no found.';
+	}
+
 }

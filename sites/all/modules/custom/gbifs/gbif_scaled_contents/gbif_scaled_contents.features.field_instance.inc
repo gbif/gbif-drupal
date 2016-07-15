@@ -577,7 +577,7 @@ function gbif_scaled_contents_field_default_field_instances() {
       'module' => 'number',
       'settings' => array(),
       'type' => 'number',
-      'weight' => 10,
+      'weight' => 7,
     ),
   );
 
@@ -1025,6 +1025,60 @@ function gbif_scaled_contents_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-news-field_translation_source'.
+  $field_instances['node-news-field_translation_source'] = array(
+    'bundle' => 'news',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'If this content entity is a translation of another, in addition to indicate the language, you also need to use this field to refer to the original English version.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => FALSE,
+        ),
+        'type' => 'entityreference_label',
+        'weight' => 32,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_translation_source',
+    'label' => 'Translation source',
+    'required' => 0,
+    'settings' => array(
+      'mediafront' => array(
+        'custom' => '',
+        'field_type' => 0,
+        'media_type' => 'media',
+        'preview' => 0,
+        'thumbnail' => 0,
+      ),
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'entityreference',
+      'settings' => array(
+        'match_operator' => 'CONTAINS',
+        'path' => '',
+        'references_dialog_add' => 0,
+        'references_dialog_edit' => 0,
+        'references_dialog_search' => 0,
+        'references_dialog_search_view' => '',
+        'size' => 256,
+      ),
+      'type' => 'entityreference_autocomplete',
+      'weight' => 1,
+    ),
+  );
+
   // Exported field_instance: 'node-news-field_tx_data_type'.
   $field_instances['node-news-field_tx_data_type'] = array(
     'bundle' => 'news',
@@ -1292,7 +1346,7 @@ function gbif_scaled_contents_field_default_field_instances() {
         'progress_indicator' => 'throbber',
       ),
       'type' => 'image_image',
-      'weight' => 7,
+      'weight' => 3,
     ),
   );
 
@@ -1624,6 +1678,7 @@ function gbif_scaled_contents_field_default_field_instances() {
   t('Facebook message');
   t('Featured search terms');
   t('GBIF area');
+  t('If this content entity is a translation of another, in addition to indicate the language, you also need to use this field to refer to the original English version.');
   t('Images');
   t('Informatics');
   t('Legacy nid');
@@ -1643,6 +1698,7 @@ function gbif_scaled_contents_field_default_field_instances() {
   t('The text used in a blue footer box when featuring data use articles.');
   t('This field is used for generic free tagging. Tags put here don\'t have weighted value as those in "featured search terms".');
   t('Topic');
+  t('Translation source');
   t('UN region');
 
   return $field_instances;

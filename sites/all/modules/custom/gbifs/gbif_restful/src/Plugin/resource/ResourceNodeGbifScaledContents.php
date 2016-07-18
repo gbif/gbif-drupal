@@ -37,6 +37,9 @@ class ResourceNodeGbifScaledContents extends ResourceNodeGbif implements Resourc
 
     $public_fields['researcherLocation'] = array(
       'property' => 'field_researcher_location',
+      'process_callbacks' => array(
+        array($this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::getTermValue')
+      ),
     );
     $public_fields['linkToResearch'] = array(
       'property' => 'field_link_to_research',

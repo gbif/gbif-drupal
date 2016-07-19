@@ -28,6 +28,10 @@ function gbif_directory_theme($existing, $type, $theme, $path) {
       'template' => 'gd-tg_dfudm',
       'path' => $path . '/theme',
     ),
+    'gd_tg_dfrias' => array(
+      'template' => 'gd-tg_dfrias',
+      'path' => $path . '/theme',
+    ),
   );
 }
 
@@ -83,6 +87,7 @@ function gbif_directory_tokens($type, $tokens, array $data = array(), array $opt
         case 'tg_adbd':
         case 'tg_dfua':
         case 'tg_dfudm':
+        case 'tg_dfrias':
           $replacements[$original] = _gd_print_task_group_list($name);
           break;
       }
@@ -112,6 +117,7 @@ function _gd_groups($key) {
     'tg_adbd' => t('Accelerating the Discovery of Bio-collections Data Task Force'),
     'tg_dfua' => t('DFFU-A - Task Group on Fitness for Use in Agrobiodiversity'),
     'tg_dfudm' => t('DFFU-DM - Task Group on Data Fitness for Use in Distribution Modelling'),
+    'tg_dfrias' => t('Task Group on Data Fitness for Use in Research into Invasive Alien Species'),
   );
   if (!empty($key)) {
     return $groups[$key];

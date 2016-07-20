@@ -52,7 +52,7 @@ class Event__1_0 extends ResourceNodeGbif implements ResourceNodeGbifInterface {
       ),
     );
 
-    $public_fields['dataText'] = array(
+    $public_fields['dateText'] = array(
       'property' => 'ge_date_text',
     );
 
@@ -119,6 +119,10 @@ class Event__1_0 extends ResourceNodeGbif implements ResourceNodeGbifInterface {
       'process_callbacks' => array(
         array($this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::fileProcess'),
       ),
+    );
+
+    $public_fields['__system'] = array(
+      'callback' => 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::getSystemAttributes',
     );
 
     return $public_fields;

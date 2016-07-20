@@ -51,7 +51,7 @@ function gbif_event_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'body',
-    'label' => 'Summary',
+    'label' => 'Description',
     'required' => 0,
     'settings' => array(
       'display_summary' => 1,
@@ -547,6 +547,7 @@ function gbif_event_field_default_field_instances() {
 
   // Exported field_instance: 'node-event-ge_desc_long'.
   $field_instances['node-event-ge_desc_long'] = array(
+    'bueditor_profile' => -1,
     'bundle' => 'event',
     'default_value' => NULL,
     'deleted' => 0,
@@ -582,7 +583,7 @@ function gbif_event_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'ge_desc_long',
-    'label' => 'Description',
+    'label' => 'Description (deprecated)',
     'required' => 0,
     'settings' => array(
       'linkit' => array(
@@ -1577,6 +1578,7 @@ function gbif_event_field_default_field_instances() {
   t('Currently link to "countries" vocabulary.');
   t('Date');
   t('Description');
+  t('Description (deprecated)');
   t('Event Date');
   t('Event ID');
   t('Event image');
@@ -1591,7 +1593,6 @@ function gbif_event_field_default_field_instances() {
   t('Please only enter the city.');
   t('Resources');
   t('Status');
-  t('Summary');
   t('Textual information of resources. HTML allowed.');
   t('Textual information that actually shows on the event detail and teaser. Leave this field blank if you want it to be calculated.');
   t('The status to the audience, e.g., "in preparation", "canceled", "finished", etc.');

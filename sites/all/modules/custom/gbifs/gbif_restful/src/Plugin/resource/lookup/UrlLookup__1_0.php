@@ -14,8 +14,8 @@ use Drupal\restful\Plugin\resource\ResourceInterface;
  * @package Drupal\gbif_restful\Plugin\resource\lookup
  *
  * @Resource(
- *   name = "urllookup:1.0",
- *   resource = "urllookup",
+ *   name = "url-lookup:1.0",
+ *   resource = "url-lookup",
  *   label = "URL redirection Lookup",
  *   description = "Gets the entity id from a URL alias.",
  *   authenticationTypes = TRUE,
@@ -29,6 +29,13 @@ use Drupal\restful\Plugin\resource\ResourceInterface;
  */
 
 class UrlLookup__1_0 extends ResourceLookupBase implements ResourceInterface {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function dataProviderClassName() {
+    return '\\Drupal\\gbif_restful\\Plugin\\resource\\DataProvider\\DataProviderUrlLookup';
+  }
 
   /**
    * {@inheritdoc}

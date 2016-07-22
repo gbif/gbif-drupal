@@ -14,8 +14,8 @@ use Drupal\gbif_restful\Plugin\resource\ResourceNodeGbifScaledContents;
  * @package Drupal\restful\Plugin\resource
  *
  * @Resource(
- *   name = "data_use:1.0",
- *   resource = "data_use",
+ *   name = "data-use:1.0",
+ *   resource = "data-use",
  *   label = "Data use",
  *   description = "Export the data use articles with all authentication providers.",
  *   authenticationTypes = TRUE,

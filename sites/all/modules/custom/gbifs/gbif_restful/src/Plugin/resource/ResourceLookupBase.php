@@ -12,12 +12,4 @@ use Drupal\restful\Plugin\resource\ResourceInterface;
 
 abstract class ResourceLookupBase extends Resource implements ResourceInterface {
 
-  /**
-   * {@inheritdoc}
-   */
-  protected function dataProviderClassName() {
-    return '\\Drupal\\gbif_restful\\Plugin\\resource\\DataProvider\\DataProviderUrlLookup';
-  }
-
-
 }

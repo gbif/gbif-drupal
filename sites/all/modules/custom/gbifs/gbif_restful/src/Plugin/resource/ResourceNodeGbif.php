@@ -11,7 +11,6 @@ use Drupal\restful\Plugin\resource\ResourceNode;
 use Drupal\restful\Plugin\resource\Field\ResourceFieldBase;
 use Drupal\restful\Plugin\resource\DataInterpreter\DataInterpreterInterface;
 use \EntityFieldQuery;
-use MyProject\Proxies\__CG__\stdClass;
 
 class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface {
 

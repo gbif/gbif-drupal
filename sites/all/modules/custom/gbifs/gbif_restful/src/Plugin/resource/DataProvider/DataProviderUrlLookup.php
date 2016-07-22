@@ -24,7 +24,7 @@ use Drupal\restful\Plugin\resource\Field\ResourceFieldCollectionInterface;
  *
  * @package Drupal\restful_search_api\Plugin\resource\DataProvider
  */
-class DataProviderUrlLookup extends DataProvider implements DataProviderUrlLookupInterface {
+class DataProviderUrlLookup extends DataProvider implements DataProviderLookupInterface {
 
   /**
    * {@inheritdoc}

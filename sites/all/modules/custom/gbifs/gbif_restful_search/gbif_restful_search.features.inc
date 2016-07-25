@@ -32,8 +32,10 @@ function gbif_restful_search_default_search_api_index() {
       "cron_limit" : "50",
       "fields" : {
         "author" : { "type" : "integer", "entity_type" : "user" },
+        "body:summary" : { "type" : "text", "boost" : "3.0" },
+        "body:value" : { "type" : "text", "boost" : "2.0" },
         "changed" : { "type" : "date" },
-        "field_acronym" : { "type" : "text" },
+        "field_acronym" : { "type" : "string" },
         "field_cchunk" : {
           "type" : "list\\u003Cinteger\\u003E",
           "entity_type" : "field_collection_item"
@@ -42,7 +44,7 @@ function gbif_restful_search_default_search_api_index() {
         "field_funding_statement" : { "type" : "text" },
         "field_ge_gbif_attendee" : { "type" : "text" },
         "field_subtitle" : { "type" : "text" },
-        "field_title_for_display" : { "type" : "text" },
+        "field_title_for_display" : { "type" : "string" },
         "field_tx_data_type" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
         "field_tx_purpose" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
         "ge_date_text" : { "type" : "text" },
@@ -60,10 +62,11 @@ function gbif_restful_search_default_search_api_index() {
         "gr_short_title" : { "type" : "text" },
         "language" : { "type" : "string" },
         "promote" : { "type" : "boolean" },
+        "revision" : { "type" : "boolean" },
         "search_api_language" : { "type" : "string" },
         "status" : { "type" : "integer" },
         "sticky" : { "type" : "boolean" },
-        "title" : { "type" : "text" },
+        "title" : { "type" : "text", "boost" : "5.0" },
         "tx_about_gbif" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
         "tx_audience" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
         "tx_capacity_enhancement" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },

@@ -152,8 +152,7 @@ class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface
   public static function getTargetUrl(DataInterpreterInterface $interpreter) {
     $wrapper = $interpreter->getWrapper();
     $nid = $wrapper->getIdentifier();
-    $alias = drupal_get_path_alias('node/' . $nid);
-    return $alias;
+    return drupal_get_path_alias('node/' . $nid);
   }
 
   public static function getSystemAttributes(DataInterpreterInterface $interpreter) {

@@ -10,6 +10,7 @@ use Drupal\restful\Plugin\resource\ResourceInterface;
 use Drupal\restful_search_api\Plugin\Resource\ResourceSearchBase;
 use Drupal\restful\Plugin\resource\DataInterpreter\DataInterpreterInterface;
 use Drupal\restful\Plugin\resource\Field\ResourceFieldBase;
+use Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif;
 
 /**
  * Class Search
@@ -95,6 +96,13 @@ class Search extends ResourceSearchBase implements ResourceInterface {
       'callback' => 'Drupal\gbif_restful_search\Plugin\resource\search\node\v1_0\Search::getUrlAlias'
     );
 
+    $public_fields['featuredSearchTerms'] = array(
+      'property' => 'field_featured_search_terms',
+      'process_callbacks' => array(
+        array($this, 'Drupal\gbif_restful_search\Plugin\resource\search\node\v1_0\Search::getTermValue'),
+      ),
+    );
+
     $public_fields['title'] = array(
       'property' => 'title',
     );
@@ -146,18 +154,7 @@ class Search extends ResourceSearchBase implements ResourceInterface {
   public static function getUrlAlias(DataInterpreterInterface $interpreter) {
     $wrapper = $interpreter->getWrapper();
     $nid = $wrapper->get('nid');
-    $node = node_load($nid);
-    if (property_exists($node, 'path')) {
-      if (isset($node->path['alias'])) {
-        return $node->path['alias'];
-      }
-      else {
-        return NULL;
-      }
-    }
-    else {
-      return NULL;
-    }
+    return drupal_get_path_alias('node/' . $nid);
   }
 
   /**
@@ -193,6 +190,35 @@ class Search extends ResourceSearchBase implements ResourceInterface {
         'masthead__desktop' => image_style_url('masthead__desktop', $value['uri']),
       ),
     );
+  }
+
+  /**
+   * @param array $value
+   * @return array
+   */
+  public static function getTermValue($value) {
+    $output = array();
+    $extracted = array();
+    if (is_array($value)) {
+      if (isset($value['und'])) {
+        foreach ($value['und'] as $v) {
+          $extracted[] = $v['tid'];
+        }
+      }
+    }
+    $terms = taxonomy_term_load_multiple($extracted);
+    foreach ($terms as $term) {
+      $term->id = $term->tid;
+      unset($term->tid, $term->vid, $term->description, $term->format, $term->weight, $term->uuid, $term->vocabulary_machine_name, $term->field_iso2);
+      // legacy attributes
+      foreach (array('field_ims_keyword_id', 'ge_ims_kp_id', 'field_term_iso_639_1', 'field_term_native_name') as $field) {
+        if (isset($term->$field)) {
+          unset($term->$field);
+        }
+      }
+      $output[] = $term;
+    }
+    return $output;
   }
 
 }

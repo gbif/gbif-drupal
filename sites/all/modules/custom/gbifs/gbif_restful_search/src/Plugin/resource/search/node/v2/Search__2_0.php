@@ -7,10 +7,9 @@
 
 namespace Drupal\gbif_restful_search\Plugin\resource\search\node\v2;
 use Drupal\restful\Plugin\resource\ResourceInterface;
-use Drupal\restful_search_api\Plugin\Resource\ResourceSearchBase;
 use Drupal\restful\Plugin\resource\DataInterpreter\DataInterpreterInterface;
 use Drupal\restful\Plugin\resource\Field\ResourceFieldBase;
-use Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif;
+use Drupal\gbif_restful_search\Plugin\Resource\GbifResourceSearchBase;
 
 /**
  * Class Search__2_0
@@ -35,7 +34,7 @@ use Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif;
  *   formatter = "json"
  * )
  */
-class Search__2_0 extends ResourceSearchBase implements ResourceInterface {
+class Search__2_0 extends GbifResourceSearchBase implements ResourceInterface {
 
   /**
    * Overrides Resource::versionedUrl().
@@ -130,6 +129,10 @@ class Search__2_0 extends ResourceSearchBase implements ResourceInterface {
         ),
       );
     }
+
+    $public_fields['promote'] = array(
+      'property' => 'promote',
+    );
 
     $public_fields['sticky'] = array(
       'property' => 'sticky',

@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\gbif_restful_search\Plugin\resource\search\node\v1_0\Search.
+ * Contains \Drupal\gbif_restful_search\Plugin\resource\search\node\v1\Search__1_0.
  */
 
-namespace Drupal\gbif_restful_search\Plugin\resource\search\node\v1_0;
+namespace Drupal\gbif_restful_search\Plugin\resource\search\node\v1;
 use Drupal\restful\Plugin\resource\ResourceInterface;
 use Drupal\restful_search_api\Plugin\Resource\ResourceSearchBase;
 use Drupal\restful\Plugin\resource\DataInterpreter\DataInterpreterInterface;
@@ -13,8 +13,8 @@ use Drupal\restful\Plugin\resource\Field\ResourceFieldBase;
 use Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif;
 
 /**
- * Class Search
- * @package Drupal\gbif_restful_search\Plugin\resource\search\node\v1_0
+ * Class Search__1_0
+ * @package Drupal\gbif_restful_search\Plugin\resource\search\node\v1
  *
  * @Resource(
  *   name = "search:1.0",
@@ -35,7 +35,7 @@ use Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif;
  *   formatter = "json"
  * )
  */
-class Search extends ResourceSearchBase implements ResourceInterface {
+class Search__1_0 extends ResourceSearchBase implements ResourceInterface {
 
   /**
    * Overrides Resource::versionedUrl().
@@ -93,13 +93,13 @@ class Search extends ResourceSearchBase implements ResourceInterface {
     );
 
     $public_fields['targetUrl'] = array(
-      'callback' => 'Drupal\gbif_restful_search\Plugin\resource\search\node\v1_0\Search::getUrlAlias'
+      'callback' => 'Drupal\gbif_restful_search\Plugin\resource\search\node\v1\Search__1_0::getUrlAlias'
     );
 
     $public_fields['featuredSearchTerms'] = array(
       'property' => 'field_featured_search_terms',
       'process_callbacks' => array(
-        array($this, 'Drupal\gbif_restful_search\Plugin\resource\search\node\v1_0\Search::getTermValue'),
+        array($this, 'Drupal\gbif_restful_search\Plugin\resource\search\node\v1\Search__1_0::getTermValue'),
       ),
     );
 
@@ -126,7 +126,7 @@ class Search extends ResourceSearchBase implements ResourceInterface {
         'property' => 'field_uni_images',
         'sub_property' => LANGUAGE_NONE,
         'process_callbacks' => array(
-          array($this, 'Drupal\gbif_restful_search\Plugin\resource\search\node\v1_0\Search::imageProcess'),
+          array($this, 'Drupal\gbif_restful_search\Plugin\resource\search\node\v1\Search__1_0::imageProcess'),
         ),
       );
     }

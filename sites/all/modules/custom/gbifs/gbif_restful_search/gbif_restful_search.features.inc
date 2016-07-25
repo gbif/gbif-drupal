@@ -32,8 +32,8 @@ function gbif_restful_search_default_search_api_index() {
       "cron_limit" : "50",
       "fields" : {
         "author" : { "type" : "integer", "entity_type" : "user" },
-        "body:summary" : { "type" : "text", "boost" : "3.0" },
-        "body:value" : { "type" : "text", "boost" : "2.0" },
+        "body:summary" : { "type" : "text" },
+        "body:value" : { "type" : "text" },
         "changed" : { "type" : "date" },
         "field_acronym" : { "type" : "string" },
         "field_cchunk" : {
@@ -41,6 +41,7 @@ function gbif_restful_search_default_search_api_index() {
           "entity_type" : "field_collection_item"
         },
         "field_country" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
+        "field_featured_search_terms:name" : { "type" : "list\\u003Ctext\\u003E", "boost" : "21.0" },
         "field_funding_statement" : { "type" : "text" },
         "field_ge_gbif_attendee" : { "type" : "text" },
         "field_subtitle" : { "type" : "text" },

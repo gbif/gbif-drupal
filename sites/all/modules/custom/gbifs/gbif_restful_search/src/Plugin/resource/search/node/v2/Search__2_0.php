@@ -31,7 +31,7 @@ use Drupal\gbif_restful_search\Plugin\Resource\GbifResourceSearchBase;
  *   authenticationOptional = TRUE,
  *   majorVersion = 2,
  *   minorVersion = 0,
- *   formatter = "json"
+ *   formatter = "json_gbif"
  * )
  */
 class Search__2_0 extends GbifResourceSearchBase implements ResourceInterface {

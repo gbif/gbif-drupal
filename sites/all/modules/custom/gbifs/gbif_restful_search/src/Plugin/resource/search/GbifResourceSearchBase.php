@@ -39,7 +39,7 @@ abstract class GbifResourceSearchBase extends Resource implements ResourceInterf
   protected function processPublicFields(array $field_definitions) {
     foreach ($field_definitions as &$field_definition) {
       if (empty($field_definition['class'])) {
-        $field_definition['class'] = '\\Drupal\\restful_search_api\\Plugin\\resource\\Field\\ResourceFieldSearchKey';
+        $field_definition['class'] = '\\Drupal\\gbif_restful_search\\Plugin\\resource\\Field\\ResourceFieldGbifSearchKey';
       }
     }
     $field_definitions = parent::processPublicFields($field_definitions);

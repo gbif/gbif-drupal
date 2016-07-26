@@ -10,6 +10,7 @@ use Drupal\restful\Exception\BadRequestException;
 use Drupal\restful\Exception\ForbiddenException;
 use Drupal\restful\Exception\ServerConfigurationException;
 use Drupal\restful\Exception\ServiceUnavailableException;
+use Drupal\restful\Exception\UnprocessableEntityException;
 use Drupal\restful\Http\RequestInterface;
 use Drupal\restful\Plugin\resource\DataInterpreter\ArrayWrapper;
 use Drupal\restful\Plugin\resource\DataInterpreter\DataInterpreterArray;
@@ -246,6 +247,39 @@ use Drupal\restful\Plugin\resource\Field\ResourceFieldCollectionInterface;
     }
 
     return $search_api_filter;
+  }
+
+  /**
+   * Parses the request object to get the pagination options.
+   *
+   * @return array
+   *   A numeric array with the offset and length options.
+   *
+   * @throws BadRequestException
+   * @throws UnprocessableEntityException
+   */
+  protected function parseRequestForListPagination() {
+    $pager_input = $this->getRequest()->getPagerInput();
+
+    //@todo Add offset value here.
+    $page = isset($pager_input['number']) ? $pager_input['number'] : 1;
+    if (!ctype_digit((string) $page) || $page < 1) {
+      throw new BadRequestException('"Page" property should be numeric and equal or higher than 1.');
+    }
+
+    $range = isset($pager_input['size']) ? (int) $pager_input['size'] : $this->getRange();
+    $range = $range > $this->getRange() ? $this->getRange() : $range;
+    if (!ctype_digit((string) $range) || $range < 1) {
+      throw new BadRequestException('"Range" property should be numeric and equal or higher than 1.');
+    }
+
+    $url_params = empty($this->options['urlParams']) ? array() : $this->options['urlParams'];
+    if (isset($url_params['range']) && !$url_params['range']) {
+      throw new UnprocessableEntityException('Range parameters have been disabled in server configuration.');
+    }
+
+    $offset = ($page - 1) * $range;
+    return array($offset, $range);
   }
 
   /**

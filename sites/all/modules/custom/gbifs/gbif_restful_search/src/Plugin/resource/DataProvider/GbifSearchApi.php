@@ -333,27 +333,7 @@ use Drupal\restful\Plugin\resource\Field\ResourceFieldCollectionInterface;
       $results[$id]->search_api_relevance = $result['score'];
     }
     if (!empty($resultsObj['search_api_facets'])) {
-
-      // Extra double quotes are introduced during the query.
-      // We sanitise it here.
-      foreach ($resultsObj['search_api_facets'] as $f_name => &$field) {
-        foreach ($field as &$facet) {
-          $facet['count'] = (int)$facet['count'];
-          $facet['filter'] = str_replace('"', '', $facet['filter']);
-          if (is_numeric($facet['filter'])) {
-            // Modify the facet output so it makes better sense to consumers.
-            $facet['id'] = (int)$facet['filter'];
-            $term = taxonomy_term_load($facet['id']);
-            $facet['label'] = $term->name;
-          }
-          else {
-            $facet['enum'] = $facet['filter'];
-          }
-          unset($facet['filter']);
-        }
-      }
-
-      $this->hateoas['facets'] = $resultsObj['search_api_facets'];
+      $this->hateoas['facets'] = $this->processSearchIndexFacets($resultsObj['search_api_facets']);
     }
     $this->hateoas['count'] = $resultsObj['result count'];
 
@@ -487,4 +467,51 @@ use Drupal\restful\Plugin\resource\Field\ResourceFieldCollectionInterface;
     }
   }
 
+  /**
+   *
+   */
+  private function processSearchIndexFacets(&$facets) {
+    $mapping = array(
+      'tx_informatics' => 'category_informatics',
+      'tx_data_use' => 'category_data_use',
+      'tx_capacity_enhancement' => 'category_capacity_enhancement',
+      'tx_about_gbif' => 'category_about_gbif',
+      'tx_audience' => 'category_audience',
+      'field_tx_purpose' => 'category_purpose',
+      'field_tx_data_type' => 'category_data_type',
+      'gr_resource_type' => 'category_resource_type',
+      'field_country' => 'category_country',
+      'tx_topic' => 'category_topic',
+      'tx_tags' => 'category_tags',
+    );
+
+    // Extra double quotes are introduced during the query.
+    // We sanitise it here.
+    foreach($facets as $field_name => &$field) {
+      foreach ($field as &$facet) {
+        $facet['count'] = (int)$facet['count'];
+        $facet['filter'] = str_replace('"', '', $facet['filter']);
+        if (is_numeric($facet['filter'])) {
+          // Modify the facet output so it makes better sense to consumers.
+          $facet['id'] = (int)$facet['filter'];
+          $term = taxonomy_term_load($facet['id']);
+          $facet['label'] = $term->name;
+        }
+        else {
+          $facet['enum'] = $facet['filter'];
+        }
+        unset($facet['filter']);
+      }
+    }
+    // Map field names to conform the defined convention.
+    foreach($facets as $field_name => &$field) {
+      foreach ($mapping as $m => $n) {
+        if ($field_name == $m) {
+          $facets[$n] = $facets[$m];
+          unset($facets[$m]);
+        }
+      }
+    }
+    return $facets;
+  }
 }

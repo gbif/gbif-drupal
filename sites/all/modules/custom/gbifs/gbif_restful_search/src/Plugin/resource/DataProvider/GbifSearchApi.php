@@ -333,6 +333,26 @@ use Drupal\restful\Plugin\resource\Field\ResourceFieldCollectionInterface;
       $results[$id]->search_api_relevance = $result['score'];
     }
     if (!empty($resultsObj['search_api_facets'])) {
+
+      // Extra double quotes are introduced during the query.
+      // We sanitise it here.
+      foreach ($resultsObj['search_api_facets'] as $f_name => &$field) {
+        foreach ($field as &$facet) {
+          $facet['count'] = (int)$facet['count'];
+          $facet['filter'] = str_replace('"', '', $facet['filter']);
+          if (is_numeric($facet['filter'])) {
+            // Modify the facet output so it makes better sense to consumers.
+            $facet['id'] = (int)$facet['filter'];
+            $term = taxonomy_term_load($facet['id']);
+            $facet['label'] = $term->name;
+          }
+          else {
+            $facet['enum'] = $facet['filter'];
+          }
+          unset($facet['filter']);
+        }
+      }
+
       $this->hateoas['facets'] = $resultsObj['search_api_facets'];
     }
     $this->hateoas['count'] = $resultsObj['result count'];

@@ -27,7 +27,7 @@ class ResourceFieldGbifSearchKey extends ResourceFieldKeyValue implements Resour
     if (!empty($definition['sub_property'])) {
       $parts = explode(static::NESTING_SEPARATOR, $definition['sub_property']);
       foreach ($parts as $part) {
-        $value = $value[$part];
+        if (isset($value[$part])) $value = $value[$part];
       }
     }
     return $value;

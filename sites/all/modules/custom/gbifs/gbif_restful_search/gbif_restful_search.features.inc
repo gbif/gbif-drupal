@@ -8,6 +8,9 @@
  * Implements hook_ctools_plugin_api().
  */
 function gbif_restful_search_ctools_plugin_api($module = NULL, $api = NULL) {
+  if ($module == "facetapi" && $api == "facetapi_defaults") {
+    return array("version" => "1");
+  }
   if ($module == "strongarm" && $api == "strongarm") {
     return array("version" => "1");
   }
@@ -30,7 +33,6 @@ function gbif_restful_search_default_search_api_index() {
           "dataset",
           "event",
           "gbif_participant",
-          "generictemplate",
           "news",
           "programme",
           "project",

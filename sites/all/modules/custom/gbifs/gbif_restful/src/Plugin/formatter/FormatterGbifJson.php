@@ -69,7 +69,7 @@ class FormatterGbifJson extends Formatter implements FormatterInterface {
       // Add HATEOAS to the output.
       $this->addHateoas($output);
     }
-
+    unset($output['self']);
     return $output;
   }
 

@@ -49,6 +49,23 @@ use Drupal\restful\Plugin\resource\Field\ResourceFieldCollectionInterface;
   protected $hateoas = array();
 
   /**
+   * Mapping for readable tag related fields.
+   */
+  private $mapping = array(
+    'tx_informatics' => 'category_informatics',
+    'tx_data_use' => 'category_data_use',
+    'tx_capacity_enhancement' => 'category_capacity_enhancement',
+    'tx_about_gbif' => 'category_about_gbif',
+    'tx_audience' => 'category_audience',
+    'field_tx_purpose' => 'category_purpose',
+    'field_tx_data_type' => 'category_data_type',
+    'gr_resource_type' => 'category_resource_type',
+    'field_country' => 'category_country',
+    'tx_topic' => 'category_topic',
+    'tx_tags' => 'category_tags',
+  );
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(RequestInterface $request, ResourceFieldCollectionInterface $field_definitions, $account, $plugin_id, $resource_path = NULL, array $options = array(), $langcode = NULL) {
@@ -225,9 +242,16 @@ use Drupal\restful\Plugin\resource\Field\ResourceFieldCollectionInterface;
       throw new BadRequestException('Filter parameters have been disabled in server configuration.');
     }
 
+    $mapping = $this->mapping;
+
     foreach ($input['filter'] as $public_field => $value) {
+      foreach ($mapping as $m => $n) {
+        if ($public_field == $n) {
+          $public_field = $m;
+        }
+      }
       $resource_field = $this->fieldDefinitions->get($public_field);
-      $field = $resource_field->getProperty() ?: $public_field;
+      $field = $resource_field->getProperty() ? : $public_field;
 
       if (!is_array($value)) {
         // Request uses the shorthand form for filter. For example
@@ -471,19 +495,7 @@ use Drupal\restful\Plugin\resource\Field\ResourceFieldCollectionInterface;
    *
    */
   private function processSearchIndexFacets(&$facets) {
-    $mapping = array(
-      'tx_informatics' => 'category_informatics',
-      'tx_data_use' => 'category_data_use',
-      'tx_capacity_enhancement' => 'category_capacity_enhancement',
-      'tx_about_gbif' => 'category_about_gbif',
-      'tx_audience' => 'category_audience',
-      'field_tx_purpose' => 'category_purpose',
-      'field_tx_data_type' => 'category_data_type',
-      'gr_resource_type' => 'category_resource_type',
-      'field_country' => 'category_country',
-      'tx_topic' => 'category_topic',
-      'tx_tags' => 'category_tags',
-    );
+    $mapping = $this->mapping;
 
     // Extra double quotes are introduced during the query.
     // We sanitise it here.

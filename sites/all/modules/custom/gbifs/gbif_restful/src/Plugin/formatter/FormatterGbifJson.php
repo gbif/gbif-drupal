@@ -69,7 +69,6 @@ class FormatterGbifJson extends Formatter implements FormatterInterface {
       // Add HATEOAS to the output.
       $this->addHateoas($output);
     }
-    unset($output['self']);
     return $output;
   }
 
@@ -155,10 +154,11 @@ class FormatterGbifJson extends Formatter implements FormatterInterface {
     $request = $resource->getRequest();
 
     // Get self link.
-    $data['self'] = array(
-      'title' => 'Self',
-      'href' => $resource->versionedUrl($resource->getPath()),
-    );
+    // @todo We commented this out because we don't need it.
+    //$data['self'] = array(
+    //  'title' => 'Self',
+    //  'href' => $resource->versionedUrl($resource->getPath()),
+    //);
 
     $input = $request->getParsedInput();
     unset($input['page']);
@@ -171,7 +171,7 @@ class FormatterGbifJson extends Formatter implements FormatterInterface {
       $query['page']['number'] = $page - 1;
       $data['previous'] = array(
         'title' => 'Previous',
-        'href' => $resource->versionedUrl('', array('query' => $query), TRUE),
+        'href' => $resource->versionedUrl($resource->getPath(), array('query' => $query), TRUE),
       );
     }
 
@@ -185,7 +185,7 @@ class FormatterGbifJson extends Formatter implements FormatterInterface {
       $query['page']['number'] = $page + 1;
       $data['next'] = array(
         'title' => 'Next',
-        'href' => $resource->versionedUrl('', array('query' => $query), TRUE),
+        'href' => $resource->versionedUrl($resource->getPath(), array('query' => $query), TRUE),
       );
     }
 

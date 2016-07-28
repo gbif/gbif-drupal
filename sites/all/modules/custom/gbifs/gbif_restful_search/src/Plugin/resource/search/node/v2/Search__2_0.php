@@ -130,6 +130,52 @@ class Search__2_0 extends GbifResourceSearchBase implements ResourceInterface {
       );
     }
 
+    // Tag fields should be here for filtering to work.
+    $public_fields['tx_informatics'] = array(
+      'property' => 'tx_informatics',
+      'sub_property' => 'und',
+    );
+    $public_fields['tx_data_use'] = array(
+      'property' => 'tx_data_use',
+      'sub_property' => 'und',
+    );
+    $public_fields['tx_capacity_enhancement'] = array(
+      'property' => 'tx_capacity_enhancement',
+      'sub_property' => 'und',
+    );
+    $public_fields['tx_about_gbif'] = array(
+      'property' => 'tx_about_gbif',
+      'sub_property' => 'und',
+    );
+    $public_fields['tx_audience'] = array(
+      'property' => 'tx_audience',
+      'sub_property' => 'und',
+    );
+    $public_fields['field_tx_purpose'] = array(
+      'property' => 'field_tx_purpose',
+      'sub_property' => 'und',
+    );
+    $public_fields['field_tx_data_type'] = array(
+      'property' => 'field_tx_data_type',
+      'sub_property' => 'und',
+    );
+    $public_fields['gr_resource_type'] = array(
+      'property' => 'gr_resource_type',
+      'sub_property' => 'und',
+    );
+    $public_fields['field_country'] = array(
+      'property' => 'field_country',
+      'sub_property' => 'und',
+    );
+    $public_fields['tx_topic'] = array(
+      'property' => 'tx_topic',
+      'sub_property' => 'und',
+    );
+    $public_fields['tx_tags'] = array(
+      'property' => 'tx_tags',
+      'sub_property' => 'und',
+    );
+
     $public_fields['promote'] = array(
       'property' => 'promote',
     );

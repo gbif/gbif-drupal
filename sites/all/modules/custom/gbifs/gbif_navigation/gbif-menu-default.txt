@@ -65,6 +65,7 @@ Community {"url":"<front>"}
 -Resources {"url":"resources", "description": "Library of documents, tools and and other information to support the GBIF community (look template.php for changing this particular item.)"}
 --Resources {"url":"resources"}
 --Literature {"url":"mendeley"}
+--Featured research {"url":"resources\/featured-research"}
 --Key information {"url":"resources\/key-information"}
 --Logos {"url":"resources\/logos"}
 About {"url":"<front>"}
@@ -73,6 +74,7 @@ About {"url":"<front>"}
 -Key information {"url":"resources\/key-information"}
 --Resources {"url":"resources"}
 --Literature {"url":"mendeley"}
+--Featured research {"url":"resources\/featured-research"}
 --Key information {"url":"resources\/key-information"}
 --Logos {"url":"resources\/logos"}
 -Awards {"url":"about\/awards", "description": "Bringing biodiversity information to life"}

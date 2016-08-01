@@ -40,7 +40,7 @@ function gbif_scaled_contents_page_build(&$page) {
   if (drupal_match_path($current_path, 'node/82810') !== FALSE) {
     $page['highlighted_title'] = array(
       'name' => t('Featured research'),
-      'description' => t('Citations of selected recent peer-reviewed research making substantive use of GBIF-mediate data'),
+      'description' => t('Citations of selected recent peer-reviewed research making substantive use of GBIF-mediated data'),
     );
   }
 

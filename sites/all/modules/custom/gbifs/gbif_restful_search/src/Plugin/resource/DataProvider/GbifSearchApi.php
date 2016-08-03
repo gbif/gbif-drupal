@@ -524,6 +524,15 @@ use Drupal\restful\Plugin\resource\Field\ResourceFieldCollectionInterface;
         }
       }
     }
-    return $facets;
+    // Arrange it as non-associative array.
+    $facet_non_associative = array();
+    foreach ($facets as $field_name => $field) {
+      $item = array();
+      $item['field'] = $field_name;
+      $item['counts'] = $facets[$field_name];
+      $facet_non_associative[] = $item;
+    }
+
+    return $facet_non_associative;
   }
 }

@@ -359,7 +359,7 @@ use Drupal\restful\Plugin\resource\Field\ResourceFieldCollectionInterface;
     if (!empty($resultsObj['search_api_facets'])) {
       $this->hateoas['facets'] = $this->processSearchIndexFacets($resultsObj['search_api_facets']);
     }
-    $this->hateoas['count'] = $resultsObj['result count'];
+    $this->hateoas['count'] = (int)$resultsObj['result count'];
 
     return $results;
   }

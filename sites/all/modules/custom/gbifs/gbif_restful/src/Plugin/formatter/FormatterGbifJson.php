@@ -69,6 +69,21 @@ class FormatterGbifJson extends Formatter implements FormatterInterface {
       // Add HATEOAS to the output.
       $this->addHateoas($output);
     }
+
+    $output_order = array(
+      'offset',
+      'limit',
+      'endOfRecords',
+      'count',
+      'results',
+      'facets',
+      'previous',
+      'next',
+    );
+
+    uksort($output, function($a, $b) use ($output_order) {
+      return array_search($a, $output_order) - array_search($b, $output_order);
+    });
     return $output;
   }
 
@@ -153,6 +168,9 @@ class FormatterGbifJson extends Formatter implements FormatterInterface {
     }
     $request = $resource->getRequest();
 
+    // Default false of the end of record.
+    $data['endOfRecords'] = FALSE;
+
     // Get self link.
     // @todo We commented this out because we don't need it.
     //$data['self'] = array(
@@ -188,7 +206,14 @@ class FormatterGbifJson extends Formatter implements FormatterInterface {
         'href' => $resource->versionedUrl($resource->getPath(), array('query' => $query), TRUE),
       );
     }
+    // No more pages means we've reached the end of records.
+    else {
+      $data['endOfRecords'] = TRUE;
+    }
 
+    // We offer a few more values here as the rest of GBIF API does.
+    $data['offset'] = ($page - 1) * $items_per_page;
+    $data['limit'] = (int)$items_per_page;
   }
 
   /**

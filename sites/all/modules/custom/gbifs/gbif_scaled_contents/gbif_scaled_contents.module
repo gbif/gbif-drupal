@@ -32,6 +32,22 @@ function gbif_scaled_contents_page_summary() {
 }
 
 /**
+ * Implements hook_page_build().
+ */
+function gbif_scaled_contents_page_build(&$page) {
+  // determine title and slogan in banner
+  $current_path = current_path();
+  if (drupal_match_path($current_path, 'node/82810') !== FALSE) {
+    $page['highlighted_title'] = array(
+      'name' => t('Featured research'),
+      'description' => t('Citations of selected recent peer-reviewed research making substantive use of GBIF-mediated data'),
+    );
+  }
+
+}
+
+
+/**
  * Implements hook_theme().
  */
 function gbif_scaled_contents_theme($existing, $type, $theme, $path) {

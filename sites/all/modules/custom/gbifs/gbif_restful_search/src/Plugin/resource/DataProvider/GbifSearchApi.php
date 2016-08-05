@@ -518,9 +518,9 @@ use Drupal\restful\Plugin\resource\Field\ResourceFieldCollectionInterface;
     // Map field names to conform the defined convention.
     foreach($facets as $field_name => &$field) {
       foreach ($mapping as $m => $n) {
-        if ($field_name == $m) {
+        if (strpos($field_name, $m) !== false) {
           $facets[$n] = $facets[$m];
-          unset($facets[$m]);
+          unset($facets[$field_name]);
         }
       }
     }

@@ -71,7 +71,6 @@ function gbif_restful_search_default_search_api_index() {
         "gr_language" : { "type" : "integer", "entity_type" : "taxonomy_term" },
         "gr_purpose" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
         "gr_resource_type" : { "type" : "integer", "entity_type" : "taxonomy_term" },
-        "gr_resource_type:tid" : { "type" : "integer" },
         "gr_short_title" : { "type" : "text" },
         "language" : { "type" : "string" },
         "promote" : { "type" : "boolean" },

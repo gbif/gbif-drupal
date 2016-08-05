@@ -526,7 +526,7 @@ use Drupal\restful\Plugin\resource\Field\ResourceFieldCollectionInterface;
     }
     // Arrange it as non-associative array.
     $facet_non_associative = array();
-    foreach ($facets as $field_name => $field) {
+    foreach ($facets as $field_name => &$field) {
       $item = array();
       $item['field'] = $field_name;
       $item['counts'] = $facets[$field_name];

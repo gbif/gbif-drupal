@@ -40,7 +40,6 @@ features[facetapi][] = search_api@node_index:block:gr_data_type
 features[facetapi][] = search_api@node_index:block:gr_language
 features[facetapi][] = search_api@node_index:block:gr_purpose
 features[facetapi][] = search_api@node_index:block:gr_resource_type
-features[facetapi][] = search_api@node_index:block:gr_resource_type:tid
 features[facetapi][] = search_api@node_index:block:gr_short_title
 features[facetapi][] = search_api@node_index:block:language
 features[facetapi][] = search_api@node_index:block:promote

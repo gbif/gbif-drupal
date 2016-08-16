@@ -220,15 +220,52 @@ class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface
       $value = array($value);
     }
     $entities = entity_load('node', $value);
+
     foreach ($entities as $nid => $entity) {
       $item = array();
       $item['id'] = $nid;
       $item['type'] = $entity->type;
+
+      // Type specific fields
+      switch ($entity->type) {
+        case 'dir_organization':
+          $image_field = array(
+            'id' => $entity->field_image['und'][0]['fid'],
+            'original' => file_create_url($entity->field_image['und'][0]['uri']),
+            'filemime' => $entity->field_image['und'][0]['filemime'],
+            'filesize' => $entity->field_image['und'][0]['filesize'],
+            'width' => $entity->field_image['und'][0]['image_dimensions']['width'],
+            'height' => $entity->field_image['und'][0]['image_dimensions']['height'],
+          );
+          $item['image'] = $image_field;
+          $url_field = array(
+            'url' => $entity->field_url['und'][0]['url'],
+            'title' => $entity->field_url['und'][0]['title'],
+          );
+          $item['url'] = $url_field;
+          break;
+
+        case 'news':
+          $item['image'] = array(
+            'id' => '',
+            'original' => file_create_url($entity->field_uni_images['und'][0]['uri']),
+            'filemime' => $entity->field_uni_images['und'][0]['filemime'],
+            'filesize' => $entity->field_uni_images['und'][0]['filesize'],
+            'width' => $entity->field_uni_images['und'][0]['image_dimensions']['width'],
+            'height' => $entity->field_uni_images['und'][0]['image_dimensions']['height'],
+            'styles' => array(
+              'square_thumbnail' => image_style_url('square_thumbnail', $entity->field_uni_images['und'][0]['uri'])
+            ),
+          );
+          break;
+
+      }
       $item['created'] = $entity->created;
       $item['title'] = $entity->title;
       $item['language'] = $entity->language;
       $output[] = $item;
     }
+
     return $output;
   }
 

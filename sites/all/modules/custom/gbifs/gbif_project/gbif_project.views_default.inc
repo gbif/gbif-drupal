@@ -306,6 +306,60 @@ function gbif_project_views_default_views() {
   $handler->display->display_options['defaults']['style_options'] = FALSE;
   $handler->display->display_options['defaults']['row_plugin'] = FALSE;
   $handler->display->display_options['defaults']['row_options'] = FALSE;
+  $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Field: Content: Image */
+  $handler->display->display_options['fields']['field_pj_image']['id'] = 'field_pj_image';
+  $handler->display->display_options['fields']['field_pj_image']['table'] = 'field_data_field_pj_image';
+  $handler->display->display_options['fields']['field_pj_image']['field'] = 'field_pj_image';
+  $handler->display->display_options['fields']['field_pj_image']['label'] = '';
+  $handler->display->display_options['fields']['field_pj_image']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_pj_image']['hide_empty'] = TRUE;
+  $handler->display->display_options['fields']['field_pj_image']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_pj_image']['settings'] = array(
+    'image_style' => 'sidebar_thumbnail',
+    'image_link' => 'content',
+  );
+  /* Field: Content: Title */
+  $handler->display->display_options['fields']['title']['id'] = 'title';
+  $handler->display->display_options['fields']['title']['table'] = 'node';
+  $handler->display->display_options['fields']['title']['field'] = 'title';
+  $handler->display->display_options['fields']['title']['label'] = '';
+  $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
+  $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
+  /* Field: Content: Body */
+  $handler->display->display_options['fields']['body']['id'] = 'body';
+  $handler->display->display_options['fields']['body']['table'] = 'field_data_body';
+  $handler->display->display_options['fields']['body']['field'] = 'body';
+  $handler->display->display_options['fields']['body']['label'] = '';
+  $handler->display->display_options['fields']['body']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['body']['type'] = 'smart_trim_format';
+  $handler->display->display_options['fields']['body']['settings'] = array(
+    'trim_link' => '0',
+    'trim_length' => '300',
+    'trim_type' => 'words',
+    'trim_suffix' => '...',
+    'more_link' => '0',
+    'more_text' => 'learn more',
+    'summary_handler' => 'full',
+    'trim_options' => array(
+      'text' => 'text',
+    ),
+    'trim_preserve_tags' => '',
+  );
+  /* Field: Content: Duration */
+  $handler->display->display_options['fields']['field_duration']['id'] = 'field_duration';
+  $handler->display->display_options['fields']['field_duration']['table'] = 'field_data_field_duration';
+  $handler->display->display_options['fields']['field_duration']['field'] = 'field_duration';
+  $handler->display->display_options['fields']['field_duration']['label'] = '';
+  $handler->display->display_options['fields']['field_duration']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_duration']['settings'] = array(
+    'format_type' => 'mmm_yyyy',
+    'fromto' => 'both',
+    'multiple_number' => '',
+    'multiple_from' => '',
+    'multiple_to' => '',
+    'show_repeat_rule' => 'show',
+  );
   $handler->display->display_options['path'] = 'programme/%/all-projects/json';
   $translatables['related_projects'] = array(
     t('Master'),

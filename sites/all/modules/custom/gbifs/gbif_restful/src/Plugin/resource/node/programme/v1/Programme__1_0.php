@@ -68,7 +68,7 @@ class Programme__1_0 extends ResourceNodeGbif implements ResourceNodeGbifInterfa
     );
 
     // entity reference
-    $public_fields['funder'] = array(
+    $public_fields['funders'] = array(
       'property' => 'field_co_funder',
       'process_callbacks' => array(
         array($this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::getEntityValue')

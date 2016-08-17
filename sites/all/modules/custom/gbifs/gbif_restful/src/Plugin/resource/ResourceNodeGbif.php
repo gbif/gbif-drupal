@@ -265,6 +265,7 @@ class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface
       }
       $item['created'] = $entity->created;
       $item['title'] = $entity->title;
+      $item['summary'] = $entity->body['und'][0]['summary'];
       $item['language'] = $entity->language;
       $output[] = $item;
     }

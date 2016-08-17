@@ -236,6 +236,9 @@ class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface
             'filesize' => $entity->field_image['und'][0]['filesize'],
             'width' => $entity->field_image['und'][0]['image_dimensions']['width'],
             'height' => $entity->field_image['und'][0]['image_dimensions']['height'],
+            'styles' => array(
+              'funder_image' => image_style_url('funder_image', $entity->field_image['und'][0]['uri'])
+            ),
           );
           $item['image'] = $image_field;
           $url_field = array(

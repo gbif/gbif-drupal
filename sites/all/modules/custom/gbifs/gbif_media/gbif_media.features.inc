@@ -112,8 +112,8 @@ function gbif_media_image_default_styles() {
       11 => array(
         'name' => 'focal_point_scale_and_crop',
         'data' => array(
-          'width' => 199,
-          'height' => 112,
+          'width' => 240,
+          'height' => 144,
           'focal_point_advanced' => array(
             'shift_x' => '',
             'shift_y' => '',

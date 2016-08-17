@@ -10,3 +10,4 @@ features[image][] = masthead__laptop
 features[image][] = masthead__mobile
 features[image][] = masthead__tablet
 features[image][] = prose_image_for_desktop
+features[image][] = sidebar_thumbnail

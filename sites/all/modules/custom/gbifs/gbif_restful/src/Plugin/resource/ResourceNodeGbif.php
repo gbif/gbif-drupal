@@ -224,6 +224,7 @@ class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface
     foreach ($entities as $nid => $entity) {
       $item = array();
       $item['id'] = $nid;
+      $item['targetUrl'] = drupal_get_path_alias('node/' . $nid);
       $item['type'] = $entity->type;
 
       // Type specific fields
@@ -246,6 +247,9 @@ class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface
             'title' => $entity->field_url['und'][0]['title'],
           );
           $item['url'] = $url_field;
+
+          // organization URL is not exposed
+          unset($item['targetUrl']);
           break;
 
         case 'news':

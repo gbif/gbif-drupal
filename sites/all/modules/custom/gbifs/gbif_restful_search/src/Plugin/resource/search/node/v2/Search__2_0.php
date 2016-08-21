@@ -266,4 +266,11 @@ class Search__2_0 extends GbifResourceSearchBase implements ResourceInterface {
     return $output;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function index($path) {
+    return $this->getDataProvider()->index();
+  }
+
 }

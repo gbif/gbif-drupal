@@ -116,7 +116,12 @@ use Drupal\restful\Plugin\resource\Field\ResourceFieldCollectionInterface;
    * {@inheritdoc}
    */
   public function count() {
-    throw new ServiceUnavailableException(sprintf('%s is not implemented.', __METHOD__));
+    $count = db_select('search_api_db_node_index', 'n')
+      ->fields('n')
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+    return $count;
   }
 
   /**
@@ -169,7 +174,31 @@ use Drupal\restful\Plugin\resource\Field\ResourceFieldCollectionInterface;
    * {@inheritdoc}
    */
   public function getIndexIds() {
-    throw new ServiceUnavailableException(sprintf('%s is not implemented.', __METHOD__));
+    // bko: hard coded target index here for GBIF usage.
+    $options = $ids = array();
+
+    list($options['offset'], $options['limit']) = $this->parseRequestForListPagination();
+
+    try {
+      // Query SearchAPI for the results.
+      $search_results = $this->executeQuery('', $options);
+      foreach ($search_results as $search_result) {
+        $ids[] = $this->mapSearchResultToPublicFields($search_result);
+      }
+    }
+    catch (\SearchApiException $e) {
+      // Relay the exception with one of RESTful's types.
+      throw new ServerConfigurationException(format_string('Search API Exception: @message', array(
+        '@message' => $e->getMessage(),
+      )));
+    }
+
+    // This is an emergency sort. Only apply it if no sort could be applied.
+    if (!array_filter(array_values($this->sorted))) {
+      $this->manualArraySort($ids);
+    }
+
+    return $ids;
   }
 
   /**

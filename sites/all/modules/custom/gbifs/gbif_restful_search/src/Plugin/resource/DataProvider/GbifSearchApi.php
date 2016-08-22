@@ -537,6 +537,12 @@ use Drupal\restful\Plugin\resource\Field\ResourceFieldCollectionInterface;
           $facet['id'] = (int)$facet['filter'];
           $term = taxonomy_term_load($facet['id']);
           $facet['label'] = $term->name;
+          if ($field_name == 'field_country') {
+            $facet['enum'] = $term->field_iso2['und'][0]['value'];
+          }
+          else {
+            $facet['enum'] = strtolower(str_replace(' ', '_', $term->name));
+          }
         }
         else {
           $facet['enum'] = $facet['filter'];

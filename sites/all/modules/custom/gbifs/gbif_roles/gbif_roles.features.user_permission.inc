@@ -16,7 +16,6 @@ function gbif_roles_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Editor' => 'Editor',
-      'GBIFS Staff' => 'GBIFS Staff',
       'Publisher' => 'Publisher',
       'TDWG DQIG' => 'TDWG DQIG',
     ),
@@ -29,7 +28,6 @@ function gbif_roles_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Editor' => 'Editor',
-      'GBIFS Staff' => 'GBIFS Staff',
       'Publisher' => 'Publisher',
       'TDWG DQIG' => 'TDWG DQIG',
     ),
@@ -116,7 +114,6 @@ function gbif_roles_user_default_permissions() {
     'name' => 'access gbifs office reports',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'GBIFS Staff' => 'GBIFS Staff',
     ),
     'module' => 'gbif_roles',
   );
@@ -284,15 +281,6 @@ function gbif_roles_user_default_permissions() {
       'Administrator' => 'Administrator',
     ),
     'module' => 'system',
-  );
-
-  // Exported permission: 'administer advanced pane settings'.
-  $permissions['administer advanced pane settings'] = array(
-    'name' => 'administer advanced pane settings',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-    ),
-    'module' => 'panels',
   );
 
   // Exported permission: 'administer better countries'.
@@ -613,33 +601,6 @@ function gbif_roles_user_default_permissions() {
     'module' => 'oauth_common',
   );
 
-  // Exported permission: 'administer pane access'.
-  $permissions['administer pane access'] = array(
-    'name' => 'administer pane access',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-    ),
-    'module' => 'panels',
-  );
-
-  // Exported permission: 'administer panels layouts'.
-  $permissions['administer panels layouts'] = array(
-    'name' => 'administer panels layouts',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-    ),
-    'module' => 'panels',
-  );
-
-  // Exported permission: 'administer panels styles'.
-  $permissions['administer panels styles'] = array(
-    'name' => 'administer panels styles',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-    ),
-    'module' => 'panels',
-  );
-
   // Exported permission: 'administer pathauto'.
   $permissions['administer pathauto'] = array(
     'name' => 'administer pathauto',
@@ -925,15 +886,6 @@ function gbif_roles_user_default_permissions() {
       'Publisher' => 'Publisher',
     ),
     'module' => 'user',
-  );
-
-  // Exported permission: 'change layouts in place editing'.
-  $permissions['change layouts in place editing'] = array(
-    'name' => 'change layouts in place editing',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-    ),
-    'module' => 'panels',
   );
 
   // Exported permission: 'change own username'.
@@ -2455,51 +2407,6 @@ function gbif_roles_user_default_permissions() {
     'module' => 'ctools',
   );
 
-  // Exported permission: 'use ipe with page manager'.
-  $permissions['use ipe with page manager'] = array(
-    'name' => 'use ipe with page manager',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-    ),
-    'module' => 'panels',
-  );
-
-  // Exported permission: 'use panels caching features'.
-  $permissions['use panels caching features'] = array(
-    'name' => 'use panels caching features',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-    ),
-    'module' => 'panels',
-  );
-
-  // Exported permission: 'use panels dashboard'.
-  $permissions['use panels dashboard'] = array(
-    'name' => 'use panels dashboard',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-    ),
-    'module' => 'panels',
-  );
-
-  // Exported permission: 'use panels in place editing'.
-  $permissions['use panels in place editing'] = array(
-    'name' => 'use panels in place editing',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-    ),
-    'module' => 'panels',
-  );
-
-  // Exported permission: 'use panels locks'.
-  $permissions['use panels locks'] = array(
-    'name' => 'use panels locks',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-    ),
-    'module' => 'panels',
-  );
-
   // Exported permission: 'use text format filtered_html'.
   $permissions['use text format filtered_html'] = array(
     'name' => 'use text format filtered_html',
@@ -2784,15 +2691,6 @@ function gbif_roles_user_default_permissions() {
       'TDWG DQIG' => 'TDWG DQIG',
     ),
     'module' => 'node',
-  );
-
-  // Exported permission: 'view pane admin links'.
-  $permissions['view pane admin links'] = array(
-    'name' => 'view pane admin links',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-    ),
-    'module' => 'panels',
   );
 
   // Exported permission: 'view revisions'.

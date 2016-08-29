@@ -156,15 +156,14 @@ class FormatterGbifJson extends Formatter implements FormatterInterface {
 
     // Expose image field using 'images'
     foreach (['field_uni_images', 'field_programme_ef_image', 'field_pj_image'] as $image_field) {
-      if ($output[$image_field] == null) {
+      if (isset($output[$image_field]) && $output[$image_field] == null) {
         unset($output[$image_field]);
       }
       else {
-        $output['images'] = $output[$image_field];
+        if (isset($output[$image_field])) $output['images'] = $output[$image_field];
         unset($output[$image_field]);
       }
     }
-    if (!isset($output['images'])) $output['images'] = null;
 
     return $output;
   }

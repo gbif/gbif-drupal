@@ -120,14 +120,23 @@ class Search__2_0 extends GbifResourceSearchBase implements ResourceInterface {
 
     // By checking that the field exists, we allow re-using this class on
     // different tests, where different fields exist.
-    if (field_info_field('field_uni_images')) {
-      $public_fields['images'] = array(
-        'property' => 'field_uni_images',
-        'sub_property' => LANGUAGE_NONE,
-        'process_callbacks' => array(
-          array($this, 'Drupal\gbif_restful_search\Plugin\resource\search\node\v2\Search__2_0::imageProcess'),
-        ),
-      );
+    $imageFieldBundleMapping = [
+      'news' => 'field_uni_images',
+      'dataset' => 'field_uni_images',
+      'data_use' => 'field_uni_images',
+      'programme' => 'field_programme_ef_image',
+      'project' => 'field_pj_image'
+    ];
+    foreach ($imageFieldBundleMapping as $bundle => $imageField) {
+      if (field_info_instance('node', $imageField, $bundle)) {
+        $public_fields[$imageField] = array(
+        'property' => $imageField,
+          'sub_property' => LANGUAGE_NONE,
+          'process_callbacks' => array(
+            array($this, 'Drupal\gbif_restful_search\Plugin\resource\search\node\v2\Search__2_0::imageProcess'),
+          ),
+        );
+      }
     }
 
     // Tag fields should be here for filtering to work.
@@ -200,6 +209,11 @@ class Search__2_0 extends GbifResourceSearchBase implements ResourceInterface {
     $wrapper = $interpreter->getWrapper();
     $nid = $wrapper->get('nid');
     return drupal_get_path_alias('node/' . $nid);
+  }
+
+  public static function getBundle(DataInterpreterInterface $interpreter) {
+    $wrapper = $interpreter->getWrapper();
+    return $wrapper->get('type');
   }
 
   /**

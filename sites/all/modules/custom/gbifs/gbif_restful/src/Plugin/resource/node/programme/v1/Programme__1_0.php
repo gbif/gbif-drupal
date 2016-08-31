@@ -156,6 +156,12 @@ class Programme__1_0 extends ResourceNodeGbif implements ResourceNodeGbifInterfa
             'sidebar_thumbnail' => image_style_url('sidebar_thumbnail', $project->field_pj_image['und'][0]['uri']),
           ),
         );
+        $node['status'] = (isset($project->field_status['und'])) ? $project->field_status['und'][0]['value'] : null;
+        $node['titleForDisplay'] = (isset($project->field_title_for_display['und'])) ? $project->field_title_for_display['und'][0]['value'] : null;
+        $node['fundingAllocated'] = (isset($project->field_pj_funding_allocated['und'])) ? $project->field_pj_funding_allocated['und'][0]['value'] : null;
+        $node['estimatedCoFunding'] = (isset($project->field_pj_matching_fund['und'])) ? $project->field_pj_matching_fund['und'][0]['value'] : null;
+        $node['grantType'] = (isset($project->field_pj_grant_type['und'])) ? $project->field_pj_grant_type['und'][0]['value'] : null;
+
         $output[] = $node;
       }
     }

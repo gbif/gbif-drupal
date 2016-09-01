@@ -269,6 +269,10 @@
 	        return registryEnumService.list('country').then(
 	          function (response) {
 	            // On success, set the response as the array of countries.
+	            // Since it's for address/location, we show Taiwan instead of Chinese Taipei.
+	            response.data.forEach(function(datum){
+	              if (datum.title == 'Chinese Taipei') datum.title = 'Taiwan';
+	            });
 	            self.countries = response.data;
 	          }, function(errResponse) {
 	            console.error('Error while fetching countries')
@@ -297,9 +301,13 @@
 	        return registryNodeService.list().then(
 	          function (response) {
 	            // On success, filter the response to only OAP before appending.
-	            self.otherAssociateParticipants = _.filter(response.data.results, function(node) {
+	            var oap = _.filter(response.data.results, function(node) {
 	              return node.type === 'OTHER';
 	            });
+	            oap.forEach(function(p){
+	              if (p.participantTitle == 'Chinese Taipei') p.participantTitle = 'Taiwan Biodiversity Information Facility';
+	            });
+	            self.otherAssociateParticipants = oap;
 	          }, function(errResponse) {
 	            console.error('Error while fetching participants')
 	          }
@@ -404,7 +412,10 @@
 	                initialResults.forEach(function (element, index, array) {
 	                  if (validType.indexOf(element.type) !== -1 && element.participationStatus != 'FORMER' && element.participationStatus != 'OBSERVER') countryParticipants.push(element);
 	                  // Chinese Taipei has a hybrid status so an exception here.
-	                  if (element.participantTitle == 'Chinese Taipei') countryParticipants.push(element);
+	                  if (element.participantTitle == 'Chinese Taipei') {
+	                    element.participantTitle = 'Taiwan Biodiversity Information Facility';
+	                    countryParticipants.push(element);
+	                  }
 	                });
 	
 	                // Determine which form to show according to the status of the selected country.
@@ -562,7 +573,7 @@
 	            var file = exampleFiles[i];
 	            self.hash = MD5(file);
 	            Upload.upload({
-	              url: '/eoi/example-file-upload?XDEBUG_SESSION_START=11182',
+	              url: '/eoi/example-file-upload',
 	              fields: {'hash': self.hash},
 	              file: file
 	            }).progress(function (evt) {

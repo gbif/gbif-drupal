@@ -39,7 +39,7 @@ function gbif_project_image_default_styles() {
   $styles = array();
 
   // Exported image style: focal_point_for_projects.
-  $styles['focal_point_for_projects'] = array(
+  $styles['focal_point_for_projects (drupal)'] = array(
     'label' => 'Focal point for projects',
     'effects' => array(
       11 => array(
@@ -59,7 +59,7 @@ function gbif_project_image_default_styles() {
 
   // Exported image style: funder_image.
   $styles['funder_image'] = array(
-    'label' => 'Funder image',
+    'label' => 'Funder image (drupal)',
     'effects' => array(
       11 => array(
         'name' => 'image_scale',
@@ -82,7 +82,7 @@ function gbif_project_image_default_styles() {
 
   // Exported image style: programme_image_for_landing_page.
   $styles['programme_image_for_landing_page'] = array(
-    'label' => 'Programme image for landing page',
+    'label' => 'Programme image for landing page (drupal)',
     'effects' => array(
       13 => array(
         'name' => 'focal_point_scale_and_crop',
@@ -100,7 +100,7 @@ function gbif_project_image_default_styles() {
   );
 
   // Exported image style: teaser_thumbmail.
-  $styles['teaser_thumbmail'] = array(
+  $styles['teaser_thumbmail (drupal)'] = array(
     'label' => 'Teaser thumbmail',
     'effects' => array(
       12 => array(

@@ -11,6 +11,7 @@ use Drupal\gbif_restful\Plugin\resource\ResourceNodeGbifInterface;
 use Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif;
 use Drupal\restful\Plugin\resource\DataInterpreter\DataInterpreterInterface;
 use \EntityFieldQuery;
+use \EntityMetadataWrapper;
 
 /**
  * Class Programme__1_0
@@ -66,6 +67,7 @@ class Programme__1_0 extends ResourceNodeGbif implements ResourceNodeGbifInterfa
         'masthead__tablet',
         'masthead__laptop',
         'masthead__desktop',
+        'prose_image_for_desktop',
       ),
     );
 
@@ -136,32 +138,29 @@ class Programme__1_0 extends ResourceNodeGbif implements ResourceNodeGbifInterfa
 
       $nodes = node_load_multiple($ids);
       foreach ($nodes as $project) {
+        $project_wrapper = entity_metadata_wrapper('node', $project->nid);
         $node = array();
-        $node['id'] = $project->nid;
+        $node['id'] = (int)$project->nid;
         $node['type'] = $project->type;
-        $node['targetUrl'] = drupal_get_path_alias('node/' . $nid);
-        $node['title'] = $project->title;
-        $node['summary'] = $project->body['und'][0]['summary'];
+        $node['targetUrl'] = drupal_get_path_alias('node/' . $project->nid);
+        $node['title'] = $project_wrapper->label();
         $node['duration'] = array(
-          'start' => $project->field_duration['und'][0]['value'],
-          'end' => $project->field_duration['und'][0]['value2'],
+          'start' => (int)$project_wrapper->field_duration->value->value(),
+          'end' => (int)$project_wrapper->field_duration->value2->value(),
         );
+
         $node['image'] = array(
-          'id' => $project->field_pj_image['und'][0]['fid'],
-          'original' => file_create_url($project->field_pj_image['und'][0]['uri']),
-          'filemime' => $project->field_pj_image['und'][0]['filemime'],
-          'title' => $project->field_pj_image['und'][0]['title'],
-          'alt' => $project->field_pj_image['und'][0]['alt'],
+          'id' => (int)$project_wrapper->field_pj_image->file->value()->fid,
+          'original' => file_create_url($project_wrapper->field_pj_image->file->value()->uri),
+          'filemime' => $project_wrapper->field_pj_image->file->value()->filemime,
           'styles' => array(
-            'sidebar_thumbnail' => image_style_url('sidebar_thumbnail', $project->field_pj_image['und'][0]['uri']),
+            'sidebar_thumbnail' => image_style_url('sidebar_thumbnail', $project_wrapper->field_pj_image->file->value()->uri),
           ),
         );
-        $node['status'] = (isset($project->field_status['und'])) ? $project->field_status['und'][0]['value'] : null;
-        $node['titleForDisplay'] = (isset($project->field_title_for_display['und'])) ? $project->field_title_for_display['und'][0]['value'] : null;
-        $node['fundingAllocated'] = (isset($project->field_pj_funding_allocated['und'])) ? $project->field_pj_funding_allocated['und'][0]['value'] : null;
-        $node['estimatedCoFunding'] = (isset($project->field_pj_matching_fund['und'])) ? $project->field_pj_matching_fund['und'][0]['value'] : null;
-        $node['grantType'] = (isset($project->field_pj_grant_type['und'])) ? $project->field_pj_grant_type['und'][0]['value'] : null;
-
+        $node['status'] = $project_wrapper->field_status->value();
+        $node['fundingAllocated'] = (int)$project_wrapper->field_pj_funding_allocated->value();
+        $node['estimatedCoFunding'] = (int)$project_wrapper->field_pj_matching_fund->value();
+        $node['grantType'] = $project_wrapper->field_pj_grant_type->value();
         $output[] = $node;
       }
     }

@@ -90,11 +90,11 @@ function gbif_media_image_default_styles() {
   $styles['prose_image_for_desktop'] = array(
     'label' => 'Prose image for desktop (express)',
     'effects' => array(
-      3 => array(
+      1 => array(
         'name' => 'focal_point_scale_and_crop',
         'data' => array(
-          'width' => 965,
-          'height' => 400,
+          'width' => 1920,
+          'height' => 1040,
           'focal_point_advanced' => array(
             'shift_x' => '',
             'shift_y' => '',

@@ -131,7 +131,7 @@ class Project__1_0 extends ResourceNodeGbif implements ResourceNodeGbifInterface
       'property' => 'field_related_resources',
     );
 
-    $public_fields['purpose'] = array(
+    $public_fields['tagsPurpose'] = array(
       'property' => 'gr_purpose',
       'process_callbacks' => array(
         array($this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::getTermValue'),

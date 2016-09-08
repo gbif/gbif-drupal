@@ -141,7 +141,7 @@ class Programme__1_0 extends ResourceNodeGbif implements ResourceNodeGbifInterfa
         $project_wrapper = entity_metadata_wrapper('node', $project->nid);
         $node = array();
         $node['id'] = (int)$project->nid;
-        $node['type'] = $project->type;
+        $node['type'] = $project_wrapper->type();
         $node['targetUrl'] = drupal_get_path_alias('node/' . $project->nid);
         $node['title'] = $project_wrapper->label();
         $node['duration'] = array(

@@ -11,6 +11,7 @@ use Drupal\restful\Plugin\resource\ResourceNode;
 use Drupal\restful\Plugin\resource\Field\ResourceFieldBase;
 use Drupal\restful\Plugin\resource\DataInterpreter\DataInterpreterInterface;
 use \EntityFieldQuery;
+use \EntityMetadataWrapper;
 
 class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface {
 
@@ -108,12 +109,12 @@ class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface
       return $output;
     }
     $output = array(
-      'id' => $value['fid'],
+      'id' => (int)$value['fid'],
       'original' => file_create_url($value['uri']),
       'filemime' => $value['filemime'],
-      'filesize' => $value['filesize'],
-      'width' => $value['width'],
-      'height' => $value['height'],
+      'filesize' => (int)$value['filesize'],
+      'width' => (int)$value['width'],
+      'height' => (int)$value['height'],
     );
     if (isset($value['image_styles'])) {
       $output['styles'] = $value['image_styles'];
@@ -216,64 +217,90 @@ class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface
    */
   public static function getEntityValue($value) {
     $output = array();
+
     if (!is_array($value)) {
       $value = array($value);
     }
-    $entities = entity_load('node', $value);
 
-    foreach ($entities as $nid => $entity) {
-      $item = array();
-      $item['id'] = $nid;
-      $item['targetUrl'] = drupal_get_path_alias('node/' . $nid);
-      $item['type'] = $entity->type;
+    foreach ($value as $nid) {
 
-      // Type specific fields
-      switch ($entity->type) {
-        case 'dir_organization':
-          $image_field = array(
-            'id' => $entity->field_image['und'][0]['fid'],
-            'original' => file_create_url($entity->field_image['und'][0]['uri']),
-            'filemime' => $entity->field_image['und'][0]['filemime'],
-            'filesize' => $entity->field_image['und'][0]['filesize'],
-            'width' => $entity->field_image['und'][0]['image_dimensions']['width'],
-            'height' => $entity->field_image['und'][0]['image_dimensions']['height'],
-            'styles' => array(
-              'funder_image' => image_style_url('funder_image', $entity->field_image['und'][0]['uri'])
-            ),
-          );
-          $item['image'] = $image_field;
-          $url_field = array(
-            'url' => $entity->field_url['und'][0]['url'],
-            'title' => $entity->field_url['und'][0]['title'],
-          );
-          $item['url'] = $url_field;
+        $item = array();
+        $entity = entity_metadata_wrapper('node', $nid);
+        $item['id'] = (int)$nid;
+        $item['type'] = $entity->getBundle();
+        $item['targetUrl'] = drupal_get_path_alias('node/' . $nid);
+        $item['title'] = $entity->label();
 
-          // organization URL is not exposed
-          unset($item['targetUrl']);
-          break;
+        switch ($item['type']) {
+          case 'dir_organization':
+            // Image
+            $image = $entity->field_image->value();
+            if (isset($image)) {
+              $image_field = array(
+                'id' => (int)$image['fid'],
+                'original' => file_create_url($image['uri']),
+                'filemime' => $image['filemime'],
+                'filesize' => (int)$image['filesize'],
+                'width' => (int)$image['image_dimensions']['width'],
+                'height' => (int)$image['image_dimensions']['height'],
+                'styles' => array(
+                  'funder_image' => image_style_url('funder_image', $image['uri'])
+                ),
+              );
+              $item['image'] = $image_field;
+            }
+            else {
+              $item['image'] = NULL;
+            }
+            unset($image);
 
-        case 'news':
-          $item['image'] = array(
-            'id' => '',
-            'original' => file_create_url($entity->field_uni_images['und'][0]['uri']),
-            'filemime' => $entity->field_uni_images['und'][0]['filemime'],
-            'filesize' => $entity->field_uni_images['und'][0]['filesize'],
-            'width' => $entity->field_uni_images['und'][0]['image_dimensions']['width'],
-            'height' => $entity->field_uni_images['und'][0]['image_dimensions']['height'],
-            'styles' => array(
-              'square_thumbnail' => image_style_url('square_thumbnail', $entity->field_uni_images['und'][0]['uri'])
-            ),
-          );
-          break;
+            // URL
+            $url = $entity->field_url->value();
+            if ($entity->field_url->value()) {
+              $item['url'] = $url[0];
+            }
+            else {
+              $item['url'] = NULL;
+            }
+            unset($url);
+            // organization URL is not exposed
+            unset($item['targetUrl']);
 
-      }
-      $item['created'] = $entity->created;
-      $item['title'] = $entity->title;
-      $item['summary'] = (isset($entity->body['und'])) ? $entity->body['und'][0]['summary'] : '';
-      $item['language'] = $entity->language;
-      $output[] = $item;
+            break;
+          case 'news':
+            $item['summary'] = $entity->body->__isset('summary') ? $entity->body->summary->value() : $entity->body->value();
+            // Image
+            $image = $entity->field_uni_images->value();
+            if (isset($image)) {
+              $image_field = array(
+                'id' => (int)$image['fid'],
+                'original' => file_create_url($image['uri']),
+                'filemime' => $image['filemime'],
+                'filesize' => (int)$image['filesize'],
+                'width' => (int)$image['image_dimensions']['width'],
+                'height' => (int)$image['image_dimensions']['height'],
+                'styles' => array(
+                  'square_thumbnail' => image_style_url('square_thumbnail', $image['uri'])
+                ),
+              );
+              $item['image'] = $image_field;
+            }
+            else {
+              $item['image'] = NULL;
+            }
+            unset($image);
+
+            break;
+          case 'call':
+            $item['acronym'] = $entity->field_acronym->value();
+            break;
+
+        }
+
+        $item['language'] = $entity->language->value();
+        $item['created'] = (int)$entity->created->value();
+        $output[] = $item;
     }
-
     return $output;
   }
 

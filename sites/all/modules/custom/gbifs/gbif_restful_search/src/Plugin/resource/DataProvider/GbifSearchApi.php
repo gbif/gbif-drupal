@@ -51,7 +51,7 @@ use Drupal\restful\Plugin\resource\Field\ResourceFieldCollectionInterface;
   /**
    * Mapping for readable tag related fields.
    */
-  private $mapping = array(
+  public $mapping = array(
     'tx_informatics' => 'category_informatics',
     'tx_data_use' => 'category_data_use',
     'tx_capacity_enhancement' => 'category_capacity_enhancement',
@@ -65,6 +65,22 @@ use Drupal\restful\Plugin\resource\Field\ResourceFieldCollectionInterface;
     'tx_tags' => 'category_tags',
   );
 
+   /**
+    * Mapping for fields and vocabulary.
+    */
+   public $mapping_vocabulary = array(
+     'tx_informatics' => 'informatics',
+     'tx_data_use' => 'data_use',
+     'tx_capacity_enhancement' => 'capacity_enhancement',
+     'tx_about_gbif' => 'about_gbif',
+     'tx_audience' => 'audience',
+     'field_tx_purpose' => 'purpose',
+     'field_tx_data_type' => 'data_type',
+     'gr_resource_type' => 'resource_type',
+     'field_country' => 'countries',
+     'tx_topic' => 'topic',
+     'tx_tags' => 'tags',
+   );
   /**
    * {@inheritdoc}
    */
@@ -390,6 +406,19 @@ use Drupal\restful\Plugin\resource\Field\ResourceFieldCollectionInterface;
     }
     $this->hateoas['count'] = (int)$resultsObj['result count'];
 
+    // Search keyword is considered a filter
+    $this->hateoas['filters'] = array(
+      ['q' => $keywords]
+    );
+
+    // Add a request object
+    $filters = $query->getFilter()->getFilters();
+    if (isset($filters)) {
+      $response = $this->appendQueryFilters($filters);
+      $this->hateoas['filters'] = array_merge($this->hateoas['filters'], $response['filters']);
+      $this->hateoas['issues'] = $response['issues'];
+    }
+
     return $results;
   }
 
@@ -569,5 +598,109 @@ use Drupal\restful\Plugin\resource\Field\ResourceFieldCollectionInterface;
     }
 
     return $facet_non_associative;
+  }
+
+  /**
+   * This function append the filter information to the result object so it's
+   * possible to show/debug what's being requested.
+   */
+  private function appendQueryFilters(&$filters) {
+    $mapping = $this->mapping;
+    $node_types = node_type_get_types();
+    unset($node_types['dir_organization'], $node_types['call'], $node_types['generictemplate']);
+    $languages = language_list();
+
+    $requested_filters = [];
+    $issues = [];
+
+    foreach($filters as $filter) {
+
+      switch ($filter[0]) {
+        case 'type':
+          $valid_type = FALSE;
+          foreach ($node_types as $type => $type_obj) {
+            if ($filter[1] == $type) {
+              $valid_type = TRUE;
+            }
+          }
+          if ($valid_type == TRUE) {
+            $item = array(
+              'label' => $node_types[$filter[1]]->name,
+              'enum' => $filter[1]
+            );
+            $requested_filters[] = $item;
+          }
+          else {
+            $issues[] = $filter[1] . ' is not a valid content type.';
+          }
+          break;
+
+        case 'language':
+          $valid_language = FALSE;
+          foreach ($languages as $lang_code => $language) {
+            if ($filter[1] == $lang_code || $filter[1] == 'und') $valid_language = TRUE;
+          }
+          if ($valid_language == TRUE && $filter[1] != 'und') {
+            $request[] = array(
+              'label' => $languages[$filter[1]]->name,
+              'enum' => $filter[1],
+            );
+          }
+          elseif ($valid_language == TRUE && $filter[1] == 'und') {
+            $requested_filters[] = array(
+              'label' => t('Not-specified'),
+              'enum' => $filter[1],
+            );
+          }
+          else {
+            $issues[] = $filter[1] . ' is not a valid language code. Either the code is wrong or unavailable on this site';
+          }
+
+          break;
+        default:
+          $is_term = (is_numeric($filter[1])) ?  TRUE : FALSE;
+          if ($is_term) {
+            $term = taxonomy_term_load($filter[1]);
+            if ($this->validTaxonomy($filter[0], $filter[1])) {
+              $item = array(
+                'id' => (int)$term->tid,
+                'label' => $term->name,
+                'enum' => strtolower(str_replace(' ', '_', $term->name)),
+              );
+              $requested_filters[] = $item;
+            }
+            else {
+              $issues[] = $filter[1] . '(' . $term->name . ', ' . $term->vocabulary_machine_name . ') is not a valid term ID for ' . $mapping[$filter[0]];
+            }
+          }
+          break;
+      }
+    }
+
+    return $response = array(
+      'filters' => $requested_filters,
+      'issues' => $issues
+    );
+  }
+
+  /**
+   * Validate that the requested term filter is of correct vocabulary.
+   * @param $field
+   * @param $tid
+   */
+  private function validTaxonomy($field, $tid) {
+    $mapping_vocabulary = $this->mapping_vocabulary;
+    foreach ($mapping_vocabulary as $m => $n) {
+      if ($field == $m) {
+        $term = taxonomy_term_load($tid);
+        // id matches a term in the requested vocabulary
+        if ($term->vocabulary_machine_name == $n) {
+          return TRUE;
+        }
+        else {
+          return FALSE;
+        }
+      }
+    }
   }
 }

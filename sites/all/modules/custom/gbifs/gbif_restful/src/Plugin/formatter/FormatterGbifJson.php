@@ -79,6 +79,8 @@ class FormatterGbifJson extends Formatter implements FormatterInterface {
       'facets',
       'previous',
       'next',
+      'filters',
+      'issues',
     );
 
     uksort($output, function($a, $b) use ($output_order) {

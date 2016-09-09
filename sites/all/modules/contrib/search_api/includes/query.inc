@@ -579,7 +579,7 @@ class SearchApiQuery implements SearchApiQueryInterface {
    * {@inheritdoc}
    */
   public function filter(SearchApiQueryFilterInterface $filter) {
-    $this->filter->filter($filter);
+    $this->filter = $filter;
     return $this;
   }
 

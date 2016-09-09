@@ -12,6 +12,7 @@ use Drupal\restful\Plugin\resource\Field\ResourceFieldBase;
 use Drupal\restful\Plugin\resource\DataInterpreter\DataInterpreterInterface;
 use \EntityFieldQuery;
 use \EntityMetadataWrapper;
+use \EntityValueWrapper;
 
 class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface {
 
@@ -159,26 +160,27 @@ class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface
   public static function getSystemAttributes(DataInterpreterInterface $interpreter) {
     $wrapper = $interpreter->getWrapper();
     $nid = $wrapper->getIdentifier();
-    $prev_node = node_load(prev_next_nid($nid, 'prev'));
-    $next_node = node_load(prev_next_nid($nid, 'next'));
-    $output = array(
-      'prev' => array(
-        'id' => $prev_node->nid,
-        'type' => $prev_node->type,
-        'title' => $prev_node->title,
-        'targetUrl' => drupal_get_path_alias('node/' . $prev_node->nid),
-        'thumbnail' => (isset($prev_node->field_uni_images['und'])) ? image_style_url('focal_point_for_news', $prev_node->field_uni_images['und'][0]['uri']) : NULL,
-        'imageCaption' => (isset($prev_node->field_uni_images['und'])) ? $prev_node->field_uni_images['und'][0]['image_field_caption']['value'] : NULL,
-      ),
-      'next' => array(
-        'id' => $next_node->nid,
-        'type' => $next_node->type,
-        'title' => $next_node->title,
-        'targetUrl' => drupal_get_path_alias('node/' . $next_node->nid),
-        'thumbnail' => (isset($next_node->field_uni_images['und'])) ? image_style_url('focal_point_for_news', $next_node->field_uni_images['und'][0]['uri']) : NULL,
-        'imageCaption' => (isset($next_node->field_uni_images['und'])) ? $next_node->field_uni_images['und'][0]['image_field_caption']['value'] : NULL,
-      ),
-    );
+    $output = array();
+
+    foreach (['prev', 'next'] as $rel) {
+
+      $node = node_load(prev_next_nid($nid, $rel));
+      $rel_wrapper = entity_metadata_wrapper('node', $node);
+      $output[$rel] = array(
+        'id' => $rel_wrapper->getIdentifier(),
+        'type' => $rel_wrapper->getBundle(),
+        'title' => $rel_wrapper->label(),
+        'targetUrl' => drupal_get_path_alias('node/' . $rel_wrapper->getIdentifier()),
+      );
+
+      $image = $rel_wrapper->field_uni_images->value();
+      if (isset($image)) {
+        $output[$rel]['thumbnail'] = image_style_url('focal_point_for_news', $image[0]['uri']);
+        $output[$rel]['imageCaption'] = $image[0]['image_field_caption']['value'];
+      }
+      unset($image);
+
+    }
 
     // Get translated copies only for News.
     $node = node_load($nid);

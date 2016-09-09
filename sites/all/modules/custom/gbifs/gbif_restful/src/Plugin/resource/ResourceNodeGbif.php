@@ -270,7 +270,8 @@ class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface
           case 'news':
             $item['summary'] = $entity->body->__isset('summary') ? $entity->body->summary->value() : $entity->body->value();
             // Image
-            $image = $entity->field_uni_images->value();
+            $images = $entity->field_uni_images->value();
+            $image = $images[0]; // for referenced entity only use the first image
             if (isset($image)) {
               $image_field = array(
                 'id' => (int)$image['fid'],

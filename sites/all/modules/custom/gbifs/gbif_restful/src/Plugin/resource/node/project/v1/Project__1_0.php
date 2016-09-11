@@ -85,6 +85,14 @@ class Project__1_0 extends ResourceNodeGbif implements ResourceNodeGbifInterface
       'property' => 'field_pj_grant_type',
     );
 
+    $public_fields['fundingAllocated'] = array(
+      'property' => 'field_pj_funding_allocated',
+    );
+
+    $public_fields['estimatedCoFunding'] = array(
+      'property' => 'field_pj_matching_fund',
+    );
+
     $public_fields['funder'] = array(
       'property' => 'field_co_funder',
       'process_callbacks' => array(

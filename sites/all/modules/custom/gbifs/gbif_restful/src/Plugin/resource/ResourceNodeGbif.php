@@ -16,7 +16,6 @@ use \EntityValueWrapper;
 
 class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface {
 
-
   /**
    * Overrides ResourceNode::publicFields().
    */
@@ -67,6 +66,9 @@ class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface
     );
     $public_fields['created'] = array(
       'property' => 'created',
+    );
+    $public_fields['changed'] = array(
+      'property' => 'changed',
     );
 
     return $public_fields;
@@ -167,16 +169,31 @@ class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface
       $node = node_load(prev_next_nid($nid, $rel));
       $rel_wrapper = entity_metadata_wrapper('node', $node);
       $output[$rel] = array(
-        'id' => $rel_wrapper->getIdentifier(),
+        'id' => (int)$rel_wrapper->getIdentifier(),
         'type' => $rel_wrapper->getBundle(),
         'title' => $rel_wrapper->label(),
         'targetUrl' => drupal_get_path_alias('node/' . $rel_wrapper->getIdentifier()),
       );
 
-      $image = $rel_wrapper->field_uni_images->value();
+      switch ($wrapper->getBundle()) {
+        case 'news':
+        case 'dataset':
+        case 'data_use':
+          $image = $rel_wrapper->field_uni_images->value();
+          break;
+        case 'event':
+          $image = $rel_wrapper->ge_image->value();
+          break;
+        case 'programme':
+          $image = $rel_wrapper->field_programme_ef_image->value();
+          break;
+        case 'project':
+          $image = $rel_wrapper->field_pj_image->value();
+          break;
+      }
       if (isset($image)) {
-        $output[$rel]['thumbnail'] = image_style_url('focal_point_for_news', $image[0]['uri']);
-        $output[$rel]['imageCaption'] = $image[0]['image_field_caption']['value'];
+        $output[$rel]['thumbnail'] = (isset($image[0])) ? image_style_url('focal_point_for_news', $image[0]['uri']) : NULL;
+        $output[$rel]['imageCaption'] = (isset($image[0])) ? $image[0]['image_field_caption']['value'] : NULL;
       }
       unset($image);
 
@@ -201,7 +218,7 @@ class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface
     }
     $terms = taxonomy_term_load_multiple($value);
     foreach ($terms as $term) {
-      $term->id = $term->tid;
+      $term->id = (int)$term->tid;
       unset($term->tid, $term->vid, $term->description, $term->format, $term->weight, $term->uuid, $term->vocabulary_machine_name, $term->field_iso2);
       // legacy attributes
       foreach (array('field_ims_keyword_id', 'ge_ims_kp_id', 'field_term_iso_639_1', 'field_term_native_name') as $field) {

@@ -204,9 +204,11 @@ class Search__2_0 extends GbifResourceSearchBase implements ResourceInterface {
     $public_fields['created'] = array(
       'property' => 'created',
     );
+
     $public_fields['changed'] = array(
       'property' => 'changed',
     );
+
     return $public_fields;
   }
 

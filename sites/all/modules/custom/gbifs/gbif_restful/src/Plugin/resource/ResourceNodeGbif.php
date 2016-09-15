@@ -183,12 +183,15 @@ class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface
           break;
         case 'event':
           $image = $rel_wrapper->ge_image->value();
+          $image = [$image];
           break;
         case 'programme':
           $image = $rel_wrapper->field_programme_ef_image->value();
+          $image = [$image];
           break;
         case 'project':
           $image = $rel_wrapper->field_pj_image->value();
+          $image = [$image];
           break;
       }
       if (isset($image)) {

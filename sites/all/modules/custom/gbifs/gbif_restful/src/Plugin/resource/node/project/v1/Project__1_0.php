@@ -153,6 +153,10 @@ class Project__1_0 extends ResourceNodeGbif implements ResourceNodeGbifInterface
       ),
     );
 
+    $public_fields['__system'] = array(
+      'callback' => 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::getSystemAttributes',
+    );
+
     return $public_fields;
   }
 

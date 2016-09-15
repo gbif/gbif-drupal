@@ -118,6 +118,7 @@ class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface
       'filesize' => (int)$value['filesize'],
       'width' => (int)$value['width'],
       'height' => (int)$value['height'],
+      'image_field_caption' => $value['image_field_caption']['value'],
     );
     if (isset($value['image_styles'])) {
       $output['styles'] = $value['image_styles'];

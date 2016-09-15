@@ -204,7 +204,7 @@ function gbif_scaled_contents_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'prev_next_index_nid';
-  $strongarm->value = 0;
+  $strongarm->value = '82828';
   $export['prev_next_index_nid'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -281,7 +281,7 @@ function gbif_scaled_contents_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'prev_next_node_type_dataset_current';
-  $strongarm->value = '0';
+  $strongarm->value = '1';
   $export['prev_next_node_type_dataset_current'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -295,7 +295,7 @@ function gbif_scaled_contents_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'prev_next_node_type_dataset_indexing_criteria_current';
-  $strongarm->value = 'nid';
+  $strongarm->value = 'created';
   $export['prev_next_node_type_dataset_indexing_criteria_current'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -309,7 +309,7 @@ function gbif_scaled_contents_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'prev_next_node_type_dataset_same_type_current';
-  $strongarm->value = '0';
+  $strongarm->value = '1';
   $export['prev_next_node_type_dataset_same_type_current'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -337,7 +337,7 @@ function gbif_scaled_contents_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'prev_next_node_type_data_use_current';
-  $strongarm->value = '0';
+  $strongarm->value = '1';
   $export['prev_next_node_type_data_use_current'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -351,7 +351,7 @@ function gbif_scaled_contents_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'prev_next_node_type_data_use_indexing_criteria_current';
-  $strongarm->value = 'nid';
+  $strongarm->value = 'created';
   $export['prev_next_node_type_data_use_indexing_criteria_current'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -365,7 +365,7 @@ function gbif_scaled_contents_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'prev_next_node_type_data_use_same_type_current';
-  $strongarm->value = '0';
+  $strongarm->value = '1';
   $export['prev_next_node_type_data_use_same_type_current'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -547,7 +547,7 @@ function gbif_scaled_contents_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'prev_next_node_type_news_current';
-  $strongarm->value = '0';
+  $strongarm->value = '1';
   $export['prev_next_node_type_news_current'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -561,7 +561,7 @@ function gbif_scaled_contents_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'prev_next_node_type_news_indexing_criteria_current';
-  $strongarm->value = 'nid';
+  $strongarm->value = 'created';
   $export['prev_next_node_type_news_indexing_criteria_current'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -575,14 +575,14 @@ function gbif_scaled_contents_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'prev_next_node_type_news_same_type_current';
-  $strongarm->value = '0';
+  $strongarm->value = '1';
   $export['prev_next_node_type_news_same_type_current'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'prev_next_node_type_programme';
-  $strongarm->value = 0;
+  $strongarm->value = 1;
   $export['prev_next_node_type_programme'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -603,7 +603,7 @@ function gbif_scaled_contents_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'prev_next_node_type_programme_indexing_criteria';
-  $strongarm->value = 'nid';
+  $strongarm->value = 'created';
   $export['prev_next_node_type_programme_indexing_criteria'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -617,7 +617,7 @@ function gbif_scaled_contents_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'prev_next_node_type_programme_same_type';
-  $strongarm->value = 0;
+  $strongarm->value = 1;
   $export['prev_next_node_type_programme_same_type'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -631,7 +631,7 @@ function gbif_scaled_contents_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'prev_next_node_type_project';
-  $strongarm->value = 0;
+  $strongarm->value = 1;
   $export['prev_next_node_type_project'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -659,7 +659,7 @@ function gbif_scaled_contents_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'prev_next_node_type_project_indexing_criteria';
-  $strongarm->value = 'nid';
+  $strongarm->value = 'created';
   $export['prev_next_node_type_project_indexing_criteria'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -673,7 +673,7 @@ function gbif_scaled_contents_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'prev_next_node_type_project_same_type';
-  $strongarm->value = 0;
+  $strongarm->value = 1;
   $export['prev_next_node_type_project_same_type'] = $strongarm;
 
   $strongarm = new stdClass();

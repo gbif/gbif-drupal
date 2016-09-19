@@ -621,16 +621,19 @@ use Drupal\restful\Plugin\resource\Field\ResourceFieldCollectionInterface;
           foreach ($node_types as $type => $type_obj) {
             if ($filter[1] == $type) {
               $valid_type = TRUE;
+              $item = array(
+                'field' => $filter[0],
+                'counts' => array(
+                  array(
+                    'label' => $node_types[$filter[1]]->name,
+                    'enum' => $filter[1]
+                  )
+                ),
+              );
+              $requested_filters[] = $item;
             }
           }
-          if ($valid_type == TRUE) {
-            $item = array(
-              'label' => $node_types[$filter[1]]->name,
-              'enum' => $filter[1]
-            );
-            $requested_filters[] = $item;
-          }
-          else {
+          if ($valid_type == FALSE) {
             $issues[] = $filter[1] . ' is not a valid content type.';
           }
           break;
@@ -640,17 +643,30 @@ use Drupal\restful\Plugin\resource\Field\ResourceFieldCollectionInterface;
           foreach ($languages as $lang_code => $language) {
             if ($filter[1] == $lang_code || $filter[1] == 'und') $valid_language = TRUE;
           }
+
           if ($valid_language == TRUE && $filter[1] != 'und') {
-            $request[] = array(
-              'label' => $languages[$filter[1]]->name,
-              'enum' => $filter[1],
+            $item = array(
+              'field' => $filter[0],
+              'counts' => array(
+                array(
+                  'label' => $languages[$filter[1]]->name,
+                  'enum' => $filter[1]
+                )
+              ),
             );
+            $requested_filters[] = $item;
           }
           elseif ($valid_language == TRUE && $filter[1] == 'und') {
-            $requested_filters[] = array(
-              'label' => t('Not-specified'),
-              'enum' => $filter[1],
+            $item = array(
+              'field' => $filter[0],
+              'counts' => array(
+                array(
+                  'label' => t('Not-specified'),
+                  'enum' => $filter[1]
+                )
+              ),
             );
+            $requested_filters[] = $item;
           }
           else {
             $issues[] = $filter[1] . ' is not a valid language code. Either the code is wrong or unavailable on this site';
@@ -663,9 +679,14 @@ use Drupal\restful\Plugin\resource\Field\ResourceFieldCollectionInterface;
             $term = taxonomy_term_load($filter[1]);
             if ($this->validTaxonomy($filter[0], $filter[1])) {
               $item = array(
-                'id' => (int)$term->tid,
-                'label' => $term->name,
-                'enum' => strtolower(str_replace(' ', '_', $term->name)),
+                'field' => $filter[0],
+                'counts' => array(
+                  array(
+                    'id' => (int)$term->tid,
+                    'label' => $term->name,
+                    'enum' => strtolower(str_replace(' ', '_', $term->name)),
+                  )
+                ),
               );
               $requested_filters[] = $item;
             }

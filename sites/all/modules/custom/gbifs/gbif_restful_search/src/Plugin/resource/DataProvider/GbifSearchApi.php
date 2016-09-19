@@ -63,6 +63,8 @@ use Drupal\restful\Plugin\resource\Field\ResourceFieldCollectionInterface;
     'field_country' => 'category_country',
     'tx_topic' => 'category_topic',
     'tx_tags' => 'category_tags',
+    'type' => 'type',
+    'language' => 'language',
   );
 
    /**
@@ -292,6 +294,21 @@ use Drupal\restful\Plugin\resource\Field\ResourceFieldCollectionInterface;
     foreach ($input['filter'] as $public_field => $value) {
       foreach ($mapping as $m => $n) {
         if ($public_field == $n) {
+          // if it's category_* fields convert $value to $tid if it's not.
+          if (strpos($public_field, 'category_') !== FALSE && !is_numeric($value)) {
+            $voc = str_replace('category_', '', $public_field);
+            $value = str_replace('_', ' ', $value);
+            $term = taxonomy_get_term_by_name($value, $voc);
+            if (count($term) == 1) {
+              foreach ($term as $tid => $t) {
+                $value = $tid;
+              }
+            }
+            else {
+              throw new \Exception();
+            }
+          }
+          // Convert the requested field name to the actual field name.
           $public_field = $m;
         }
       }
@@ -407,9 +424,7 @@ use Drupal\restful\Plugin\resource\Field\ResourceFieldCollectionInterface;
     $this->hateoas['count'] = (int)$resultsObj['result count'];
 
     // Search keyword is considered a filter
-    $this->hateoas['filters'] = array(
-      ['q' => $keywords]
-    );
+    $this->hateoas['filters'] = [];
 
     // Add a request object
     $filters = $query->getFilter()->getFilters();
@@ -584,7 +599,7 @@ use Drupal\restful\Plugin\resource\Field\ResourceFieldCollectionInterface;
       foreach ($mapping as $m => $n) {
         if (strpos($field_name, $m) !== false) {
           $facets[$n] = $facets[$m];
-          unset($facets[$field_name]);
+          if (!in_array($m, ['type', 'language'])) unset($facets[$m]);
         }
       }
     }
@@ -671,8 +686,8 @@ use Drupal\restful\Plugin\resource\Field\ResourceFieldCollectionInterface;
           else {
             $issues[] = $filter[1] . ' is not a valid language code. Either the code is wrong or unavailable on this site';
           }
-
           break;
+
         default:
           $is_term = (is_numeric($filter[1])) ?  TRUE : FALSE;
           if ($is_term) {

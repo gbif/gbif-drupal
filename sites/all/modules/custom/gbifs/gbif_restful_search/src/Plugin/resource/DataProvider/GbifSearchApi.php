@@ -622,7 +622,7 @@ use Drupal\restful\Plugin\resource\Field\ResourceFieldCollectionInterface;
             if ($filter[1] == $type) {
               $valid_type = TRUE;
               $item = array(
-                'field' => $filter[0],
+                'field' => $mapping[$filter[0]],
                 'counts' => array(
                   array(
                     'label' => $node_types[$filter[1]]->name,
@@ -646,7 +646,7 @@ use Drupal\restful\Plugin\resource\Field\ResourceFieldCollectionInterface;
 
           if ($valid_language == TRUE && $filter[1] != 'und') {
             $item = array(
-              'field' => $filter[0],
+              'field' => $mapping[$filter[0]],
               'counts' => array(
                 array(
                   'label' => $languages[$filter[1]]->name,
@@ -658,7 +658,7 @@ use Drupal\restful\Plugin\resource\Field\ResourceFieldCollectionInterface;
           }
           elseif ($valid_language == TRUE && $filter[1] == 'und') {
             $item = array(
-              'field' => $filter[0],
+              'field' => $mapping[$filter[0]],
               'counts' => array(
                 array(
                   'label' => t('Not-specified'),
@@ -679,7 +679,7 @@ use Drupal\restful\Plugin\resource\Field\ResourceFieldCollectionInterface;
             $term = taxonomy_term_load($filter[1]);
             if ($this->validTaxonomy($filter[0], $filter[1])) {
               $item = array(
-                'field' => $filter[0],
+                'field' => $mapping[$filter[0]],
                 'counts' => array(
                   array(
                     'id' => (int)$term->tid,

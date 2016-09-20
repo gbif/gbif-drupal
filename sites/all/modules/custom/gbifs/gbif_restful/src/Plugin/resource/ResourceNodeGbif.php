@@ -168,38 +168,45 @@ class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface
     foreach (['prev', 'next'] as $rel) {
 
       $node = node_load(prev_next_nid($nid, $rel));
-      $rel_wrapper = entity_metadata_wrapper('node', $node);
-      $output[$rel] = array(
-        'id' => (int)$rel_wrapper->getIdentifier(),
-        'type' => $rel_wrapper->getBundle(),
-        'title' => $rel_wrapper->label(),
-        'targetUrl' => drupal_get_path_alias('node/' . $rel_wrapper->getIdentifier()),
-      );
+      if (!empty($node)) {
+        $rel_wrapper = entity_metadata_wrapper('node', $node);
+        $output[$rel] = array(
+          'id' => (int)$rel_wrapper->getIdentifier(),
+          'type' => $rel_wrapper->getBundle(),
+          'title' => $rel_wrapper->label(),
+          'targetUrl' => drupal_get_path_alias('node/' . $rel_wrapper->getIdentifier()),
+        );
 
-      switch ($wrapper->getBundle()) {
-        case 'news':
-        case 'dataset':
-        case 'data_use':
-          $image = $rel_wrapper->field_uni_images->value();
-          break;
-        case 'event':
-          $image = $rel_wrapper->ge_image->value();
-          $image = [$image];
-          break;
-        case 'programme':
-          $image = $rel_wrapper->field_programme_ef_image->value();
-          $image = [$image];
-          break;
-        case 'project':
-          $image = $rel_wrapper->field_pj_image->value();
-          $image = [$image];
-          break;
+        switch ($wrapper->getBundle()) {
+          case 'news':
+          case 'dataset':
+          case 'data_use':
+            $image = $rel_wrapper->field_uni_images->value();
+            break;
+          case 'event':
+            $image = $rel_wrapper->ge_image->value();
+            $image = [$image];
+            break;
+          case 'programme':
+            $image = $rel_wrapper->field_programme_ef_image->value();
+            $image = [$image];
+            break;
+          case 'project':
+            $image = $rel_wrapper->field_pj_image->value();
+            $image = [$image];
+            break;
+        }
+        if (isset($image)) {
+          $output[$rel]['thumbnail'] = (isset($image[0])) ? image_style_url('focal_point_for_news', $image[0]['uri']) : NULL;
+          $output[$rel]['imageCaption'] = (isset($image[0])) ? $image[0]['image_field_caption']['value'] : NULL;
+        }
+        unset($image);
       }
-      if (isset($image)) {
-        $output[$rel]['thumbnail'] = (isset($image[0])) ? image_style_url('focal_point_for_news', $image[0]['uri']) : NULL;
-        $output[$rel]['imageCaption'] = (isset($image[0])) ? $image[0]['image_field_caption']['value'] : NULL;
+      else {
+        $output[$rel] = array(
+          'message' => "Prev/next nodes unavailable."
+        );
       }
-      unset($image);
 
     }
 

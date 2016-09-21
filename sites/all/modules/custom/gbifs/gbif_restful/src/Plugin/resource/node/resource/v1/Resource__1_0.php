@@ -181,7 +181,7 @@ class Resource__1_0 extends ResourceNodeGbif implements ResourceNodeGbifInterfac
       ),
     );
 
-    $public_fields['image'] = array(
+    $public_fields['images'] = array(
       'property' => 'gr_image',
       'process_callbacks' => array(
         array($this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::imageProcess'),

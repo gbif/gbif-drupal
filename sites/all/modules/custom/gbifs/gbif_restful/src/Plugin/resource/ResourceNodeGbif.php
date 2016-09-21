@@ -104,24 +104,23 @@ class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface
    *   A cleaned image array.
    */
   public function imageProcess($value) {
-    if (ResourceFieldBase::isArrayNumeric($value)) {
-      $output = array();
-      foreach ($value as $item) {
-        $output[] = $this->imageProcess($item);
-      }
-      return $output;
+    if (!ResourceFieldBase::isArrayNumeric($value)) {
+      $value = array($value);
     }
-    $output = array(
-      'id' => (int)$value['fid'],
-      'original' => file_create_url($value['uri']),
-      'filemime' => $value['filemime'],
-      'filesize' => (int)$value['filesize'],
-      'width' => (int)$value['width'],
-      'height' => (int)$value['height'],
-      'image_field_caption' => $value['image_field_caption']['value'],
-    );
-    if (isset($value['image_styles'])) {
-      $output['styles'] = $value['image_styles'];
+    $output = array();
+    foreach ($value as $k => $item) {
+      $output[] = array(
+        'id' => (int)$item['fid'],
+        'original' => file_create_url($item['uri']),
+        'filemime' => $item['filemime'],
+        'filesize' => (int)$item['filesize'],
+        'width' => (int)$item['width'],
+        'height' => (int)$item['height'],
+        'image_field_caption' => $item['image_field_caption']['value'],
+      );
+      if (isset($item['image_styles'])) {
+        $output[$k]['styles'] = $item['image_styles'];
+      }
     }
     return $output;
   }

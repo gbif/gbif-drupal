@@ -16,6 +16,7 @@ use Drupal\restful\Plugin\resource\DataInterpreter\ArrayWrapper;
 use Drupal\restful\Plugin\resource\DataInterpreter\DataInterpreterArray;
 use Drupal\restful\Plugin\resource\DataProvider\DataProvider;
 use Drupal\restful\Plugin\resource\Field\ResourceFieldCollectionInterface;
+use \EntityFieldQuery;
 
 /**
  * Class GbifSearchApi.
@@ -294,18 +295,36 @@ use Drupal\restful\Plugin\resource\Field\ResourceFieldCollectionInterface;
     foreach ($input['filter'] as $public_field => $value) {
       foreach ($mapping as $m => $n) {
         if ($public_field == $n) {
+
           // if it's category_* fields convert $value to $tid if it's not.
           if (strpos($public_field, 'category_') !== FALSE && !is_numeric($value)) {
             $voc = str_replace('category_', '', $public_field);
-            $value = str_replace('_', ' ', $value);
-            $term = taxonomy_get_term_by_name($value, $voc);
-            if (count($term) == 1) {
-              foreach ($term as $tid => $t) {
-                $value = $tid;
+
+            // if it's country we assume to accept ISO 2-digit code.
+            if ($voc == 'country') {
+              $query = new EntityFieldQuery();
+              $query->entityCondition('entity_type', 'taxonomy_term');
+              $query->entityCondition('bundle', array('countries'));
+              $query->fieldCondition('field_iso2', 'value', $value, '=');
+              $results = $query->execute();
+              if (count($results) == 1 && isset($results['taxonomy_term'])) {
+                foreach ($results['taxonomy_term'] as $tid => $t_obj) {
+                  $value = $tid;
+                }
               }
+              else throw new \Exception;
             }
             else {
-              throw new \Exception();
+              $value = str_replace('_', ' ', $value);
+              $term = taxonomy_get_term_by_name($value, $voc);
+              if (count($term) == 1) {
+                foreach ($term as $tid => $t) {
+                  $value = $tid;
+                }
+              }
+              else {
+                throw new \Exception();
+              }
             }
           }
           // Convert the requested field name to the actual field name.

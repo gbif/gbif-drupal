@@ -98,7 +98,7 @@
         </div>
         <div class="row">
 
-          <?php if ($markdown == TRUE): ?>
+          <?php if (isset($markdown) && $markdown == TRUE): ?>
           <div class="node-content markdown-layout col-xs-12">
           <?php else: ?>
           <div class="node-content col-xs-8">
@@ -131,13 +131,13 @@
             <?php endif; ?>
             <?php print render($content['comments']); ?>
           </div>
-          <?php if ($markdown == FALSE): ?>
+          <?php if (isset($markdown) && $markdown == FALSE): ?>
           <div class="node-sidebar col-xs-3">
 						<?php if (isset($content['service_links'])): ?>
 							<?php print render($content['service_links']); ?>
 						<?php endif; ?>
             <?php
-              print $sidebar;
+              if (isset($sidebar)) print $sidebar;
             ?>
           </div>
           <?php endif; ?>

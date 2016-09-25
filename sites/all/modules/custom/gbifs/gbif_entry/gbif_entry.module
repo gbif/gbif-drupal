@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the GBIF Entry feature.
+ */
+
+include_once 'gbif_entry.features.inc';

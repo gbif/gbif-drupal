@@ -1,22 +1,22 @@
 <?php
 /**
  * @file
- * gbif_entry.field_group.inc
+ * gbif_generic.field_group.inc
  */
 
 /**
  * Implements hook_field_group_info().
  */
-function gbif_entry_field_group_info() {
+function gbif_generic_field_group_info() {
   $field_groups = array();
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
   $field_group->api_version = 1;
-  $field_group->identifier = 'group_anchors|node|entry|form';
+  $field_group->identifier = 'group_anchors|node|generic|form';
   $field_group->group_name = 'group_anchors';
   $field_group->entity_type = 'node';
-  $field_group->bundle = 'entry';
+  $field_group->bundle = 'generic';
   $field_group->mode = 'form';
   $field_group->parent_name = 'group_attached_items';
   $field_group->data = array(
@@ -35,15 +35,15 @@ function gbif_entry_field_group_info() {
       ),
     ),
   );
-  $field_groups['group_anchors|node|entry|form'] = $field_group;
+  $field_groups['group_anchors|node|generic|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
   $field_group->api_version = 1;
-  $field_group->identifier = 'group_attached_items|node|entry|form';
+  $field_group->identifier = 'group_attached_items|node|generic|form';
   $field_group->group_name = 'group_attached_items';
   $field_group->entity_type = 'node';
-  $field_group->bundle = 'entry';
+  $field_group->bundle = 'generic';
   $field_group->mode = 'form';
   $field_group->parent_name = '';
   $field_group->data = array(
@@ -64,15 +64,15 @@ function gbif_entry_field_group_info() {
       ),
     ),
   );
-  $field_groups['group_attached_items|node|entry|form'] = $field_group;
+  $field_groups['group_attached_items|node|generic|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
   $field_group->api_version = 1;
-  $field_group->identifier = 'group_def_taxonomy|node|entry|form';
+  $field_group->identifier = 'group_def_taxonomy|node|generic|form';
   $field_group->group_name = 'group_def_taxonomy';
   $field_group->entity_type = 'node';
-  $field_group->bundle = 'entry';
+  $field_group->bundle = 'generic';
   $field_group->mode = 'form';
   $field_group->parent_name = 'group_gbif_cms_taxonomy';
   $field_group->data = array(
@@ -96,15 +96,15 @@ function gbif_entry_field_group_info() {
       ),
     ),
   );
-  $field_groups['group_def_taxonomy|node|entry|form'] = $field_group;
+  $field_groups['group_def_taxonomy|node|generic|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
   $field_group->api_version = 1;
-  $field_group->identifier = 'group_files|node|entry|form';
+  $field_group->identifier = 'group_files|node|generic|form';
   $field_group->group_name = 'group_files';
   $field_group->entity_type = 'node';
-  $field_group->bundle = 'entry';
+  $field_group->bundle = 'generic';
   $field_group->mode = 'form';
   $field_group->parent_name = 'group_attached_items';
   $field_group->data = array(
@@ -123,15 +123,15 @@ function gbif_entry_field_group_info() {
       ),
     ),
   );
-  $field_groups['group_files|node|entry|form'] = $field_group;
+  $field_groups['group_files|node|generic|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
   $field_group->api_version = 1;
-  $field_group->identifier = 'group_gbif_cms_taxonomy|node|entry|form';
+  $field_group->identifier = 'group_gbif_cms_taxonomy|node|generic|form';
   $field_group->group_name = 'group_gbif_cms_taxonomy';
   $field_group->entity_type = 'node';
-  $field_group->bundle = 'entry';
+  $field_group->bundle = 'generic';
   $field_group->mode = 'form';
   $field_group->parent_name = '';
   $field_group->data = array(
@@ -151,15 +151,15 @@ function gbif_entry_field_group_info() {
       ),
     ),
   );
-  $field_groups['group_gbif_cms_taxonomy|node|entry|form'] = $field_group;
+  $field_groups['group_gbif_cms_taxonomy|node|generic|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
   $field_group->api_version = 1;
-  $field_group->identifier = 'group_images|node|entry|form';
+  $field_group->identifier = 'group_images|node|generic|form';
   $field_group->group_name = 'group_images';
   $field_group->entity_type = 'node';
-  $field_group->bundle = 'entry';
+  $field_group->bundle = 'generic';
   $field_group->mode = 'form';
   $field_group->parent_name = 'group_attached_items';
   $field_group->data = array(
@@ -178,15 +178,15 @@ function gbif_entry_field_group_info() {
       ),
     ),
   );
-  $field_groups['group_images|node|entry|form'] = $field_group;
+  $field_groups['group_images|node|generic|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
   $field_group->api_version = 1;
-  $field_group->identifier = 'group_links|node|entry|form';
+  $field_group->identifier = 'group_links|node|generic|form';
   $field_group->group_name = 'group_links';
   $field_group->entity_type = 'node';
-  $field_group->bundle = 'entry';
+  $field_group->bundle = 'generic';
   $field_group->mode = 'form';
   $field_group->parent_name = 'group_attached_items';
   $field_group->data = array(
@@ -205,15 +205,15 @@ function gbif_entry_field_group_info() {
       ),
     ),
   );
-  $field_groups['group_links|node|entry|form'] = $field_group;
+  $field_groups['group_links|node|generic|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
   $field_group->api_version = 1;
-  $field_group->identifier = 'group_regions|node|entry|form';
+  $field_group->identifier = 'group_regions|node|generic|form';
   $field_group->group_name = 'group_regions';
   $field_group->entity_type = 'node';
-  $field_group->bundle = 'entry';
+  $field_group->bundle = 'generic';
   $field_group->mode = 'form';
   $field_group->parent_name = 'group_gbif_cms_taxonomy';
   $field_group->data = array(
@@ -234,15 +234,15 @@ function gbif_entry_field_group_info() {
       ),
     ),
   );
-  $field_groups['group_regions|node|entry|form'] = $field_group;
+  $field_groups['group_regions|node|generic|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
   $field_group->api_version = 1;
-  $field_group->identifier = 'group_topics_tags|node|entry|form';
+  $field_group->identifier = 'group_topics_tags|node|generic|form';
   $field_group->group_name = 'group_topics_tags';
   $field_group->entity_type = 'node';
-  $field_group->bundle = 'entry';
+  $field_group->bundle = 'generic';
   $field_group->mode = 'form';
   $field_group->parent_name = 'group_gbif_cms_taxonomy';
   $field_group->data = array(
@@ -262,7 +262,7 @@ function gbif_entry_field_group_info() {
       ),
     ),
   );
-  $field_groups['group_topics_tags|node|entry|form'] = $field_group;
+  $field_groups['group_topics_tags|node|generic|form'] = $field_group;
 
   // Translatables
   // Included for use with string extractors like potx.

@@ -1,15 +1,15 @@
 <?php
 /**
  * @file
- * Code for the GBIF Entry feature.
+ * Code for the GBIF generic feature.
  */
 
-include_once 'gbif_entry.features.inc';
+include_once 'gbif_generic.features.inc';
 
 /**
  * Implements hook_page_build().
  */
-function gbif_entry_page_build(&$page) {
+function gbif_generic_page_build(&$page) {
   // Find the current menu item by path
   $menu_item = menu_link_get_preferred(current_path());
   if (!empty($menu_item)) {

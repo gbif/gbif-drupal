@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * gbif_entry.features.field_instance.inc
+ * gbif_generic.features.field_instance.inc
  */
 
 /**
  * Implements hook_field_default_field_instances().
  */
-function gbif_entry_field_default_field_instances() {
+function gbif_generic_field_default_field_instances() {
   $field_instances = array();
 
   // Exported field_instance:
@@ -437,10 +437,10 @@ function gbif_entry_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-entry-body'.
-  $field_instances['node-entry-body'] = array(
+  // Exported field_instance: 'node-generic-body'.
+  $field_instances['node-generic-body'] = array(
     'bueditor_profile' => -1,
-    'bundle' => 'entry',
+    'bundle' => 'generic',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => '',
@@ -529,9 +529,9 @@ function gbif_entry_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-entry-field_anchor_links_block'.
-  $field_instances['node-entry-field_anchor_links_block'] = array(
-    'bundle' => 'entry',
+  // Exported field_instance: 'node-generic-field_anchor_links_block'.
+  $field_instances['node-generic-field_anchor_links_block'] = array(
+    'bundle' => 'generic',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => '',
@@ -579,12 +579,12 @@ function gbif_entry_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-entry-field_attached_files'.
-  $field_instances['node-entry-field_attached_files'] = array(
-    'bundle' => 'entry',
+  // Exported field_instance: 'node-generic-field_attached_files'.
+  $field_instances['node-generic-field_attached_files'] = array(
+    'bundle' => 'generic',
     'default_value' => array(),
     'deleted' => 0,
-    'description' => 'Files that are attached to only this entry. For those that should be available via the resource library, they need to be created as a resource first, and then \'linked\' with the \'internal or external links\' field.',
+    'description' => 'Files that are attached to only this generic. For those that should be available via the resource library, they need to be created as a resource first, and then \'linked\' with the \'internal or external links\' field.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -624,7 +624,7 @@ function gbif_entry_field_default_field_instances() {
             'slashes' => 0,
             'transliterate' => 0,
           ),
-          'value' => 'gbif_entry/files',
+          'value' => 'gbif_generic/files',
         ),
         'redirect' => 0,
         'retroactive_update' => 0,
@@ -711,9 +711,9 @@ function gbif_entry_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-entry-field_country'.
-  $field_instances['node-entry-field_country'] = array(
-    'bundle' => 'entry',
+  // Exported field_instance: 'node-generic-field_country'.
+  $field_instances['node-generic-field_country'] = array(
+    'bundle' => 'generic',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => '',
@@ -758,9 +758,9 @@ function gbif_entry_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-entry-field_gbif_area'.
-  $field_instances['node-entry-field_gbif_area'] = array(
-    'bundle' => 'entry',
+  // Exported field_instance: 'node-generic-field_gbif_area'.
+  $field_instances['node-generic-field_gbif_area'] = array(
+    'bundle' => 'generic',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => '',
@@ -802,9 +802,9 @@ function gbif_entry_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-entry-field_links_block'.
-  $field_instances['node-entry-field_links_block'] = array(
-    'bundle' => 'entry',
+  // Exported field_instance: 'node-generic-field_links_block'.
+  $field_instances['node-generic-field_links_block'] = array(
+    'bundle' => 'generic',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => '',
@@ -852,9 +852,9 @@ function gbif_entry_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-entry-field_tx_data_type'.
-  $field_instances['node-entry-field_tx_data_type'] = array(
-    'bundle' => 'entry',
+  // Exported field_instance: 'node-generic-field_tx_data_type'.
+  $field_instances['node-generic-field_tx_data_type'] = array(
+    'bundle' => 'generic',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => '',
@@ -896,9 +896,9 @@ function gbif_entry_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-entry-field_un_region'.
-  $field_instances['node-entry-field_un_region'] = array(
-    'bundle' => 'entry',
+  // Exported field_instance: 'node-generic-field_un_region'.
+  $field_instances['node-generic-field_un_region'] = array(
+    'bundle' => 'generic',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => '',
@@ -943,9 +943,9 @@ function gbif_entry_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-entry-field_uni_images'.
-  $field_instances['node-entry-field_uni_images'] = array(
-    'bundle' => 'entry',
+  // Exported field_instance: 'node-generic-field_uni_images'.
+  $field_instances['node-generic-field_uni_images'] = array(
+    'bundle' => 'generic',
     'deleted' => 0,
     'description' => '',
     'display' => array(
@@ -1083,9 +1083,9 @@ function gbif_entry_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-entry-tx_about_gbif'.
-  $field_instances['node-entry-tx_about_gbif'] = array(
-    'bundle' => 'entry',
+  // Exported field_instance: 'node-generic-tx_about_gbif'.
+  $field_instances['node-generic-tx_about_gbif'] = array(
+    'bundle' => 'generic',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => '',
@@ -1127,9 +1127,9 @@ function gbif_entry_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-entry-tx_audience'.
-  $field_instances['node-entry-tx_audience'] = array(
-    'bundle' => 'entry',
+  // Exported field_instance: 'node-generic-tx_audience'.
+  $field_instances['node-generic-tx_audience'] = array(
+    'bundle' => 'generic',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => '',
@@ -1171,9 +1171,9 @@ function gbif_entry_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-entry-tx_capacity_enhancement'.
-  $field_instances['node-entry-tx_capacity_enhancement'] = array(
-    'bundle' => 'entry',
+  // Exported field_instance: 'node-generic-tx_capacity_enhancement'.
+  $field_instances['node-generic-tx_capacity_enhancement'] = array(
+    'bundle' => 'generic',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => '',
@@ -1215,9 +1215,9 @@ function gbif_entry_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-entry-tx_data_use'.
-  $field_instances['node-entry-tx_data_use'] = array(
-    'bundle' => 'entry',
+  // Exported field_instance: 'node-generic-tx_data_use'.
+  $field_instances['node-generic-tx_data_use'] = array(
+    'bundle' => 'generic',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => '',
@@ -1259,9 +1259,9 @@ function gbif_entry_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-entry-tx_informatics'.
-  $field_instances['node-entry-tx_informatics'] = array(
-    'bundle' => 'entry',
+  // Exported field_instance: 'node-generic-tx_informatics'.
+  $field_instances['node-generic-tx_informatics'] = array(
+    'bundle' => 'generic',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => '',
@@ -1303,9 +1303,9 @@ function gbif_entry_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-entry-tx_tags'.
-  $field_instances['node-entry-tx_tags'] = array(
-    'bundle' => 'entry',
+  // Exported field_instance: 'node-generic-tx_tags'.
+  $field_instances['node-generic-tx_tags'] = array(
+    'bundle' => 'generic',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => '',
@@ -1350,9 +1350,9 @@ function gbif_entry_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-entry-tx_topic'.
-  $field_instances['node-entry-tx_topic'] = array(
-    'bundle' => 'entry',
+  // Exported field_instance: 'node-generic-tx_topic'.
+  $field_instances['node-generic-tx_topic'] = array(
+    'bundle' => 'generic',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => '',
@@ -1406,7 +1406,7 @@ function gbif_entry_field_default_field_instances() {
   t('Country');
   t('Data type');
   t('Data use');
-  t('Files that are attached to only this entry. For those that should be available via the resource library, they need to be created as a resource first, and then \'linked\' with the \'internal or external links\' field.');
+  t('Files that are attached to only this generic. For those that should be available via the resource library, they need to be created as a resource first, and then \'linked\' with the \'internal or external links\' field.');
   t('GBIF area');
   t('Images');
   t('Informatics');

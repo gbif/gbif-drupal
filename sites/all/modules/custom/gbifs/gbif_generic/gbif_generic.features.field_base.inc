@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * gbif_entry.features.field_base.inc
+ * gbif_generic.features.field_base.inc
  */
 
 /**
  * Implements hook_field_default_field_bases().
  */
-function gbif_entry_field_default_field_bases() {
+function gbif_generic_field_default_field_bases() {
   $field_bases = array();
 
   // Exported field_base: 'field_anchor_links'.

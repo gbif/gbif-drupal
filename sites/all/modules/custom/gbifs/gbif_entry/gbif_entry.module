@@ -1,0 +1,38 @@
+<?php
+/**
+ * @file
+ * Code for the GBIF Entry feature.
+ */
+
+include_once 'gbif_entry.features.inc';
+
+/**
+ * Implements hook_page_build().
+ */
+function gbif_entry_page_build(&$page) {
+  // Find the current menu item by path
+  $menu_item = menu_link_get_preferred(current_path());
+  if (!empty($menu_item)) {
+    $parameters = [
+      'active_trail' => [$menu_item['plid']],
+      'only_active_trail' => FALSE,
+      'min_depth' => (int)$menu_item['depth'] + 1,
+      'max_depth' => (int)$menu_item['depth'] + 1,
+      'conditions' => ['plid' => $menu_item['mlid']],
+    ];
+
+    $children = menu_build_tree($menu_item['menu_name'], $parameters);
+    $ids = [];
+    foreach ($children as $child) {
+      $link_path = $child['link']['link_path'];
+      $link_exploded = explode('/', $link_path);
+      if (isset($link_exploded[0]) && $link_exploded[0] == 'node') {
+        if (isset($link_exploded[1])) $ids[] = $link_exploded[1];
+      }
+    }
+    $nodes = node_load_multiple($ids);
+    foreach($nodes as $nid => $node) {
+      $page['content']['system_main']['nodes'][] = node_view($node); // @todo add langcode when i18n.
+    }
+  }
+}

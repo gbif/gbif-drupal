@@ -68,3 +68,15 @@ function gbif_generic_module_implements_alter(&$implementations, $hook) {
     $implementations['gbif_generic'] = $group;
   }
 }
+
+/**
+ * Implements hook_node_access().
+ */
+function gbif_project_node_access($node, $op, $account) {
+  if (in_array($node->type, ['generic']) && $op == 'view'  && empty(array_intersect($account->roles, ['Administrator', 'Editor', 'GBIFS Staff', 'Publisher']))) {
+    return NODE_ACCESS_DENY;
+  }
+  else {
+    return NODE_ACCESS_IGNORE;
+  }
+}

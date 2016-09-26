@@ -18,13 +18,11 @@ function gbif_generic_field_group_info() {
   $field_group->entity_type = 'node';
   $field_group->bundle = 'generic';
   $field_group->mode = 'form';
-  $field_group->parent_name = 'group_attached_items';
+  $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Anchors',
-    'weight' => '15',
-    'children' => array(
-      0 => 'field_anchor_links_block',
-    ),
+    'weight' => '9',
+    'children' => array(),
     'format_type' => 'tab',
     'format_settings' => array(
       'formatter' => 'closed',
@@ -248,9 +246,9 @@ function gbif_generic_field_group_info() {
     'label' => 'Topics and tags',
     'weight' => '13',
     'children' => array(
-      0 => 'tx_tags',
-      1 => 'tx_topic',
-      2 => 'field_featured_search_terms',
+      0 => 'field_featured_search_terms',
+      1 => 'tx_tags',
+      2 => 'tx_topic',
     ),
     'format_type' => 'tab',
     'format_settings' => array(

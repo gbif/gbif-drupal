@@ -653,8 +653,8 @@ function gbif_generic_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-generic-field_translation_source'.
-  $field_instances['node-generic-field_translation_source'] = array(
+  // Exported field_instance: 'node-generic-field_translation_source_generic'.
+  $field_instances['node-generic-field_translation_source_generic'] = array(
     'bundle' => 'generic',
     'default_value' => NULL,
     'deleted' => 0,
@@ -677,7 +677,7 @@ function gbif_generic_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'node',
-    'field_name' => 'field_translation_source',
+    'field_name' => 'field_translation_source_generic',
     'label' => 'Translation source',
     'required' => 0,
     'settings' => array(

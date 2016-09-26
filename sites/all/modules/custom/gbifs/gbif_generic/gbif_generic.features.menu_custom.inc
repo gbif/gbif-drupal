@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * gbif_entry.features.menu_custom.inc
+ * gbif_generic.features.menu_custom.inc
  */
 
 /**
  * Implements hook_menu_default_menu_custom().
  */
-function gbif_entry_menu_default_menu_custom() {
+function gbif_generic_menu_default_menu_custom() {
   $menus = array();
 
   // Exported menu: menu-p16menu.

@@ -36,3 +36,35 @@ function gbif_generic_page_build(&$page) {
     }
   }
 }
+
+/**
+ * Implements hook_form_alter().
+ */
+function gbif_generic_form_alter(&$form, &$form_state, $form_id) {
+  if (in_array($form_id, array('generic_node_form'))) {
+    $form['language']['#required'] = TRUE;
+    if (isset($form['language']['#default_value']) && $form['language']['#default_value'] == 'und') {
+      $form['language']['#default_value'] = NULL;
+    }
+    $form['language']['#weight'] = 1;
+    $form['field_subtitle']['#weight'] = 1;
+    $form['#after_build'][] = 'gbif_generic_node_form_after_build';
+  }
+}
+
+function gbif_generic_node_form_after_build($form) {
+  $form['body']['und']['0']['format']['#access'] = FALSE;
+  $form['field_subtitle']['und']['0']['format']['#access'] = FALSE;
+  return $form;
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function gbif_generic_module_implements_alter(&$implementations, $hook) {
+  if ($hook == 'form_alter') {
+    $group = $implementations['gbif_generic'];
+    unset($implementations['gbif_generic']);
+    $implementations['gbif_generic'] = $group;
+  }
+}

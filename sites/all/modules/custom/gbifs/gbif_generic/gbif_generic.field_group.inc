@@ -48,12 +48,11 @@ function gbif_generic_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Attached items',
-    'weight' => '2',
+    'weight' => '4',
     'children' => array(
-      0 => 'group_images',
-      1 => 'group_files',
+      0 => 'group_files',
+      1 => 'group_images',
       2 => 'group_links',
-      3 => 'group_anchors',
     ),
     'format_type' => 'tabs',
     'format_settings' => array(
@@ -79,12 +78,12 @@ function gbif_generic_field_group_info() {
     'label' => 'Defined Taxonomy',
     'weight' => '12',
     'children' => array(
-      0 => 'tx_about_gbif',
-      1 => 'tx_capacity_enhancement',
+      0 => 'field_tx_data_type',
+      1 => 'tx_about_gbif',
       2 => 'tx_audience',
-      3 => 'tx_data_use',
-      4 => 'tx_informatics',
-      5 => 'field_tx_data_type',
+      3 => 'tx_capacity_enhancement',
+      4 => 'tx_data_use',
+      5 => 'tx_informatics',
     ),
     'format_type' => 'tab',
     'format_settings' => array(
@@ -136,11 +135,11 @@ function gbif_generic_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'GBIF CMS Taxonomy',
-    'weight' => '3',
+    'weight' => '5',
     'children' => array(
       0 => 'group_def_taxonomy',
-      1 => 'group_topics_tags',
-      2 => 'group_regions',
+      1 => 'group_regions',
+      2 => 'group_topics_tags',
     ),
     'format_type' => 'tabs',
     'format_settings' => array(
@@ -220,9 +219,9 @@ function gbif_generic_field_group_info() {
     'label' => 'Regions',
     'weight' => '11',
     'children' => array(
-      0 => 'field_gbif_area',
-      1 => 'field_un_region',
-      2 => 'field_country',
+      0 => 'field_country',
+      1 => 'field_gbif_area',
+      2 => 'field_un_region',
     ),
     'format_type' => 'tab',
     'format_settings' => array(
@@ -249,8 +248,9 @@ function gbif_generic_field_group_info() {
     'label' => 'Topics and tags',
     'weight' => '13',
     'children' => array(
-      0 => 'tx_topic',
-      1 => 'tx_tags',
+      0 => 'tx_tags',
+      1 => 'tx_topic',
+      2 => 'field_featured_search_terms',
     ),
     'format_type' => 'tab',
     'format_settings' => array(

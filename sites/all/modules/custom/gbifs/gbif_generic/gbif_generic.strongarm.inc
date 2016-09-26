@@ -34,16 +34,16 @@ function gbif_generic_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'comment_generic';
-  $strongarm->value = '1';
-  $export['comment_generic'] = $strongarm;
+  $strongarm->name = 'comment_form_location_generic';
+  $strongarm->value = 1;
+  $export['comment_form_location_generic'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'comment_form_location_generic';
-  $strongarm->value = 1;
-  $export['comment_form_location_generic'] = $strongarm;
+  $strongarm->name = 'comment_generic';
+  $strongarm->value = '1';
+  $export['comment_generic'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -68,16 +68,16 @@ function gbif_generic_strongarm() {
     'extra_fields' => array(
       'form' => array(
         'metatags' => array(
-          'weight' => '6',
+          'weight' => '8',
         ),
         'title' => array(
           'weight' => '0',
         ),
         'path' => array(
-          'weight' => '5',
+          'weight' => '7',
         ),
         'redirect' => array(
-          'weight' => '4',
+          'weight' => '6',
         ),
       ),
       'display' => array(),
@@ -136,21 +136,21 @@ function gbif_generic_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'pathauto_node_generic_en_pattern';
-  $strongarm->value = '';
+  $strongarm->value = 'generic/[node:nid]';
   $export['pathauto_node_generic_en_pattern'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'pathauto_node_generic_es_pattern';
-  $strongarm->value = '';
+  $strongarm->value = 'generic/[node:nid]';
   $export['pathauto_node_generic_es_pattern'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'pathauto_node_generic_fr_pattern';
-  $strongarm->value = '';
+  $strongarm->value = 'generic/[node:nid]';
   $export['pathauto_node_generic_fr_pattern'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -164,7 +164,7 @@ function gbif_generic_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'pathauto_node_generic_pt_pattern';
-  $strongarm->value = '';
+  $strongarm->value = 'generic/[node:nid]';
   $export['pathauto_node_generic_pt_pattern'] = $strongarm;
 
   $strongarm = new stdClass();

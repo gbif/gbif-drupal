@@ -11,207 +11,6 @@ function gbif_generic_field_default_field_instances() {
   $field_instances = array();
 
   // Exported field_instance:
-  // 'field_collection_item-field_anchor_links_block-field_anchor_links'.
-  $field_instances['field_collection_item-field_anchor_links_block-field_anchor_links'] = array(
-    'bundle' => 'field_anchor_links_block',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => NULL,
-        'settings' => array(),
-        'type' => 'alf_formatter',
-        'weight' => 2,
-      ),
-    ),
-    'entity_type' => 'field_collection_item',
-    'field_name' => 'field_anchor_links',
-    'label' => 'Anchor links',
-    'required' => 0,
-    'settings' => array(
-      'mediafront' => array(
-        'custom' => '',
-        'field_type' => 0,
-        'media_type' => 'media',
-        'preview' => 0,
-        'thumbnail' => 0,
-      ),
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 0,
-      'module' => 'alf',
-      'settings' => array(),
-      'type' => 'alf_field',
-      'weight' => 5,
-    ),
-  );
-
-  // Exported field_instance:
-  // 'field_collection_item-field_anchor_links_block-field_title'.
-  $field_instances['field_collection_item-field_anchor_links_block-field_title'] = array(
-    'bundle' => 'field_anchor_links_block',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'text',
-        'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'field_collection_item',
-    'field_name' => 'field_title',
-    'label' => 'Title',
-    'required' => 0,
-    'settings' => array(
-      'better_formats' => array(
-        'allowed_formats' => array(
-          'filtered_html' => 0,
-          'full_html' => 0,
-          'parsedown' => 'parsedown',
-          'php_code' => 0,
-          'plain_text' => 0,
-          'raw_html' => 0,
-        ),
-        'allowed_formats_toggle' => 1,
-        'default_order_toggle' => 0,
-        'default_order_wrapper' => array(
-          'formats' => array(
-            'filtered_html' => array(
-              'weight' => -9,
-            ),
-            'full_html' => array(
-              'weight' => -10,
-            ),
-            'parsedown' => array(
-              'weight' => 0,
-            ),
-            'php_code' => array(
-              'weight' => -7,
-            ),
-            'plain_text' => array(
-              'weight' => -8,
-            ),
-            'raw_html' => array(
-              'weight' => -6,
-            ),
-          ),
-        ),
-      ),
-      'linkit' => array(
-        'button_text' => 'Search',
-        'enable' => 0,
-        'profile' => '',
-      ),
-      'mediafront' => array(
-        'custom' => '',
-        'field_type' => 0,
-        'media_type' => 'media',
-        'preview' => 0,
-        'thumbnail' => 0,
-      ),
-      'text_processing' => 1,
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'text',
-      'settings' => array(
-        'size' => 60,
-      ),
-      'type' => 'text_textfield',
-      'weight' => 2,
-    ),
-  );
-
-  // Exported field_instance:
-  // 'field_collection_item-field_anchor_links_block-field_title_for_display'.
-  $field_instances['field_collection_item-field_anchor_links_block-field_title_for_display'] = array(
-    'bundle' => 'field_anchor_links_block',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'text',
-        'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 1,
-      ),
-    ),
-    'entity_type' => 'field_collection_item',
-    'field_name' => 'field_title_for_display',
-    'label' => 'Title for display',
-    'required' => 0,
-    'settings' => array(
-      'better_formats' => array(
-        'allowed_formats' => array(
-          'filtered_html' => 0,
-          'full_html' => 0,
-          'parsedown' => 'parsedown',
-          'php_code' => 0,
-          'plain_text' => 0,
-          'raw_html' => 0,
-        ),
-        'allowed_formats_toggle' => 1,
-        'default_order_toggle' => 0,
-        'default_order_wrapper' => array(
-          'formats' => array(
-            'filtered_html' => array(
-              'weight' => -9,
-            ),
-            'full_html' => array(
-              'weight' => -10,
-            ),
-            'parsedown' => array(
-              'weight' => 0,
-            ),
-            'php_code' => array(
-              'weight' => -7,
-            ),
-            'plain_text' => array(
-              'weight' => -8,
-            ),
-            'raw_html' => array(
-              'weight' => -6,
-            ),
-          ),
-        ),
-      ),
-      'linkit' => array(
-        'button_text' => 'Search',
-        'enable' => 0,
-        'profile' => '',
-      ),
-      'mediafront' => array(
-        'custom' => '',
-        'field_type' => 0,
-        'media_type' => 'media',
-        'preview' => 0,
-        'thumbnail' => 0,
-      ),
-      'text_processing' => 1,
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'text',
-      'settings' => array(
-        'size' => 60,
-      ),
-      'type' => 'text_textfield',
-      'weight' => 4,
-    ),
-  );
-
-  // Exported field_instance:
   // 'field_collection_item-field_links_block-field_links'.
   $field_instances['field_collection_item-field_links_block-field_links'] = array(
     'bundle' => 'field_links_block',
@@ -356,94 +155,13 @@ function gbif_generic_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance:
-  // 'field_collection_item-field_links_block-field_title_for_display'.
-  $field_instances['field_collection_item-field_links_block-field_title_for_display'] = array(
-    'bundle' => 'field_links_block',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => 'This is the title that is used when we know the length may cause difficulties during layout, e.g. sidebar title.',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'text',
-        'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 1,
-      ),
-    ),
-    'entity_type' => 'field_collection_item',
-    'field_name' => 'field_title_for_display',
-    'label' => 'Title for display',
-    'required' => 0,
-    'settings' => array(
-      'better_formats' => array(
-        'allowed_formats' => array(
-          'filtered_html' => 0,
-          'full_html' => 0,
-          'parsedown' => 'parsedown',
-          'php_code' => 0,
-          'plain_text' => 0,
-          'raw_html' => 0,
-        ),
-        'allowed_formats_toggle' => 1,
-        'default_order_toggle' => 0,
-        'default_order_wrapper' => array(
-          'formats' => array(
-            'filtered_html' => array(
-              'weight' => -9,
-            ),
-            'full_html' => array(
-              'weight' => -10,
-            ),
-            'parsedown' => array(
-              'weight' => 0,
-            ),
-            'php_code' => array(
-              'weight' => -7,
-            ),
-            'plain_text' => array(
-              'weight' => -8,
-            ),
-            'raw_html' => array(
-              'weight' => -6,
-            ),
-          ),
-        ),
-      ),
-      'linkit' => array(
-        'button_text' => 'Search',
-        'enable' => 0,
-        'profile' => '',
-      ),
-      'mediafront' => array(
-        'custom' => '',
-        'field_type' => 0,
-        'media_type' => 'media',
-        'preview' => 0,
-        'thumbnail' => 0,
-      ),
-      'text_processing' => 1,
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'text',
-      'settings' => array(
-        'size' => 60,
-      ),
-      'type' => 'text_textfield',
-      'weight' => 1,
-    ),
-  );
-
   // Exported field_instance: 'node-generic-body'.
   $field_instances['node-generic-body'] = array(
     'bueditor_profile' => -1,
     'bundle' => 'generic',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => '',
+    'description' => 'This field only accept Markdown syntax.',
     'display' => array(
       'default' => array(
         'label' => 'hidden',
@@ -525,57 +243,7 @@ function gbif_generic_field_default_field_instances() {
         'summary_rows' => 5,
       ),
       'type' => 'text_textarea_with_summary',
-      'weight' => 1,
-    ),
-  );
-
-  // Exported field_instance: 'node-generic-field_anchor_links_block'.
-  $field_instances['node-generic-field_anchor_links_block'] = array(
-    'bundle' => 'generic',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'field_collection',
-        'settings' => array(
-          'add' => 'Add',
-          'delete' => 'Delete',
-          'description' => TRUE,
-          'edit' => 'Edit',
-          'view_mode' => 'full',
-        ),
-        'type' => 'field_collection_view',
-        'weight' => 2,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_anchor_links_block',
-    'label' => 'Anchor links block',
-    'required' => 0,
-    'settings' => array(
-      'mediafront' => array(
-        'custom' => '',
-        'field_type' => 0,
-        'media_type' => 'media',
-        'preview' => 0,
-        'thumbnail' => 0,
-      ),
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 0,
-      'module' => 'field_collection',
-      'settings' => array(),
-      'type' => 'field_collection_embed',
-      'weight' => 6,
+      'weight' => 3,
     ),
   );
 
@@ -758,6 +426,53 @@ function gbif_generic_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-generic-field_featured_search_terms'.
+  $field_instances['node-generic-field_featured_search_terms'] = array(
+    'bundle' => 'generic',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 16,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_featured_search_terms',
+    'label' => 'Featured search terms',
+    'required' => 0,
+    'settings' => array(
+      'mediafront' => array(
+        'custom' => '',
+        'field_type' => 0,
+        'media_type' => 'media',
+        'preview' => 0,
+        'thumbnail' => 0,
+      ),
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'taxonomy',
+      'settings' => array(
+        'autocomplete_path' => 'taxonomy/autocomplete',
+        'size' => 60,
+      ),
+      'type' => 'taxonomy_autocomplete',
+      'weight' => 31,
+    ),
+  );
+
   // Exported field_instance: 'node-generic-field_gbif_area'.
   $field_instances['node-generic-field_gbif_area'] = array(
     'bundle' => 'generic',
@@ -852,6 +567,146 @@ function gbif_generic_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-generic-field_subtitle'.
+  $field_instances['node-generic-field_subtitle'] = array(
+    'bundle' => 'generic',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Max 90 characters. Markdown accepted.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 17,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_subtitle',
+    'label' => 'Subtitle',
+    'required' => 0,
+    'settings' => array(
+      'better_formats' => array(
+        'allowed_formats' => array(
+          'filtered_html' => 0,
+          'full_html' => 0,
+          'parsedown' => 'parsedown',
+          'php_code' => 0,
+          'plain_text' => 0,
+          'raw_html' => 0,
+        ),
+        'allowed_formats_toggle' => 1,
+        'default_order_toggle' => 0,
+        'default_order_wrapper' => array(
+          'formats' => array(
+            'filtered_html' => array(
+              'weight' => -9,
+            ),
+            'full_html' => array(
+              'weight' => -10,
+            ),
+            'parsedown' => array(
+              'weight' => 0,
+            ),
+            'php_code' => array(
+              'weight' => -7,
+            ),
+            'plain_text' => array(
+              'weight' => -8,
+            ),
+            'raw_html' => array(
+              'weight' => -6,
+            ),
+          ),
+        ),
+      ),
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
+      'mediafront' => array(
+        'custom' => '',
+        'field_type' => 0,
+        'media_type' => 'media',
+        'preview' => 0,
+        'thumbnail' => 0,
+      ),
+      'text_processing' => 1,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 80,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 1,
+    ),
+  );
+
+  // Exported field_instance: 'node-generic-field_translation_source'.
+  $field_instances['node-generic-field_translation_source'] = array(
+    'bundle' => 'generic',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => FALSE,
+        ),
+        'type' => 'entityreference_label',
+        'weight' => 18,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_translation_source',
+    'label' => 'Translation source',
+    'required' => 0,
+    'settings' => array(
+      'mediafront' => array(
+        'custom' => '',
+        'field_type' => 0,
+        'media_type' => 'media',
+        'preview' => 0,
+        'thumbnail' => 0,
+      ),
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'entityreference',
+      'settings' => array(
+        'match_operator' => 'CONTAINS',
+        'path' => '',
+        'references_dialog_add' => 0,
+        'references_dialog_edit' => 0,
+        'references_dialog_search' => 0,
+        'references_dialog_search_view' => '',
+        'size' => 60,
+      ),
+      'type' => 'entityreference_autocomplete',
+      'weight' => 2,
+    ),
+  );
+
   // Exported field_instance: 'node-generic-field_tx_data_type'.
   $field_instances['node-generic-field_tx_data_type'] = array(
     'bundle' => 'generic',
@@ -892,7 +747,7 @@ function gbif_generic_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_buttons',
-      'weight' => 17,
+      'weight' => 18,
     ),
   );
 
@@ -1167,7 +1022,7 @@ function gbif_generic_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_buttons',
-      'weight' => 14,
+      'weight' => 15,
     ),
   );
 
@@ -1211,7 +1066,7 @@ function gbif_generic_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_buttons',
-      'weight' => 13,
+      'weight' => 14,
     ),
   );
 
@@ -1255,7 +1110,7 @@ function gbif_generic_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_buttons',
-      'weight' => 15,
+      'weight' => 16,
     ),
   );
 
@@ -1299,7 +1154,7 @@ function gbif_generic_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_buttons',
-      'weight' => 16,
+      'weight' => 17,
     ),
   );
 
@@ -1346,7 +1201,7 @@ function gbif_generic_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'taxonomy_autocomplete',
-      'weight' => 25,
+      'weight' => 33,
     ),
   );
 
@@ -1390,15 +1245,13 @@ function gbif_generic_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_buttons',
-      'weight' => 24,
+      'weight' => 32,
     ),
   );
 
   // Translatables
   // Included for use with string extractors like potx.
   t('About GBIF');
-  t('Anchor links');
-  t('Anchor links block');
   t('Attached files');
   t('Audience');
   t('Body');
@@ -1406,17 +1259,20 @@ function gbif_generic_field_default_field_instances() {
   t('Country');
   t('Data type');
   t('Data use');
+  t('Featured search terms');
   t('Files that are attached to only this generic. For those that should be available via the resource library, they need to be created as a resource first, and then \'linked\' with the \'internal or external links\' field.');
   t('GBIF area');
   t('Images');
   t('Informatics');
   t('Links');
   t('Links block');
+  t('Max 90 characters. Markdown accepted.');
+  t('Subtitle');
   t('Tags');
-  t('This is the title that is used when we know the length may cause difficulties during layout, e.g. sidebar title.');
+  t('This field only accept Markdown syntax.');
   t('Title');
-  t('Title for display');
   t('Topic');
+  t('Translation source');
   t('UN region');
 
   return $field_instances;

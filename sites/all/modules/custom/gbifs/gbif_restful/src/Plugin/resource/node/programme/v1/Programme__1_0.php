@@ -42,14 +42,6 @@ class Programme__1_0 extends ResourceNodeGbif implements ResourceNodeGbifInterfa
   protected function publicFields() {
     $public_fields = parent::publicFields();
 
-    $public_fields['titleForDisplay'] = array(
-      'property' => 'field_title_for_display',
-    );
-
-    $public_fields['subtitle'] = array(
-      'property' => 'field_subtitle',
-    );
-
     $public_fields['acronym'] = array(
       'property' => 'field_acronym',
     );

@@ -449,6 +449,7 @@ class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface
             'id' => $k,
             'type' => $node_loaded->type,
             'language' => $node_loaded->language,
+            'targetUrl' => drupal_get_path_alias('node/' . $k),
           );
 
           $nid_results[] = $obj;

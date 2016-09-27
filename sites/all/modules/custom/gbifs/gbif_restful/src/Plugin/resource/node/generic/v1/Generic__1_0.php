@@ -46,6 +46,7 @@ class Generic__1_0 extends ResourceNodeGbif {
         ),
         'image_styles' => array(
           'focal_point_for_news',
+          'prose_image_for_desktop',
           'square_thumbnail',
           'masthead__mobile',
           'masthead__tablet',

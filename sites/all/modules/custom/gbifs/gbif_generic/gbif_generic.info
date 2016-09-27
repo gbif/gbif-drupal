@@ -47,6 +47,7 @@ features[field_instance][] = node-generic-field_links_block
 features[field_instance][] = node-generic-field_subtitle
 features[field_instance][] = node-generic-field_translation_source_generic
 features[field_instance][] = node-generic-field_tx_data_type
+features[field_instance][] = node-generic-field_tx_purpose
 features[field_instance][] = node-generic-field_un_region
 features[field_instance][] = node-generic-field_uni_images
 features[field_instance][] = node-generic-tx_about_gbif

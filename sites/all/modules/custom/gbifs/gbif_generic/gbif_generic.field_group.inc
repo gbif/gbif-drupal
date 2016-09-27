@@ -82,6 +82,7 @@ function gbif_generic_field_group_info() {
       3 => 'tx_capacity_enhancement',
       4 => 'tx_data_use',
       5 => 'tx_informatics',
+      6 => 'field_tx_purpose',
     ),
     'format_type' => 'tab',
     'format_settings' => array(

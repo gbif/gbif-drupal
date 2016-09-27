@@ -747,6 +747,50 @@ function gbif_generic_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_buttons',
+      'weight' => 17,
+    ),
+  );
+
+  // Exported field_instance: 'node-generic-field_tx_purpose'.
+  $field_instances['node-generic-field_tx_purpose'] = array(
+    'bundle' => 'generic',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 19,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_tx_purpose',
+    'label' => 'Purpose',
+    'required' => 0,
+    'settings' => array(
+      'mediafront' => array(
+        'custom' => '',
+        'field_type' => 0,
+        'media_type' => 'media',
+        'preview' => 0,
+        'thumbnail' => 0,
+      ),
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_buttons',
       'weight' => 18,
     ),
   );
@@ -1022,7 +1066,7 @@ function gbif_generic_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_buttons',
-      'weight' => 15,
+      'weight' => 14,
     ),
   );
 
@@ -1066,7 +1110,7 @@ function gbif_generic_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_buttons',
-      'weight' => 14,
+      'weight' => 13,
     ),
   );
 
@@ -1110,7 +1154,7 @@ function gbif_generic_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_buttons',
-      'weight' => 16,
+      'weight' => 15,
     ),
   );
 
@@ -1154,7 +1198,7 @@ function gbif_generic_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_buttons',
-      'weight' => 17,
+      'weight' => 16,
     ),
   );
 
@@ -1267,6 +1311,7 @@ function gbif_generic_field_default_field_instances() {
   t('Links');
   t('Links block');
   t('Max 90 characters. Markdown accepted.');
+  t('Purpose');
   t('Subtitle');
   t('Tags');
   t('This field only accept Markdown syntax.');

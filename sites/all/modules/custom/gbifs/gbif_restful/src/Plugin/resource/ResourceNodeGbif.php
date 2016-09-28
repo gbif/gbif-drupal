@@ -231,10 +231,10 @@ class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface
 
     }
 
-    // Get translated copies only for News.
+    // Get translated copies for News and generic.
     $node = node_load($nid);
     if (in_array($node->type, ['news', 'generic'])) {
-      $output['translated_copies'] = ResourceNodeGbif::getTranslatedNids($node);
+      $output['translated_copies'] = ResourceNodeGbif::getTranslatedNodes($node);
     }
     return $output;
   }
@@ -424,8 +424,9 @@ class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface
   /**
    *
    */
-  private static function getTranslatedNids($node) {
+  private static function getTranslatedNodes($node) {
     $nid_results = array();
+    $wrapper = entity_metadata_wrapper('node', $node);
 
     $reference_field = NULL;
     switch ($node->type) {
@@ -438,24 +439,40 @@ class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface
     }
 
     if ($reference_field !== NULL) {
+      $translation_source_node = $wrapper->$reference_field->value();
+      $query_nid = (!empty($translation_source_node)) ? $translation_source_node->nid : $node->nid;
       $query = new EntityFieldQuery();
       $query->entityCondition('entity_type', 'node');
-      $query->fieldCondition($reference_field, 'target_id', $node->nid, '=');
+      $query->fieldCondition($reference_field, 'target_id', $query_nid, '=');
       $results = $query->execute();
-      if (count($results) > 0 && isset($results['node'])) {
-        foreach($results['node'] as $k => $n) {
-          $node_loaded = node_load($k);
-          $obj = array(
-            'id' => $k,
-            'type' => $node_loaded->type,
-            'language' => $node_loaded->language,
-            'targetUrl' => drupal_get_path_alias('node/' . $k),
-          );
 
-          $nid_results[] = $obj;
+      if (!empty($translation_source_node)) {
+        $nid_results[] = [
+          'id' => $translation_source_node->nid,
+          'type' => $translation_source_node->type,
+          'language' => $translation_source_node->language,
+          'targetUrl' => drupal_get_path_alias('node/' . $translation_source_node->nid),
+          'title' => $translation_source_node->title
+        ];
+      }
+
+      if (count($results) > 0 && isset($results['node'])) {
+        foreach ($results['node'] as $k => $n) {
+          if ($k != $node->nid) {
+            $node_loaded = node_load($k);
+            $obj = array(
+              'id' => $k,
+              'type' => $node_loaded->type,
+              'language' => $node_loaded->language,
+              'targetUrl' => drupal_get_path_alias('node/' . $k),
+              'title' => $node_loaded->title,
+            );
+            $nid_results[] = $obj;
+          }
         }
       }
     }
+
     return $nid_results;
   }
 }

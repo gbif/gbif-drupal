@@ -133,7 +133,7 @@ function gbif_project_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Node details',
-    'weight' => '3',
+    'weight' => '4',
     'children' => array(
       0 => 'group_funding',
       1 => 'group_miscellaneous',

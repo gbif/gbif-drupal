@@ -610,7 +610,7 @@ function gbif_participant_page_router($iso2 = NULL, $chapter = NULL, $sub_chapte
 		if (count($results) > 1) {
 			return t('We are working on the information regarding this participant. Please come back later. We are sorry for the inconvenience.');
 		}
-		elseif (count($results) <= 1) {
+		elseif (count($results) == 1) {
 			// Find the nid.
 			$participantID = $results[0]['id'];
       // Get the institutional address of the Node.

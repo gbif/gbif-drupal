@@ -66,6 +66,9 @@ use \EntityFieldQuery;
     'tx_tags' => 'category_tags',
     'type' => 'type',
     'language' => 'language',
+    'field_gbif_area' => 'category_area',
+    'field_content_stream' => 'category_content_stream',
+    'field_un_region' => 'category_un_region',
   );
 
    /**
@@ -83,6 +86,9 @@ use \EntityFieldQuery;
      'field_country' => 'countries',
      'tx_topic' => 'topic',
      'tx_tags' => 'tags',
+     'field_gbif_area' => 'gbif_area',
+     'field_content_stream' => 'content_stream',
+     'field_un_region' => 'un_region',
    );
   /**
    * {@inheritdoc}

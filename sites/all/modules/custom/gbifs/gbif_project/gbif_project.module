@@ -727,7 +727,9 @@ function gbif_project_views_pre_view(&$view, &$display_id, &$args) {
  * Implements hook_node_access().
  */
 function gbif_project_node_access($node, $op, $account) {
-  if (in_array($node->type, ['call', 'dir_organization']) && $op == 'view'  && empty(array_intersect($account->roles, ['Administrator', 'Editor', 'GBIFS Staff', 'Publisher']))) {
+  // @see http://stackoverflow.com/questions/17139264/cant-use-function-return-value-in-write-context
+  $validated_roles = array_intersect($account->roles, ['Administrator', 'Editor', 'GBIFS Staff', 'Publisher']);
+  if (in_array($node->type, ['call', 'dir_organization']) && $op === 'view' && empty($validated_roles)) {
     return NODE_ACCESS_DENY;
   }
   else {

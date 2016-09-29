@@ -567,6 +567,54 @@ function gbif_generic_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-generic-field_rendering_option'.
+  $field_instances['node-generic-field_rendering_option'] = array(
+    'bundle' => 'generic',
+    'default_value' => array(
+      0 => array(
+        'tid' => 1266,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 20,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_rendering_option',
+    'label' => 'Rendering option',
+    'required' => 1,
+    'settings' => array(
+      'mediafront' => array(
+        'custom' => '',
+        'field_type' => 0,
+        'media_type' => 'media',
+        'preview' => 0,
+        'thumbnail' => 0,
+      ),
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_buttons',
+      'weight' => 6,
+    ),
+  );
+
   // Exported field_instance: 'node-generic-field_subtitle'.
   $field_instances['node-generic-field_subtitle'] = array(
     'bundle' => 'generic',
@@ -1312,6 +1360,7 @@ function gbif_generic_field_default_field_instances() {
   t('Links block');
   t('Max 90 characters. Markdown accepted.');
   t('Purpose');
+  t('Rendering option');
   t('Subtitle');
   t('Tags');
   t('This field only accept Markdown syntax.');

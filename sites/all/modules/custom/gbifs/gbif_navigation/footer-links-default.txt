@@ -8,7 +8,7 @@ Who's participating {"url":"<nolink>"}
 -Data publishers {"url":"publisher\/search", "non_drupal_url":true}
 Key documents {"url":"<nolink>"}
 -Privacy policy {"url":"terms\/privacy-policy"}
--Disclaimer {"url":"terms\/disclaimer"}
+-Disclaimer {"url":"terms\/overview"}
 -Data use agreement {"url":"terms/licences\/data-use"}
 -Data sharing agreement {"url":"terms\/licences\/data-sharing"}
 -Memorandum of Understanding {"url":"resource\/80661"}

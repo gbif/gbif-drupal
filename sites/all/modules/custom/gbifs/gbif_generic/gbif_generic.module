@@ -73,13 +73,15 @@ function gbif_generic_module_implements_alter(&$implementations, $hook) {
  * Implements hook_node_access().
  */
 function gbif_generic_node_access($node, $op, $account) {
-  $current_path = current_path();
-  $path = explode('/', $current_path);
-  $validated_roles = array_intersect($account->roles, ['Administrator', 'Editor', 'GBIFS Staff', 'Publisher']);
-  if (in_array($node->type, ['generic']) && $op == 'view' && empty($validated_roles) && $path[0] != 'api') {
-    return NODE_ACCESS_DENY;
-  }
-  else {
-    return NODE_ACCESS_IGNORE;
+  if (!empty($node) && $node->type == 'generic') {
+    $current_path = current_path();
+    $path = explode('/', $current_path);
+    $validated_roles = array_intersect($account->roles, ['Administrator', 'Editor', 'GBIFS Staff', 'Publisher']);
+    if ($op == 'view' && empty($validated_roles) && $path[0] != 'api') {
+      return NODE_ACCESS_DENY;
+    }
+    else {
+      return NODE_ACCESS_IGNORE;
+    }
   }
 }

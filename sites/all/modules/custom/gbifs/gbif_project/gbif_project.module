@@ -376,13 +376,13 @@ function gbif_project_preprocess_node(&$variables) {
         $partners = array();
         // First pick participants with 'lead'
         foreach ($mixed_partners as &$mixed_partner) {
-          if ($mixed_partner['lead'] == '1') $lead_partners[] = $mixed_partner;
+          if (isset($mixed_partner['lead']) && $mixed_partner['lead'] == '1') $lead_partners[] = $mixed_partner;
           unset($mixed_partner);
         }
         $count_lead_partners = count($lead_partners);
         // then other normal ones
         foreach ($mixed_partners as &$mixed_partner) {
-          if ($mixed_partner['lead'] == '0') $partners[] = $mixed_partner;
+          if (isset($mixed_partner['lead']) && $mixed_partner['lead'] == '0') $partners[] = $mixed_partner;
         }
         $count_partners = count($partners);
 
@@ -667,17 +667,17 @@ function _gbif_project_get_partner_link($entity) {
     // @todo the gbif_participant type can't be fully utilised by entity wrapper. To investigate.
     $iso2 = $entity->gp_iso2[LANGUAGE_NONE][0]['value'];
     $participant_id = $entity->gp_id[LANGUAGE_NONE][0]['value'];
-    $participants = _gbif_participant_participant_query($participant_id, $iso2);
+    $participants = _gbif_participant_participant_query($participant_id, $iso2, 'OTHER');
     $participant = array_shift($participants);
     $participant_type = $participant['type'];
     $participant_status = $participant['participationStatus'];
     if ($participant_type == 'COUNTRY' || ($participant_type == 'OTHER' && $participant_status == 'ASSOCIATE' && $iso2 == 'TW')) {
       $partner_url = '/country/' . $iso2 . '/participation';
     }
-    elseif ($gbif_membership == 'Other Associate Participant') {
-      // get the UUID and link to Struts portal
-      $uuid = _gbif_participant_get_uuid($participant_id, 'UUID');
-      $partner_url = gbif_portal_base_url() . '/node/' . $uuid;
+    elseif ($participant_type == 'OTHER' && $participant_status == 'ASSOCIATE') {
+      if (isset($participant['participantUrl'])) {
+        $partner_url = $participant['participantUrl'];
+      }
     }
     else {
       $partner_url = gbif_portal_base_url();
@@ -727,14 +727,17 @@ function gbif_project_views_pre_view(&$view, &$display_id, &$args) {
  * Implements hook_node_access().
  */
 function gbif_project_node_access($node, $op, $account) {
-  if (!empty($node) && in_array($node->type, ['call', 'dir_organization'])) {
-    // @see http://stackoverflow.com/questions/17139264/cant-use-function-return-value-in-write-context
-    $validated_roles = array_intersect($account->roles, ['Administrator', 'Editor', 'GBIFS Staff', 'Publisher']);
-    if ($op === 'view' && empty($validated_roles)) {
-      return NODE_ACCESS_DENY;
-    }
-    else {
-      return NODE_ACCESS_IGNORE;
+  if ($op == 'view') {
+    if (!empty($node) && in_array($node->type, ['call', 'dir_organization'])) {
+      // @see http://stackoverflow.com/questions/17139264/cant-use-function-return-value-in-write-context
+      $validated_roles = array_intersect($account->roles, ['Administrator', 'Editor', 'GBIFS Staff', 'Publisher']);
+      if (empty($validated_roles)) {
+        return NODE_ACCESS_DENY;
+      }
+      else {
+        return NODE_ACCESS_IGNORE;
+      }
     }
   }
+  return NODE_ACCESS_IGNORE;
 }

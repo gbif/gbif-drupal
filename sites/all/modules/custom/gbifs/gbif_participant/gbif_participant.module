@@ -953,6 +953,9 @@ function _gbif_participant_participant_query($participantID = NULL, $iso2 = NULL
         $results[] = $participant;
       }
     }
+    else {
+      $results[] = $participant;
+    }
   }
 
   // attach Node information

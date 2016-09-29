@@ -572,7 +572,7 @@ function gbif_generic_field_default_field_instances() {
     'bundle' => 'generic',
     'default_value' => array(
       0 => array(
-        'tid' => 1266,
+        'tid' => 1265,
       ),
     ),
     'deleted' => 0,

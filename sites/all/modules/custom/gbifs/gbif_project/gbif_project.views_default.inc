@@ -47,7 +47,7 @@ function gbif_project_views_default_views() {
   $handler->display->display_options['fields']['field_uni_images']['hide_empty'] = TRUE;
   $handler->display->display_options['fields']['field_uni_images']['click_sort_column'] = 'fid';
   $handler->display->display_options['fields']['field_uni_images']['settings'] = array(
-    'image_style' => 'teaser_thumbmail',
+    'image_style' => 'teaser_thumbmail (drupal)',
     'image_link' => 'content',
   );
   $handler->display->display_options['fields']['field_uni_images']['delta_offset'] = '0';

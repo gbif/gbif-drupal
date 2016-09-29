@@ -13,67 +13,6 @@ function gbif_restful_search_facetapi_default_facet_settings() {
   $facet = new stdClass();
   $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
   $facet->api_version = 1;
-  $facet->name = 'search_api@node_index::language';
-  $facet->searcher = 'search_api@node_index';
-  $facet->realm = '';
-  $facet->facet = 'language';
-  $facet->enabled = FALSE;
-  $facet->settings = array(
-    'operator' => 'and',
-    'hard_limit' => '50',
-    'dependencies' => array(
-      'facets' => array(),
-      'reverse_dependency' => FALSE,
-      'force_deactivation' => TRUE,
-      'regex' => FALSE,
-    ),
-    'facet_mincount' => '1',
-    'facet_missing' => '0',
-    'flatten' => 0,
-    'individual_parent' => 0,
-    'query_type' => 'term',
-    'limit_active_items' => 0,
-    'default_true' => TRUE,
-    'facet_search_ids' => array(),
-    'exclude' => 0,
-  );
-  $export['search_api@node_index::language'] = $facet;
-
-  $facet = new stdClass();
-  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
-  $facet->api_version = 1;
-  $facet->name = 'search_api@node_index::tx_about_gbif';
-  $facet->searcher = 'search_api@node_index';
-  $facet->realm = '';
-  $facet->facet = 'tx_about_gbif';
-  $facet->enabled = FALSE;
-  $facet->settings = array(
-    'operator' => 'and',
-    'hard_limit' => '50',
-    'dependencies' => array(
-      'facets' => array(),
-      'reverse_dependency' => FALSE,
-      'force_deactivation' => TRUE,
-      'regex' => FALSE,
-      'roles' => array(),
-      'bundle' => 'none',
-      'bundle_selected' => array(),
-    ),
-    'facet_mincount' => '1',
-    'facet_missing' => '0',
-    'flatten' => '0',
-    'individual_parent' => '0',
-    'query_type' => 'term',
-    'limit_active_items' => 0,
-    'default_true' => TRUE,
-    'facet_search_ids' => array(),
-    'exclude' => 0,
-  );
-  $export['search_api@node_index::tx_about_gbif'] = $facet;
-
-  $facet = new stdClass();
-  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
-  $facet->api_version = 1;
   $facet->name = 'search_api@node_index:block:author';
   $facet->searcher = 'search_api@node_index';
   $facet->realm = 'block';
@@ -106,6 +45,42 @@ function gbif_restful_search_facetapi_default_facet_settings() {
     'show_expanded' => 0,
   );
   $export['search_api@node_index:block:author'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
+  $facet->name = 'search_api@node_index:block:body:format';
+  $facet->searcher = 'search_api@node_index';
+  $facet->realm = 'block';
+  $facet->facet = 'body:format';
+  $facet->enabled = FALSE;
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'facetapi_links',
+    'filters' => array(),
+    'active_sorts' => array(
+      'active' => 'active',
+      'count' => 'count',
+      'display' => 'display',
+    ),
+    'sort_weight' => array(
+      'active' => -50,
+      'count' => -49,
+      'display' => -48,
+    ),
+    'sort_order' => array(
+      'active' => 3,
+      'count' => 3,
+      'display' => 4,
+    ),
+    'empty_behavior' => 'none',
+    'facet_more_text' => 'Show more',
+    'facet_fewer_text' => 'Show fewer',
+    'soft_limit' => 20,
+    'nofollow' => 1,
+    'show_expanded' => 0,
+  );
+  $export['search_api@node_index:block:body:format'] = $facet;
 
   $facet = new stdClass();
   $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
@@ -218,6 +193,42 @@ function gbif_restful_search_facetapi_default_facet_settings() {
   $facet = new stdClass();
   $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
   $facet->api_version = 1;
+  $facet->name = 'search_api@node_index:block:created';
+  $facet->searcher = 'search_api@node_index';
+  $facet->realm = 'block';
+  $facet->facet = 'created';
+  $facet->enabled = FALSE;
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'facetapi_links',
+    'filters' => array(),
+    'active_sorts' => array(
+      'active' => 'active',
+      'count' => 'count',
+      'display' => 'display',
+    ),
+    'sort_weight' => array(
+      'active' => -50,
+      'count' => -49,
+      'display' => -48,
+    ),
+    'sort_order' => array(
+      'active' => 3,
+      'count' => 3,
+      'display' => 4,
+    ),
+    'empty_behavior' => 'none',
+    'facet_more_text' => 'Show more',
+    'facet_fewer_text' => 'Show fewer',
+    'soft_limit' => 20,
+    'nofollow' => 1,
+    'show_expanded' => 0,
+  );
+  $export['search_api@node_index:block:created'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
   $facet->name = 'search_api@node_index:block:field_acronym';
   $facet->searcher = 'search_api@node_index';
   $facet->realm = 'block';
@@ -254,10 +265,10 @@ function gbif_restful_search_facetapi_default_facet_settings() {
   $facet = new stdClass();
   $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
   $facet->api_version = 1;
-  $facet->name = 'search_api@node_index:block:field_cchunk';
+  $facet->name = 'search_api@node_index:block:field_co_funder';
   $facet->searcher = 'search_api@node_index';
   $facet->realm = 'block';
-  $facet->facet = 'field_cchunk';
+  $facet->facet = 'field_co_funder';
   $facet->enabled = FALSE;
   $facet->settings = array(
     'weight' => 0,
@@ -285,7 +296,43 @@ function gbif_restful_search_facetapi_default_facet_settings() {
     'nofollow' => 1,
     'show_expanded' => 0,
   );
-  $export['search_api@node_index:block:field_cchunk'] = $facet;
+  $export['search_api@node_index:block:field_co_funder'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
+  $facet->name = 'search_api@node_index:block:field_content_stream';
+  $facet->searcher = 'search_api@node_index';
+  $facet->realm = 'block';
+  $facet->facet = 'field_content_stream';
+  $facet->enabled = TRUE;
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'facetapi_links',
+    'filters' => array(),
+    'active_sorts' => array(
+      'active' => 'active',
+      'count' => 'count',
+      'display' => 'display',
+    ),
+    'sort_weight' => array(
+      'active' => -50,
+      'count' => -49,
+      'display' => -48,
+    ),
+    'sort_order' => array(
+      'active' => 3,
+      'count' => 3,
+      'display' => 4,
+    ),
+    'empty_behavior' => 'none',
+    'facet_more_text' => 'Show more',
+    'facet_fewer_text' => 'Show fewer',
+    'soft_limit' => 20,
+    'nofollow' => 1,
+    'show_expanded' => 0,
+  );
+  $export['search_api@node_index:block:field_content_stream'] = $facet;
 
   $facet = new stdClass();
   $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
@@ -362,11 +409,11 @@ function gbif_restful_search_facetapi_default_facet_settings() {
   $facet = new stdClass();
   $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
   $facet->api_version = 1;
-  $facet->name = 'search_api@node_index:block:field_funding_statement';
+  $facet->name = 'search_api@node_index:block:field_gbif_area';
   $facet->searcher = 'search_api@node_index';
   $facet->realm = 'block';
-  $facet->facet = 'field_funding_statement';
-  $facet->enabled = FALSE;
+  $facet->facet = 'field_gbif_area';
+  $facet->enabled = TRUE;
   $facet->settings = array(
     'weight' => 0,
     'widget' => 'facetapi_links',
@@ -393,7 +440,7 @@ function gbif_restful_search_facetapi_default_facet_settings() {
     'nofollow' => 1,
     'show_expanded' => 0,
   );
-  $export['search_api@node_index:block:field_funding_statement'] = $facet;
+  $export['search_api@node_index:block:field_gbif_area'] = $facet;
 
   $facet = new stdClass();
   $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
@@ -430,6 +477,474 @@ function gbif_restful_search_facetapi_default_facet_settings() {
     'show_expanded' => 0,
   );
   $export['search_api@node_index:block:field_ge_gbif_attendee'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
+  $facet->name = 'search_api@node_index:block:field_links_block';
+  $facet->searcher = 'search_api@node_index';
+  $facet->realm = 'block';
+  $facet->facet = 'field_links_block';
+  $facet->enabled = FALSE;
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'facetapi_links',
+    'filters' => array(),
+    'active_sorts' => array(
+      'active' => 'active',
+      'count' => 'count',
+      'display' => 'display',
+    ),
+    'sort_weight' => array(
+      'active' => -50,
+      'count' => -49,
+      'display' => -48,
+    ),
+    'sort_order' => array(
+      'active' => 3,
+      'count' => 3,
+      'display' => 4,
+    ),
+    'empty_behavior' => 'none',
+    'facet_more_text' => 'Show more',
+    'facet_fewer_text' => 'Show fewer',
+    'soft_limit' => 20,
+    'nofollow' => 1,
+    'show_expanded' => 0,
+  );
+  $export['search_api@node_index:block:field_links_block'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
+  $facet->name = 'search_api@node_index:block:field_organizations';
+  $facet->searcher = 'search_api@node_index';
+  $facet->realm = 'block';
+  $facet->facet = 'field_organizations';
+  $facet->enabled = FALSE;
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'facetapi_links',
+    'filters' => array(),
+    'active_sorts' => array(
+      'active' => 'active',
+      'count' => 'count',
+      'display' => 'display',
+    ),
+    'sort_weight' => array(
+      'active' => -50,
+      'count' => -49,
+      'display' => -48,
+    ),
+    'sort_order' => array(
+      'active' => 3,
+      'count' => 3,
+      'display' => 4,
+    ),
+    'empty_behavior' => 'none',
+    'facet_more_text' => 'Show more',
+    'facet_fewer_text' => 'Show fewer',
+    'soft_limit' => 20,
+    'nofollow' => 1,
+    'show_expanded' => 0,
+  );
+  $export['search_api@node_index:block:field_organizations'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
+  $facet->name = 'search_api@node_index:block:field_pj_grant_type';
+  $facet->searcher = 'search_api@node_index';
+  $facet->realm = 'block';
+  $facet->facet = 'field_pj_grant_type';
+  $facet->enabled = FALSE;
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'facetapi_links',
+    'filters' => array(),
+    'active_sorts' => array(
+      'active' => 'active',
+      'count' => 'count',
+      'display' => 'display',
+    ),
+    'sort_weight' => array(
+      'active' => -50,
+      'count' => -49,
+      'display' => -48,
+    ),
+    'sort_order' => array(
+      'active' => 3,
+      'count' => 3,
+      'display' => 4,
+    ),
+    'empty_behavior' => 'none',
+    'facet_more_text' => 'Show more',
+    'facet_fewer_text' => 'Show fewer',
+    'soft_limit' => 20,
+    'nofollow' => 1,
+    'show_expanded' => 0,
+  );
+  $export['search_api@node_index:block:field_pj_grant_type'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
+  $facet->name = 'search_api@node_index:block:field_pj_participants';
+  $facet->searcher = 'search_api@node_index';
+  $facet->realm = 'block';
+  $facet->facet = 'field_pj_participants';
+  $facet->enabled = FALSE;
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'facetapi_links',
+    'filters' => array(),
+    'active_sorts' => array(
+      'active' => 'active',
+      'count' => 'count',
+      'display' => 'display',
+    ),
+    'sort_weight' => array(
+      'active' => -50,
+      'count' => -49,
+      'display' => -48,
+    ),
+    'sort_order' => array(
+      'active' => 3,
+      'count' => 3,
+      'display' => 4,
+    ),
+    'empty_behavior' => 'none',
+    'facet_more_text' => 'Show more',
+    'facet_fewer_text' => 'Show fewer',
+    'soft_limit' => 20,
+    'nofollow' => 1,
+    'show_expanded' => 0,
+  );
+  $export['search_api@node_index:block:field_pj_participants'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
+  $facet->name = 'search_api@node_index:block:field_pj_partners';
+  $facet->searcher = 'search_api@node_index';
+  $facet->realm = 'block';
+  $facet->facet = 'field_pj_partners';
+  $facet->enabled = FALSE;
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'facetapi_links',
+    'filters' => array(),
+    'active_sorts' => array(
+      'active' => 'active',
+      'count' => 'count',
+      'display' => 'display',
+    ),
+    'sort_weight' => array(
+      'active' => -50,
+      'count' => -49,
+      'display' => -48,
+    ),
+    'sort_order' => array(
+      'active' => 3,
+      'count' => 3,
+      'display' => 4,
+    ),
+    'empty_behavior' => 'none',
+    'facet_more_text' => 'Show more',
+    'facet_fewer_text' => 'Show fewer',
+    'soft_limit' => 20,
+    'nofollow' => 1,
+    'show_expanded' => 0,
+  );
+  $export['search_api@node_index:block:field_pj_partners'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
+  $facet->name = 'search_api@node_index:block:field_programme';
+  $facet->searcher = 'search_api@node_index';
+  $facet->realm = 'block';
+  $facet->facet = 'field_programme';
+  $facet->enabled = FALSE;
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'facetapi_links',
+    'filters' => array(),
+    'active_sorts' => array(
+      'active' => 'active',
+      'count' => 'count',
+      'display' => 'display',
+    ),
+    'sort_weight' => array(
+      'active' => -50,
+      'count' => -49,
+      'display' => -48,
+    ),
+    'sort_order' => array(
+      'active' => 3,
+      'count' => 3,
+      'display' => 4,
+    ),
+    'empty_behavior' => 'none',
+    'facet_more_text' => 'Show more',
+    'facet_fewer_text' => 'Show fewer',
+    'soft_limit' => 20,
+    'nofollow' => 1,
+    'show_expanded' => 0,
+  );
+  $export['search_api@node_index:block:field_programme'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
+  $facet->name = 'search_api@node_index:block:field_programme_ef';
+  $facet->searcher = 'search_api@node_index';
+  $facet->realm = 'block';
+  $facet->facet = 'field_programme_ef';
+  $facet->enabled = FALSE;
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'facetapi_links',
+    'filters' => array(),
+    'active_sorts' => array(
+      'active' => 'active',
+      'count' => 'count',
+      'display' => 'display',
+    ),
+    'sort_weight' => array(
+      'active' => -50,
+      'count' => -49,
+      'display' => -48,
+    ),
+    'sort_order' => array(
+      'active' => 3,
+      'count' => 3,
+      'display' => 4,
+    ),
+    'empty_behavior' => 'none',
+    'facet_more_text' => 'Show more',
+    'facet_fewer_text' => 'Show fewer',
+    'soft_limit' => 20,
+    'nofollow' => 1,
+    'show_expanded' => 0,
+  );
+  $export['search_api@node_index:block:field_programme_ef'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
+  $facet->name = 'search_api@node_index:block:field_project_id';
+  $facet->searcher = 'search_api@node_index';
+  $facet->realm = 'block';
+  $facet->facet = 'field_project_id';
+  $facet->enabled = FALSE;
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'facetapi_links',
+    'filters' => array(),
+    'active_sorts' => array(
+      'active' => 'active',
+      'count' => 'count',
+      'display' => 'display',
+    ),
+    'sort_weight' => array(
+      'active' => -50,
+      'count' => -49,
+      'display' => -48,
+    ),
+    'sort_order' => array(
+      'active' => 3,
+      'count' => 3,
+      'display' => 4,
+    ),
+    'empty_behavior' => 'none',
+    'facet_more_text' => 'Show more',
+    'facet_fewer_text' => 'Show fewer',
+    'soft_limit' => 20,
+    'nofollow' => 1,
+    'show_expanded' => 0,
+  );
+  $export['search_api@node_index:block:field_project_id'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
+  $facet->name = 'search_api@node_index:block:field_related_events';
+  $facet->searcher = 'search_api@node_index';
+  $facet->realm = 'block';
+  $facet->facet = 'field_related_events';
+  $facet->enabled = FALSE;
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'facetapi_links',
+    'filters' => array(),
+    'active_sorts' => array(
+      'active' => 'active',
+      'count' => 'count',
+      'display' => 'display',
+    ),
+    'sort_weight' => array(
+      'active' => -50,
+      'count' => -49,
+      'display' => -48,
+    ),
+    'sort_order' => array(
+      'active' => 3,
+      'count' => 3,
+      'display' => 4,
+    ),
+    'empty_behavior' => 'none',
+    'facet_more_text' => 'Show more',
+    'facet_fewer_text' => 'Show fewer',
+    'soft_limit' => 20,
+    'nofollow' => 1,
+    'show_expanded' => 0,
+  );
+  $export['search_api@node_index:block:field_related_events'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
+  $facet->name = 'search_api@node_index:block:field_related_news';
+  $facet->searcher = 'search_api@node_index';
+  $facet->realm = 'block';
+  $facet->facet = 'field_related_news';
+  $facet->enabled = FALSE;
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'facetapi_links',
+    'filters' => array(),
+    'active_sorts' => array(
+      'active' => 'active',
+      'count' => 'count',
+      'display' => 'display',
+    ),
+    'sort_weight' => array(
+      'active' => -50,
+      'count' => -49,
+      'display' => -48,
+    ),
+    'sort_order' => array(
+      'active' => 3,
+      'count' => 3,
+      'display' => 4,
+    ),
+    'empty_behavior' => 'none',
+    'facet_more_text' => 'Show more',
+    'facet_fewer_text' => 'Show fewer',
+    'soft_limit' => 20,
+    'nofollow' => 1,
+    'show_expanded' => 0,
+  );
+  $export['search_api@node_index:block:field_related_news'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
+  $facet->name = 'search_api@node_index:block:field_related_projects';
+  $facet->searcher = 'search_api@node_index';
+  $facet->realm = 'block';
+  $facet->facet = 'field_related_projects';
+  $facet->enabled = FALSE;
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'facetapi_links',
+    'filters' => array(),
+    'active_sorts' => array(
+      'active' => 'active',
+      'count' => 'count',
+      'display' => 'display',
+    ),
+    'sort_weight' => array(
+      'active' => -50,
+      'count' => -49,
+      'display' => -48,
+    ),
+    'sort_order' => array(
+      'active' => 3,
+      'count' => 3,
+      'display' => 4,
+    ),
+    'empty_behavior' => 'none',
+    'facet_more_text' => 'Show more',
+    'facet_fewer_text' => 'Show fewer',
+    'soft_limit' => 20,
+    'nofollow' => 1,
+    'show_expanded' => 0,
+  );
+  $export['search_api@node_index:block:field_related_projects'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
+  $facet->name = 'search_api@node_index:block:field_researcher_location';
+  $facet->searcher = 'search_api@node_index';
+  $facet->realm = 'block';
+  $facet->facet = 'field_researcher_location';
+  $facet->enabled = FALSE;
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'facetapi_links',
+    'filters' => array(),
+    'active_sorts' => array(
+      'active' => 'active',
+      'count' => 'count',
+      'display' => 'display',
+    ),
+    'sort_weight' => array(
+      'active' => -50,
+      'count' => -49,
+      'display' => -48,
+    ),
+    'sort_order' => array(
+      'active' => 3,
+      'count' => 3,
+      'display' => 4,
+    ),
+    'empty_behavior' => 'none',
+    'facet_more_text' => 'Show more',
+    'facet_fewer_text' => 'Show fewer',
+    'soft_limit' => 20,
+    'nofollow' => 1,
+    'show_expanded' => 0,
+  );
+  $export['search_api@node_index:block:field_researcher_location'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
+  $facet->name = 'search_api@node_index:block:field_status';
+  $facet->searcher = 'search_api@node_index';
+  $facet->realm = 'block';
+  $facet->facet = 'field_status';
+  $facet->enabled = FALSE;
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'facetapi_links',
+    'filters' => array(),
+    'active_sorts' => array(
+      'active' => 'active',
+      'count' => 'count',
+      'display' => 'display',
+    ),
+    'sort_weight' => array(
+      'active' => -50,
+      'count' => -49,
+      'display' => -48,
+    ),
+    'sort_order' => array(
+      'active' => 3,
+      'count' => 3,
+      'display' => 4,
+    ),
+    'empty_behavior' => 'none',
+    'facet_more_text' => 'Show more',
+    'facet_fewer_text' => 'Show fewer',
+    'soft_limit' => 20,
+    'nofollow' => 1,
+    'show_expanded' => 0,
+  );
+  $export['search_api@node_index:block:field_status'] = $facet;
 
   $facet = new stdClass();
   $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
@@ -574,6 +1089,42 @@ function gbif_restful_search_facetapi_default_facet_settings() {
     'show_expanded' => 0,
   );
   $export['search_api@node_index:block:field_tx_purpose'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
+  $facet->name = 'search_api@node_index:block:field_un_region';
+  $facet->searcher = 'search_api@node_index';
+  $facet->realm = 'block';
+  $facet->facet = 'field_un_region';
+  $facet->enabled = TRUE;
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'facetapi_links',
+    'filters' => array(),
+    'active_sorts' => array(
+      'active' => 'active',
+      'count' => 'count',
+      'display' => 'display',
+    ),
+    'sort_weight' => array(
+      'active' => -50,
+      'count' => -49,
+      'display' => -48,
+    ),
+    'sort_order' => array(
+      'active' => 3,
+      'count' => 3,
+      'display' => 4,
+    ),
+    'empty_behavior' => 'none',
+    'facet_more_text' => 'Show more',
+    'facet_fewer_text' => 'Show fewer',
+    'soft_limit' => 20,
+    'nofollow' => 1,
+    'show_expanded' => 0,
+  );
+  $export['search_api@node_index:block:field_un_region'] = $facet;
 
   $facet = new stdClass();
   $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
@@ -830,6 +1381,78 @@ function gbif_restful_search_facetapi_default_facet_settings() {
   $facet = new stdClass();
   $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
   $facet->api_version = 1;
+  $facet->name = 'search_api@node_index:block:gp_has_mandate';
+  $facet->searcher = 'search_api@node_index';
+  $facet->realm = 'block';
+  $facet->facet = 'gp_has_mandate';
+  $facet->enabled = FALSE;
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'facetapi_links',
+    'filters' => array(),
+    'active_sorts' => array(
+      'active' => 'active',
+      'count' => 'count',
+      'display' => 'display',
+    ),
+    'sort_weight' => array(
+      'active' => -50,
+      'count' => -49,
+      'display' => -48,
+    ),
+    'sort_order' => array(
+      'active' => 3,
+      'count' => 3,
+      'display' => 4,
+    ),
+    'empty_behavior' => 'none',
+    'facet_more_text' => 'Show more',
+    'facet_fewer_text' => 'Show fewer',
+    'soft_limit' => 20,
+    'nofollow' => 1,
+    'show_expanded' => 0,
+  );
+  $export['search_api@node_index:block:gp_has_mandate'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
+  $facet->name = 'search_api@node_index:block:gp_node_established';
+  $facet->searcher = 'search_api@node_index';
+  $facet->realm = 'block';
+  $facet->facet = 'gp_node_established';
+  $facet->enabled = FALSE;
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'facetapi_links',
+    'filters' => array(),
+    'active_sorts' => array(
+      'active' => 'active',
+      'count' => 'count',
+      'display' => 'display',
+    ),
+    'sort_weight' => array(
+      'active' => -50,
+      'count' => -49,
+      'display' => -48,
+    ),
+    'sort_order' => array(
+      'active' => 3,
+      'count' => 3,
+      'display' => 4,
+    ),
+    'empty_behavior' => 'none',
+    'facet_more_text' => 'Show more',
+    'facet_fewer_text' => 'Show fewer',
+    'soft_limit' => 20,
+    'nofollow' => 1,
+    'show_expanded' => 0,
+  );
+  $export['search_api@node_index:block:gp_node_established'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
   $facet->name = 'search_api@node_index:block:gr_alternative_title';
   $facet->searcher = 'search_api@node_index';
   $facet->realm = 'block';
@@ -898,6 +1521,42 @@ function gbif_restful_search_facetapi_default_facet_settings() {
     'show_expanded' => 0,
   );
   $export['search_api@node_index:block:gr_data_type'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
+  $facet->name = 'search_api@node_index:block:gr_date_of_publication';
+  $facet->searcher = 'search_api@node_index';
+  $facet->realm = 'block';
+  $facet->facet = 'gr_date_of_publication';
+  $facet->enabled = FALSE;
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'facetapi_links',
+    'filters' => array(),
+    'active_sorts' => array(
+      'active' => 'active',
+      'count' => 'count',
+      'display' => 'display',
+    ),
+    'sort_weight' => array(
+      'active' => -50,
+      'count' => -49,
+      'display' => -48,
+    ),
+    'sort_order' => array(
+      'active' => 3,
+      'count' => 3,
+      'display' => 4,
+    ),
+    'empty_behavior' => 'none',
+    'facet_more_text' => 'Show more',
+    'facet_fewer_text' => 'Show fewer',
+    'soft_limit' => 20,
+    'nofollow' => 1,
+    'show_expanded' => 0,
+  );
+  $export['search_api@node_index:block:gr_date_of_publication'] = $facet;
 
   $facet = new stdClass();
   $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
@@ -1059,33 +1718,23 @@ function gbif_restful_search_facetapi_default_facet_settings() {
       'active' => 'active',
       'count' => 'count',
       'display' => 'display',
-      'natural' => 'natural',
-      'indexed' => 0,
     ),
     'sort_weight' => array(
-      'active' => '-50',
-      'count' => '-49',
-      'display' => '-48',
-      'natural' => '0',
-      'indexed' => '0',
+      'active' => -50,
+      'count' => -49,
+      'display' => -48,
     ),
     'sort_order' => array(
-      'active' => '3',
-      'count' => '3',
-      'display' => '4',
-      'natural' => '4',
-      'indexed' => '4',
+      'active' => 3,
+      'count' => 3,
+      'display' => 4,
     ),
     'empty_behavior' => 'none',
     'facet_more_text' => 'Show more',
     'facet_fewer_text' => 'Show fewer',
-    'soft_limit' => '20',
+    'soft_limit' => 20,
     'nofollow' => 1,
     'show_expanded' => 0,
-    'empty_text' => array(
-      'value' => '',
-      'format' => 'full_html',
-    ),
   );
   $export['search_api@node_index:block:language'] = $facet;
 
@@ -1321,33 +1970,23 @@ function gbif_restful_search_facetapi_default_facet_settings() {
       'active' => 'active',
       'count' => 'count',
       'display' => 'display',
-      'natural' => 'natural',
-      'indexed' => 0,
     ),
     'sort_weight' => array(
-      'active' => '-50',
-      'count' => '-49',
-      'display' => '-48',
-      'natural' => '0',
-      'indexed' => '0',
+      'active' => -50,
+      'count' => -49,
+      'display' => -48,
     ),
     'sort_order' => array(
-      'active' => '3',
-      'count' => '3',
-      'display' => '4',
-      'natural' => '4',
-      'indexed' => '4',
+      'active' => 3,
+      'count' => 3,
+      'display' => 4,
     ),
     'empty_behavior' => 'none',
     'facet_more_text' => 'Show more',
     'facet_fewer_text' => 'Show fewer',
-    'soft_limit' => '20',
+    'soft_limit' => 20,
     'nofollow' => 1,
     'show_expanded' => 0,
-    'empty_text' => array(
-      'value' => '',
-      'format' => 'full_html',
-    ),
   );
   $export['search_api@node_index:block:tx_about_gbif'] = $facet;
 

@@ -24,7 +24,7 @@ function gbif_restful_search_default_search_api_index() {
   $items['node_index'] = entity_import('search_api_index', '{
     "name" : "Node index",
     "machine_name" : "node_index",
-    "description" : null,
+    "description" : "General content index for p16 project.",
     "server" : "mysql",
     "item_type" : "node",
     "options" : {
@@ -33,6 +33,7 @@ function gbif_restful_search_default_search_api_index() {
           "dataset",
           "event",
           "gbif_participant",
+          "generic",
           "news",
           "programme",
           "project",
@@ -43,31 +44,51 @@ function gbif_restful_search_default_search_api_index() {
       "cron_limit" : "50",
       "fields" : {
         "author" : { "type" : "integer", "entity_type" : "user" },
+        "body:format" : { "type" : "string" },
         "body:summary" : { "type" : "text" },
         "body:value" : { "type" : "text" },
         "changed" : { "type" : "date" },
-        "field_acronym" : { "type" : "string" },
-        "field_cchunk" : {
+        "created" : { "type" : "date" },
+        "field_acronym" : { "type" : "text" },
+        "field_co_funder" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "node" },
+        "field_content_stream" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
+        "field_country" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
+        "field_featured_search_terms:name" : { "type" : "list\\u003Ctext\\u003E", "boost" : "21.0" },
+        "field_gbif_area" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
+        "field_ge_gbif_attendee" : { "type" : "text" },
+        "field_links_block" : {
           "type" : "list\\u003Cinteger\\u003E",
           "entity_type" : "field_collection_item"
         },
-        "field_country" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
-        "field_featured_search_terms:name" : { "type" : "list\\u003Ctext\\u003E", "boost" : "21.0" },
-        "field_funding_statement" : { "type" : "text" },
-        "field_ge_gbif_attendee" : { "type" : "text" },
+        "field_organizations" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
+        "field_pj_grant_type" : { "type" : "string" },
+        "field_pj_participants" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "node" },
+        "field_pj_partners" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "node" },
+        "field_programme" : { "type" : "integer", "entity_type" : "taxonomy_term" },
+        "field_programme_ef" : { "type" : "integer", "entity_type" : "node" },
+        "field_project_id" : { "type" : "text" },
+        "field_related_events" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "node" },
+        "field_related_news" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "node" },
+        "field_related_projects" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "node" },
+        "field_researcher_location" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
+        "field_status" : { "type" : "string" },
         "field_subtitle" : { "type" : "text" },
-        "field_title_for_display" : { "type" : "string" },
+        "field_title_for_display" : { "type" : "text" },
         "field_tx_data_type" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
         "field_tx_purpose" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
+        "field_un_region" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
         "ge_date_text" : { "type" : "text" },
-        "ge_language" : { "type" : "text" },
+        "ge_language" : { "type" : "text", "boost" : "0.8" },
         "ge_location" : { "type" : "text" },
         "ge_organising_participants" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
         "ge_status" : { "type" : "text" },
         "ge_venue" : { "type" : "text" },
         "ge_venue_country" : { "type" : "integer", "entity_type" : "taxonomy_term" },
+        "gp_has_mandate" : { "type" : "boolean" },
+        "gp_node_established" : { "type" : "date" },
         "gr_alternative_title" : { "type" : "text" },
         "gr_data_type" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
+        "gr_date_of_publication" : { "type" : "date" },
         "gr_language" : { "type" : "integer", "entity_type" : "taxonomy_term" },
         "gr_purpose" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
         "gr_resource_type" : { "type" : "integer", "entity_type" : "taxonomy_term" },
@@ -95,57 +116,45 @@ function gbif_restful_search_default_search_api_index() {
           "weight" : "-10",
           "settings" : { "default" : "1", "bundles" : [] }
         },
-        "search_api_alter_node_access" : { "status" : 0, "weight" : "0", "settings" : [] },
-        "search_api_alter_node_status" : { "status" : 1, "weight" : "0", "settings" : [] },
         "search_api_alter_language_control" : {
           "status" : 0,
           "weight" : "0",
           "settings" : { "lang_field" : "", "languages" : [] }
         },
+        "search_api_alter_node_access" : { "status" : 0, "weight" : "0", "settings" : [] },
+        "search_api_alter_node_status" : { "status" : 1, "weight" : "0", "settings" : [] },
+        "search_api_alter_add_hierarchy" : { "status" : 0, "weight" : "0", "settings" : { "fields" : [] } },
         "search_api_alter_add_viewed_entity" : { "status" : 0, "weight" : "0", "settings" : { "mode" : "full" } },
         "search_api_alter_add_url" : { "status" : 0, "weight" : "0", "settings" : [] },
         "search_api_alter_add_aggregation" : { "status" : 0, "weight" : "0", "settings" : [] },
-        "search_api_alter_add_hierarchy" : { "status" : 0, "weight" : "0", "settings" : { "fields" : [] } }
+        "search_api_metatag_alter_callback" : { "status" : 0, "weight" : "0", "settings" : [] }
       },
       "processors" : {
         "search_api_case_ignore" : {
           "status" : 1,
           "weight" : "0",
           "settings" : { "fields" : {
-              "type" : true,
               "title" : true,
-              "language" : true,
-              "status" : true,
-              "field_cchunk" : true,
               "ge_date_text" : true,
               "ge_language" : true,
               "ge_location" : true,
               "ge_status" : true,
               "ge_venue" : true,
-              "ge_venue_country" : true,
               "field_ge_gbif_attendee" : true,
               "gr_alternative_title" : true,
-              "gr_data_type" : true,
-              "gr_language" : true,
               "gr_short_title" : true,
-              "tx_about_gbif" : true,
-              "tx_audience" : true,
-              "tx_capacity_enhancement" : true,
-              "tx_data_use" : true,
-              "tx_informatics" : true,
-              "tx_tags" : true,
-              "tx_topic" : true,
-              "field_acronym" : true,
               "field_title_for_display" : true,
-              "field_funding_statement" : true,
+              "field_acronym" : true,
               "field_subtitle" : true,
-              "field_country" : true,
-              "field_tx_purpose" : true
+              "field_project_id" : true,
+              "body:value" : true,
+              "body:summary" : true,
+              "field_featured_search_terms:name" : true
             }
           }
         },
         "search_api_html_filter" : {
-          "status" : 0,
+          "status" : 1,
           "weight" : "10",
           "settings" : {
             "fields" : {
@@ -158,18 +167,21 @@ function gbif_restful_search_default_search_api_index() {
               "field_ge_gbif_attendee" : true,
               "gr_alternative_title" : true,
               "gr_short_title" : true,
-              "field_acronym" : true,
               "field_title_for_display" : true,
-              "field_funding_statement" : true,
-              "field_subtitle" : true
+              "field_acronym" : true,
+              "field_subtitle" : true,
+              "field_project_id" : true,
+              "body:value" : true,
+              "body:summary" : true,
+              "field_featured_search_terms:name" : true
             },
-            "title" : 0,
+            "title" : 1,
             "alt" : 1,
             "tags" : "h1 = 5\\r\\nh2 = 3\\r\\nh3 = 2\\r\\nstrong = 2\\r\\nb = 2\\r\\nem = 1.5\\r\\nu = 1.5"
           }
         },
         "search_api_transliteration" : {
-          "status" : 0,
+          "status" : 1,
           "weight" : "15",
           "settings" : { "fields" : {
               "title" : true,
@@ -181,10 +193,13 @@ function gbif_restful_search_default_search_api_index() {
               "field_ge_gbif_attendee" : true,
               "gr_alternative_title" : true,
               "gr_short_title" : true,
-              "field_acronym" : true,
               "field_title_for_display" : true,
-              "field_funding_statement" : true,
-              "field_subtitle" : true
+              "field_acronym" : true,
+              "field_subtitle" : true,
+              "field_project_id" : true,
+              "body:value" : true,
+              "body:summary" : true,
+              "field_featured_search_terms:name" : true
             }
           }
         },
@@ -202,17 +217,20 @@ function gbif_restful_search_default_search_api_index() {
               "field_ge_gbif_attendee" : true,
               "gr_alternative_title" : true,
               "gr_short_title" : true,
-              "field_acronym" : true,
               "field_title_for_display" : true,
-              "field_funding_statement" : true,
-              "field_subtitle" : true
+              "field_acronym" : true,
+              "field_subtitle" : true,
+              "field_project_id" : true,
+              "body:value" : true,
+              "body:summary" : true,
+              "field_featured_search_terms:name" : true
             },
             "spaces" : "[^[:alnum:]]",
             "ignorable" : "[\\u0027]"
           }
         },
         "search_api_stopwords" : {
-          "status" : 0,
+          "status" : 1,
           "weight" : "30",
           "settings" : {
             "fields" : {
@@ -225,10 +243,13 @@ function gbif_restful_search_default_search_api_index() {
               "field_ge_gbif_attendee" : true,
               "gr_alternative_title" : true,
               "gr_short_title" : true,
-              "field_acronym" : true,
               "field_title_for_display" : true,
-              "field_funding_statement" : true,
-              "field_subtitle" : true
+              "field_acronym" : true,
+              "field_subtitle" : true,
+              "field_project_id" : true,
+              "body:value" : true,
+              "body:summary" : true,
+              "field_featured_search_terms:name" : true
             },
             "file" : "",
             "stopwords" : "but\\r\\ndid\\r\\nthe this that those\\r\\netc"

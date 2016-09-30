@@ -7,12 +7,11 @@ Who's participating {"url":"<nolink>"}
 -Organizations {"url":"participation/participant-list#other"}
 -Data publishers {"url":"publisher\/search", "non_drupal_url":true}
 Key documents {"url":"<nolink>"}
+-Terms of use {"url":"terms\/overview"}
+-Data publishers agreement {"url":"terms\/data-publisher"}
+-Data users agreement {"url":"terms\/data-user"}
 -Privacy policy {"url":"terms\/privacy-policy"}
--Disclaimer {"url":"terms\/overview"}
--Data use agreement {"url":"terms/licences\/data-use"}
--Data sharing agreement {"url":"terms\/licences\/data-sharing"}
 -Memorandum of Understanding {"url":"resource\/80661"}
--GBIF Work Programme {"url":"resource\/80876"}
 -GBIF Travel guidelines {"url":"http://links.gbif.org\/travel_guidelines.pdf"}
 For developers {"url":"<nolink>"}
 -Portal API {"url":"developer", "non_drupal_url":true}

@@ -11,3 +11,15 @@ include_once 'gbif_restful_search.features.inc';
  * Module implementation file.
  */
 
+/**
+ * Implements hook_node_postsave().
+ */
+function gbif_restful_search_node_postsave($node, $op) {
+  $redirect = drupal_get_path_alias('node/' . $node->nid);
+  if ($op == 'insert') {
+    $index = search_api_index_load('node_index');
+    if (_search_api_batch_indexing_create($index, 50, -1, 1)) {
+      batch_process($redirect);
+    }
+  }
+}

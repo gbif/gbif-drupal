@@ -97,7 +97,7 @@ Home {"url":"<front>","hidden":true}
 -Terms of use {"url":"<front>","hidden":true, "description": "Licensing agreements and disclaimers relating to access and use of GBIF-mediated data"}
 --Overview {"url":"terms\/overview"}
 --Data publishers {"url":"terms\/data-publisher"}
---Data users {"url":"terms\/data-user"}
+--Data users {"url":"terms\/data-user-agreement"}
 --Privacy policy {"url":"terms\/privacy-policy"}
 -Publishing data {"url":"<front>", "description": "How and why you should make biodiversity datasets accessible through GBIF"}
 --Request endorsement {"url":"publishing-data\/request-endorsement"}

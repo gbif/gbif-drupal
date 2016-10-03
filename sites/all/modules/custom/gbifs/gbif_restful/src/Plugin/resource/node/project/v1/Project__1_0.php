@@ -49,7 +49,7 @@ class Project__1_0 extends ResourceNodeGbif implements ResourceNodeGbifInterface
       'sub_property' => 'value',
     );
 
-    $public_fields['projectID'] = array(
+    $public_fields['projectId'] = array(
       'property' => 'field_project_id',
     );
 

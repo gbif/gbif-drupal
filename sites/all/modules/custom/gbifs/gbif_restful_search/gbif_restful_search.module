@@ -15,11 +15,13 @@ include_once 'gbif_restful_search.features.inc';
  * Implements hook_node_postsave().
  */
 function gbif_restful_search_node_postsave($node, $op) {
-  $redirect = drupal_get_path_alias('node/' . $node->nid);
-  if ($op == 'insert') {
-    $index = search_api_index_load('node_index');
-    if (_search_api_batch_indexing_create($index, 50, -1, 1)) {
-      batch_process($redirect);
+  if (in_array($node->type, ['news', 'data_use', 'dataset', 'event', 'programme', 'project', 'resource', 'gbif_participant', 'generic'])) {
+    $redirect = drupal_get_path_alias('node/' . $node->nid);
+    if ($op == 'insert') {
+      $index = search_api_index_load('node_index');
+      if (_search_api_batch_indexing_create($index, 50, -1, 1)) {
+        batch_process($redirect);
+      }
     }
   }
 }

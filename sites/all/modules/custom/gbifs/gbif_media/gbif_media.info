@@ -1,0 +1,13 @@
+name = GBIF Media
+description = Media configurations
+core = 7.x
+package = GBIFS
+version = 7.x-0.3
+dependencies[] = image
+features[features_api][] = api:2
+features[image][] = masthead__desktop
+features[image][] = masthead__laptop
+features[image][] = masthead__mobile
+features[image][] = masthead__tablet
+features[image][] = prose_image_for_desktop
+features[image][] = sidebar_thumbnail

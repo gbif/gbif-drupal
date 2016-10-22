@@ -39,13 +39,13 @@ class Generic__1_0 extends ResourceNodeGbif {
     $public_fields = parent::publicFields();
 
     if (field_info_field('field_category_upper')) {
-      $public_fields['category_upper'] = array(
+      $public_fields['categoryUpper'] = array(
         'property' => 'field_category_upper'
       );
     }
 
     if (field_info_field('field_category_lower')) {
-      $public_fields['category_lower'] = array(
+      $public_fields['categoryLower'] = array(
         'property' => 'field_category_lower'
       );
     }

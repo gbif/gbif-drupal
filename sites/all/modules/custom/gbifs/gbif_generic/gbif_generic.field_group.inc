@@ -21,7 +21,7 @@ function gbif_generic_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Anchors',
-    'weight' => '9',
+    'weight' => '11',
     'children' => array(),
     'format_type' => 'tab',
     'format_settings' => array(
@@ -46,7 +46,7 @@ function gbif_generic_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Attached items',
-    'weight' => '4',
+    'weight' => '6',
     'children' => array(
       0 => 'group_files',
       1 => 'group_images',
@@ -77,12 +77,12 @@ function gbif_generic_field_group_info() {
     'weight' => '12',
     'children' => array(
       0 => 'field_tx_data_type',
-      1 => 'tx_about_gbif',
-      2 => 'tx_audience',
-      3 => 'tx_capacity_enhancement',
-      4 => 'tx_data_use',
-      5 => 'tx_informatics',
-      6 => 'field_tx_purpose',
+      1 => 'field_tx_purpose',
+      2 => 'tx_about_gbif',
+      3 => 'tx_audience',
+      4 => 'tx_capacity_enhancement',
+      5 => 'tx_data_use',
+      6 => 'tx_informatics',
     ),
     'format_type' => 'tab',
     'format_settings' => array(
@@ -134,7 +134,7 @@ function gbif_generic_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'GBIF CMS Taxonomy',
-    'weight' => '5',
+    'weight' => '7',
     'children' => array(
       0 => 'group_def_taxonomy',
       1 => 'group_regions',

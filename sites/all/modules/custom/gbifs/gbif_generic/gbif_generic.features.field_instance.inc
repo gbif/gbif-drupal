@@ -243,7 +243,7 @@ function gbif_generic_field_default_field_instances() {
         'summary_rows' => 5,
       ),
       'type' => 'text_textarea_with_summary',
-      'weight' => 3,
+      'weight' => 5,
     ),
   );
 
@@ -376,6 +376,186 @@ function gbif_generic_field_default_field_instances() {
       ),
       'type' => 'file_generic',
       'weight' => 4,
+    ),
+  );
+
+  // Exported field_instance: 'node-generic-field_category_lower'.
+  $field_instances['node-generic-field_category_lower'] = array(
+    'bundle' => 'generic',
+    'default_value' => array(
+      0 => array(
+        'value' => 'generic',
+      ),
+    ),
+    'deleted' => 0,
+    'description' => 'The right category heading immediately below the header nav.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 22,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_category_lower',
+    'label' => 'category_lower',
+    'required' => 0,
+    'settings' => array(
+      'better_formats' => array(
+        'allowed_formats' => array(
+          'filtered_html' => 'filtered_html',
+          'full_html' => 'full_html',
+          'parsedown' => 'parsedown',
+          'php_code' => 'php_code',
+          'plain_text' => 'plain_text',
+          'raw_html' => 'raw_html',
+        ),
+        'allowed_formats_toggle' => 0,
+        'default_order_toggle' => 0,
+        'default_order_wrapper' => array(
+          'formats' => array(
+            'filtered_html' => array(
+              'weight' => -9,
+            ),
+            'full_html' => array(
+              'weight' => -10,
+            ),
+            'parsedown' => array(
+              'weight' => 0,
+            ),
+            'php_code' => array(
+              'weight' => -7,
+            ),
+            'plain_text' => array(
+              'weight' => -8,
+            ),
+            'raw_html' => array(
+              'weight' => -6,
+            ),
+          ),
+        ),
+      ),
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
+      'mediafront' => array(
+        'custom' => '',
+        'field_type' => 0,
+        'media_type' => 'media',
+        'preview' => 0,
+        'thumbnail' => 0,
+      ),
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 100,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 3,
+    ),
+  );
+
+  // Exported field_instance: 'node-generic-field_category_upper'.
+  $field_instances['node-generic-field_category_upper'] = array(
+    'bundle' => 'generic',
+    'default_value' => array(
+      0 => array(
+        'value' => 'About',
+      ),
+    ),
+    'deleted' => 0,
+    'description' => 'The left category heading immediately below the header nav.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 21,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_category_upper',
+    'label' => 'category_upper',
+    'required' => 0,
+    'settings' => array(
+      'better_formats' => array(
+        'allowed_formats' => array(
+          'filtered_html' => 'filtered_html',
+          'full_html' => 'full_html',
+          'parsedown' => 'parsedown',
+          'php_code' => 'php_code',
+          'plain_text' => 'plain_text',
+          'raw_html' => 'raw_html',
+        ),
+        'allowed_formats_toggle' => 0,
+        'default_order_toggle' => 0,
+        'default_order_wrapper' => array(
+          'formats' => array(
+            'filtered_html' => array(
+              'weight' => -9,
+            ),
+            'full_html' => array(
+              'weight' => -10,
+            ),
+            'parsedown' => array(
+              'weight' => 0,
+            ),
+            'php_code' => array(
+              'weight' => -7,
+            ),
+            'plain_text' => array(
+              'weight' => -8,
+            ),
+            'raw_html' => array(
+              'weight' => -6,
+            ),
+          ),
+        ),
+      ),
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
+      'mediafront' => array(
+        'custom' => '',
+        'field_type' => 0,
+        'media_type' => 'media',
+        'preview' => 0,
+        'thumbnail' => 0,
+      ),
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 2,
     ),
   );
 
@@ -611,7 +791,7 @@ function gbif_generic_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_buttons',
-      'weight' => 6,
+      'weight' => 8,
     ),
   );
 
@@ -751,7 +931,7 @@ function gbif_generic_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'entityreference_autocomplete',
-      'weight' => 2,
+      'weight' => 4,
     ),
   );
 
@@ -1363,11 +1543,15 @@ function gbif_generic_field_default_field_instances() {
   t('Rendering option');
   t('Subtitle');
   t('Tags');
+  t('The left category heading immediately below the header nav.');
+  t('The right category heading immediately below the header nav.');
   t('This field only accept Markdown syntax.');
   t('Title');
   t('Topic');
   t('Translation source');
   t('UN region');
+  t('category_lower');
+  t('category_upper');
 
   return $field_instances;
 }

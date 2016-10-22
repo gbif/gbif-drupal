@@ -39,14 +39,20 @@ class Generic__1_0 extends ResourceNodeGbif {
     $public_fields = parent::publicFields();
 
     if (field_info_field('field_category_upper')) {
-      $public_fields['categoryUpper'] = array(
-        'property' => 'field_category_upper'
+      $public_fields['headingPrimary'] = array(
+        'property' => 'field_category_upper',
+        'process_callbacks' => [
+          [$this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::camelCase']
+        ]
       );
     }
 
     if (field_info_field('field_category_lower')) {
-      $public_fields['categoryLower'] = array(
-        'property' => 'field_category_lower'
+      $public_fields['headingSecondary'] = array(
+        'property' => 'field_category_lower',
+        'process_callbacks' => [
+        [$this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::camelCase']
+      ]
       );
     }
 

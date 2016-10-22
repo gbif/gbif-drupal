@@ -50,5 +50,10 @@ interface ResourceNodeGbifInterface extends ResourceInterface {
    *
    */
   public static function getDateValue($value);
+
+  /*
+   *
+   */
+  public static function camelCase($string);
 }
 

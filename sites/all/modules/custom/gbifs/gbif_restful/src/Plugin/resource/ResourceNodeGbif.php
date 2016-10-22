@@ -475,4 +475,9 @@ class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface
 
     return $nid_results;
   }
+
+  public static function camelCase($string) {
+    return lcfirst(str_replace(' ', '', ucwords($string)));
+  }
+
 }

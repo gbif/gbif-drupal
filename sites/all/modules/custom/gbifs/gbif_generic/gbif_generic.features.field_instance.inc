@@ -406,7 +406,7 @@ function gbif_generic_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_category_lower',
-    'label' => 'category_lower',
+    'label' => 'Secondary heading',
     'required' => 0,
     'settings' => array(
       'better_formats' => array(
@@ -496,7 +496,7 @@ function gbif_generic_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_category_upper',
-    'label' => 'category_upper',
+    'label' => 'Primary heading',
     'required' => 0,
     'settings' => array(
       'better_formats' => array(

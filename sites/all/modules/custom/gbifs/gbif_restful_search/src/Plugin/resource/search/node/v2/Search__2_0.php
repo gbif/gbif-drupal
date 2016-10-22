@@ -139,6 +139,15 @@ class Search__2_0 extends GbifResourceSearchBase implements ResourceInterface {
       }
     }
 
+    foreach (['news', 'data_use', 'dataset'] as $type) {
+      if (field_info_instance('node', 'field_dataset_uuid', $type)) {
+        $public_fields['datasetUuid'] = [
+          'property' => 'field_dataset_uuid',
+          'sub_property' => LANGUAGE_NONE . '::0::value'
+        ];
+      }
+    }
+
     // Tag fields should be here for filtering to work.
     $public_fields['tx_informatics'] = array(
       'property' => 'tx_informatics',

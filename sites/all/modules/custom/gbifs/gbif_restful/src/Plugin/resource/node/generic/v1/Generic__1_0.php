@@ -38,6 +38,18 @@ class Generic__1_0 extends ResourceNodeGbif {
   protected function publicFields() {
     $public_fields = parent::publicFields();
 
+    if (field_info_field('field_category_upper')) {
+      $public_fields['category_upper'] = array(
+        'property' => 'field_category_upper'
+      );
+    }
+
+    if (field_info_field('field_category_lower')) {
+      $public_fields['category_lower'] = array(
+        'property' => 'field_category_lower'
+      );
+    }
+
     // Use raw markdown text for from body.
     if (isset($public_fields['body'])) {
       $public_fields['body'] = [

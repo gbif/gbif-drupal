@@ -339,6 +339,7 @@ class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface
                 'width' => (int)$image['image_dimensions']['width'],
                 'height' => (int)$image['image_dimensions']['height'],
                 'styles' => array(
+                  'inline_header_image' => image_style_url('inline_header_image', $image['uri']),
                   'square_thumbnail' => image_style_url('square_thumbnail', $image['uri'])
                 ),
               );

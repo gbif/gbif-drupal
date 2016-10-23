@@ -83,6 +83,11 @@ class Project__1_0 extends ResourceNodeGbif implements ResourceNodeGbifInterface
       'process_callbacks' => array(
         array($this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::imageProcess'),
       ),
+      'image_styles' => array(
+        'header_image',
+        'inline_header_image',
+        'square_thumbnail'
+      ),
     );
 
     $public_fields['grantType'] = array(

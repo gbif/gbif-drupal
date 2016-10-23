@@ -53,13 +53,9 @@ class Programme__1_0 extends ResourceNodeGbif implements ResourceNodeGbifInterfa
         array($this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::imageProcess'),
       ),
       'image_styles' => array(
-        'focal_point_for_news',
-        'square_thumbnail',
-        'masthead__mobile',
-        'masthead__tablet',
-        'masthead__laptop',
-        'masthead__desktop',
         'prose_image_for_desktop',
+        'focal_point_for_news',
+        'square_thumbnail'
       ),
     );
 

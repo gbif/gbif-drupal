@@ -25,12 +25,9 @@ class ResourceNodeGbifScaledContents extends ResourceNodeGbif implements Resourc
           array($this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::imageProcess'),
         ),
         'image_styles' => array(
+          'prose_image_for_desktop',
           'focal_point_for_news',
-          'square_thumbnail',
-          'masthead__mobile',
-          'masthead__tablet',
-          'masthead__laptop',
-          'masthead__desktop',
+          'square_thumbnail'
         ),
       );
     }

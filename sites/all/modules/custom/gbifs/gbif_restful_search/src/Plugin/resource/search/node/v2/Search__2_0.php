@@ -258,12 +258,8 @@ class Search__2_0 extends GbifResourceSearchBase implements ResourceInterface {
       'width' => $value['width'],
       'height' => $value['height'],
       'styles' => array(
-        'focal_point_for_news' => image_style_url('focal_point_for_news', $value['uri']),
-        'square_thumbnail' => image_style_url('square_thumbnail', $value['uri']),
-        'masthead__mobile' => image_style_url('masthead__mobile', $value['uri']),
-        'masthead__tablet' => image_style_url('masthead__tablet', $value['uri']),
-        'masthead__laptop' => image_style_url('masthead__laptop', $value['uri']),
-        'masthead__desktop' => image_style_url('masthead__desktop', $value['uri']),
+        'inline_header_image' => gbif_tweaks_image_cache_url(image_style_url('inline_header_image', $value['uri'])),
+        'square_thumbnail' => gbif_tweaks_image_cache_url(image_style_url('square_thumbnail', $value['uri'])),
       ),
     );
   }

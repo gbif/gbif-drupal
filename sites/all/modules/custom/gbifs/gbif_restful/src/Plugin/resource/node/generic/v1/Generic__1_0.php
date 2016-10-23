@@ -70,8 +70,8 @@ class Generic__1_0 extends ResourceNodeGbif {
           array($this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::imageProcess'),
         ),
         'image_styles' => array(
-          'prose_image_for_desktop',
-          'focal_point_for_news',
+          'header_image',
+          'inline_header_image',
           'square_thumbnail'
         ),
       );

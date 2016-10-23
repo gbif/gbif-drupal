@@ -223,7 +223,7 @@ class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface
             break;
         }
         if (isset($image)) {
-          $output[$rel]['thumbnail'] = (isset($image[0])) ? image_style_url('focal_point_for_news', $image[0]['uri']) : NULL;
+          $output[$rel]['thumbnail'] = (isset($image[0])) ? gbif_tweaks_image_cache_url(image_style_url('inline_header_image', $image[0]['uri'])) : NULL;
           $output[$rel]['imageCaption'] = (isset($image[0])) ? $image[0]['image_field_caption']['value'] : NULL;
         }
         unset($image);
@@ -295,12 +295,13 @@ class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface
               $image_field = array(
                 'id' => (int)$image['fid'],
                 'original' => file_create_url($image['uri']),
+                'urlForImageCache' => gbif_tweaks_image_cache_url(file_create_url($image['uri'])),
                 'filemime' => $image['filemime'],
                 'filesize' => (int)$image['filesize'],
                 'width' => (int)$image['image_dimensions']['width'],
                 'height' => (int)$image['image_dimensions']['height'],
                 'styles' => array(
-                  'funder_image' => image_style_url('funder_image', $image['uri'])
+                  'funder_image' => gbif_tweaks_image_cache_url(image_style_url('funder_image', $image['uri']))
                 ),
               );
               $item['image'] = $image_field;
@@ -332,12 +333,13 @@ class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface
               $image_field = array(
                 'id' => (int)$image['fid'],
                 'original' => file_create_url($image['uri']),
+                'urlForImageCache' => gbif_tweaks_image_cache_url(file_create_url($image['uri'])),
                 'filemime' => $image['filemime'],
                 'filesize' => (int)$image['filesize'],
                 'width' => (int)$image['image_dimensions']['width'],
                 'height' => (int)$image['image_dimensions']['height'],
                 'styles' => array(
-                  'square_thumbnail' => image_style_url('square_thumbnail', $image['uri'])
+                  'square_thumbnail' => gbif_tweaks_image_cache_url(image_style_url('square_thumbnail', $image['uri']))
                 ),
               );
               $item['image'] = $image_field;

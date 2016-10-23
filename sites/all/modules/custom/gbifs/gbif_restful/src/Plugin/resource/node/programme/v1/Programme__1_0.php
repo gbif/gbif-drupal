@@ -53,8 +53,8 @@ class Programme__1_0 extends ResourceNodeGbif implements ResourceNodeGbifInterfa
         array($this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::imageProcess'),
       ),
       'image_styles' => array(
-        'prose_image_for_desktop',
-        'focal_point_for_news',
+        'header_image',
+        'inline_header_image',
         'square_thumbnail'
       ),
     );
@@ -146,7 +146,7 @@ class Programme__1_0 extends ResourceNodeGbif implements ResourceNodeGbifInterfa
           'original' => file_create_url($project_wrapper->field_pj_image->file->value()->uri),
           'filemime' => $project_wrapper->field_pj_image->file->value()->filemime,
           'styles' => array(
-            'sidebar_thumbnail' => image_style_url('sidebar_thumbnail', $project_wrapper->field_pj_image->file->value()->uri),
+            'square_thumbnail' => gbif_tweaks_image_cache_url(image_style_url('square_thumbnail', $project_wrapper->field_pj_image->file->value()->uri)),
           ),
         );
         $node['status'] = $project_wrapper->field_status->value();

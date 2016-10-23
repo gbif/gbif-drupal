@@ -141,7 +141,7 @@ class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface
       if (isset($item['image_styles'])) {
         $styles = [];
         foreach ($item['image_styles'] as $style_name => $url) {
-          $styles[$style_name] = gbif_tweaks_image_cache_url($url);
+          $styles[$style_name] = $url;
         }
         $output[$k]['styles'] = $styles;
       }
@@ -223,7 +223,7 @@ class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface
             break;
         }
         if (isset($image)) {
-          $output[$rel]['thumbnail'] = (isset($image[0])) ? gbif_tweaks_image_cache_url(image_style_url('inline_header_image', $image[0]['uri'])) : NULL;
+          $output[$rel]['thumbnail'] = (isset($image[0])) ? image_style_url('inline_header_image', $image[0]['uri']) : NULL;
           $output[$rel]['imageCaption'] = (isset($image[0])) ? $image[0]['image_field_caption']['value'] : NULL;
         }
         unset($image);
@@ -301,7 +301,7 @@ class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface
                 'width' => (int)$image['image_dimensions']['width'],
                 'height' => (int)$image['image_dimensions']['height'],
                 'styles' => array(
-                  'funder_image' => gbif_tweaks_image_cache_url(image_style_url('funder_image', $image['uri']))
+                  'funder_image' => image_style_url('funder_image', $image['uri'])
                 ),
               );
               $item['image'] = $image_field;
@@ -339,7 +339,7 @@ class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface
                 'width' => (int)$image['image_dimensions']['width'],
                 'height' => (int)$image['image_dimensions']['height'],
                 'styles' => array(
-                  'square_thumbnail' => gbif_tweaks_image_cache_url(image_style_url('square_thumbnail', $image['uri']))
+                  'square_thumbnail' => image_style_url('square_thumbnail', $image['uri'])
                 ),
               );
               $item['image'] = $image_field;

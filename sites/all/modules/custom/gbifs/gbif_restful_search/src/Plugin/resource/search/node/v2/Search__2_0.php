@@ -258,8 +258,8 @@ class Search__2_0 extends GbifResourceSearchBase implements ResourceInterface {
       'width' => $value['width'],
       'height' => $value['height'],
       'styles' => array(
-        'inline_header_image' => gbif_tweaks_image_cache_url(image_style_url('inline_header_image', $value['uri'])),
-        'square_thumbnail' => gbif_tweaks_image_cache_url(image_style_url('square_thumbnail', $value['uri'])),
+        'inline_header_image' => image_style_url('inline_header_image', $value['uri']),
+        'square_thumbnail' => image_style_url('square_thumbnail', $value['uri']),
       ),
     );
   }

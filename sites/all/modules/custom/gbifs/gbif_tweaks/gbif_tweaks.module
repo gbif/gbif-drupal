@@ -320,3 +320,12 @@ function gbif_portal_base_url() {
   $env = variable_get('environment_settings');
   return $env['data_portal_base_url'];
 }
+
+/**
+ * Creating file URL for image caching purpose
+ * A fork of file_create_url().
+ * @param $url
+ */
+function gbif_tweaks_image_cache_url($url) {
+  return rawurldecode($url);
+}

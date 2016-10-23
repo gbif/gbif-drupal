@@ -131,6 +131,7 @@ class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface
       $output[] = array(
         'id' => (int)$item['fid'],
         'original' => file_create_url($item['uri']),
+        'urlForImageCache' => gbif_tweaks_image_cache_url(file_create_url($item['uri'])),
         'filemime' => $item['filemime'],
         'filesize' => (int)$item['filesize'],
         'width' => (int)$item['width'],
@@ -138,7 +139,11 @@ class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface
         'image_field_caption' => $item['image_field_caption']['value'],
       );
       if (isset($item['image_styles'])) {
-        $output[$k]['styles'] = $item['image_styles'];
+        $styles = [];
+        foreach ($item['image_styles'] as $style_name => $url) {
+          $styles[$style_name] = gbif_tweaks_image_cache_url($url);
+        }
+        $output[$k]['styles'] = $styles;
       }
     }
     return $output;

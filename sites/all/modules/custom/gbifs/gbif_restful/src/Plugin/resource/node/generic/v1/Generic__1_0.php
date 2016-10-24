@@ -51,8 +51,8 @@ class Generic__1_0 extends ResourceNodeGbif {
       $public_fields['headingSecondary'] = array(
         'property' => 'field_category_lower',
         'process_callbacks' => [
-        [$this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::camelCase']
-      ]
+          [$this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::camelCase']
+        ]
       );
     }
 

@@ -148,6 +148,24 @@ class Search__2_0 extends GbifResourceSearchBase implements ResourceInterface {
       }
     }
 
+    // Primary and secondary headings
+    if (field_info_instance('node', 'field_category_upper', 'generic') && field_info_instance('node', 'field_category_lower', 'generic')) {
+      $public_fields['headingPrimary'] = array(
+        'property' => 'field_category_upper',
+        'sub_property' => LANGUAGE_NONE . '::0::value',
+        'process_callbacks' => [
+          [$this, 'Drupal\gbif_restful_search\Plugin\resource\search\node\v2\Search__2_0::camelCase']
+        ]
+      );
+      $public_fields['headingSecondary'] = array(
+        'property' => 'field_category_lower',
+        'sub_property' => LANGUAGE_NONE . '::0::value',
+        'process_callbacks' => [
+          [$this, 'Drupal\gbif_restful_search\Plugin\resource\search\node\v2\Search__2_0::camelCase']
+        ]
+      );
+    }
+
     // Tag fields should be here for filtering to work.
     $public_fields['tx_informatics'] = array(
       'property' => 'tx_informatics',
@@ -298,6 +316,10 @@ class Search__2_0 extends GbifResourceSearchBase implements ResourceInterface {
    */
   public function index($path) {
     return $this->getDataProvider()->index();
+  }
+
+  public static function camelCase($string) {
+    return (is_array($string)) ? $string : lcfirst(str_replace(' ', '', ucwords($string)));
   }
 
 }

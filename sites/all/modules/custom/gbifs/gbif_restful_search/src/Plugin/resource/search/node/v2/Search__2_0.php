@@ -124,8 +124,9 @@ class Search__2_0 extends GbifResourceSearchBase implements ResourceInterface {
       'news' => 'field_uni_images',
       'dataset' => 'field_uni_images',
       'data_use' => 'field_uni_images',
+      'generic' => 'field_uni_images',
       'programme' => 'field_programme_ef_image',
-      'project' => 'field_pj_image'
+      'project' => 'field_pj_image',
     ];
     foreach ($imageFieldBundleMapping as $bundle => $imageField) {
       if (field_info_instance('node', $imageField, $bundle)) {

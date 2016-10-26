@@ -32,15 +32,9 @@ function drush_gbif_generic_publish() {
         $node = node_load($nid);
         $node->status = 1;
         $node->log = 'CMS API deployment: state changed to published';
-        foreach ($node->workbench_moderation as $moderate) {
-          $moderate->from_state = "draft";
-          $moderate->state = "publish";
-          $moderate->is_current = 1;
-        }
-        $node->workbench_moderation_state_new = "published";
-        $node->workbench_moderation_state_current = "published";
+        $node->revision = 1;
         node_save($node);
-        workbench_moderation_node_update($node);
+        workbench_moderation_moderate($node, 'published');
         $count++;
         unset($node);
       }

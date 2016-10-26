@@ -177,6 +177,22 @@ class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface
     );
   }
 
+  public function relatedResourcesProcess($value) {
+    global $base_url;
+    if (ResourceFieldBase::isArrayNumeric($value)) {
+      $output = array();
+      foreach ($value as $item) {
+        $output[] = $this->relatedResourcesProcess($item);
+      }
+      return $output;
+    }
+    return array(
+      'url' => $base_url . '/' . $value['url'],
+      'title' => $value['title'],
+      'attributes' => $value['attributes'],
+    );
+  }
+
   public static function getTargetUrl(DataInterpreterInterface $interpreter) {
     $wrapper = $interpreter->getWrapper();
     $nid = $wrapper->getIdentifier();

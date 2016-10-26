@@ -49,6 +49,9 @@ class ResourceNodeGbifScaledContents extends ResourceNodeGbif implements Resourc
     );
     $public_fields['relatedGbifResources'] = array(
       'property' => 'field_related_gbif_resources',
+      'process_callbacks' => array(
+        array($this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::relatedResourcesProcess')
+      ),
     );
     $public_fields['datasetUuid'] = array(
       'property' => 'field_dataset_uuid',

@@ -29,11 +29,12 @@ function drush_gbif_generic_publish() {
 
     if (isset($entities['node'])) {
       foreach ($entities['node'] as $nid => $ref) {
-        $node = node_load($nid);
-        $node->status = 1;
+        $node = workbench_moderation_node_current_load(node_load($nid));
         $node->log = 'CMS API deployment: state changed to published';
+        $node->workbench_moderation_state_new = 'published';
+        $node->workbench_moderation_state_current = 'draft';
+        $node->revision = 1;
         node_save($node);
-        workbench_moderation_moderate($node, 'published');
         $count++;
         unset($node);
       }

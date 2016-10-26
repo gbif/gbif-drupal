@@ -187,7 +187,7 @@ class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface
       return $output;
     }
     return array(
-      'url' => $base_url . '/' . $value['url'],
+      'url' => $base_url . $value['url'],
       'title' => $value['title'],
       'attributes' => $value['attributes'],
     );

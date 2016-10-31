@@ -2,17 +2,19 @@
 
 /**
  * @file
- * Contains \Drupal\gbif_restful\Http\GbifRequest
+ * Contains \Drupal\gbif_restful_search\Http\GbifRequest
  */
 
-namespace Drupal\restful\Http;
+namespace Drupal\gbif_restful_search\Http;
 use Drupal\restful\Exception\BadRequestException;
 use Drupal\restful\Util\StringHelper;
+use Drupal\restful\Http\Request;
+use Drupal\restful\Http\RequestInterface;
 
 /**
  * Deals with everything coming from the consumer.
  */
-class GbifRequest implements RequestInterface {
+class GbifRequest extends Request implements RequestInterface {
 
   /**
    * Names for headers that can be trusted when

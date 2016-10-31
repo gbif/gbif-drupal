@@ -379,7 +379,7 @@ use \EntityFieldQuery;
     }
 
     $range = isset($pager_input['size']) ? (int) $pager_input['size'] : $this->getRange();
-    $range = $range > $this->getRange() ? $this->getRange() : $range;
+    $range = isset($range) ? $range : $this->getRange();
     if (!ctype_digit((string) $range) || $range < 1) {
       throw new BadRequestException('"Range" property should be numeric and equal or higher than 1.');
     }

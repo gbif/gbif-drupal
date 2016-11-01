@@ -64,7 +64,7 @@
 	  <ul>
       <li>Perform the same search on our <?php print $new_search_link; ?> in preview</li>
     </ul>
-	  <?php print search_help('search#noresults', drupal_help_arg()); ?>
+	  <?php print gbif_tweak_help('search#noresults', drupal_help_arg()); ?>
 	</div>
 </div>
 <?php endif; ?>

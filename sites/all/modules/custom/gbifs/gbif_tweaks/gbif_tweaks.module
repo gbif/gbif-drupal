@@ -320,3 +320,22 @@ function gbif_portal_base_url() {
   $env = variable_get('environment_settings');
   return $env['data_portal_base_url'];
 }
+
+function gbif_tweak_help($path, $arg) {
+  switch ($path) {
+    case 'search#noresults':
+      return t('<ul>
+        <li>Check if your spelling is correct.</li>
+        <li>Remove quotes around phrases to search for each word individually. <em>@bikeshed</em> will often show more results than <em>&quot;bike shed&quot;</em>.</li>
+        <li>Consider loosening your query with <em>OR</em>. <em>bike OR shed</em> will often show more results than <em>bike shed</em>.</li>
+      </ul>', array('@bikeshed' => l('bike shed', 'http://demo.gbif.org/search', array(
+        'query' => array(
+          'q' => 'bike shed'
+        ),
+        'attributes' => array(
+          'target' => '_blank'
+        )
+      ))));
+  }
+  return null;
+}

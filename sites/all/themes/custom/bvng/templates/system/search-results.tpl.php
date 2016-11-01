@@ -22,6 +22,16 @@
  *
  * @ingroup themeable
  */
+
+  $new_search_link = l('new site', 'http://demo.gbif.org/search', array(
+    'query' => array(
+      'q' => arg(2)
+    ),
+    'attributes' => array(
+      'target' => '_blank'
+    )
+  ));
+
 ?>
 <?php if ($search_results): ?>
 <div class="row">
@@ -34,6 +44,7 @@
 </div>
 <div class="row">
 	<div class="view-column col-xs-8">
+		<p>Or, perform the same search on our <?php print $new_search_link; ?> in preview?</p>
     <?php print $search_results; ?>
 		<hr>
 	  <?php print $pager; ?>

@@ -61,6 +61,9 @@
 </div>
 <div class="row">
 	<div class="view-column col-xs-8">
+	  <ul>
+      <li>Perform the same search on our <?php print $new_search_link; ?> in preview</li>
+    </ul>
 	  <?php print search_help('search#noresults', drupal_help_arg()); ?>
 	</div>
 </div>

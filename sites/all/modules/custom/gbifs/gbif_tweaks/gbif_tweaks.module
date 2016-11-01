@@ -329,6 +329,7 @@ function gbif_tweak_help($path, $arg) {
         <li>Remove quotes around phrases to search for each word individually. <em>@bikeshed</em> will often show more results than <em>&quot;bike shed&quot;</em>.</li>
         <li>Consider loosening your query with <em>OR</em>. <em>bike OR shed</em> will often show more results than <em>bike shed</em>.</li>
       </ul>', array('@bikeshed' => l('bike shed', 'http://demo.gbif.org/search', array(
+        'html' => true,
         'query' => array(
           'q' => 'bike shed'
         ),

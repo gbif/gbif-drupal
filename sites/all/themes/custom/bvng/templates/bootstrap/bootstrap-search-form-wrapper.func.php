@@ -32,7 +32,6 @@ function bvng_bootstrap_search_form_wrapper($variables) {
 
   // We'd like to add a glyphicon here.
   $output .= '<span class="glyphicon glyphicon-search bring-forward"></span>';
-
   $output .= '</div>';
   return $output;
 }

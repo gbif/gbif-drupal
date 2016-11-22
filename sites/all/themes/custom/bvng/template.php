@@ -712,8 +712,9 @@ function _bvng_get_more_search_options($tid = NULL, $search_string = NULL) {
   $data_portal_base_url = $env['data_portal_base_url'];
   $term = taxonomy_term_load($tid);
   $voc = taxonomy_vocabulary_load($term->vid);
-  $links = '<p>' . t('This search result only covers the text content of the news and information pages of the GBIF portal.') . '</p>';
-  $links .= '<p>' . t('If you want to search data content, start here:') . '</p>';
+  $links = '<p>' . t('The search result on our current site is limited and we\'ve been working on improving it.') . '</p>';
+  $links .= '<p>' . t('Please go to ') . l('http://demo.gbif.org', 'http://demo.gbif.org') . ' for the early access version of our new search.</p>';
+  /*
   $links .= '<ul class="filter-list">';
 
   // Publishers and datasets
@@ -747,6 +748,7 @@ function _bvng_get_more_search_options($tid = NULL, $search_string = NULL) {
   $links .= '<li>' . l($link_text, $path_species) . '</li>';
 
   $links .= '</ul>';
+  */
   return $links;
 }
 

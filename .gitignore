@@ -61,6 +61,7 @@ Thumbs.db
 
 # Ignore development aids
 .idea
+.editorconfig
 .buildpath
 .project
 .settings

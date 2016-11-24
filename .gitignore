@@ -15,6 +15,7 @@ sites/staging.gbif.org
 # Ignore sites folders of envionments
 sites/drupaledit.gbif-dev.org
 sites/drupaledit.gbif-uat.org
+sites/bko.gbif.org
 
 # Ignore default text files
 robots.txt

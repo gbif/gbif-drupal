@@ -28,7 +28,7 @@ function gbif_project_ctools_plugin_api($module = NULL, $api = NULL) {
 function gbif_project_views_api($module = NULL, $api = NULL) {
   return array(
     'api' => '3.0',
-    'template path' => drupal_get_path('module', 'gbif_project' . '/theme'),
+    'template path' => drupal_get_path('module', 'gbif_project') . '/theme',
   );
 }
 

@@ -16,6 +16,12 @@ sites/staging.gbif.org
 sites/drupaledit.gbif-dev.org
 sites/drupaledit.gbif-uat.org
 sites/bko.gbif.org
+sites/cms.gbif-dev.org/
+sites/cms-swap.gbif-dev.org/
+sites/cms.gbif-uat.org/
+sites/cms-swap.gbif-uat.org/
+sites/cms.gbif.org/
+sites/cms-swap.gbif.org/
 
 # Ignore default text files
 robots.txt

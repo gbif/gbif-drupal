@@ -120,6 +120,7 @@ class Programme__1_0 extends ResourceNodeGbif implements ResourceNodeGbifInterfa
     $query = new EntityFieldQuery();
     $query->entityCondition('entity_type', 'node');
     $query->fieldCondition('field_programme_ef', 'target_id', $nid, '=');
+    $query->propertyCondition('status', NODE_PUBLISHED);
     $results = $query->execute();
 
     if (count($results) > 0 && isset($results['node'])) {

@@ -817,6 +817,16 @@ function gbif_vocabularies_uuid_features_default_terms() {
     ),
   );
   $terms[] = array(
+    'name' => 'BID',
+    'description' => NULL,
+    'format' => NULL,
+    'weight' => 0,
+    'uuid' => '1353d952-1c59-4871-916d-b88f9810277d',
+    'vocabulary_machine_name' => 'internal_tags',
+    'field_ims_keyword_id' => array(),
+    'field_term_attributes' => array(),
+  );
+  $terms[] = array(
     'name' => 'Kuwait',
     'description' => 'Kuwait',
     'format' => NULL,
@@ -1109,14 +1119,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_attributes' => array(),
-  );
-  $terms[] = array(
-    'name' => 'Mountain biodiversity',
-    'description' => '',
-    'format' => 'plain_text',
-    'weight' => 0,
-    'uuid' => '19370e22-9273-42a9-9aac-685a69e84706',
-    'vocabulary_machine_name' => 'topic',
   );
   $terms[] = array(
     'name' => 'Oceania',
@@ -1665,6 +1667,14 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_native_name' => array(),
+  );
+  $terms[] = array(
+    'name' => 'darwin core',
+    'description' => NULL,
+    'format' => NULL,
+    'weight' => 0,
+    'uuid' => '25b951b6-aa83-430b-a99d-a4082f858420',
+    'vocabulary_machine_name' => 'featured_search_terms',
   );
   $terms[] = array(
     'name' => 'Cornish',
@@ -2241,6 +2251,16 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
+  );
+  $terms[] = array(
+    'name' => 'Alaska',
+    'description' => NULL,
+    'format' => NULL,
+    'weight' => 0,
+    'uuid' => '317770f7-fb0c-45e0-b7f5-1e041a4dbbea',
+    'vocabulary_machine_name' => 'tags',
+    'field_ims_keyword_id' => array(),
+    'field_term_attributes' => array(),
   );
   $terms[] = array(
     'name' => 'Italian',
@@ -3288,6 +3308,16 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'field_term_attributes' => array(),
   );
   $terms[] = array(
+    'name' => 'mentors',
+    'description' => NULL,
+    'format' => NULL,
+    'weight' => 0,
+    'uuid' => '44e0db92-1186-46fe-a975-0a56f919c2ed',
+    'vocabulary_machine_name' => 'tags',
+    'field_ims_keyword_id' => array(),
+    'field_term_attributes' => array(),
+  );
+  $terms[] = array(
     'name' => 'Yemen',
     'description' => 'Yemen',
     'format' => NULL,
@@ -3886,6 +3916,14 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_attributes' => array(),
+  );
+  $terms[] = array(
+    'name' => 'CESP',
+    'description' => NULL,
+    'format' => NULL,
+    'weight' => 0,
+    'uuid' => '4f85e069-84da-4f4e-897f-bcda718e44e6',
+    'vocabulary_machine_name' => 'featured_search_terms',
   );
   $terms[] = array(
     'name' => 'Invasives',
@@ -5459,7 +5497,7 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'field_term_attributes' => array(),
   );
   $terms[] = array(
-    'name' => 'Taxonomic research',
+    'name' => 'taxonomy',
     'description' => '',
     'format' => 'plain_text',
     'weight' => 0,
@@ -5770,6 +5808,14 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'field_term_native_name' => array(),
   );
   $terms[] = array(
+    'name' => 'mentor',
+    'description' => NULL,
+    'format' => NULL,
+    'weight' => 0,
+    'uuid' => '74b353bb-f61f-4d9f-999a-0cb433c1ebdd',
+    'vocabulary_machine_name' => 'featured_search_terms',
+  );
+  $terms[] = array(
     'name' => 'Mongolia',
     'description' => 'Mongolia',
     'format' => NULL,
@@ -5865,6 +5911,17 @@ function gbif_vocabularies_uuid_features_default_terms() {
     ),
   );
   $terms[] = array(
+    'name' => 'biodiversity science',
+    'description' => '',
+    'format' => 'full_html',
+    'weight' => 0,
+    'uuid' => '77a30d8d-f1d8-4344-b7df-0144a4d13662',
+    'vocabulary_machine_name' => 'topic',
+    'path' => array(
+      'pathauto' => 0,
+    ),
+  );
+  $terms[] = array(
     'name' => 'Singapore',
     'description' => 'Singapore',
     'format' => NULL,
@@ -5897,15 +5954,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
-  );
-  $terms[] = array(
-    'name' => '',
-    'description' => NULL,
-    'format' => NULL,
-    'weight' => 0,
-    'uuid' => '796cf142-6eb5-4dae-870d-d6bdad9f79ca',
-    'vocabulary_machine_name' => 'countries',
-    'field_iso2' => array(),
   );
   $terms[] = array(
     'name' => 'Japanese',
@@ -6189,6 +6237,14 @@ function gbif_vocabularies_uuid_features_default_terms() {
     ),
   );
   $terms[] = array(
+    'name' => 'IPT',
+    'description' => NULL,
+    'format' => NULL,
+    'weight' => 0,
+    'uuid' => '7e1c6910-57cb-4b60-9ddb-7019fb0eb037',
+    'vocabulary_machine_name' => 'featured_search_terms',
+  );
+  $terms[] = array(
     'name' => 'Bolivia',
     'description' => 'Bolivia',
     'format' => NULL,
@@ -6221,6 +6277,14 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
+  );
+  $terms[] = array(
+    'name' => 'BID',
+    'description' => NULL,
+    'format' => NULL,
+    'weight' => 0,
+    'uuid' => '7f5926b8-8697-4779-a066-58ac96b27de8',
+    'vocabulary_machine_name' => 'featured_search_terms',
   );
   $terms[] = array(
     'name' => 'Informaticians',
@@ -6582,6 +6646,23 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_attributes' => array(),
+  );
+  $terms[] = array(
+    'name' => 'mentoring',
+    'description' => NULL,
+    'format' => NULL,
+    'weight' => 0,
+    'uuid' => '85b845df-4a83-4798-956c-ab8da1997fb6',
+    'vocabulary_machine_name' => 'featured_search_terms',
+  );
+  $terms[] = array(
+    'name' => 'Saint Barthélemy',
+    'description' => NULL,
+    'format' => NULL,
+    'weight' => 0,
+    'uuid' => '85d79ec0-8c9a-4760-adfd-d593c9f5d25f',
+    'vocabulary_machine_name' => 'countries',
+    'field_iso2' => array(),
   );
   $terms[] = array(
     'name' => 'GEO',
@@ -6955,6 +7036,17 @@ function gbif_vocabularies_uuid_features_default_terms() {
           'tid' => 'ee7dd1a0-8e1e-4965-be96-97047f14cf2e',
         ),
       ),
+    ),
+  );
+  $terms[] = array(
+    'name' => 'data management',
+    'description' => '',
+    'format' => 'full_html',
+    'weight' => 0,
+    'uuid' => '8e8db8c2-f4d5-4bdb-8b23-dad89b6dc702',
+    'vocabulary_machine_name' => 'topic',
+    'path' => array(
+      'pathauto' => 0,
     ),
   );
   $terms[] = array(
@@ -8910,6 +9002,17 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'field_term_native_name' => array(),
   );
   $terms[] = array(
+    'name' => 'phylogenetics',
+    'description' => '',
+    'format' => 'full_html',
+    'weight' => 0,
+    'uuid' => 'c1dd1d4a-f45e-4353-b7a0-34b3a7b83736',
+    'vocabulary_machine_name' => 'topic',
+    'path' => array(
+      'pathauto' => 0,
+    ),
+  );
+  $terms[] = array(
     'name' => 'China',
     'description' => 'China',
     'format' => NULL,
@@ -8961,6 +9064,14 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'field_term_attributes' => array(),
   );
   $terms[] = array(
+    'name' => 'mentors',
+    'description' => NULL,
+    'format' => NULL,
+    'weight' => 0,
+    'uuid' => 'c45bc047-9605-4df0-a76a-699af0bf21d5',
+    'vocabulary_machine_name' => 'featured_search_terms',
+  );
+  $terms[] = array(
     'name' => 'CBOL',
     'description' => 'Consortium for Barcode of Life',
     'format' => NULL,
@@ -8978,6 +9089,14 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'vocabulary_machine_name' => 'tags',
     'field_ims_keyword_id' => array(),
     'field_term_attributes' => array(),
+  );
+  $terms[] = array(
+    'name' => 'BIFA',
+    'description' => NULL,
+    'format' => NULL,
+    'weight' => 0,
+    'uuid' => 'c4b5d75b-3c13-4978-933c-3e6b5482a451',
+    'vocabulary_machine_name' => 'featured_search_terms',
   );
   $terms[] = array(
     'name' => 'Polish',
@@ -9289,6 +9408,16 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
+  );
+  $terms[] = array(
+    'name' => 'BID',
+    'description' => NULL,
+    'format' => NULL,
+    'weight' => 0,
+    'uuid' => 'cc3a9294-acaa-4edc-8812-c5e20039d208',
+    'vocabulary_machine_name' => 'tags',
+    'field_ims_keyword_id' => array(),
+    'field_term_attributes' => array(),
   );
   $terms[] = array(
     'name' => 'Dominican Republic',
@@ -10734,6 +10863,17 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'field_term_native_name' => array(),
   );
   $terms[] = array(
+    'name' => 'data paper',
+    'description' => '',
+    'format' => 'full_html',
+    'weight' => 0,
+    'uuid' => 'e55f7de9-2c80-44ba-9f32-af1d78d4cb98',
+    'vocabulary_machine_name' => 'topic',
+    'path' => array(
+      'pathauto' => 0,
+    ),
+  );
+  $terms[] = array(
     'name' => 'Arctic',
     'description' => '',
     'format' => 'full_html',
@@ -11141,6 +11281,14 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
+  );
+  $terms[] = array(
+    'name' => 'science review',
+    'description' => NULL,
+    'format' => NULL,
+    'weight' => 0,
+    'uuid' => 'ed636285-b7f6-44db-9872-25929ba94688',
+    'vocabulary_machine_name' => 'featured_search_terms',
   );
   $terms[] = array(
     'name' => 'Chinese Taipei',
@@ -11866,6 +12014,14 @@ function gbif_vocabularies_uuid_features_default_terms() {
     ),
   );
   $terms[] = array(
+    'name' => 'Caribbean',
+    'description' => NULL,
+    'format' => NULL,
+    'weight' => 0,
+    'uuid' => 'f8d29d3d-1c06-4c9e-8e05-82968a2dd833',
+    'vocabulary_machine_name' => 'un_region',
+  );
+  $terms[] = array(
     'name' => 'EU BON',
     'description' => '',
     'format' => 'full_html',
@@ -12122,6 +12278,14 @@ function gbif_vocabularies_uuid_features_default_terms() {
         ),
       ),
     ),
+  );
+  $terms[] = array(
+    'name' => 'publishing',
+    'description' => NULL,
+    'format' => NULL,
+    'weight' => 0,
+    'uuid' => 'fed9fc58-9a47-4a09-a9ec-83d831a811eb',
+    'vocabulary_machine_name' => 'featured_search_terms',
   );
   $terms[] = array(
     'name' => 'Link',

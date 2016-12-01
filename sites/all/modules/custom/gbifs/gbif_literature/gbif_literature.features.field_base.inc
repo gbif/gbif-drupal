@@ -206,6 +206,25 @@ function gbif_literature_field_default_field_bases() {
     'type' => 'number_integer',
   );
 
+  // Exported field_base: 'field_mdl_editors'.
+  $field_bases['field_mdl_editors'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_mdl_editors',
+    'indexes' => array(
+      'format' => array(
+        0 => 'format',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'text',
+    'settings' => array(),
+    'translatable' => 0,
+    'type' => 'text_long',
+  );
+
   // Exported field_base: 'field_mdl_file_attached'.
   $field_bases['field_mdl_file_attached'] = array(
     'active' => 1,
@@ -319,13 +338,13 @@ function gbif_literature_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_mdl_identifier'.
-  $field_bases['field_mdl_identifier'] = array(
+  // Exported field_base: 'field_mdl_identifiers'.
+  $field_bases['field_mdl_identifiers'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
-    'field_name' => 'field_mdl_identifier',
+    'field_name' => 'field_mdl_identifiers',
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -447,7 +466,7 @@ function gbif_literature_field_default_field_bases() {
     'locked' => 0,
     'module' => 'text',
     'settings' => array(
-      'max_length' => 12,
+      'max_length' => 255,
     ),
     'translatable' => 0,
     'type' => 'text',

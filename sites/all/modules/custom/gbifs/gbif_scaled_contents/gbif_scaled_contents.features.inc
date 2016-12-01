@@ -23,7 +23,10 @@ function gbif_scaled_contents_ctools_plugin_api($module = NULL, $api = NULL) {
  * Implements hook_views_api().
  */
 function gbif_scaled_contents_views_api($module = NULL, $api = NULL) {
-  return array("api" => "3.0");
+  return array(
+    'api' => '3.0',
+    'template path' => drupal_get_path('module', 'gbif_scaled_contents') . '/theme',
+  );
 }
 
 /**

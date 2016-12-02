@@ -179,7 +179,7 @@ function gbif_literature_field_default_field_instances() {
         'size' => 10,
       ),
       'type' => 'text_textfield',
-      'weight' => 16,
+      'weight' => 17,
     ),
   );
 
@@ -226,10 +226,10 @@ function gbif_literature_field_default_field_instances() {
       'active' => 1,
       'module' => 'options',
       'settings' => array(
-        'display_label' => 0,
+        'display_label' => 1,
       ),
       'type' => 'options_onoff',
-      'weight' => 19,
+      'weight' => 28,
     ),
   );
 
@@ -402,7 +402,7 @@ function gbif_literature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 22,
+      'weight' => 18,
     ),
   );
 
@@ -488,7 +488,7 @@ function gbif_literature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 23,
+      'weight' => 19,
     ),
   );
 
@@ -535,10 +535,10 @@ function gbif_literature_field_default_field_instances() {
       'active' => 1,
       'module' => 'options',
       'settings' => array(
-        'display_label' => 0,
+        'display_label' => 1,
       ),
       'type' => 'options_onoff',
-      'weight' => 20,
+      'weight' => 29,
     ),
   );
 
@@ -601,7 +601,7 @@ function gbif_literature_field_default_field_instances() {
         'year_range' => '-3:+3',
       ),
       'type' => 'date_text',
-      'weight' => 11,
+      'weight' => 12,
     ),
   );
 
@@ -654,7 +654,7 @@ function gbif_literature_field_default_field_instances() {
       'module' => 'number',
       'settings' => array(),
       'type' => 'number',
-      'weight' => 25,
+      'weight' => 8,
     ),
   );
 
@@ -788,7 +788,7 @@ function gbif_literature_field_default_field_instances() {
       'active' => 1,
       'module' => 'options',
       'settings' => array(
-        'display_label' => 0,
+        'display_label' => 1,
       ),
       'type' => 'options_onoff',
       'weight' => 31,
@@ -877,7 +877,7 @@ function gbif_literature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 32,
+      'weight' => 24,
     ),
   );
 
@@ -963,7 +963,7 @@ function gbif_literature_field_default_field_instances() {
         'size' => 36,
       ),
       'type' => 'text_textfield',
-      'weight' => 13,
+      'weight' => 14,
     ),
   );
 
@@ -1010,10 +1010,10 @@ function gbif_literature_field_default_field_instances() {
       'active' => 1,
       'module' => 'options',
       'settings' => array(
-        'display_label' => 0,
+        'display_label' => 1,
       ),
       'type' => 'options_onoff',
-      'weight' => 21,
+      'weight' => 30,
     ),
   );
 
@@ -1099,12 +1099,13 @@ function gbif_literature_field_default_field_instances() {
         'size' => 36,
       ),
       'type' => 'text_textfield',
-      'weight' => 10,
+      'weight' => 11,
     ),
   );
 
   // Exported field_instance: 'node-literature-field_mdl_identifiers'.
   $field_instances['node-literature-field_mdl_identifiers'] = array(
+    'bueditor_profile' => -1,
     'bundle' => 'literature',
     'default_value' => NULL,
     'deleted' => 0,
@@ -1115,7 +1116,7 @@ function gbif_literature_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 15,
+        'weight' => 38,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1182,10 +1183,10 @@ function gbif_literature_field_default_field_instances() {
       'active' => 1,
       'module' => 'text',
       'settings' => array(
-        'size' => 100,
+        'rows' => 5,
       ),
-      'type' => 'text_textfield',
-      'weight' => 7,
+      'type' => 'text_textarea',
+      'weight' => 5,
     ),
   );
 
@@ -1271,7 +1272,7 @@ function gbif_literature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 28,
+      'weight' => 22,
     ),
   );
 
@@ -1318,7 +1319,7 @@ function gbif_literature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'taxonomy_autocomplete',
-      'weight' => 9,
+      'weight' => 10,
     ),
   );
 
@@ -1381,7 +1382,7 @@ function gbif_literature_field_default_field_instances() {
         'year_range' => '-3:+3',
       ),
       'type' => 'date_text',
-      'weight' => 14,
+      'weight' => 15,
     ),
   );
 
@@ -1434,7 +1435,7 @@ function gbif_literature_field_default_field_instances() {
       'module' => 'number',
       'settings' => array(),
       'type' => 'number',
-      'weight' => 24,
+      'weight' => 7,
     ),
   );
 
@@ -1520,7 +1521,7 @@ function gbif_literature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 26,
+      'weight' => 20,
     ),
   );
 
@@ -1606,7 +1607,7 @@ function gbif_literature_field_default_field_instances() {
         'size' => 36,
       ),
       'type' => 'text_textfield',
-      'weight' => 12,
+      'weight' => 13,
     ),
   );
 
@@ -1692,7 +1693,7 @@ function gbif_literature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 30,
+      'weight' => 23,
     ),
   );
 
@@ -1739,10 +1740,10 @@ function gbif_literature_field_default_field_instances() {
       'active' => 1,
       'module' => 'options',
       'settings' => array(
-        'display_label' => 0,
+        'display_label' => 1,
       ),
       'type' => 'options_onoff',
-      'weight' => 17,
+      'weight' => 26,
     ),
   );
 
@@ -1828,7 +1829,7 @@ function gbif_literature_field_default_field_instances() {
         'size' => 100,
       ),
       'type' => 'text_textfield',
-      'weight' => 6,
+      'weight' => 9,
     ),
   );
 
@@ -1875,10 +1876,10 @@ function gbif_literature_field_default_field_instances() {
       'active' => 1,
       'module' => 'options',
       'settings' => array(
-        'display_label' => 0,
+        'display_label' => 1,
       ),
       'type' => 'options_onoff',
-      'weight' => 18,
+      'weight' => 27,
     ),
   );
 
@@ -2014,12 +2015,13 @@ function gbif_literature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 27,
+      'weight' => 21,
     ),
   );
 
   // Exported field_instance: 'node-literature-field_mdl_websites'.
   $field_instances['node-literature-field_mdl_websites'] = array(
+    'bueditor_profile' => -1,
     'bundle' => 'literature',
     'default_value' => NULL,
     'deleted' => 0,
@@ -2030,7 +2032,7 @@ function gbif_literature_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 32,
+        'weight' => 39,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -2097,10 +2099,10 @@ function gbif_literature_field_default_field_instances() {
       'active' => 1,
       'module' => 'text',
       'settings' => array(
-        'size' => 60,
+        'rows' => 5,
       ),
-      'type' => 'text_textfield',
-      'weight' => 29,
+      'type' => 'text_textarea',
+      'weight' => 25,
     ),
   );
 
@@ -2153,7 +2155,7 @@ function gbif_literature_field_default_field_instances() {
       'module' => 'number',
       'settings' => array(),
       'type' => 'number',
-      'weight' => 5,
+      'weight' => 6,
     ),
   );
 
@@ -2200,7 +2202,7 @@ function gbif_literature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'taxonomy_autocomplete',
-      'weight' => 15,
+      'weight' => 16,
     ),
   );
 

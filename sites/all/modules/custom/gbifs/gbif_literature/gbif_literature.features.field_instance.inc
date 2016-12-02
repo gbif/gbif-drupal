@@ -560,7 +560,7 @@ function gbif_literature_field_default_field_instances() {
           'show_repeat_rule' => 'show',
         ),
         'type' => 'date_default',
-        'weight' => 7,
+        'weight' => 40,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -600,8 +600,8 @@ function gbif_literature_field_default_field_instances() {
         'text_parts' => array(),
         'year_range' => '-3:+3',
       ),
-      'type' => 'date_text',
-      'weight' => 12,
+      'type' => 'date_popup',
+      'weight' => 35,
     ),
   );
 
@@ -1341,7 +1341,7 @@ function gbif_literature_field_default_field_instances() {
           'show_repeat_rule' => 'show',
         ),
         'type' => 'date_default',
-        'weight' => 17,
+        'weight' => 41,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1381,8 +1381,8 @@ function gbif_literature_field_default_field_instances() {
         'text_parts' => array(),
         'year_range' => '-3:+3',
       ),
-      'type' => 'date_text',
-      'weight' => 15,
+      'type' => 'date_popup',
+      'weight' => 36,
     ),
   );
 

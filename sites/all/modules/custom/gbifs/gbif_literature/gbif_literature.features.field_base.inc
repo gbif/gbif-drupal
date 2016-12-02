@@ -188,7 +188,7 @@ function gbif_literature_field_default_field_bases() {
       'tz_handling' => 'date',
     ),
     'translatable' => 0,
-    'type' => 'date',
+    'type' => 'datestamp',
   );
 
   // Exported field_base: 'field_mdl_day'.
@@ -431,7 +431,7 @@ function gbif_literature_field_default_field_bases() {
       'tz_handling' => 'date',
     ),
     'translatable' => 0,
-    'type' => 'date',
+    'type' => 'datestamp',
   );
 
   // Exported field_base: 'field_mdl_month'.
@@ -600,6 +600,7 @@ function gbif_literature_field_default_field_bases() {
     'settings' => array(
       'allowed_values' => array(
         'journal' => 'journal',
+        'book_section' => 'book section',
       ),
       'allowed_values_function' => '',
     ),

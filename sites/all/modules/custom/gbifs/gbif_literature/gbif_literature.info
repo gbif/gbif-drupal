@@ -1,7 +1,7 @@
 name = GBIF Literature
 core = 7.x
 package = GBIFS
-version = 7.x-0.1
+version = 7.x-0.3
 dependencies[] = ctools
 dependencies[] = date
 dependencies[] = features

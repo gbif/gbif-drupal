@@ -20,7 +20,6 @@ function drush_gbif_literature_import() {
   $time_begin = time();
 
   $term_ref_fields = [
-    'keywords' => 'field_mdl_keywords',
     'tags' => 'tx_tags',
   ];
 
@@ -76,7 +75,6 @@ function drush_gbif_literature_import() {
         };
         array_walk($text_fields, $set_text_value);
 
-        //
         // set serialized fields
         $serialized_fields = [
           'authors' => 'field_mdl_authors',
@@ -122,6 +120,27 @@ function drush_gbif_literature_import() {
         };
         array_walk($date_fields, $set_date_value);
 
+        // keywords
+        // 1) see if a new term is already in the voc, if not, create one.
+        $set_keywords_value = function($keyword) use ($wrapper, $doc) {
+          $terms = taxonomy_get_term_by_name($keyword, 'keywords');
+          $voc = taxonomy_vocabulary_machine_name_load('keywords');
+          if (count($terms) === 0) {
+            $new_term = gbif_literature_create_taxonomy_term($keyword, $voc->vid);
+            $wrapper->field_mdl_keywords[] = $new_term;
+          }
+          elseif (count($terms) === 1) {
+            $wrapper->field_mdl_keywords[] = $terms[0];
+          }
+          elseif (count($terms) > 1) {
+            drupal_set_message('More than one keywords matched.', 'error');
+          }
+          else {
+            drupal_set_message('Exception while inserting Keywords field.', 'error');
+          }
+        };
+        if (isset($doc->keywords) && is_array($doc->keywords)) array_map($set_keywords_value, $doc->keywords);
+
         $wrapper->save();
       }
       else {
@@ -140,6 +159,7 @@ function drush_gbif_literature_import() {
 
 function drush_gbif_literature_delete() {
   $time_begin = time();
+
   // query if already an item with the same ID
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'node')
@@ -159,7 +179,23 @@ function drush_gbif_literature_delete() {
     drupal_set_message('No document to be deleted.', 'status');
   }
 
+  // delete all terms in Keywords vocabulary
+  $voc = taxonomy_vocabulary_machine_name_load('keywords');
+  $terms = taxonomy_get_tree((int) $voc->vid);
+  $delete_term = function($term) {
+    taxonomy_term_delete($term->tid);
+  }
+  array_map($delete_term, $terms);
+
   $time_end = time();
   $time_elapsed = date('i:s', $time_end - $time_begin);
   drupal_set_message('Time elapsed: ' . $time_elapsed . '.', 'status');
 };
+
+function gbif_literature_create_taxonomy_term($name, $vid) {
+  $term = new stdClass();
+  $term->name = $name;
+  $term->vid = $vid;
+  taxonomy_term_save($term);
+  return $term;
+}

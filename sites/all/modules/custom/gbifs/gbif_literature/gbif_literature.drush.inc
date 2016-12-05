@@ -184,7 +184,7 @@ function drush_gbif_literature_delete() {
   $terms = taxonomy_get_tree((int) $voc->vid);
   $delete_term = function($term) {
     taxonomy_term_delete($term->tid);
-  }
+  };
   array_map($delete_term, $terms);
 
   $time_end = time();
@@ -198,4 +198,73 @@ function gbif_literature_create_taxonomy_term($name, $vid) {
   $term->vid = $vid;
   taxonomy_term_save($term);
   return $term;
+}
+
+function gbif_literature_topic_term_mapping() {
+  return $mapping = [
+    [
+      'source_tagss' => ['climate_change'],
+      'target_tid' => 970,
+    ],
+    [
+      'source_tagss' => ['conservation', 'endangered_species', 'IUCN_red_list'],
+      'target_tid' => 826,
+    ],
+    [
+      'source_tags' => ['data_management'],
+      'target_tid' => 1328,
+    ],
+    [
+      'source_tags' => ['data_paper'],
+      'target_tid' => 1330,
+    ],
+    [
+      'source_tags' => ['ecosystem_services', 'ecosystem_function'],
+      'target_tid' => 902,
+    ],
+    [
+      'source_tags' => ['human_health', 'medical_plants'],
+      'target_tid' => 878,
+    ],
+    [
+      'source_tags' => ['invasives'],
+      'target_tid' => 968,
+    ],
+    [
+      'source_tags' => ['phylogenetics'],
+      'target_tid' => 1329,
+    ],
+    [
+      'source_tags' => ['evolution'],
+      'target_tid' => 951,
+    ],
+    [
+      'source_tags' => ['species_distributions'],
+      'target_tid' => 1038,
+    ],
+    [
+      'source_tags' => ['biogeography'],
+      'target_tid' => 1048,
+    ],
+    [
+      'source_tags' => ['taxonomy'],
+      'target_tid' => 928,
+    ],
+    [
+      'source_tags' => ['ecology'],
+      'target_tid' => 836,
+    ],
+    [
+      'source_tags' => ['freshwater'],
+      'target_tid' => 887,
+    ],
+    [
+      'source_tags' => ['citizen_science'],
+      'target_tid' => 975,
+    ],
+    [
+      'source_tags' => ['marine'],
+      'target_tid' => 861,
+    ],
+  ];
 }

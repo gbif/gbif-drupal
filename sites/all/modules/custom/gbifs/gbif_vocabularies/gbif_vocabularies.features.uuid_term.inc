@@ -1257,6 +1257,17 @@ function gbif_vocabularies_uuid_features_default_terms() {
     ),
   );
   $terms[] = array(
+    'name' => 'GBIF_cited',
+    'description' => '',
+    'format' => 'full_html',
+    'weight' => 0,
+    'uuid' => '1caac01c-beae-4566-a739-3cf7438ba004',
+    'vocabulary_machine_name' => 'literature_type',
+    'path' => array(
+      'pathauto' => 0,
+    ),
+  );
+  $terms[] = array(
     'name' => 'Engagement',
     'description' => 'Engaging communities',
     'format' => 'plain_text',
@@ -2346,6 +2357,17 @@ function gbif_vocabularies_uuid_features_default_terms() {
           'safe_value' => 'PL',
         ),
       ),
+    ),
+  );
+  $terms[] = array(
+    'name' => 'GBIF_discussed',
+    'description' => '',
+    'format' => 'full_html',
+    'weight' => 0,
+    'uuid' => '31f59b19-fc71-4ba0-8df1-23bd1153fbe6',
+    'vocabulary_machine_name' => 'literature_type',
+    'path' => array(
+      'pathauto' => 0,
     ),
   );
   $terms[] = array(
@@ -5497,6 +5519,17 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'field_term_attributes' => array(),
   );
   $terms[] = array(
+    'name' => 'GBIF_author',
+    'description' => '',
+    'format' => 'full_html',
+    'weight' => 0,
+    'uuid' => '6f204187-10f2-4efc-9c50-3987d0204339',
+    'vocabulary_machine_name' => 'literature_type',
+    'path' => array(
+      'pathauto' => 0,
+    ),
+  );
+  $terms[] = array(
     'name' => 'taxonomy',
     'description' => '',
     'format' => 'plain_text',
@@ -5953,6 +5986,17 @@ function gbif_vocabularies_uuid_features_default_terms() {
           'safe_value' => 'AD',
         ),
       ),
+    ),
+  );
+  $terms[] = array(
+    'name' => 'GBIF_VIP',
+    'description' => '',
+    'format' => 'full_html',
+    'weight' => 0,
+    'uuid' => '797bce11-5c99-4303-b6c4-3ab6b314b43e',
+    'vocabulary_machine_name' => 'literature_type',
+    'path' => array(
+      'pathauto' => 0,
     ),
   );
   $terms[] = array(
@@ -8144,6 +8188,17 @@ function gbif_vocabularies_uuid_features_default_terms() {
       ),
     ),
     'field_term_attributes' => array(),
+  );
+  $terms[] = array(
+    'name' => 'GBIF_acknowledged',
+    'description' => '',
+    'format' => 'full_html',
+    'weight' => 0,
+    'uuid' => 'a8ed207b-0a2f-4358-bab0-af4ec3d56703',
+    'vocabulary_machine_name' => 'literature_type',
+    'path' => array(
+      'pathauto' => 0,
+    ),
   );
   $terms[] = array(
     'name' => 'Bonaire, Sint Eustatius and Saba',
@@ -11070,6 +11125,17 @@ function gbif_vocabularies_uuid_features_default_terms() {
     ),
   );
   $terms[] = array(
+    'name' => 'GBIF_used',
+    'description' => '',
+    'format' => 'full_html',
+    'weight' => 0,
+    'uuid' => 'e9316767-8bd9-4503-b42a-da1997218b30',
+    'vocabulary_machine_name' => 'literature_type',
+    'path' => array(
+      'pathauto' => 0,
+    ),
+  );
+  $terms[] = array(
     'name' => 'Palau',
     'description' => 'Palau',
     'format' => NULL,
@@ -11811,6 +11877,17 @@ function gbif_vocabularies_uuid_features_default_terms() {
     ),
   );
   $terms[] = array(
+    'name' => 'GBIF_primary',
+    'description' => '',
+    'format' => 'full_html',
+    'weight' => 0,
+    'uuid' => 'f5c3c466-d911-4fe2-8bc0-95c695d6c18a',
+    'vocabulary_machine_name' => 'literature_type',
+    'path' => array(
+      'pathauto' => 0,
+    ),
+  );
+  $terms[] = array(
     'name' => 'Pitcairn',
     'description' => 'Pitcairn',
     'format' => NULL,
@@ -12067,6 +12144,17 @@ function gbif_vocabularies_uuid_features_default_terms() {
           'safe_value' => 'IR',
         ),
       ),
+    ),
+  );
+  $terms[] = array(
+    'name' => 'GBIF_published',
+    'description' => '',
+    'format' => 'full_html',
+    'weight' => 0,
+    'uuid' => 'f996c99a-77a0-467e-8cbd-53ed02afd7b2',
+    'vocabulary_machine_name' => 'literature_type',
+    'path' => array(
+      'pathauto' => 0,
     ),
   );
   $terms[] = array(

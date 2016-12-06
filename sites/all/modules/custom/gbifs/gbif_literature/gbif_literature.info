@@ -1,7 +1,7 @@
 name = GBIF Literature
 core = 7.x
 package = GBIFS
-version = 7.x-0.3
+version = 7.x-0.4
 dependencies[] = ctools
 dependencies[] = date
 dependencies[] = features
@@ -75,6 +75,7 @@ features[field_instance][] = node-literature-field_mdl_volume
 features[field_instance][] = node-literature-field_mdl_websites
 features[field_instance][] = node-literature-field_mdl_year
 features[field_instance][] = node-literature-tx_tags
+features[field_instance][] = node-literature-tx_topic
 features[node][] = literature
 features[taxonomy][] = keywords
 features[variable][] = comment_anonymous_literature

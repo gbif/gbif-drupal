@@ -52,6 +52,7 @@ features[taxonomy][] = gbif_area
 features[taxonomy][] = informatics
 features[taxonomy][] = internal_tags
 features[taxonomy][] = language
+features[taxonomy][] = literature_type
 features[taxonomy][] = organizations
 features[taxonomy][] = programme
 features[taxonomy][] = purpose

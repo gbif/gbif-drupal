@@ -141,6 +141,73 @@ function drush_gbif_literature_import() {
         };
         if (isset($doc->keywords) && is_array($doc->keywords)) array_map($set_keywords_value, $doc->keywords);
 
+        // GBIF assigned tags
+        $set_tags_value = function($tag) use ($wrapper, $doc) {
+
+          $mappings = gbif_literature_topic_term_mapping();
+          $literature_types = gbif_literature_types();
+
+          foreach ($mappings as $mapping) {
+
+            // if the tag is already defined in the mapping, following the mapping to insert into tx_topic field.
+            if (in_array($tag, $mapping['source_tags'])) {
+              // first see if the target tid is already in the field.
+              $existing_topics = $wrapper->tx_topic->value();
+              $topics_matched = false;
+              $find_match = function($topic) use ($mapping, &$topics_matched) {
+                if ($topic->tid == $mapping['target_tid']) $topics_matched = true;
+              };
+              array_map($find_match, $existing_topics);
+              if ($topics_matched === false) {
+                $wrapper->tx_topic[] = taxonomy_term_load($mapping['target_tid']);
+              }
+            }
+            // if the tag is gbif_xyz, put them in literature_type
+            elseif (in_array($tag, $literature_types)) {
+              // see if the tag is already in the field.
+              $existing_lit_types = $wrapper->field_literature_type->value();
+              $lit_type_matched = false;
+              $find_lit_match = function($type) use ($tag, &$lit_type_matched){
+                if ($type->name == $tag) $lit_type_matched = true;
+              };
+              array_map($find_lit_match, $existing_lit_types);
+              if ($lit_type_matched === false) {
+                $type_terms = taxonomy_get_term_by_name($tag, 'literature_type');
+                if (count($type_terms) === 1) {
+                  $wrapper->field_literature_type[] = $type_terms[0];
+                }
+                else {
+                  drupal_set_message('Tag matching exception for ' . $tag . ' when adding into literature_type', 'error');
+                }
+              }
+            }
+            // the rest will go to tx_tags
+            else {
+              $existing_tags = $wrapper->tx_tags->value();
+              $tags_matched = false;
+              $find_tag_match = function($tx_tag) use (&$tags_matched) {
+                if ($tx_tag->name) $tags_matched = true;
+              };
+              array_map($find_tag_match, $existing_tags);
+              if ($tags_matched === false) {
+                $tag_terms = taxonomy_get_term_by_name($tag, 'tags');
+                if (count($tag_terms) === 1) {
+                  $wrapper->tx_tags[] = $tag_terms[0];
+                }
+                elseif (count($tag_terms) ===  0) {
+                  $voc = taxonomy_vocabulary_machine_name_load('tags');
+                  $new_tag = gbif_literature_create_taxonomy_term($tag, $voc->vid);
+                  $wrapper->tx_tags[] = $new_tag;
+                }
+              }
+            }
+          }
+
+        };
+        if (isset($doc->tags) && is_array($doc->tags)) array_map($set_tags_value, $doc->tags);
+
+        // @todo countries and languages
+
         $wrapper->save();
       }
       else {
@@ -203,68 +270,74 @@ function gbif_literature_create_taxonomy_term($name, $vid) {
 function gbif_literature_topic_term_mapping() {
   return $mapping = [
     [
-      'source_tagss' => ['climate_change'],
-      'target_tid' => 970,
+      'source_tags' => ['climate_change'],
+      'target_tid' => 970, // Climate change
     ],
     [
-      'source_tagss' => ['conservation', 'endangered_species', 'IUCN_red_list'],
-      'target_tid' => 826,
+      'source_tags' => ['conservation', 'endangered_species', 'IUCN_red_list'],
+      'target_tid' => 826, // Conservation
     ],
     [
       'source_tags' => ['data_management'],
-      'target_tid' => 1328,
+      'target_tid' => 1328, // data management
     ],
     [
       'source_tags' => ['data_paper'],
-      'target_tid' => 1330,
+      'target_tid' => 1330, // data paper
     ],
     [
       'source_tags' => ['ecosystem_services', 'ecosystem_function'],
-      'target_tid' => 902,
+      'target_tid' => 902, // Ecosystem services
     ],
     [
       'source_tags' => ['human_health', 'medical_plants'],
-      'target_tid' => 878,
+      'target_tid' => 878, // Human health
     ],
     [
       'source_tags' => ['invasives'],
-      'target_tid' => 968,
+      'target_tid' => 968, // Invasives
     ],
     [
       'source_tags' => ['phylogenetics'],
-      'target_tid' => 1329,
+      'target_tid' => 1329, // phylogenetics
     ],
     [
       'source_tags' => ['evolution'],
-      'target_tid' => 951,
+      'target_tid' => 951, // Evolution
     ],
     [
       'source_tags' => ['species_distributions'],
-      'target_tid' => 1038,
+      'target_tid' => 1038, // Species distributions
     ],
     [
       'source_tags' => ['biogeography'],
-      'target_tid' => 1048,
+      'target_tid' => 1048, // Biogeography
     ],
     [
       'source_tags' => ['taxonomy'],
-      'target_tid' => 928,
+      'target_tid' => 928, // taxonomy
     ],
     [
       'source_tags' => ['ecology'],
-      'target_tid' => 836,
+      'target_tid' => 836, // Ecology
     ],
     [
       'source_tags' => ['freshwater'],
-      'target_tid' => 887,
+      'target_tid' => 887, // Ecology
     ],
     [
       'source_tags' => ['citizen_science'],
-      'target_tid' => 975,
+      'target_tid' => 975, // Citizen science
     ],
     [
       'source_tags' => ['marine'],
-      'target_tid' => 861,
+      'target_tid' => 861, // Marine
     ],
   ];
+}
+
+function gbif_literature_types() {
+  return [
+    'GBIF_used', 'GBIF_cited', 'GBIF_VIP', 'GBIF_discussed', 'GBIF_primary', 'GBIF_acknowledged', 'GBIF_published', 'GBIF_author'
+    ];
 }

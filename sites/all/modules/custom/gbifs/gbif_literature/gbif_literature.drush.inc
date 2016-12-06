@@ -18,10 +18,7 @@ function gbif_literature_drush_command() {
 
 function drush_gbif_literature_import() {
   $time_begin = time();
-
-  $term_ref_fields = [
-    'tags' => 'tx_tags',
-  ];
+  $processed_docs = 0;
 
   // Prepare the uri for storing retrieved documents
   $documents_file_loc = file_build_uri('gbif_mendeley/documents.json');
@@ -32,8 +29,14 @@ function drush_gbif_literature_import() {
   }
   else {
     $documents = json_decode(file_get_contents(drupal_realpath($documents_file_loc)));
+    $subset_docs = [];
+    foreach ($documents as $d) {
+      if (isset($d->tags) && in_array('GBIF_used', $d->tags)) {
+        $subset_docs[] = $d;
+      }
+    }
 
-    $import_document = function($doc) {
+    $import_document = function($doc) use (&$processed_docs) {
       // query if already an item with the same ID
       $query = new EntityFieldQuery();
       $query->entityCondition('entity_type', 'node')
@@ -53,28 +56,29 @@ function drush_gbif_literature_import() {
         // set text/integer fields
         $text_fields = [
           'title' => 'title',
-          'abstract' => 'field_mdl_abstract',
-          'citation_key' => 'field_mdl_citation_key',
-          'code' => 'field_mdl_code',
-          'firstAuthor' => 'field_mdl_first_author',
-          'group_id' =>'field_mdl_group_id',
-          'id' => 'field_mdl_id',
-          'accessed' => 'field_mdl_accessed',
-          'issue' => 'field_mdl_issue',
-          'pages' => 'field_mdl_pages',
-          'profile_id' => 'field_mdl_profile_id',
-          'publisher' => 'field_mdl_publisher',
-          'source' => 'field_mdl_source',
-          'volume' => 'field_mdl_volume',
-          'year' => 'field_mdl_year',
-          'month' => 'field_mdl_month',
-          'day' => 'field_mdl_day',
+        //  'abstract' => 'field_mdl_abstract',
+        //  'citation_key' => 'field_mdl_citation_key',
+        //  'code' => 'field_mdl_code',
+        //  'firstAuthor' => 'field_mdl_first_author',
+        //  'group_id' =>'field_mdl_group_id',
+        //  'id' => 'field_mdl_id',
+        //  'accessed' => 'field_mdl_accessed',
+        //  'issue' => 'field_mdl_issue',
+        //  'pages' => 'field_mdl_pages',
+        //  'profile_id' => 'field_mdl_profile_id',
+        //  'publisher' => 'field_mdl_publisher',
+        //  'source' => 'field_mdl_source',
+        //  'volume' => 'field_mdl_volume',
+        //  'year' => 'field_mdl_year',
+        //  'month' => 'field_mdl_month',
+        //  'day' => 'field_mdl_day',
         ];
         $set_text_value = function($target_field, $source_field) use ($wrapper, $doc) {
           if (isset($doc->$source_field)) $wrapper->$target_field->set($doc->$source_field);
         };
         array_walk($text_fields, $set_text_value);
 
+        /*
         // set serialized fields
         $serialized_fields = [
           'authors' => 'field_mdl_authors',
@@ -141,6 +145,7 @@ function drush_gbif_literature_import() {
         };
         if (isset($doc->keywords) && is_array($doc->keywords)) array_map($set_keywords_value, $doc->keywords);
 
+        */
         // GBIF assigned tags
         $set_tags_value = function($tag) use ($wrapper, $doc) {
 
@@ -151,7 +156,7 @@ function drush_gbif_literature_import() {
 
             // if the tag is already defined in the mapping, following the mapping to insert into tx_topic field.
             if (in_array($tag, $mapping['source_tags'])) {
-              // first see if the target tid is already in the field.
+              // first see if the target term is already in the field.
               $existing_topics = $wrapper->tx_topic->value();
               $topics_matched = false;
               $find_match = function($topic) use ($mapping, &$topics_matched) {
@@ -174,7 +179,8 @@ function drush_gbif_literature_import() {
               if ($lit_type_matched === false) {
                 $type_terms = taxonomy_get_term_by_name($tag, 'literature_type');
                 if (count($type_terms) === 1) {
-                  $wrapper->field_literature_type[] = $type_terms[0];
+                  $term_keys = array_keys($type_terms);
+                  $wrapper->field_literature_type[] = taxonomy_term_load($term_keys[0]);
                 }
                 else {
                   drupal_set_message('Tag matching exception for ' . $tag . ' when adding into literature_type', 'error');
@@ -192,7 +198,8 @@ function drush_gbif_literature_import() {
               if ($tags_matched === false) {
                 $tag_terms = taxonomy_get_term_by_name($tag, 'tags');
                 if (count($tag_terms) === 1) {
-                  $wrapper->tx_tags[] = $tag_terms[0];
+                  $tag_keys = array_keys($tag_terms);
+                  $wrapper->tx_tags[] = taxonomy_term_load($tag_keys[0]);
                 }
                 elseif (count($tag_terms) ===  0) {
                   $voc = taxonomy_vocabulary_machine_name_load('tags');
@@ -209,6 +216,7 @@ function drush_gbif_literature_import() {
         // @todo countries and languages
 
         $wrapper->save();
+        $processed_docs ++;
       }
       else {
         drupal_set_message('Exception.', 'error');
@@ -219,7 +227,7 @@ function drush_gbif_literature_import() {
 
     $time_end = time();
     $time_elapsed = date('i:s', $time_end - $time_begin);
-    drupal_set_message('Literature import finished. Time elapsed: ' . $time_elapsed . '.', 'status');
+    drupal_set_message($processed_docs . ' literature import finished. Time elapsed: ' . $time_elapsed . '.', 'status');
   }
 
 }
@@ -268,7 +276,7 @@ function gbif_literature_create_taxonomy_term($name, $vid) {
 }
 
 function gbif_literature_topic_term_mapping() {
-  return $mapping = [
+  return $mappings = [
     [
       'source_tags' => ['climate_change'],
       'target_tid' => 970, // Climate change

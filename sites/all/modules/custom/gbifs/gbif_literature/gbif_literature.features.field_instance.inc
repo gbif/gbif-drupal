@@ -10,6 +10,50 @@
 function gbif_literature_field_default_field_instances() {
   $field_instances = array();
 
+  // Exported field_instance: 'node-literature-field_literature_type'.
+  $field_instances['node-literature-field_literature_type'] = array(
+    'bundle' => 'literature',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 43,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_literature_type',
+    'label' => 'Literature_type',
+    'required' => 0,
+    'settings' => array(
+      'mediafront' => array(
+        'custom' => '',
+        'field_type' => 0,
+        'media_type' => 'media',
+        'preview' => 0,
+        'thumbnail' => 0,
+      ),
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_buttons',
+      'weight' => 13,
+    ),
+  );
+
   // Exported field_instance: 'node-literature-field_mdl_abstract'.
   $field_instances['node-literature-field_mdl_abstract'] = array(
     'bueditor_profile' => -1,
@@ -179,7 +223,7 @@ function gbif_literature_field_default_field_instances() {
         'size' => 10,
       ),
       'type' => 'text_textfield',
-      'weight' => 16,
+      'weight' => 17,
     ),
   );
 
@@ -229,7 +273,7 @@ function gbif_literature_field_default_field_instances() {
         'display_label' => 1,
       ),
       'type' => 'options_onoff',
-      'weight' => 27,
+      'weight' => 28,
     ),
   );
 
@@ -402,7 +446,7 @@ function gbif_literature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 17,
+      'weight' => 18,
     ),
   );
 
@@ -488,7 +532,7 @@ function gbif_literature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 18,
+      'weight' => 19,
     ),
   );
 
@@ -538,7 +582,7 @@ function gbif_literature_field_default_field_instances() {
         'display_label' => 1,
       ),
       'type' => 'options_onoff',
-      'weight' => 28,
+      'weight' => 29,
     ),
   );
 
@@ -601,7 +645,7 @@ function gbif_literature_field_default_field_instances() {
         'year_range' => '-3:+3',
       ),
       'type' => 'date_popup',
-      'weight' => 31,
+      'weight' => 32,
     ),
   );
 
@@ -791,7 +835,7 @@ function gbif_literature_field_default_field_instances() {
         'display_label' => 1,
       ),
       'type' => 'options_onoff',
-      'weight' => 30,
+      'weight' => 31,
     ),
   );
 
@@ -877,7 +921,7 @@ function gbif_literature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 23,
+      'weight' => 24,
     ),
   );
 
@@ -963,7 +1007,7 @@ function gbif_literature_field_default_field_instances() {
         'size' => 36,
       ),
       'type' => 'text_textfield',
-      'weight' => 14,
+      'weight' => 16,
     ),
   );
 
@@ -1013,7 +1057,7 @@ function gbif_literature_field_default_field_instances() {
         'display_label' => 1,
       ),
       'type' => 'options_onoff',
-      'weight' => 29,
+      'weight' => 30,
     ),
   );
 
@@ -1099,7 +1143,7 @@ function gbif_literature_field_default_field_instances() {
         'size' => 36,
       ),
       'type' => 'text_textfield',
-      'weight' => 12,
+      'weight' => 14,
     ),
   );
 
@@ -1272,7 +1316,7 @@ function gbif_literature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 21,
+      'weight' => 22,
     ),
   );
 
@@ -1382,7 +1426,7 @@ function gbif_literature_field_default_field_instances() {
         'year_range' => '-3:+3',
       ),
       'type' => 'date_popup',
-      'weight' => 32,
+      'weight' => 33,
     ),
   );
 
@@ -1521,7 +1565,7 @@ function gbif_literature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 19,
+      'weight' => 20,
     ),
   );
 
@@ -1607,7 +1651,7 @@ function gbif_literature_field_default_field_instances() {
         'size' => 36,
       ),
       'type' => 'text_textfield',
-      'weight' => 13,
+      'weight' => 15,
     ),
   );
 
@@ -1693,7 +1737,7 @@ function gbif_literature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 22,
+      'weight' => 23,
     ),
   );
 
@@ -1743,7 +1787,7 @@ function gbif_literature_field_default_field_instances() {
         'display_label' => 1,
       ),
       'type' => 'options_onoff',
-      'weight' => 25,
+      'weight' => 26,
     ),
   );
 
@@ -1879,7 +1923,7 @@ function gbif_literature_field_default_field_instances() {
         'display_label' => 1,
       ),
       'type' => 'options_onoff',
-      'weight' => 26,
+      'weight' => 27,
     ),
   );
 
@@ -2015,7 +2059,7 @@ function gbif_literature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 20,
+      'weight' => 21,
     ),
   );
 
@@ -2102,7 +2146,7 @@ function gbif_literature_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 24,
+      'weight' => 25,
     ),
   );
 
@@ -2202,7 +2246,7 @@ function gbif_literature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'taxonomy_autocomplete',
-      'weight' => 15,
+      'weight' => 12,
     ),
   );
 
@@ -2271,6 +2315,7 @@ function gbif_literature_field_default_field_instances() {
   t('Issue');
   t('Keywords');
   t('Last modified');
+  t('Literature_type');
   t('Month');
   t('Pages');
   t('Profile ID');

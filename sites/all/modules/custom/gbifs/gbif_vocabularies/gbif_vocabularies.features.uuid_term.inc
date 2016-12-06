@@ -8882,17 +8882,6 @@ function gbif_vocabularies_uuid_features_default_terms() {
     ),
   );
   $terms[] = array(
-    'name' => 'use case',
-    'description' => '',
-    'format' => 'full_html',
-    'weight' => 0,
-    'uuid' => 'bc29fb4f-7279-457b-9a56-e804148faf15',
-    'vocabulary_machine_name' => 'topic',
-    'path' => array(
-      'pathauto' => 0,
-    ),
-  );
-  $terms[] = array(
     'name' => 'Strategic application',
     'description' => '',
     'format' => 'plain_text',

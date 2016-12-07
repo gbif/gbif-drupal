@@ -118,6 +118,11 @@ class Search__2_0 extends GbifResourceSearchBase implements ResourceInterface {
       'sub_property' => LANGUAGE_NONE . '::0::value',
     );
 
+    $public_fields['abstract'] = array(
+      'property' => 'field_mdl_abstract',
+      'sub_property' => LANGUAGE_NONE . '::0::value',
+    );
+
     // By checking that the field exists, we allow re-using this class on
     // different tests, where different fields exist.
     $imageFieldBundleMapping = [
@@ -148,6 +153,7 @@ class Search__2_0 extends GbifResourceSearchBase implements ResourceInterface {
         ];
       }
     }
+    unset($type);
 
     // Primary and secondary headings
     if (field_info_instance('node', 'field_category_upper', 'generic') && field_info_instance('node', 'field_category_lower', 'generic')) {

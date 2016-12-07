@@ -129,5 +129,47 @@ function gbif_literature_strongarm() {
   $strongarm->value = 0;
   $export['node_submitted_literature'] = $strongarm;
 
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pathauto_node_literature_en_pattern';
+  $strongarm->value = '';
+  $export['pathauto_node_literature_en_pattern'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pathauto_node_literature_es_pattern';
+  $strongarm->value = '';
+  $export['pathauto_node_literature_es_pattern'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pathauto_node_literature_fr_pattern';
+  $strongarm->value = '';
+  $export['pathauto_node_literature_fr_pattern'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pathauto_node_literature_pattern';
+  $strongarm->value = 'literature/[node:nid]';
+  $export['pathauto_node_literature_pattern'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pathauto_node_literature_pt_pattern';
+  $strongarm->value = '';
+  $export['pathauto_node_literature_pt_pattern'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pathauto_node_literature_und_pattern';
+  $strongarm->value = '';
+  $export['pathauto_node_literature_und_pattern'] = $strongarm;
+
   return $export;
 }

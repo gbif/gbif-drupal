@@ -20,6 +20,18 @@ function drush_gbif_literature_import() {
   $time_begin = time();
   $processed_docs = 0;
 
+  // country objects
+  $gbif_enum_countries = json_decode(file_get_contents(GBIF_ENUMERATION_COUNTRY));
+  $gbif_countries = [];
+  $prepare_countries = function($c) use (&$gbif_countries) {
+    $gbif_countries[$c->iso2] = (array)$c;
+  };
+  array_map($prepare_countries, $gbif_enum_countries);
+  ksort($gbif_countries);
+
+  $mappings = gbif_literature_topic_term_mapping();
+  $literature_types = gbif_literature_types();
+
   // Prepare the uri for storing retrieved documents
   $documents_file_loc = file_build_uri('gbif_mendeley/documents.json');
   $documents_exist = file_exists($documents_file_loc);
@@ -36,7 +48,7 @@ function drush_gbif_literature_import() {
       }
     }
 
-    $import_document = function($doc) use (&$processed_docs) {
+    $import_document = function($doc) use (&$processed_docs, $mappings, $literature_types, $gbif_countries) {
       // query if already an item with the same ID
       $query = new EntityFieldQuery();
       $query->entityCondition('entity_type', 'node')
@@ -52,33 +64,32 @@ function drush_gbif_literature_import() {
         $entity_type = 'node';
         $entity = entity_create($entity_type, ['type' => 'literature']);
         $wrapper = entity_metadata_wrapper($entity_type, $entity);
+        $bio_iso2 = '';
 
         // set text/integer fields
         $text_fields = [
-          'title' => 'title',
-        //  'abstract' => 'field_mdl_abstract',
-        //  'citation_key' => 'field_mdl_citation_key',
-        //  'code' => 'field_mdl_code',
-        //  'firstAuthor' => 'field_mdl_first_author',
-        //  'group_id' =>'field_mdl_group_id',
-        //  'id' => 'field_mdl_id',
-        //  'accessed' => 'field_mdl_accessed',
-        //  'issue' => 'field_mdl_issue',
-        //  'pages' => 'field_mdl_pages',
-        //  'profile_id' => 'field_mdl_profile_id',
-        //  'publisher' => 'field_mdl_publisher',
-        //  'source' => 'field_mdl_source',
-        //  'volume' => 'field_mdl_volume',
-        //  'year' => 'field_mdl_year',
-        //  'month' => 'field_mdl_month',
-        //  'day' => 'field_mdl_day',
+          'title' => 'title',   'abstract' => 'field_mdl_abstract',
+          'citation_key' => 'field_mdl_citation_key',
+          'code' => 'field_mdl_code',
+          'firstAuthor' => 'field_mdl_first_author',
+          'group_id' =>'field_mdl_group_id',
+          'id' => 'field_mdl_id',
+          'accessed' => 'field_mdl_accessed',
+          'issue' => 'field_mdl_issue',
+          'pages' => 'field_mdl_pages',
+          'profile_id' => 'field_mdl_profile_id',
+          'publisher' => 'field_mdl_publisher',
+          'source' => 'field_mdl_source',
+          'volume' => 'field_mdl_volume',
+          'year' => 'field_mdl_year',
+          'month' => 'field_mdl_month',
+          'day' => 'field_mdl_day',
         ];
         $set_text_value = function($target_field, $source_field) use ($wrapper, $doc) {
           if (isset($doc->$source_field)) $wrapper->$target_field->set($doc->$source_field);
         };
         array_walk($text_fields, $set_text_value);
 
-        /*
         // set serialized fields
         $serialized_fields = [
           'authors' => 'field_mdl_authors',
@@ -145,75 +156,95 @@ function drush_gbif_literature_import() {
         };
         if (isset($doc->keywords) && is_array($doc->keywords)) array_map($set_keywords_value, $doc->keywords);
 
-        */
         // GBIF assigned tags
-        $set_tags_value = function($tag) use ($wrapper, $doc) {
+        $set_tags_value = function($tag) use ($wrapper, $doc, $mappings, $literature_types, $gbif_countries, $bio_iso2) {
 
-          $mappings = gbif_literature_topic_term_mapping();
-          $literature_types = gbif_literature_types();
-
-          foreach ($mappings as $mapping) {
-
-            // if the tag is already defined in the mapping, following the mapping to insert into tx_topic field.
-            if (in_array($tag, $mapping['source_tags'])) {
-              // first see if the target term is already in the field.
-              $existing_topics = $wrapper->tx_topic->value();
-              $topics_matched = false;
-              $find_match = function($topic) use ($mapping, &$topics_matched) {
-                if ($topic->tid == $mapping['target_tid']) $topics_matched = true;
-              };
-              array_map($find_match, $existing_topics);
-              if ($topics_matched === false) {
-                $wrapper->tx_topic[] = taxonomy_term_load($mapping['target_tid']);
+          // if the tag is already defined in the mapping, following the mapping to insert into tx_topic field.
+          if (isset($mappings[$tag])) {
+            // first see if the target term is already in the field.
+            $existing_topics = $wrapper->tx_topic->value();
+            $matched = false;
+            $find_match = function($topic) use ($mappings, &$matched, $tag) {
+              if ($topic->tid == $mappings[$tag]) $matched = true;
+            };
+            array_map($find_match, $existing_topics);
+            if ($matched === false) {
+              $wrapper->tx_topic[] = taxonomy_term_load($mappings[$tag]);
+            }
+            unset($matched);
+          }
+          // if the tag is gbif_xyz, put them in literature_type
+          elseif (in_array($tag, $literature_types)) {
+            // see if the tag is already in the field.
+            $existing_lit_types = $wrapper->field_literature_type->value();
+            $matched = false;
+            $find_lit_match = function($type) use ($tag, &$matched){
+              if ($type->name == $tag) $matched = true;
+            };
+            array_map($find_lit_match, $existing_lit_types);
+            if ($matched === false) {
+              $type_terms = taxonomy_get_term_by_name($tag, 'literature_type');
+              if (count($type_terms) === 1) {
+                $term_keys = array_keys($type_terms);
+                $wrapper->field_literature_type[] = taxonomy_term_load($term_keys[0]);
+              }
+              else {
+                drupal_set_message('Tag matching exception for ' . $tag . ' when adding into literature_type', 'error');
               }
             }
-            // if the tag is gbif_xyz, put them in literature_type
-            elseif (in_array($tag, $literature_types)) {
-              // see if the tag is already in the field.
-              $existing_lit_types = $wrapper->field_literature_type->value();
-              $lit_type_matched = false;
-              $find_lit_match = function($type) use ($tag, &$lit_type_matched){
-                if ($type->name == $tag) $lit_type_matched = true;
-              };
-              array_map($find_lit_match, $existing_lit_types);
-              if ($lit_type_matched === false) {
-                $type_terms = taxonomy_get_term_by_name($tag, 'literature_type');
-                if (count($type_terms) === 1) {
-                  $term_keys = array_keys($type_terms);
-                  $wrapper->field_literature_type[] = taxonomy_term_load($term_keys[0]);
-                }
-                else {
-                  drupal_set_message('Tag matching exception for ' . $tag . ' when adding into literature_type', 'error');
-                }
+            unset($matched);
+          }
+          // if the tag is iso2 country code or [country_title]_biodiversity
+          elseif (isset($gbif_countries[$tag])) {
+            $query = new EntityFieldQuery();
+            $query->entityCondition('entity_type', 'taxonomy_term')
+              ->entityCondition('bundle', 'countries')
+              ->fieldCondition('field_iso2', 'value', $tag, '=');
+
+            $result = $query->execute();
+            if (isset($result['taxonomy_term']) && count($result['taxonomy_term']) === 1) {
+              $term_keys = array_keys($result['taxonomy_term']);
+              $wrapper->field_mdl_author_from_country[] = taxonomy_term_load($term_keys[0]);
+            }
+          }
+          elseif (_gbif_literature_bio_tag($tag, $gbif_countries, $bio_iso2)) {
+            $query = new EntityFieldQuery();
+            $query->entityCondition('entity_type', 'taxonomy_term')
+              ->entityCondition('bundle', 'countries')
+              ->fieldCondition('field_iso2', 'value', $bio_iso2, '=');
+
+            $result = $query->execute();
+            if (isset($result['taxonomy_term']) && count($result['taxonomy_term']) === 1) {
+              $term_keys = array_keys($result['taxonomy_term']);
+              $wrapper->field_mdl_bio_country[] = taxonomy_term_load($term_keys[0]);
+            }
+            unset($bio_iso2);
+          }
+          // the rest will go to tx_tags
+          else {
+            $existing_tags = $wrapper->tx_tags->value();
+            $matched = false;
+            $find_tag_match = function($tx_tag) use (&$matched) {
+              if ($tx_tag->name) $matched = true;
+            };
+            array_map($find_tag_match, $existing_tags);
+            if ($matched === false) {
+              $tag_terms = taxonomy_get_term_by_name($tag, 'tags');
+              if (count($tag_terms) === 1) {
+                $tag_keys = array_keys($tag_terms);
+                $wrapper->tx_tags[] = taxonomy_term_load($tag_keys[0]);
+              }
+              elseif (count($tag_terms) ===  0) {
+                $voc = taxonomy_vocabulary_machine_name_load('tags');
+                $new_tag = gbif_literature_create_taxonomy_term($tag, $voc->vid);
+                $wrapper->tx_tags[] = $new_tag;
               }
             }
-            // the rest will go to tx_tags
-            else {
-              $existing_tags = $wrapper->tx_tags->value();
-              $tags_matched = false;
-              $find_tag_match = function($tx_tag) use (&$tags_matched) {
-                if ($tx_tag->name) $tags_matched = true;
-              };
-              array_map($find_tag_match, $existing_tags);
-              if ($tags_matched === false) {
-                $tag_terms = taxonomy_get_term_by_name($tag, 'tags');
-                if (count($tag_terms) === 1) {
-                  $tag_keys = array_keys($tag_terms);
-                  $wrapper->tx_tags[] = taxonomy_term_load($tag_keys[0]);
-                }
-                elseif (count($tag_terms) ===  0) {
-                  $voc = taxonomy_vocabulary_machine_name_load('tags');
-                  $new_tag = gbif_literature_create_taxonomy_term($tag, $voc->vid);
-                  $wrapper->tx_tags[] = $new_tag;
-                }
-              }
-            }
+            unset($matched);
           }
 
         };
         if (isset($doc->tags) && is_array($doc->tags)) array_map($set_tags_value, $doc->tags);
-
-        // @todo countries and languages
 
         $wrapper->save();
         $processed_docs ++;
@@ -276,7 +307,7 @@ function gbif_literature_create_taxonomy_term($name, $vid) {
 }
 
 function gbif_literature_topic_term_mapping() {
-  return $mappings = [
+  $mappings = [
     [
       'source_tags' => ['climate_change'],
       'target_tid' => 970, // Climate change
@@ -342,10 +373,31 @@ function gbif_literature_topic_term_mapping() {
       'target_tid' => 861, // Marine
     ],
   ];
+  $term_id_mapping = [];
+  foreach ($mappings as $mapping) {
+    foreach($mapping['source_tags'] as $tag) {
+      $term_id_mapping[$tag] = $mapping['target_tid'];
+    }
+  }
+  return $term_id_mapping;
 }
 
 function gbif_literature_types() {
   return [
     'GBIF_used', 'GBIF_cited', 'GBIF_VIP', 'GBIF_discussed', 'GBIF_primary', 'GBIF_acknowledged', 'GBIF_published', 'GBIF_author'
     ];
+}
+
+function _gbif_literature_bio_tag($tag, $gbif_countries, &$bio_iso2) {
+  $exploded_tag = explode('_', $tag);
+  $exists = false;
+  foreach ($gbif_countries as $iso2 => $country) {
+    if ($exploded_tag[0] == $country['title']) {
+      if (strtolower($exploded_tag[1]) == 'biodiversity') {
+        $bio_iso2 = $country['iso2'];
+        $exists = true;
+      }
+    }
+  }
+  return $exists;
 }

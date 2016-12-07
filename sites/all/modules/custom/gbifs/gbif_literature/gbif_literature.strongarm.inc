@@ -68,16 +68,16 @@ function gbif_literature_strongarm() {
     'extra_fields' => array(
       'form' => array(
         'metatags' => array(
-          'weight' => '36',
+          'weight' => '38',
         ),
         'title' => array(
           'weight' => '0',
         ),
         'path' => array(
-          'weight' => '34',
+          'weight' => '36',
         ),
         'redirect' => array(
-          'weight' => '35',
+          'weight' => '37',
         ),
       ),
       'display' => array(),

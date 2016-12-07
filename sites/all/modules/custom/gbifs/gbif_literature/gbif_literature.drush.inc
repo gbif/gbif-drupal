@@ -246,6 +246,7 @@ function drush_gbif_literature_import() {
         };
         if (isset($doc->tags) && is_array($doc->tags)) array_map($set_tags_value, $doc->tags);
 
+        $wrapper->status->set(1);
         $wrapper->save();
         $processed_docs ++;
       }

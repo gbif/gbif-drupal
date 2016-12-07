@@ -1126,7 +1126,7 @@ function gbif_event_field_default_field_instances() {
     'bundle' => 'event',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'Currently link to "countries" vocabulary.',
+    'description' => 'Participant in GBIF terms. However this currently link to "countries" vocabulary, meaning only country participants can be selected here. For other types of organisations as the host, please use "contact information" above. Or when appropriate, use "participants" in "people" tab.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -1157,7 +1157,7 @@ function gbif_event_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'ge_organising_participants',
-    'label' => 'Organising participant(s)',
+    'label' => 'Organising GBIF participant(s)',
     'required' => 0,
     'settings' => array(
       'mediafront' => array(
@@ -1170,13 +1170,12 @@ function gbif_event_field_default_field_instances() {
       'user_register_form' => FALSE,
     ),
     'widget' => array(
-      'active' => 0,
-      'module' => 'taxonomy',
+      'active' => 1,
+      'module' => 'options',
       'settings' => array(
-        'autocomplete_path' => 'taxonomy/autocomplete',
-        'size' => 60,
+        'apply_chosen' => '',
       ),
-      'type' => 'taxonomy_autocomplete',
+      'type' => 'options_select',
       'weight' => 34,
     ),
   );
@@ -1287,12 +1286,13 @@ function gbif_event_field_default_field_instances() {
     'settings' => array(
       'description_field' => 1,
       'file_directory' => '',
-      'file_extensions' => 'txt pdf doc docx xls xlsx',
+      'file_extensions' => 'txt pdf doc docx xls xlsx ppt pptx',
       'filefield_paths' => array(
         'active_updating' => 0,
         'file_name' => array(
           'options' => array(
             'pathauto' => 0,
+            'slashes' => 0,
             'transliterate' => 0,
           ),
           'value' => '[file:ffp-name-only-original].[file:ffp-extension-original]',
@@ -1300,10 +1300,12 @@ function gbif_event_field_default_field_instances() {
         'file_path' => array(
           'options' => array(
             'pathauto' => 0,
+            'slashes' => 0,
             'transliterate' => 0,
           ),
           'value' => 'gbif_event/files',
         ),
+        'redirect' => 0,
         'retroactive_update' => 0,
       ),
       'filefield_paths_enabled' => 1,
@@ -1340,6 +1342,7 @@ function gbif_event_field_default_field_instances() {
           ),
           'source_reference' => array(
             'autocomplete' => 0,
+            'search_all_fields' => 0,
           ),
         ),
         'imce_filefield_on' => 0,
@@ -1351,26 +1354,36 @@ function gbif_event_field_default_field_instances() {
           'auto' => 'auto',
           'colorbox__featured' => 0,
           'colorbox__featured_news_slideshow_image' => 0,
+          'colorbox__focal_point_for_news' => 0,
+          'colorbox__focal_point_for_projects (drupal)' => 0,
+          'colorbox__focal_point_preview' => 0,
+          'colorbox__funder_image' => 0,
+          'colorbox__header_image' => 0,
+          'colorbox__inline_header_image' => 0,
           'colorbox__large' => 0,
           'colorbox__linkit_thumb' => 0,
-          'colorbox__mainimage' => 0,
           'colorbox__medium' => 0,
-          'colorbox__rhimage' => 0,
+          'colorbox__programme_image_for_landing_page' => 0,
           'colorbox__square_thumbnail' => 0,
+          'colorbox__teaser_thumbmail (drupal)' => 0,
           'colorbox__thumbnail' => 0,
-          'colorbox__uses_of_data___main' => 0,
           'icon_link' => 0,
           'image' => 0,
           'image_featured' => 0,
           'image_featured_news_slideshow_image' => 0,
+          'image_focal_point_for_news' => 0,
+          'image_focal_point_for_projects (drupal)' => 0,
+          'image_focal_point_preview' => 0,
+          'image_funder_image' => 0,
+          'image_header_image' => 0,
+          'image_inline_header_image' => 0,
           'image_large' => 0,
           'image_linkit_thumb' => 0,
-          'image_mainimage' => 0,
           'image_medium' => 0,
-          'image_rhimage' => 0,
+          'image_programme_image_for_landing_page' => 0,
           'image_square_thumbnail' => 0,
+          'image_teaser_thumbmail (drupal)' => 0,
           'image_thumbnail' => 0,
-          'image_uses_of_data___main' => 0,
           'link' => 0,
         ),
         'insert_width' => '',
@@ -1575,7 +1588,6 @@ function gbif_event_field_default_field_instances() {
   t('Add to calendar');
   t('Audience');
   t('Contact information');
-  t('Currently link to "countries" vocabulary.');
   t('Date');
   t('Description');
   t('Description (deprecated)');
@@ -1588,7 +1600,8 @@ function gbif_event_field_default_field_instances() {
   t('Language of event');
   t('Location');
   t('Notes');
-  t('Organising participant(s)');
+  t('Organising GBIF participant(s)');
+  t('Participant in GBIF terms. However this currently link to "countries" vocabulary, meaning only country participants can be selected here. For other types of organisations as the host, please use "contact information" above. Or when appropriate, use "participants" in "people" tab.');
   t('Participants');
   t('Please only enter the city.');
   t('Resources');

@@ -10,6 +10,32 @@
 function gbif_literature_field_default_field_bases() {
   $field_bases = array();
 
+  // Exported field_base: 'field_literature_type'.
+  $field_bases['field_literature_type'] = array(
+    'active' => 1,
+    'cardinality' => -1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_literature_type',
+    'indexes' => array(
+      'tid' => array(
+        0 => 'tid',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'taxonomy',
+    'settings' => array(
+      'allowed_values' => array(
+        0 => array(
+          'vocabulary' => 'literature_type',
+          'parent' => 0,
+        ),
+      ),
+    ),
+    'translatable' => 0,
+    'type' => 'taxonomy_term_reference',
+  );
+
   // Exported field_base: 'field_mdl_abstract'.
   $field_bases['field_mdl_abstract'] = array(
     'active' => 1,
@@ -48,6 +74,32 @@ function gbif_literature_field_default_field_bases() {
     ),
     'translatable' => 0,
     'type' => 'text',
+  );
+
+  // Exported field_base: 'field_mdl_author_from_country'.
+  $field_bases['field_mdl_author_from_country'] = array(
+    'active' => 1,
+    'cardinality' => -1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_mdl_author_from_country',
+    'indexes' => array(
+      'tid' => array(
+        0 => 'tid',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'taxonomy',
+    'settings' => array(
+      'allowed_values' => array(
+        0 => array(
+          'vocabulary' => 'countries',
+          'parent' => 0,
+        ),
+      ),
+    ),
+    'translatable' => 0,
+    'type' => 'taxonomy_term_reference',
   );
 
   // Exported field_base: 'field_mdl_authored'.
@@ -92,6 +144,32 @@ function gbif_literature_field_default_field_bases() {
     'settings' => array(),
     'translatable' => 0,
     'type' => 'text_long',
+  );
+
+  // Exported field_base: 'field_mdl_bio_country'.
+  $field_bases['field_mdl_bio_country'] = array(
+    'active' => 1,
+    'cardinality' => -1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_mdl_bio_country',
+    'indexes' => array(
+      'tid' => array(
+        0 => 'tid',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'taxonomy',
+    'settings' => array(
+      'allowed_values' => array(
+        0 => array(
+          'vocabulary' => 'countries',
+          'parent' => 0,
+        ),
+      ),
+    ),
+    'translatable' => 0,
+    'type' => 'taxonomy_term_reference',
   );
 
   // Exported field_base: 'field_mdl_citation_key'.
@@ -188,7 +266,7 @@ function gbif_literature_field_default_field_bases() {
       'tz_handling' => 'date',
     ),
     'translatable' => 0,
-    'type' => 'date',
+    'type' => 'datestamp',
   );
 
   // Exported field_base: 'field_mdl_day'.
@@ -204,6 +282,25 @@ function gbif_literature_field_default_field_bases() {
     'settings' => array(),
     'translatable' => 0,
     'type' => 'number_integer',
+  );
+
+  // Exported field_base: 'field_mdl_editors'.
+  $field_bases['field_mdl_editors'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_mdl_editors',
+    'indexes' => array(
+      'format' => array(
+        0 => 'format',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'text',
+    'settings' => array(),
+    'translatable' => 0,
+    'type' => 'text_long',
   );
 
   // Exported field_base: 'field_mdl_file_attached'.
@@ -319,13 +416,13 @@ function gbif_literature_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_mdl_identifier'.
-  $field_bases['field_mdl_identifier'] = array(
+  // Exported field_base: 'field_mdl_identifiers'.
+  $field_bases['field_mdl_identifiers'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
-    'field_name' => 'field_mdl_identifier',
+    'field_name' => 'field_mdl_identifiers',
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -333,11 +430,9 @@ function gbif_literature_field_default_field_bases() {
     ),
     'locked' => 0,
     'module' => 'text',
-    'settings' => array(
-      'max_length' => 1024,
-    ),
+    'settings' => array(),
     'translatable' => 0,
-    'type' => 'text',
+    'type' => 'text_long',
   );
 
   // Exported field_base: 'field_mdl_issue'.
@@ -414,7 +509,7 @@ function gbif_literature_field_default_field_bases() {
       'tz_handling' => 'date',
     ),
     'translatable' => 0,
-    'type' => 'date',
+    'type' => 'datestamp',
   );
 
   // Exported field_base: 'field_mdl_month'.
@@ -447,7 +542,7 @@ function gbif_literature_field_default_field_bases() {
     'locked' => 0,
     'module' => 'text',
     'settings' => array(
-      'max_length' => 12,
+      'max_length' => 255,
     ),
     'translatable' => 0,
     'type' => 'text',
@@ -583,6 +678,25 @@ function gbif_literature_field_default_field_bases() {
     'settings' => array(
       'allowed_values' => array(
         'journal' => 'journal',
+        'book' => 'book',
+        'generic' => 'generic',
+        'book_section' => 'book section',
+        'conference_proceedings' => 'conference proceedings',
+        'working_paper' => 'working paper',
+        'report' => 'report',
+        'web_page' => 'web page',
+        'thesis' => 'thesis',
+        'magazine_article' => 'magazine article',
+        'statute' => 'statute',
+        'patent' => 'patent',
+        'newspaper_article' => 'newspaper article',
+        'computer_program' => 'computer program',
+        'hearing' => 'hearing',
+        'television_broadcast' => 'television broadcast',
+        'encyclopedia_article' => 'encyclopedia article',
+        'case' => 'case',
+        'film' => 'film',
+        'bill' => 'bill',
       ),
       'allowed_values_function' => '',
     ),
@@ -614,7 +728,7 @@ function gbif_literature_field_default_field_bases() {
   // Exported field_base: 'field_mdl_websites'.
   $field_bases['field_mdl_websites'] = array(
     'active' => 1,
-    'cardinality' => -1,
+    'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_mdl_websites',
@@ -625,11 +739,9 @@ function gbif_literature_field_default_field_bases() {
     ),
     'locked' => 0,
     'module' => 'text',
-    'settings' => array(
-      'max_length' => 1024,
-    ),
+    'settings' => array(),
     'translatable' => 0,
-    'type' => 'text',
+    'type' => 'text_long',
   );
 
   // Exported field_base: 'field_mdl_year'.

@@ -354,6 +354,7 @@ function gbif_registry_create_organisation($json, $user) {
 			'language' => 'eng',
 			'address' => array($json['org']['address']),
 			'city' => $json['org']['city'],
+			'country' => (isset($json['org']['country'])) ? $json['org']['country']['iso2'] : '',
 			//'latitude' => '',
 			//'longitude' => '',
 			//'numPublishedDatasets' => ''

@@ -113,6 +113,14 @@ function gbif_vocabularies_taxonomy_default_vocabularies() {
       'module' => 'taxonomy',
       'weight' => -4,
     ),
+    'literature_type' => array(
+      'name' => 'Literature type',
+      'machine_name' => 'literature_type',
+      'description' => '',
+      'hierarchy' => 0,
+      'module' => 'taxonomy',
+      'weight' => 0,
+    ),
     'organizations' => array(
       'name' => 'Organizations/economies',
       'machine_name' => 'organizations',

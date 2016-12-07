@@ -10,6 +10,50 @@
 function gbif_literature_field_default_field_instances() {
   $field_instances = array();
 
+  // Exported field_instance: 'node-literature-field_literature_type'.
+  $field_instances['node-literature-field_literature_type'] = array(
+    'bundle' => 'literature',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 43,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_literature_type',
+    'label' => 'Literature_type',
+    'required' => 0,
+    'settings' => array(
+      'mediafront' => array(
+        'custom' => '',
+        'field_type' => 0,
+        'media_type' => 'media',
+        'preview' => 0,
+        'thumbnail' => 0,
+      ),
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_buttons',
+      'weight' => 13,
+    ),
+  );
+
   // Exported field_instance: 'node-literature-field_mdl_abstract'.
   $field_instances['node-literature-field_mdl_abstract'] = array(
     'bueditor_profile' => -1,
@@ -179,6 +223,52 @@ function gbif_literature_field_default_field_instances() {
         'size' => 10,
       ),
       'type' => 'text_textfield',
+      'weight' => 19,
+    ),
+  );
+
+  // Exported field_instance: 'node-literature-field_mdl_author_from_country'.
+  $field_instances['node-literature-field_mdl_author_from_country'] = array(
+    'bundle' => 'literature',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 44,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_mdl_author_from_country',
+    'label' => 'Author from country',
+    'required' => 0,
+    'settings' => array(
+      'mediafront' => array(
+        'custom' => '',
+        'field_type' => 0,
+        'media_type' => 'media',
+        'preview' => 0,
+        'thumbnail' => 0,
+      ),
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'apply_chosen' => '',
+      ),
+      'type' => 'options_select',
       'weight' => 14,
     ),
   );
@@ -226,10 +316,10 @@ function gbif_literature_field_default_field_instances() {
       'active' => 1,
       'module' => 'options',
       'settings' => array(
-        'display_label' => 0,
+        'display_label' => 1,
       ),
       'type' => 'options_onoff',
-      'weight' => 17,
+      'weight' => 30,
     ),
   );
 
@@ -317,6 +407,52 @@ function gbif_literature_field_default_field_instances() {
       ),
       'type' => 'text_textarea',
       'weight' => 3,
+    ),
+  );
+
+  // Exported field_instance: 'node-literature-field_mdl_bio_country'.
+  $field_instances['node-literature-field_mdl_bio_country'] = array(
+    'bundle' => 'literature',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 45,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_mdl_bio_country',
+    'label' => 'Biodiversity about country',
+    'required' => 0,
+    'settings' => array(
+      'mediafront' => array(
+        'custom' => '',
+        'field_type' => 0,
+        'media_type' => 'media',
+        'preview' => 0,
+        'thumbnail' => 0,
+      ),
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'apply_chosen' => '',
+      ),
+      'type' => 'options_select',
+      'weight' => 15,
     ),
   );
 
@@ -535,10 +671,10 @@ function gbif_literature_field_default_field_instances() {
       'active' => 1,
       'module' => 'options',
       'settings' => array(
-        'display_label' => 0,
+        'display_label' => 1,
       ),
       'type' => 'options_onoff',
-      'weight' => 18,
+      'weight' => 31,
     ),
   );
 
@@ -560,7 +696,7 @@ function gbif_literature_field_default_field_instances() {
           'show_repeat_rule' => 'show',
         ),
         'type' => 'date_default',
-        'weight' => 7,
+        'weight' => 40,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -600,8 +736,8 @@ function gbif_literature_field_default_field_instances() {
         'text_parts' => array(),
         'year_range' => '-3:+3',
       ),
-      'type' => 'date_text',
-      'weight' => 9,
+      'type' => 'date_popup',
+      'weight' => 34,
     ),
   );
 
@@ -654,7 +790,94 @@ function gbif_literature_field_default_field_instances() {
       'module' => 'number',
       'settings' => array(),
       'type' => 'number',
-      'weight' => 23,
+      'weight' => 8,
+    ),
+  );
+
+  // Exported field_instance: 'node-literature-field_mdl_editors'.
+  $field_instances['node-literature-field_mdl_editors'] = array(
+    'bueditor_profile' => -1,
+    'bundle' => 'literature',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 37,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_mdl_editors',
+    'label' => 'Editors',
+    'required' => 0,
+    'settings' => array(
+      'better_formats' => array(
+        'allowed_formats' => array(
+          'filtered_html' => 'filtered_html',
+          'full_html' => 'full_html',
+          'parsedown' => 'parsedown',
+          'php_code' => 'php_code',
+          'plain_text' => 'plain_text',
+          'raw_html' => 'raw_html',
+        ),
+        'allowed_formats_toggle' => 0,
+        'default_order_toggle' => 0,
+        'default_order_wrapper' => array(
+          'formats' => array(
+            'filtered_html' => array(
+              'weight' => -9,
+            ),
+            'full_html' => array(
+              'weight' => -10,
+            ),
+            'parsedown' => array(
+              'weight' => 0,
+            ),
+            'php_code' => array(
+              'weight' => -7,
+            ),
+            'plain_text' => array(
+              'weight' => -8,
+            ),
+            'raw_html' => array(
+              'weight' => -6,
+            ),
+          ),
+        ),
+      ),
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
+      'mediafront' => array(
+        'custom' => '',
+        'field_type' => 0,
+        'media_type' => 'media',
+        'preview' => 0,
+        'thumbnail' => 0,
+      ),
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'rows' => 6,
+      ),
+      'type' => 'text_textarea',
+      'weight' => 4,
     ),
   );
 
@@ -701,10 +924,10 @@ function gbif_literature_field_default_field_instances() {
       'active' => 1,
       'module' => 'options',
       'settings' => array(
-        'display_label' => 0,
+        'display_label' => 1,
       ),
       'type' => 'options_onoff',
-      'weight' => 29,
+      'weight' => 33,
     ),
   );
 
@@ -790,7 +1013,7 @@ function gbif_literature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 30,
+      'weight' => 26,
     ),
   );
 
@@ -876,7 +1099,7 @@ function gbif_literature_field_default_field_instances() {
         'size' => 36,
       ),
       'type' => 'text_textfield',
-      'weight' => 11,
+      'weight' => 18,
     ),
   );
 
@@ -923,10 +1146,10 @@ function gbif_literature_field_default_field_instances() {
       'active' => 1,
       'module' => 'options',
       'settings' => array(
-        'display_label' => 0,
+        'display_label' => 1,
       ),
       'type' => 'options_onoff',
-      'weight' => 19,
+      'weight' => 32,
     ),
   );
 
@@ -1012,12 +1235,13 @@ function gbif_literature_field_default_field_instances() {
         'size' => 36,
       ),
       'type' => 'text_textfield',
-      'weight' => 8,
+      'weight' => 16,
     ),
   );
 
-  // Exported field_instance: 'node-literature-field_mdl_identifier'.
-  $field_instances['node-literature-field_mdl_identifier'] = array(
+  // Exported field_instance: 'node-literature-field_mdl_identifiers'.
+  $field_instances['node-literature-field_mdl_identifiers'] = array(
+    'bueditor_profile' => -1,
     'bundle' => 'literature',
     'default_value' => NULL,
     'deleted' => 0,
@@ -1028,7 +1252,7 @@ function gbif_literature_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 15,
+        'weight' => 38,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1038,8 +1262,8 @@ function gbif_literature_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'node',
-    'field_name' => 'field_mdl_identifier',
-    'label' => 'Identifier',
+    'field_name' => 'field_mdl_identifiers',
+    'label' => 'Identifiers',
     'required' => 0,
     'settings' => array(
       'better_formats' => array(
@@ -1095,10 +1319,10 @@ function gbif_literature_field_default_field_instances() {
       'active' => 1,
       'module' => 'text',
       'settings' => array(
-        'size' => 100,
+        'rows' => 5,
       ),
-      'type' => 'text_textfield',
-      'weight' => 6,
+      'type' => 'text_textarea',
+      'weight' => 5,
     ),
   );
 
@@ -1184,7 +1408,7 @@ function gbif_literature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 26,
+      'weight' => 24,
     ),
   );
 
@@ -1231,7 +1455,7 @@ function gbif_literature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'taxonomy_autocomplete',
-      'weight' => 7,
+      'weight' => 10,
     ),
   );
 
@@ -1253,7 +1477,7 @@ function gbif_literature_field_default_field_instances() {
           'show_repeat_rule' => 'show',
         ),
         'type' => 'date_default',
-        'weight' => 17,
+        'weight' => 41,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1293,8 +1517,8 @@ function gbif_literature_field_default_field_instances() {
         'text_parts' => array(),
         'year_range' => '-3:+3',
       ),
-      'type' => 'date_text',
-      'weight' => 12,
+      'type' => 'date_popup',
+      'weight' => 35,
     ),
   );
 
@@ -1347,7 +1571,7 @@ function gbif_literature_field_default_field_instances() {
       'module' => 'number',
       'settings' => array(),
       'type' => 'number',
-      'weight' => 22,
+      'weight' => 7,
     ),
   );
 
@@ -1433,7 +1657,7 @@ function gbif_literature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 24,
+      'weight' => 22,
     ),
   );
 
@@ -1519,7 +1743,7 @@ function gbif_literature_field_default_field_instances() {
         'size' => 36,
       ),
       'type' => 'text_textfield',
-      'weight' => 10,
+      'weight' => 17,
     ),
   );
 
@@ -1605,7 +1829,7 @@ function gbif_literature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 28,
+      'weight' => 25,
     ),
   );
 
@@ -1652,10 +1876,10 @@ function gbif_literature_field_default_field_instances() {
       'active' => 1,
       'module' => 'options',
       'settings' => array(
-        'display_label' => 0,
+        'display_label' => 1,
       ),
       'type' => 'options_onoff',
-      'weight' => 15,
+      'weight' => 28,
     ),
   );
 
@@ -1741,7 +1965,7 @@ function gbif_literature_field_default_field_instances() {
         'size' => 100,
       ),
       'type' => 'text_textfield',
-      'weight' => 5,
+      'weight' => 9,
     ),
   );
 
@@ -1788,10 +2012,10 @@ function gbif_literature_field_default_field_instances() {
       'active' => 1,
       'module' => 'options',
       'settings' => array(
-        'display_label' => 0,
+        'display_label' => 1,
       ),
       'type' => 'options_onoff',
-      'weight' => 16,
+      'weight' => 29,
     ),
   );
 
@@ -1927,12 +2151,13 @@ function gbif_literature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 25,
+      'weight' => 23,
     ),
   );
 
   // Exported field_instance: 'node-literature-field_mdl_websites'.
   $field_instances['node-literature-field_mdl_websites'] = array(
+    'bueditor_profile' => -1,
     'bundle' => 'literature',
     'default_value' => NULL,
     'deleted' => 0,
@@ -1943,7 +2168,7 @@ function gbif_literature_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 32,
+        'weight' => 39,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -2010,9 +2235,9 @@ function gbif_literature_field_default_field_instances() {
       'active' => 1,
       'module' => 'text',
       'settings' => array(
-        'size' => 60,
+        'rows' => 5,
       ),
-      'type' => 'text_textfield',
+      'type' => 'text_textarea',
       'weight' => 27,
     ),
   );
@@ -2066,7 +2291,7 @@ function gbif_literature_field_default_field_instances() {
       'module' => 'number',
       'settings' => array(),
       'type' => 'number',
-      'weight' => 4,
+      'weight' => 6,
     ),
   );
 
@@ -2113,7 +2338,51 @@ function gbif_literature_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'taxonomy_autocomplete',
-      'weight' => 13,
+      'weight' => 12,
+    ),
+  );
+
+  // Exported field_instance: 'node-literature-tx_topic'.
+  $field_instances['node-literature-tx_topic'] = array(
+    'bundle' => 'literature',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 42,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'tx_topic',
+    'label' => 'Topic',
+    'required' => 0,
+    'settings' => array(
+      'mediafront' => array(
+        'custom' => '',
+        'field_type' => 0,
+        'media_type' => 'media',
+        'preview' => 0,
+        'thumbnail' => 0,
+      ),
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_buttons',
+      'weight' => 11,
     ),
   );
 
@@ -2121,22 +2390,26 @@ function gbif_literature_field_default_field_instances() {
   // Included for use with string extractors like potx.
   t('Abstract');
   t('Accessed');
+  t('Author from country');
   t('Authored');
   t('Authors');
+  t('Biodiversity about country');
   t('Citation key');
   t('Code');
   t('Confirmed');
   t('Created');
   t('Day');
+  t('Editors');
   t('File attached');
   t('First author');
   t('Group ID');
   t('Hidden');
   t('Id');
-  t('Identifier');
+  t('Identifiers');
   t('Issue');
   t('Keywords');
   t('Last modified');
+  t('Literature_type');
   t('Month');
   t('Pages');
   t('Profile ID');
@@ -2145,6 +2418,7 @@ function gbif_literature_field_default_field_instances() {
   t('Source');
   t('Starred');
   t('Tags');
+  t('Topic');
   t('Type');
   t('Volume');
   t('Websites');

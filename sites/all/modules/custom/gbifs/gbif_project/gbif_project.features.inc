@@ -39,8 +39,8 @@ function gbif_project_image_default_styles() {
   $styles = array();
 
   // Exported image style: focal_point_for_projects (drupal).
-  $styles['focal_point_for_projects (drupal)'] = array(
-    'label' => 'Focal point for projects',
+  $styles['focal_point_for_projects'] = array(
+    'label' => 'Focal point for projects (drupal)',
     'effects' => array(
       11 => array(
         'name' => 'focal_point_scale_and_crop',
@@ -100,8 +100,8 @@ function gbif_project_image_default_styles() {
   );
 
   // Exported image style: teaser_thumbmail (drupal).
-  $styles['teaser_thumbmail (drupal)'] = array(
-    'label' => 'Teaser thumbmail',
+  $styles['teaser_thumbmail'] = array(
+    'label' => 'Teaser thumbmail (drupal)',
     'effects' => array(
       12 => array(
         'name' => 'image_scale',

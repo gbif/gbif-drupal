@@ -68,7 +68,6 @@ class Search__2_0 extends GbifResourceSearchBase implements ResourceInterface {
    * Overrides Resource::publicFields().
    */
   protected function publicFields() {
-
     $public_fields['entity_id'] = array(
       'property' => 'search_api_id',
       'process_callbacks' => array(
@@ -95,12 +94,7 @@ class Search__2_0 extends GbifResourceSearchBase implements ResourceInterface {
       'callback' => 'Drupal\gbif_restful_search\Plugin\resource\search\node\v2\Search__2_0::getUrlAlias'
     );
 
-    $public_fields['featuredSearchTerms'] = array(
-      'property' => 'field_featured_search_terms',
-      'process_callbacks' => array(
-        array($this, 'Drupal\gbif_restful_search\Plugin\resource\search\node\v2\Search__2_0::getTermValue'),
-      ),
-    );
+    $public_fields['featuredSearchTerms'] = ['property' => 'field_featured_search_terms', 'sub_property' => LANGUAGE_NONE];
 
     $public_fields['title'] = array(
       'property' => 'title',
@@ -115,11 +109,6 @@ class Search__2_0 extends GbifResourceSearchBase implements ResourceInterface {
 
     $public_fields['body'] = array(
       'property' => 'body',
-      'sub_property' => LANGUAGE_NONE . '::0::value',
-    );
-
-    $public_fields['abstract'] = array(
-      'property' => 'field_mdl_abstract',
       'sub_property' => LANGUAGE_NONE . '::0::value',
     );
 
@@ -145,33 +134,25 @@ class Search__2_0 extends GbifResourceSearchBase implements ResourceInterface {
       }
     }
 
-    foreach (['news', 'data_use', 'dataset'] as $type) {
-      if (field_info_instance('node', 'field_dataset_uuid', $type)) {
-        $public_fields['datasetUuid'] = [
-          'property' => 'field_dataset_uuid',
-          'sub_property' => LANGUAGE_NONE . '::0::value'
-        ];
-      }
-    }
-    unset($type);
+    $public_fields['datasetUuid'] = [
+      'property' => 'field_dataset_uuid',
+      'sub_property' => LANGUAGE_NONE . '::0::value'
+    ];
 
-    // Primary and secondary headings
-    if (field_info_instance('node', 'field_category_upper', 'generic') && field_info_instance('node', 'field_category_lower', 'generic')) {
-      $public_fields['headingPrimary'] = array(
-        'property' => 'field_category_upper',
-        'sub_property' => LANGUAGE_NONE . '::0::value',
-        'process_callbacks' => [
-          [$this, 'Drupal\gbif_restful_search\Plugin\resource\search\node\v2\Search__2_0::camelCase']
-        ]
-      );
-      $public_fields['headingSecondary'] = array(
-        'property' => 'field_category_lower',
-        'sub_property' => LANGUAGE_NONE . '::0::value',
-        'process_callbacks' => [
-          [$this, 'Drupal\gbif_restful_search\Plugin\resource\search\node\v2\Search__2_0::camelCase']
-        ]
-      );
-    }
+    $public_fields['headingPrimary'] = array(
+      'property' => 'field_category_upper',
+      'sub_property' => LANGUAGE_NONE . '::0::value',
+      'process_callbacks' => [
+        [$this, 'Drupal\gbif_restful_search\Plugin\resource\search\node\v2\Search__2_0::camelCase']
+      ]
+    );
+    $public_fields['headingSecondary'] = array(
+      'property' => 'field_category_lower',
+      'sub_property' => LANGUAGE_NONE . '::0::value',
+      'process_callbacks' => [
+        [$this, 'Drupal\gbif_restful_search\Plugin\resource\search\node\v2\Search__2_0::camelCase']
+      ]
+    );
 
     // Tag fields should be here for filtering to work.
     $public_fields['tx_informatics'] = array(
@@ -242,6 +223,30 @@ class Search__2_0 extends GbifResourceSearchBase implements ResourceInterface {
     $public_fields['changed'] = array(
       'property' => 'changed',
     );
+
+    // literature fields
+    $public_fields['abstract'] = ['property' => 'field_mdl_abstract', 'sub_property' => LANGUAGE_NONE . '::0::value'];
+    $public_fields['literatureType'] = ['property' => 'field_mdl_type', 'sub_property' => LANGUAGE_NONE . '::0::value',];
+    $public_fields['authors'] = ['property' => 'field_mdl_authors', 'sub_property' => LANGUAGE_NONE . '::0::value'];
+    $public_fields['editors'] = ['property' => 'field_mdl_editors', 'sub_property' => LANGUAGE_NONE . '::0::value'];
+
+    $public_fields['keywords'] = ['property' => 'field_mdl_keywords', 'sub_property' => LANGUAGE_NONE];
+    $public_fields['literatureGbifType'] = ['property' => 'field_literature_type', 'sub_property' => LANGUAGE_NONE];
+    $public_fields['authorCountry'] = ['property' => 'field_mdl_author_from_country', 'sub_property' => LANGUAGE_NONE];
+    $public_fields['biodiversityCountry'] = ['property' => 'field_mdl_bio_country', 'sub_property' => LANGUAGE_NONE];
+
+    $public_fields['literatureSource'] = ['property' => 'field_mdl_source', 'sub_property' => LANGUAGE_NONE . '::0::value'];
+    $public_fields['literatureYear'] = ['property' => 'field_mdl_year', 'sub_property' => LANGUAGE_NONE . '::0::value'];
+    $public_fields['literatureMonth'] = ['property' => 'field_mdl_month', 'sub_property' => LANGUAGE_NONE . '::0::value'];
+    $public_fields['literatureDay'] = ['property' => 'field_mdl_day', 'sub_property' => LANGUAGE_NONE . '::0::value'];
+    $public_fields['literatureYear'] = ['property' => 'field_mdl_year', 'sub_property' => LANGUAGE_NONE . '::0::value'];
+    $public_fields['literatureMonth'] = ['property' => 'field_mdl_month', 'sub_property' => LANGUAGE_NONE . '::0::value'];
+    $public_fields['literatureDay'] = ['property' => 'field_mdl_day', 'sub_property' => LANGUAGE_NONE . '::0::value'];
+    $public_fields['literatureVolume'] = ['property' => 'field_mdl_volume', 'sub_property' => LANGUAGE_NONE . '::0::value'];
+    $public_fields['literatureIssue'] = ['property' => 'field_mdl_issue', 'sub_property' => LANGUAGE_NONE . '::0::value'];
+    $public_fields['literaturePages'] = ['property' => 'field_mdl_pages', 'sub_property' => LANGUAGE_NONE . '::0::value'];
+    $public_fields['literatureWebsites'] = ['property' => 'field_mdl_websites', 'sub_property' => LANGUAGE_NONE . '::0::value'];
+    $public_fields['literatureIdentifiers'] = ['property' => 'field_mdl_identifiers', 'sub_property' => LANGUAGE_NONE . '::0::value'];
 
     return $public_fields;
   }

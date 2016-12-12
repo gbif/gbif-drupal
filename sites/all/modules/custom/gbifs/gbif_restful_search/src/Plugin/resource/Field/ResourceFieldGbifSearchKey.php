@@ -30,6 +30,17 @@ class ResourceFieldGbifSearchKey extends ResourceFieldKeyValue implements Resour
         if (isset($value[$part])) $value = $value[$part];
       }
     }
+
+    // Add term name if it's included to extract the term name.
+    $termRefFields = ['field_featured_search_terms', 'tx_tags', 'tx_topic'];
+    foreach ($value as &$v) {
+      if (isset($v['tid']) && in_array($definition['property'], $termRefFields)) {
+        $term = taxonomy_term_load(intval($v['tid']));
+        $v['name'] = $term->name;
+        $v['enum'] = str_replace(' ', '_', strtolower($term->name));
+      }
+    }
+
     return $value;
   }
 
@@ -40,6 +51,13 @@ class ResourceFieldGbifSearchKey extends ResourceFieldKeyValue implements Resour
     $resource_field = new static($field, $request ?: restful()->getRequest());
     $resource_field->addDefaults();
     return $resource_field;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function render(DataInterpreterInterface $interpreter) {
+    return $this->executeProcessCallbacks($this->value($interpreter));
   }
 
 }

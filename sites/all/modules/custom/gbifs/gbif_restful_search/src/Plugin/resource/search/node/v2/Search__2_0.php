@@ -6,10 +6,12 @@
  */
 
 namespace Drupal\gbif_restful_search\Plugin\resource\search\node\v2;
+use Drupal\gbif_restful_search\Plugin\resource\Field\ResourceFieldGbifCollectionInterface;
+use Drupal\gbif_restful_search\Plugin\resource\search\GbifResourceSearchBaseInterface;
 use Drupal\restful\Plugin\resource\ResourceInterface;
+use Drupal\restful\plugin\resource\Field\ResourceFieldBase;
 use Drupal\restful\Plugin\resource\DataInterpreter\DataInterpreterInterface;
-use Drupal\restful\Plugin\resource\Field\ResourceFieldBase;
-use Drupal\gbif_restful_search\Plugin\Resource\GbifResourceSearchBase;
+use Drupal\gbif_restful_search\Plugin\Resource\search\GbifResourceSearchBase;
 
 /**
  * Class Search__2_0
@@ -34,7 +36,7 @@ use Drupal\gbif_restful_search\Plugin\Resource\GbifResourceSearchBase;
  *   formatter = "json_gbif"
  * )
  */
-class Search__2_0 extends GbifResourceSearchBase implements ResourceInterface {
+class Search__2_0 extends GbifResourceSearchBase implements GbifResourceSearchBaseInterface {
 
   /**
    * Overrides Resource::versionedUrl().
@@ -332,6 +334,10 @@ class Search__2_0 extends GbifResourceSearchBase implements ResourceInterface {
 
   public static function camelCase($string) {
     return (is_array($string)) ? $string : lcfirst(str_replace(' ', '', ucwords($string)));
+  }
+
+  public function setFieldGbifDefinitions(ResourceFieldGbifCollectionInterface $field_definitions) {
+    $this->fieldDefinitions = $field_definitions;
   }
 
 }

@@ -6,6 +6,7 @@
  */
 namespace Drupal\gbif_restful_search\Plugin\resource\DataProvider;
 
+use Drupal\gbif_restful_search\Plugin\resource\Field\ResourceFieldGbifCollection;
 use Drupal\restful\Exception\BadRequestException;
 use Drupal\restful\Exception\ForbiddenException;
 use Drupal\restful\Exception\ServerConfigurationException;
@@ -15,7 +16,7 @@ use Drupal\restful\Http\RequestInterface;
 use Drupal\restful\Plugin\resource\DataInterpreter\ArrayWrapper;
 use Drupal\restful\Plugin\resource\DataInterpreter\DataInterpreterArray;
 use Drupal\restful\Plugin\resource\DataProvider\DataProvider;
-use Drupal\restful\Plugin\resource\Field\ResourceFieldCollectionInterface;
+use Drupal\gbif_restful_search\Plugin\resource\Field\ResourceFieldGbifCollectionInterface;
 use \EntityFieldQuery;
 
 /**
@@ -93,7 +94,7 @@ use \EntityFieldQuery;
   /**
    * {@inheritdoc}
    */
-  public function __construct(RequestInterface $request, ResourceFieldCollectionInterface $field_definitions, $account, $plugin_id, $resource_path = NULL, array $options = array(), $langcode = NULL) {
+  public function __construct(RequestInterface $request, ResourceFieldGbifCollectionInterface $field_definitions, $account, $plugin_id, $resource_path = NULL, array $options = array(), $langcode = NULL) {
     parent::__construct($request, $field_definitions, $account, $plugin_id, $resource_path, $options, $langcode);
     if (empty($this->options['urlParams'])) {
       $this->options['urlParams'] = array(
@@ -764,4 +765,26 @@ use \EntityFieldQuery;
       }
     }
   }
-}
+
+   /**
+    * Initialize the empty resource field collection to bundle the output.
+    *
+    * @param mixed $identifier
+    *   The ID of thing being viewed.
+    *
+    * @return ResourceFieldGbifCollectionInterface
+    *   The collection of fields.
+    *
+    * @throws \Drupal\restful\Exception\NotFoundException
+    */
+   protected function initResourceFieldCollection($identifier) {
+     $resource_field_collection = new ResourceFieldGbifCollection(array(), $this->getRequest());
+     $interpreter = $this->initDataInterpreter($identifier);
+     $resource_field_collection->setInterpreter($interpreter);
+     $id_field_name = empty($this->options['idField']) ? 'id' : $this->options['idField'];
+     $resource_field_collection->setIdField($this->fieldDefinitions->get($id_field_name));
+     $resource_field_collection->setResourceId($this->pluginId);
+     return $resource_field_collection;
+   }
+
+ }

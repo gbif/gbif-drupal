@@ -14,6 +14,7 @@ use Drupal\restful\Exception\InternalServerErrorException;
 use Drupal\restful\Plugin\resource\Field\ResourceFieldCollectionInterface;
 use Drupal\restful\Plugin\resource\Field\ResourceFieldInterface;
 use Drupal\restful\Plugin\resource\Field\ResourceFieldResourceInterface;
+use Drupal\gbif_restful_search\Plugin\resource\Field\ResourceFieldGbifCollection;
 
 /**
  * Class FormatterGbifJson.
@@ -112,6 +113,14 @@ class FormatterGbifJson extends Formatter implements FormatterInterface {
       $parent_hashes[] = $this->getCacheHash($data);
       if ($cache = $this->getCachedData($data)) {
         return $cache->data;
+      }
+    }
+    if (!is_array($data)) {
+      $fields = $data->getFields();
+      if (is_array($fields)) {
+        if ($data->getInterpreter()->getWrapper()->type == 'literature') {
+          unset($data['fields']['body']);
+        }
       }
     }
     foreach ($data as $public_field_name => $resource_field) {
@@ -254,6 +263,16 @@ class FormatterGbifJson extends Formatter implements FormatterInterface {
       throw new BadRequestException(sprintf('Invalid JSON provided: %s.', $body));
     }
     return $decoded_json;
+  }
+
+
+  private function filterFieldExportByType($data) {
+
+    foreach ($data as &$datum) {
+      if ($datum->getInterpreter()->getWrapper()->type == 'literature') {
+      }
+    }
+
   }
 
 }

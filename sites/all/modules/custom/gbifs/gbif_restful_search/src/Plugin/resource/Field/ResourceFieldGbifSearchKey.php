@@ -32,12 +32,14 @@ class ResourceFieldGbifSearchKey extends ResourceFieldKeyValue implements Resour
     }
 
     // Add term name if it's included to extract the term name.
-    $termRefFields = ['field_featured_search_terms', 'tx_tags', 'tx_topic'];
-    foreach ($value as &$v) {
-      if (isset($v['tid']) && in_array($definition['property'], $termRefFields)) {
-        $term = taxonomy_term_load(intval($v['tid']));
-        $v['name'] = $term->name;
-        $v['enum'] = str_replace(' ', '_', strtolower($term->name));
+    if (isset($value) && is_array($value)) {
+      $termRefFields = ['field_featured_search_terms', 'tx_tags', 'tx_topic'];
+      foreach ($value as &$v) {
+        if (isset($v['tid']) && in_array($definition['property'], $termRefFields)) {
+          $term = taxonomy_term_load(intval($v['tid']));
+          $v['name'] = $term->name;
+          $v['enum'] = str_replace(' ', '_', strtolower($term->name));
+        }
       }
     }
 

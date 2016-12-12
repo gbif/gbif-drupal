@@ -2,18 +2,36 @@
 
 /**
  * @file
- * Contains \Drupal\gbif_restful_search\Plugin\Resource\GbifResourceSearchBase.
+ * Contains \Drupal\gbif_restful_search\Plugin\Resource\search\GbifResourceSearchBase.
  */
 
-namespace Drupal\gbif_restful_search\Plugin\Resource;
+namespace Drupal\gbif_restful_search\Plugin\Resource\search;
 
 use Drupal\restful\Http\HttpHeader;
 use Drupal\restful\Plugin\resource\Resource;
 use Drupal\restful\Plugin\resource\ResourceInterface;
 use Drupal\restful\Exception\ServerConfigurationException;
+use Drupal\gbif_restful_search\Plugin\resource\Field\ResourceFieldGbifCollection;
+use Drupal\gbif_restful_search\Plugin\resource\Field\ResourceFieldGbifCollectionInterface;
+use Drupal\gbif_restful_search\Plugin\resource\search\GbifResourceSearchBaseInterface;
 
+abstract class GbifResourceSearchBase extends Resource implements GbifResourceSearchBaseInterface {
 
-abstract class GbifResourceSearchBase extends Resource implements ResourceInterface {
+  /**
+   * Constructs a Drupal\Component\Plugin\PluginBase object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->fieldDefinitions = ResourceFieldGbifCollection::factory($this->processPublicFields($this->publicFields()), $this->getRequest());
+    $this->initAuthenticationManager();
+  }
 
   /**
    * {@inheritdoc}
@@ -82,5 +100,4 @@ abstract class GbifResourceSearchBase extends Resource implements ResourceInterf
       return $this->getDataProvider()->viewMultiple($search_results);
     }
   }
-
 }

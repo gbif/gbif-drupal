@@ -787,4 +787,11 @@ use \EntityFieldQuery;
      return $resource_field_collection;
    }
 
+   /**
+    * Default pager size.
+    * @return int
+    */
+   public function getRange() {
+     return 20;
+   }
  }

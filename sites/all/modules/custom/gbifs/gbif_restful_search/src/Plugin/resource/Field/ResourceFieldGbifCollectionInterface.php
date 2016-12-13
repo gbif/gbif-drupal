@@ -176,8 +176,19 @@ interface ResourceFieldGbifCollectionInterface extends ResourceFieldCollectionIn
   public function setResourceId($resource_id);
 
   /**
+   * @return string
+   *    The content type
+   */
+  public function getContentType();
+
+  /**
    *
    */
   public function getFields();
+
+  /**
+   *
+   */
+  public function maskFields();
 
 }

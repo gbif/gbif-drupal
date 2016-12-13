@@ -395,4 +395,118 @@ class ResourceFieldGbifCollection extends ResourceFieldCollection implements Res
     return $this->fields;
   }
 
+  public function getContentType() {
+    return $this->getInterpreter()->getWrapper()->get('type');
+  }
+
+  public $commonFields = [
+    'entity_id',
+    'version_id',
+    'relevance',
+    'type',
+    'title',
+    'targetUrl',
+    'promote',
+    'sticky',
+    'language',
+    'status',
+    'created',
+    'changed',
+  ];
+
+  public $tagFields = [
+    'tagsInformatics',
+    'tagsCapacityEnhancement',
+    'tagsAboutGbif',
+    'tagsAudience',
+    'tagsPurpose',
+    'tagsDataType',
+    'tagsResourceType',
+    'country',
+  ];
+
+  public $sharedTagFields = [
+    'tagsTopic',
+    'tags',
+  ];
+
+  public $mask = [
+    'news' => [
+      'featuredSearchTerms',
+      'summary',
+      'body',
+      'field_uni_images',
+      'datasetUuid',
+    ],
+    'programme' => [
+      'field_programme_ef_image',
+    ],
+    'project' => [
+      'field_pj_image',
+    ],
+    'generic' => [
+      'field_uni_images',
+      'headingPrimary',
+      'headingSecondary',
+    ],
+    'event' => [],
+    'resource' => [],
+    'gbif_participant' => [],
+    'literature' => [
+      'abstract',
+      'literatureType',
+      'authors',
+      'editors',
+      'keywords',
+      'literatureGbifType',
+      'authorCountry',
+      'biodiversityCountry',
+      'literatureSource',
+      'literatureYear',
+      'literatureMonth',
+      'literatureDay',
+      'literatureVolume',
+      'literatureIssue',
+      'literaturePages',
+      'literatureWebsites',
+      'literatureIdentifiers',
+    ]
+  ];
+
+  /**
+   * Mask unused fields according to content type.
+   */
+  public function maskFields() {
+    $content_type = $this->getContentType();
+    switch ($content_type) {
+      case 'news':
+      case 'data_use':
+      case 'dataset':
+        $maskingFields = array_merge($this->commonFields, $this->mask['news'], $this->tagFields, $this->sharedTagFields);
+        break;
+      case 'programme':
+      case 'project':
+      case 'event':
+      case 'resource':
+      case 'gbif_participant':
+        $maskingFields = array_merge($this->commonFields, $this->mask['news'], $this->mask['programme'], $this->mask['project'], $this->tagFields, $this->sharedTagFields);
+        break;
+      case 'generic':
+        $maskingFields = array_merge($this->commonFields, $this->mask['news'], $this->mask['generic'], $this->tagFields, $this->sharedTagFields);
+        break;
+      case 'literature':
+        $maskingFields = array_merge($this->commonFields, $this->mask['literature'], $this->sharedTagFields);
+        break;
+      default:
+        $maskingFields = array_merge($this->commonFields, $this->tagFields, $this->sharedTagFields);
+        break;
+    }
+
+    foreach ($this->fields as $f => $f_array) {
+      if (array_search($f, $maskingFields, TRUE) === FALSE) {
+        unset($this->fields[$f]);
+      }
+    }
+
+  }
 }

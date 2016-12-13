@@ -116,11 +116,8 @@ class FormatterGbifJson extends Formatter implements FormatterInterface {
       }
     }
     if (!is_array($data)) {
-      $fields = $data->getFields();
-      if (is_array($fields)) {
-        if ($data->getInterpreter()->getWrapper()->type == 'literature') {
-          unset($data['fields']['body']);
-        }
+      if (is_array($data->getFields())) {
+        $data->maskFields();
       }
     }
     foreach ($data as $public_field_name => $resource_field) {

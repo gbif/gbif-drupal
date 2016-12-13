@@ -31,6 +31,7 @@ class ResourceFieldGbifSearchKey extends ResourceFieldKeyValue implements Resour
       }
     }
 
+    // Value processing
     // Add term name if it's included to extract the term name.
     if (isset($value) && is_array($value)) {
       $termRefFields = [
@@ -60,6 +61,11 @@ class ResourceFieldGbifSearchKey extends ResourceFieldKeyValue implements Resour
           unset($v['tid']);
         }
       }
+    }
+
+    // 2) Convert back serialised object.
+    if (in_array($this->property, ['field_mdl_authors', 'field_mdl_editors', 'field_mdl_websites', 'field_mdl_identifiers'])) {
+      $value = unserialize($value);
     }
 
     return $value;

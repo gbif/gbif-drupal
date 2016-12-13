@@ -65,7 +65,7 @@ class ResourceFieldGbifSearchKey extends ResourceFieldKeyValue implements Resour
 
     // 2) Convert back serialised object.
     if (in_array($this->property, ['field_mdl_authors', 'field_mdl_editors', 'field_mdl_websites', 'field_mdl_identifiers'])) {
-      $value = unserialize($value);
+      $value = unserialize($value) ? unserialize($value) : null;
     }
 
     return $value;

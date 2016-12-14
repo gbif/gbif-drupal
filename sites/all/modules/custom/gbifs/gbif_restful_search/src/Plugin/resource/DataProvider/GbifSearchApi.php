@@ -347,7 +347,7 @@ use \EntityFieldQuery;
         }
       }
       $resource_field = $this->fieldDefinitions->get($public_field);
-      $field = $resource_field->getProperty() ? : $public_field;
+      $field = (isset($resource_field) && $resource_field->getProperty()) ? $resource_field->getProperty() : $public_field;
 
       if (!is_array($value)) {
         // Request uses the shorthand form for filter. For example
@@ -603,6 +603,11 @@ use \EntityFieldQuery;
    */
   private function processSearchIndexFacets(&$facets) {
     $mapping = $this->mapping;
+    $country_fields = [
+      'field_country' => 'category_country',
+      'field_mdl_author_from_country' => 'category_author_from_country',
+      'field_mdl_bio_country' => 'category_biodiversity_about_country',
+    ];
 
     // Extra double quotes are introduced during the query.
     // We sanitise it here.
@@ -615,7 +620,8 @@ use \EntityFieldQuery;
           $facet['id'] = (int)$facet['filter'];
           $term = taxonomy_term_load($facet['id']);
           $facet['label'] = $term->name;
-          if ($field_name == 'field_country') {
+          // country fields uses ISO2 as enum
+          if (isset($country_fields[$field_name])) {
             $facet['enum'] = $term->field_iso2['und'][0]['value'];
           }
           else {

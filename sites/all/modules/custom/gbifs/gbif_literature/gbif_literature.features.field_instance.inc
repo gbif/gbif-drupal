@@ -10,50 +10,6 @@
 function gbif_literature_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'node-literature-field_literature_type'.
-  $field_instances['node-literature-field_literature_type'] = array(
-    'bundle' => 'literature',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
-        'weight' => 43,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_literature_type',
-    'label' => 'Literature_type',
-    'required' => 0,
-    'settings' => array(
-      'mediafront' => array(
-        'custom' => '',
-        'field_type' => 0,
-        'media_type' => 'media',
-        'preview' => 0,
-        'thumbnail' => 0,
-      ),
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'options',
-      'settings' => array(),
-      'type' => 'options_buttons',
-      'weight' => 13,
-    ),
-  );
-
   // Exported field_instance: 'node-literature-field_mdl_abstract'.
   $field_instances['node-literature-field_mdl_abstract'] = array(
     'bueditor_profile' => -1,
@@ -1014,6 +970,50 @@ function gbif_literature_field_default_field_instances() {
       ),
       'type' => 'text_textfield',
       'weight' => 26,
+    ),
+  );
+
+  // Exported field_instance: 'node-literature-field_mdl_gbif_ref_annt'.
+  $field_instances['node-literature-field_mdl_gbif_ref_annt'] = array(
+    'bundle' => 'literature',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 46,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_mdl_gbif_ref_annt',
+    'label' => 'GBIF literature annotation',
+    'required' => 0,
+    'settings' => array(
+      'mediafront' => array(
+        'custom' => '',
+        'field_type' => 0,
+        'media_type' => 'media',
+        'preview' => 0,
+        'thumbnail' => 0,
+      ),
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_buttons',
+      'weight' => 13,
     ),
   );
 
@@ -2402,6 +2402,7 @@ function gbif_literature_field_default_field_instances() {
   t('Editors');
   t('File attached');
   t('First author');
+  t('GBIF literature annotation');
   t('Group ID');
   t('Hidden');
   t('Id');
@@ -2409,7 +2410,6 @@ function gbif_literature_field_default_field_instances() {
   t('Issue');
   t('Keywords');
   t('Last modified');
-  t('Literature_type');
   t('Month');
   t('Pages');
   t('Profile ID');

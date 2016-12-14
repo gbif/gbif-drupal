@@ -70,6 +70,11 @@ use \EntityFieldQuery;
     'field_gbif_area' => 'category_area',
     'field_content_stream' => 'category_content_stream',
     'field_un_region' => 'category_un_region',
+    'field_mdl_gbif_ref_annt' => 'category_gbif_literature_annotation',
+    'field_mdl_type' => 'category_literature_type',
+    'field_mdl_author_from_country' => 'category_author_from_country',
+    'field_mdl_bio_country' => 'category_biodiversity_about_country',
+    'field_mdl_year' => 'category_literature_year'
   );
 
    /**
@@ -90,6 +95,9 @@ use \EntityFieldQuery;
      'field_gbif_area' => 'gbif_area',
      'field_content_stream' => 'content_stream',
      'field_un_region' => 'un_region',
+     'field_mdl_gbif_ref_annt' => 'gbif_literature_annotation',
+     'field_mdl_author_from_country' => 'countries',
+     'field_mdl_bio_country' => 'countries',
    );
   /**
    * {@inheritdoc}

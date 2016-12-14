@@ -5796,7 +5796,7 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'format' => 'plain_text',
     'weight' => 0,
     'uuid' => '6f204187-10f2-4efc-9c50-3987d0204339',
-    'vocabulary_machine_name' => 'literature_type',
+    'vocabulary_machine_name' => 'gbif_literature_annotation',
     'path' => array(
       'pathauto' => 0,
     ),
@@ -6276,7 +6276,7 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'format' => 'plain_text',
     'weight' => 0,
     'uuid' => '797bce11-5c99-4303-b6c4-3ab6b314b43e',
-    'vocabulary_machine_name' => 'literature_type',
+    'vocabulary_machine_name' => 'gbif_literature_annotation',
     'path' => array(
       'pathauto' => 0,
     ),
@@ -8596,7 +8596,7 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'format' => 'plain_text',
     'weight' => 0,
     'uuid' => 'a8ed207b-0a2f-4358-bab0-af4ec3d56703',
-    'vocabulary_machine_name' => 'literature_type',
+    'vocabulary_machine_name' => 'gbif_literature_annotation',
     'path' => array(
       'pathauto' => 0,
     ),
@@ -9011,7 +9011,7 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'format' => 'plain_text',
     'weight' => 0,
     'uuid' => 'b3e112e8-1378-4ba0-af7b-4716791ce59e',
-    'vocabulary_machine_name' => 'literature_type',
+    'vocabulary_machine_name' => 'gbif_literature_annotation',
     'path' => array(
       'pathauto' => 0,
     ),
@@ -11659,7 +11659,7 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'format' => 'plain_text',
     'weight' => 0,
     'uuid' => 'e9316767-8bd9-4503-b42a-da1997218b30',
-    'vocabulary_machine_name' => 'literature_type',
+    'vocabulary_machine_name' => 'gbif_literature_annotation',
     'path' => array(
       'pathauto' => 0,
     ),
@@ -12439,7 +12439,7 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'format' => 'plain_text',
     'weight' => 0,
     'uuid' => 'f5c3c466-d911-4fe2-8bc0-95c695d6c18a',
-    'vocabulary_machine_name' => 'literature_type',
+    'vocabulary_machine_name' => 'gbif_literature_annotation',
     'path' => array(
       'pathauto' => 0,
     ),
@@ -12593,7 +12593,7 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'format' => 'plain_text',
     'weight' => 0,
     'uuid' => 'f873c025-57e8-4fff-a019-48d54bb93cc8',
-    'vocabulary_machine_name' => 'literature_type',
+    'vocabulary_machine_name' => 'gbif_literature_annotation',
     'path' => array(
       'pathauto' => 0,
     ),
@@ -12720,7 +12720,7 @@ function gbif_vocabularies_uuid_features_default_terms() {
     'format' => 'plain_text',
     'weight' => 0,
     'uuid' => 'f996c99a-77a0-467e-8cbd-53ed02afd7b2',
-    'vocabulary_machine_name' => 'literature_type',
+    'vocabulary_machine_name' => 'gbif_literature_annotation',
     'path' => array(
       'pathauto' => 0,
     ),

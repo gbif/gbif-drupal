@@ -113,9 +113,9 @@ function gbif_vocabularies_taxonomy_default_vocabularies() {
       'module' => 'taxonomy',
       'weight' => -4,
     ),
-    'literature_type' => array(
-      'name' => 'Literature type',
-      'machine_name' => 'literature_type',
+    'gbif_literature_annotation' => array(
+      'name' => 'GBIF Literature Annotation',
+      'machine_name' => 'gbif_literature_annotation',
       'description' => '',
       'hierarchy' => 0,
       'module' => 'taxonomy',

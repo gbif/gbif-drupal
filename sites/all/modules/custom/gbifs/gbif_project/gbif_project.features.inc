@@ -38,7 +38,7 @@ function gbif_project_views_api($module = NULL, $api = NULL) {
 function gbif_project_image_default_styles() {
   $styles = array();
 
-  // Exported image style: focal_point_for_projects (drupal).
+  // Exported image style: focal_point_for_projects.
   $styles['focal_point_for_projects'] = array(
     'label' => 'Focal point for projects (drupal)',
     'effects' => array(
@@ -51,6 +51,7 @@ function gbif_project_image_default_styles() {
             'shift_x' => '',
             'shift_y' => '',
           ),
+          '#imageinfo_cache_effect_callback' => 'focal_point_scale_and_crop_effect',
         ),
         'weight' => 1,
       ),
@@ -67,6 +68,7 @@ function gbif_project_image_default_styles() {
           'width' => 220,
           'height' => '',
           'upscale' => 0,
+          '#imageinfo_cache_effect_callback' => 'image_scale_effect',
         ),
         'weight' => -10,
       ),
@@ -74,6 +76,7 @@ function gbif_project_image_default_styles() {
         'name' => 'image_style_quality',
         'data' => array(
           'quality' => 95,
+          '#imageinfo_cache_effect_callback' => '_image_style_quality_apply',
         ),
         'weight' => -9,
       ),
@@ -93,13 +96,14 @@ function gbif_project_image_default_styles() {
             'shift_x' => '',
             'shift_y' => '',
           ),
+          '#imageinfo_cache_effect_callback' => 'focal_point_scale_and_crop_effect',
         ),
         'weight' => 3,
       ),
     ),
   );
 
-  // Exported image style: teaser_thumbmail (drupal).
+  // Exported image style: teaser_thumbmail.
   $styles['teaser_thumbmail'] = array(
     'label' => 'Teaser thumbmail (drupal)',
     'effects' => array(
@@ -109,6 +113,7 @@ function gbif_project_image_default_styles() {
           'width' => '',
           'height' => 100,
           'upscale' => 0,
+          '#imageinfo_cache_effect_callback' => 'image_scale_effect',
         ),
         'weight' => 1,
       ),
@@ -118,6 +123,7 @@ function gbif_project_image_default_styles() {
           'width' => 100,
           'height' => 100,
           'anchor' => 'center-center',
+          '#imageinfo_cache_effect_callback' => 'image_crop_effect',
         ),
         'weight' => 2,
       ),

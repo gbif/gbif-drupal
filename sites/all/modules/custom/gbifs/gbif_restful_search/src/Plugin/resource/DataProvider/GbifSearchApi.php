@@ -316,7 +316,7 @@ use \EntityFieldQuery;
             $voc = str_replace('category_', '', $public_field);
 
             // if it's country we assume to accept ISO 2-digit code.
-            if ($voc == 'country') {
+            if (in_array($voc, ['country', 'author_from_country', 'biodiversity_about_country'])) {
               $query = new EntityFieldQuery();
               $query->entityCondition('entity_type', 'taxonomy_term');
               $query->entityCondition('bundle', array('countries'));
@@ -337,9 +337,7 @@ use \EntityFieldQuery;
                   $value = $tid;
                 }
               }
-              else {
-                throw new \Exception();
-              }
+              // @todo add multiple match condition.
             }
           }
           // Convert the requested field name to the actual field name.

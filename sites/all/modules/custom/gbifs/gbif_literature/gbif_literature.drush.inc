@@ -30,7 +30,7 @@ function drush_gbif_literature_import() {
   ksort($gbif_countries);
 
   $mappings = gbif_literature_topic_term_mapping();
-  $literature_types = gbif_literature_types();
+  $literature_annotations = gbif_literature_annotations();
 
   // Prepare the uri for storing retrieved documents
   $documents_file_loc = file_build_uri('gbif_mendeley/documents.json');
@@ -48,7 +48,7 @@ function drush_gbif_literature_import() {
       }
     }
 
-    $import_document = function($doc) use (&$processed_docs, $mappings, $literature_types, $gbif_countries) {
+    $import_document = function($doc) use (&$processed_docs, $mappings, $literature_annotations, $gbif_countries) {
       // query if already an item with the same ID
       $query = new EntityFieldQuery();
       $query->entityCondition('entity_type', 'node')
@@ -157,7 +157,7 @@ function drush_gbif_literature_import() {
         if (isset($doc->keywords) && is_array($doc->keywords)) array_map($set_keywords_value, $doc->keywords);
 
         // GBIF assigned tags
-        $set_tags_value = function($tag) use ($wrapper, $doc, $mappings, $literature_types, $gbif_countries, $bio_iso2) {
+        $set_tags_value = function($tag) use ($wrapper, $doc, $mappings, $literature_annotations, $gbif_countries, $bio_iso2) {
 
           // if the tag is already defined in the mapping, following the mapping to insert into tx_topic field.
           if (isset($mappings[$tag])) {
@@ -173,23 +173,23 @@ function drush_gbif_literature_import() {
             }
             unset($matched);
           }
-          // if the tag is gbif_xyz, put them in literature_type
-          elseif (in_array($tag, $literature_types)) {
+          // if the tag is gbif_xyz, put them in gbif literature annotation
+          elseif (in_array($tag, $literature_annotations)) {
             // see if the tag is already in the field.
-            $existing_lit_types = $wrapper->field_literature_type->value();
+            $existing_lit_types = $wrapper->field_mdl_gbif_ref_annt->value();
             $matched = false;
             $find_lit_match = function($type) use ($tag, &$matched){
               if ($type->name == $tag) $matched = true;
             };
             array_map($find_lit_match, $existing_lit_types);
             if ($matched === false) {
-              $type_terms = taxonomy_get_term_by_name($tag, 'literature_type');
+              $type_terms = taxonomy_get_term_by_name($tag, 'gbif_literature_annotation');
               if (count($type_terms) === 1) {
                 $term_keys = array_keys($type_terms);
-                $wrapper->field_literature_type[] = taxonomy_term_load($term_keys[0]);
+                $wrapper->field_mdl_gbif_ref_annt[] = taxonomy_term_load($term_keys[0]);
               }
               else {
-                drupal_set_message('Tag matching exception for ' . $tag . ' when adding into literature_type', 'error');
+                drupal_set_message('Tag matching exception for ' . $tag . ' when adding into gbif_literature_annotation', 'error');
               }
             }
             unset($matched);
@@ -383,7 +383,7 @@ function gbif_literature_topic_term_mapping() {
   return $term_id_mapping;
 }
 
-function gbif_literature_types() {
+function gbif_literature_annotations() {
   return [
     'GBIF_used', 'GBIF_cited', 'GBIF_VIP', 'GBIF_discussed', 'GBIF_primary', 'GBIF_acknowledged', 'GBIF_published', 'GBIF_author'
     ];

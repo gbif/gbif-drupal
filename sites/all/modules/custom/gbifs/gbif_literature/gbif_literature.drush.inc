@@ -292,7 +292,7 @@ function drush_gbif_literature_import() {
             $result = $query->execute();
             if (isset($result['taxonomy_term']) && count($result['taxonomy_term']) === 1) {
               $term_keys = array_keys($result['taxonomy_term']);
-              $wrapper->field_countries[] = taxonomy_term_load($term_keys[0]);
+              $wrapper->field_country[] = taxonomy_term_load($term_keys[0]);
             }
             unset($bio_iso2);
           }

@@ -67,7 +67,7 @@ function drush_gbif_literature_import() {
       $exist = $query->execute();
 
       if (isset($exist['node']) && count($exist['node']) == 1) {
-        // update
+        // @todo update procedure
       }
       elseif (empty($exist)) {
         // import
@@ -78,16 +78,16 @@ function drush_gbif_literature_import() {
 
         // language
         $available_languages = [
-          'Chinese_Simplified' => 'zh-hans',
-          'Chinese_Traditional' => 'zh-hant',
-          'Danish' => 'da',
-          'German' => 'de',
-          'English' => 'en',
-          'French' => 'fr',
-          'Japanese' => 'ja',
-          'Portuguese' => 'pt',
-          'Russian' => 'ru',
-          'Spanish' => 'es',
+          'chinese_simplified' => 'zh-hans',
+          'chinese_traditional' => 'zh-hant',
+          'danish' => 'da',
+          'german' => 'de',
+          'english' => 'en',
+          'french' => 'fr',
+          'japanese' => 'ja',
+          'portuguese' => 'pt',
+          'russian' => 'ru',
+          'spanish' => 'es',
         ];
 
         // set text/integer fields
@@ -116,6 +116,8 @@ function drush_gbif_literature_import() {
 
         // set serialized fields
         $serialized_fields = [
+          'authors' => 'field_mdl_authors_json',
+          'editors' => 'field_mdl_editors_json',
           'identifiers' => 'field_mdl_identifiers',
           'websites' => 'field_mdl_websites',
         ];
@@ -131,11 +133,50 @@ function drush_gbif_literature_import() {
         ];
         $set_author_value = function($target_field, $source_field) use ($wrapper, $doc) {
           if (isset($doc->$source_field)) {
-            // query if there is already an author
+            foreach ($doc->authors as $author) {
+              $query = new EntityFieldQuery();
+              $query->entityCondition('entity_type', 'node')
+                ->entityCondition('bundle', 'literature_author')
+                ->propertyCondition('title', $author->last_name, '=')
+                ->fieldCondition('field_mdl_first_name', 'value', $author->first_name, '=');
+
+              $result = $query->execute();
+
+              // if there are matched author(s)
+              if (isset($result['node'])) {
+                $ids = array_keys($result['node']);
+                $match_count = count($ids);
+                if ($match_count > 1) {
+                  drupal_set_message(t('More than one existing authors matched when importing author entities while processing !document_title id: !id.', ['!document_title' => $doc->title, '!id' => $doc->id]), 'error');
+                }
+                elseif ($match_count == 1) {
+                  $author_refs = $wrapper->$target_field->value();
+                  $target_ids = [];
+                  $append_nids = function($ref) use (&$target_ids) {
+                    $target_ids[] = intval($ref->nid);
+                  };
+                  array_walk($author_refs, $append_nids);
+                  $target_ids[] = $ids[0];
+                  $wrapper->$target_field->set($target_ids);
+                }
+              }
+              // when no match author, create one and insert it
+              else {
+                $literature_author = new stdClass();
+                $literature_author->type = 'literature_author';
+                node_object_prepare($literature_author);
+                $literature_author = entity_metadata_wrapper('node', $literature_author);
+                $literature_author->title->set($author->last_name);
+                $literature_author->field_mdl_first_name->set($author->first_name);
+                $literature_author->status->set(1);
+                $literature_author->save();
+                $wrapper->$target_field->set([$literature_author->getIdentifier()]);
+              }
+            }
           }
         };
+        array_walk($ent_ref_fields, $set_author_value);
 
-        /*
         // boolean fields
         $boolean_fields = [
           'authored' => 'field_mdl_authored',
@@ -191,7 +232,7 @@ function drush_gbif_literature_import() {
         if (isset($doc->keywords) && is_array($doc->keywords)) array_map($set_keywords_value, $doc->keywords);
 
         // GBIF assigned tags
-        $set_tags_value = function($tag) use ($wrapper, $doc, $mappings, $literature_annotations, $gbif_countries, $bio_iso2) {
+        $set_tags_value = function($tag) use ($wrapper, $doc, $mappings, $literature_annotations, $gbif_countries, $bio_iso2, $available_languages) {
 
           // if the tag is already defined in the mapping, following the mapping to insert into tx_topic field.
           // @todo if no matches found, assign to topic “Biodiversity Science” tid=1327
@@ -251,13 +292,17 @@ function drush_gbif_literature_import() {
             $result = $query->execute();
             if (isset($result['taxonomy_term']) && count($result['taxonomy_term']) === 1) {
               $term_keys = array_keys($result['taxonomy_term']);
-              $wrapper->field_mdl_bio_country[] = taxonomy_term_load($term_keys[0]);
+              $wrapper->field_countries[] = taxonomy_term_load($term_keys[0]);
             }
             unset($bio_iso2);
           }
           // @todo if the tag is year
-          // the rest will go to tx_tags
+          elseif (isset($available_languages[strtolower($tag)])) {
+            $wrapper->language->set($available_languages[strtolower($tag)]);
+          }
+          // the rest will go to tx_tags and language gets set as English.
           else {
+            $wrapper->language->set('en');
             $existing_tags = $wrapper->tx_tags->value();
             $matched = false;
             $find_tag_match = function($tx_tag) use (&$matched) {
@@ -280,7 +325,6 @@ function drush_gbif_literature_import() {
           }
         };
         if (isset($doc->tags) && is_array($doc->tags)) array_map($set_tags_value, $doc->tags);
-        */
 
         $wrapper->status->set(1);
         $wrapper->save();
@@ -323,6 +367,25 @@ function drush_gbif_literature_delete() {
     drupal_set_message('No document to be deleted.', 'status');
   }
 
+  // query if already an author with the same ID
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', 'literature_author');
+  $exist = $query->execute();
+
+  if (isset($exist['node'])) {
+    drupal_set_message(count($exist['node']) . ' authors are deleted.', 'status');
+
+    $ids = [];
+    foreach ($exist['node'] as $nid => $node) {
+      $ids[] = $nid;
+    }
+    node_delete_multiple($ids);
+  }
+  else {
+    drupal_set_message('No author to be deleted.', 'status');
+  }
+
   // delete all terms in Keywords vocabulary
   $voc = taxonomy_vocabulary_machine_name_load('keywords');
   $terms = taxonomy_get_tree((int) $voc->vid);
@@ -330,6 +393,7 @@ function drush_gbif_literature_delete() {
     taxonomy_term_delete($term->tid);
   };
   array_map($delete_term, $terms);
+  drupal_set_message(count($terms) . ' keywords are deleted.', 'status');
 
   $time_end = time();
   $time_elapsed = date('i:s', $time_end - $time_begin);

@@ -137,7 +137,7 @@ $env = variable_get('environment_settings');
 					<ul>
 						<li><a href="whatisgbif">Learn about GBIF</a></li>
 						<li><a href="publishingdata/summary">Publish your data through GBIF</a></li>
-						<li><a href="<?php print_r($env['data_portal_base_url']); ?>/infrastructure/summary">Technical infrastructure</a></li>
+						<li><a href="infrastructure/summary">Technical infrastructure</a></li>
 					</ul>
 				</div>
 				<div class="col-xs-4">

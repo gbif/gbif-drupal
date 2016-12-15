@@ -41,10 +41,20 @@ function drush_gbif_literature_import() {
   }
   else {
     $documents = json_decode(file_get_contents(drupal_realpath($documents_file_loc)));
-    $subset_docs = [];
+
+    // journal only documents
+    $docs_journal_only = [];
     foreach ($documents as $d) {
-      if (isset($d->tags) && in_array('GBIF_used', $d->tags)) {
-        $subset_docs[] = $d;
+      if (isset($d->type) && $d->type == 'journal') {
+        $docs_journal_only[] = $d;
+      }
+    }
+
+    // journal only with GBIF_used
+    $docs_journal_only_gbif_used = [];
+    foreach ($documents as $d) {
+      if (isset($d->type) && $d->type == 'journal' && is_array($d->tags) && in_array('GBIF_used', $d->tags)) {
+        $docs_journal_only_gbif_used[] = $d;
       }
     }
 
@@ -65,6 +75,20 @@ function drush_gbif_literature_import() {
         $entity = entity_create($entity_type, ['type' => 'literature']);
         $wrapper = entity_metadata_wrapper($entity_type, $entity);
         $bio_iso2 = '';
+
+        // language
+        $available_languages = [
+          'Chinese_Simplified' => 'zh-hans',
+          'Chinese_Traditional' => 'zh-hant',
+          'Danish' => 'da',
+          'German' => 'de',
+          'English' => 'en',
+          'French' => 'fr',
+          'Japanese' => 'ja',
+          'Portuguese' => 'pt',
+          'Russian' => 'ru',
+          'Spanish' => 'es',
+        ];
 
         // set text/integer fields
         $text_fields = [
@@ -92,15 +116,19 @@ function drush_gbif_literature_import() {
 
         // set serialized fields
         $serialized_fields = [
-          'authors' => 'field_mdl_authors',
           'identifiers' => 'field_mdl_identifiers',
-          'editors' => 'field_mdl_editors',
           'websites' => 'field_mdl_websites',
         ];
         $set_serialized_value = function($target_field, $source_field) use ($wrapper, $doc) {
           if (isset($doc->$source_field)) $wrapper->$target_field = serialize($doc->$source_field);
         };
         array_walk($serialized_fields, $set_serialized_value);
+
+        // entity referenced fields
+        $ent_ref_fields = [
+          'authors' => 'field_mdl_authors',
+          'editors' => 'field_mdl_editors',
+        ];
 
         // boolean fields
         $boolean_fields = [
@@ -160,6 +188,7 @@ function drush_gbif_literature_import() {
         $set_tags_value = function($tag) use ($wrapper, $doc, $mappings, $literature_types, $gbif_countries, $bio_iso2) {
 
           // if the tag is already defined in the mapping, following the mapping to insert into tx_topic field.
+          // @todo if no matches found, assign to topic “Biodiversity Science” tid=1327
           if (isset($mappings[$tag])) {
             // first see if the target term is already in the field.
             $existing_topics = $wrapper->tx_topic->value();
@@ -220,6 +249,7 @@ function drush_gbif_literature_import() {
             }
             unset($bio_iso2);
           }
+          // @todo if the tag is year
           // the rest will go to tx_tags
           else {
             $existing_tags = $wrapper->tx_tags->value();
@@ -254,7 +284,8 @@ function drush_gbif_literature_import() {
       }
     };
 
-    array_map($import_document, $documents);
+    // available sets: $documents, $docs_journal_only, $docs_journal_only_gbif_used
+    array_map($import_document, $docs_journal_only);
 
     $time_end = time();
     $time_elapsed = date('i:s', $time_end - $time_begin);

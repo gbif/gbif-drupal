@@ -9,14 +9,6 @@
  */
 function gbif_literature_taxonomy_default_vocabularies() {
   return array(
-    'gbif_literature_annotation' => array(
-      'name' => 'GBIF Literature Annotation',
-      'machine_name' => 'gbif_literature_annotation',
-      'description' => '',
-      'hierarchy' => 0,
-      'module' => 'taxonomy',
-      'weight' => 0,
-    ),
     'keywords' => array(
       'name' => 'Keywords',
       'machine_name' => 'keywords',

@@ -10,6 +10,32 @@
 function gbif_i18n_locale_default_languages() {
   $languages = array();
 
+  // Exported language: da.
+  $languages['da'] = array(
+    'language' => 'da',
+    'name' => 'Danish',
+    'native' => 'Dansk',
+    'direction' => 0,
+    'enabled' => 1,
+    'plurals' => 0,
+    'formula' => '',
+    'domain' => '',
+    'prefix' => 'da',
+    'weight' => 0,
+  );
+  // Exported language: de.
+  $languages['de'] = array(
+    'language' => 'de',
+    'name' => 'German',
+    'native' => 'Deutsch',
+    'direction' => 0,
+    'enabled' => 1,
+    'plurals' => 0,
+    'formula' => '',
+    'domain' => '',
+    'prefix' => 'de',
+    'weight' => 0,
+  );
   // Exported language: en.
   $languages['en'] = array(
     'language' => 'en',
@@ -49,6 +75,19 @@ function gbif_i18n_locale_default_languages() {
     'prefix' => 'fr',
     'weight' => 0,
   );
+  // Exported language: ja.
+  $languages['ja'] = array(
+    'language' => 'ja',
+    'name' => 'Japanese',
+    'native' => '日本語',
+    'direction' => 0,
+    'enabled' => 1,
+    'plurals' => 0,
+    'formula' => '',
+    'domain' => '',
+    'prefix' => 'ja',
+    'weight' => 0,
+  );
   // Exported language: pt.
   $languages['pt'] = array(
     'language' => 'pt',
@@ -60,6 +99,45 @@ function gbif_i18n_locale_default_languages() {
     'formula' => '',
     'domain' => '',
     'prefix' => 'pt',
+    'weight' => 0,
+  );
+  // Exported language: ru.
+  $languages['ru'] = array(
+    'language' => 'ru',
+    'name' => 'Russian',
+    'native' => 'Русский',
+    'direction' => 0,
+    'enabled' => 1,
+    'plurals' => 0,
+    'formula' => '',
+    'domain' => '',
+    'prefix' => 'ru',
+    'weight' => 0,
+  );
+  // Exported language: zh-hans.
+  $languages['zh-hans'] = array(
+    'language' => 'zh-hans',
+    'name' => 'Chinese, Simplified',
+    'native' => '简体中文',
+    'direction' => 0,
+    'enabled' => 1,
+    'plurals' => 0,
+    'formula' => '',
+    'domain' => '',
+    'prefix' => 'zh-hans',
+    'weight' => 0,
+  );
+  // Exported language: zh-hant.
+  $languages['zh-hant'] = array(
+    'language' => 'zh-hant',
+    'name' => 'Chinese, Traditional',
+    'native' => '繁體中文',
+    'direction' => 0,
+    'enabled' => 1,
+    'plurals' => 0,
+    'formula' => '',
+    'domain' => '',
+    'prefix' => 'zh-hant',
     'weight' => 0,
   );
   return $languages;

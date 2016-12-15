@@ -93,21 +93,21 @@ function drush_gbif_literature_import() {
         // set text/integer fields
         $text_fields = [
           'title' => 'title',   'abstract' => 'field_mdl_abstract',
-          'citation_key' => 'field_mdl_citation_key',
-          'code' => 'field_mdl_code',
-          'firstAuthor' => 'field_mdl_first_author',
-          'group_id' =>'field_mdl_group_id',
-          'id' => 'field_mdl_id',
-          'accessed' => 'field_mdl_accessed',
-          'issue' => 'field_mdl_issue',
-          'pages' => 'field_mdl_pages',
-          'profile_id' => 'field_mdl_profile_id',
-          'publisher' => 'field_mdl_publisher',
-          'source' => 'field_mdl_source',
-          'volume' => 'field_mdl_volume',
-          'year' => 'field_mdl_year',
-          'month' => 'field_mdl_month',
-          'day' => 'field_mdl_day',
+          //'citation_key' => 'field_mdl_citation_key',
+          //'code' => 'field_mdl_code',
+          //'firstAuthor' => 'field_mdl_first_author',
+          //'group_id' =>'field_mdl_group_id',
+          //'id' => 'field_mdl_id',
+          //'accessed' => 'field_mdl_accessed',
+          //'issue' => 'field_mdl_issue',
+          //'pages' => 'field_mdl_pages',
+          //'profile_id' => 'field_mdl_profile_id',
+          //'publisher' => 'field_mdl_publisher',
+          //'source' => 'field_mdl_source',
+          //'volume' => 'field_mdl_volume',
+          //'year' => 'field_mdl_year',
+          //'month' => 'field_mdl_month',
+          //'day' => 'field_mdl_day',
         ];
         $set_text_value = function($target_field, $source_field) use ($wrapper, $doc) {
           if (isset($doc->$source_field)) $wrapper->$target_field->set($doc->$source_field);
@@ -129,7 +129,13 @@ function drush_gbif_literature_import() {
           'authors' => 'field_mdl_authors',
           'editors' => 'field_mdl_editors',
         ];
+        $set_author_value = function($target_field, $source_field) use ($wrapper, $doc) {
+          if (isset($doc->$source_field)) {
+            // query if there is already an author
+          }
+        };
 
+        /*
         // boolean fields
         $boolean_fields = [
           'authored' => 'field_mdl_authored',
@@ -272,9 +278,9 @@ function drush_gbif_literature_import() {
             }
             unset($matched);
           }
-
         };
         if (isset($doc->tags) && is_array($doc->tags)) array_map($set_tags_value, $doc->tags);
+        */
 
         $wrapper->status->set(1);
         $wrapper->save();

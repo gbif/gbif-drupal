@@ -129,6 +129,47 @@ function drush_gbif_literature_import() {
           'authors' => 'field_mdl_authors',
           'editors' => 'field_mdl_editors',
         ];
+        $set_author_value = function($target_field, $source_field) use (&$wrapper, $doc) {
+          if (isset($doc->$source_field)) {
+            foreach ($doc->authors as $author) {
+              $query = new EntityFieldQuery();
+              $query->entityCondition('entity_type', 'node')
+                ->entityCondition('bundle', 'literature_author')
+                ->propertyCondition('title', $author->last_name, '=')
+                ->fieldCondition('field_mdl_first_name', 'value', $author->first_name, '=');
+
+              $result = $query->execute();
+
+              // if there are matched author(s)
+              if (isset($result['node'])) {
+                $ids = array_keys($result['node']);
+                $match_count = count($ids);
+                if ($match_count > 1) {
+                  drupal_set_message(t('More than one existing authors matched when importing author entities while processing !document_title id: !id.', ['!document_title' => $doc->title, '!id' => $doc->id]), 'error');
+                }
+                elseif ($match_count == 1) {
+                  $target_ids = _append_author_ref($wrapper, $target_field, $ids[0]);
+                  $wrapper->$target_field->set($target_ids);
+                }
+              }
+              // when no match author, create one and insert it
+              else {
+                $literature_author = new stdClass();
+                $literature_author->type = 'literature_author';
+                node_object_prepare($literature_author);
+                $literature_author = entity_metadata_wrapper('node', $literature_author);
+                $literature_author->title->set($author->last_name);
+                $literature_author->field_mdl_first_name->set($author->first_name);
+                $literature_author->status->set(1);
+                $literature_author->save();
+
+                $target_ids = _append_author_ref($wrapper, $target_field, $literature_author->getIdentifier());
+                $wrapper->$target_field->set($target_ids);
+              }
+            }
+          }
+        };
+        array_walk($ent_ref_fields, $set_author_value);
 
         // boolean fields
         $boolean_fields = [
@@ -184,26 +225,29 @@ function drush_gbif_literature_import() {
         };
         if (isset($doc->keywords) && is_array($doc->keywords)) array_map($set_keywords_value, $doc->keywords);
 
-        // GBIF assigned tags
-        $set_tags_value = function($tag) use ($wrapper, $doc, $mappings, $literature_types, $gbif_countries, $bio_iso2) {
-
-          // if the tag is already defined in the mapping, following the mapping to insert into tx_topic field.
-          // @todo if no matches found, assign to topic “Biodiversity Science” tid=1327
-          if (isset($mappings[$tag])) {
-            // first see if the target term is already in the field.
-            $existing_topics = $wrapper->tx_topic->value();
-            $matched = false;
-            $find_match = function($topic) use ($mappings, &$matched, $tag) {
-              if ($topic->tid == $mappings[$tag]) $matched = true;
-            };
-            array_map($find_match, $existing_topics);
-            if ($matched === false) {
-              $wrapper->tx_topic[] = taxonomy_term_load($mappings[$tag]);
+        // GBIF topic tags
+        // Papers tagged GBIF_used will be topically assigned according to this
+        // logic:
+        // 1) if the tag is already defined in the mapping, following the
+        //    mapping to insert into tx_topic field;
+        // 2) if no matches found, assign to topic “Biodiversity Science(1327)”.
+        $set_topic_value = function($mapping) use (&$wrapper, $doc) {
+          if (isset($doc->tags) && is_array($doc->tags)) {
+            if (count(array_intersect($mapping['source_tags'], $doc->tags)) == count($mapping['source_tags']) ) {
+              $wrapper->tx_topic[] = taxonomy_term_load($mapping['target_tid']);
             }
-            unset($matched);
+            else {
+              $wrapper->tx_topic[] = taxonomy_term_load(1327);
+            }
           }
-          // if the tag is gbif_xyz, put them in literature_type
-          elseif (in_array($tag, $literature_types)) {
+        };
+        array_walk($mappings, $set_topic_value);
+
+        // Other tags
+        $set_tags_value = function($tag) use ($wrapper, $doc, $literature_annotations, $gbif_countries, $bio_iso2, $available_languages) {
+
+          // if the tag is gbif_xyz, put them in gbif literature annotation
+          if (in_array($tag, $literature_annotations)) {
             // see if the tag is already in the field.
             $existing_lit_types = $wrapper->field_literature_type->value();
             $matched = false;
@@ -337,6 +381,11 @@ function gbif_literature_create_taxonomy_term($name, $vid) {
   return $term;
 }
 
+/**
+ * Term mapping for mapping Mendeley tags to GBIF CMS core taxonomy.
+ * Source tags are used with GBIF_used for intersecting.
+ * @return array
+ */
 function gbif_literature_topic_term_mapping() {
   $mappings = [
     [
@@ -344,7 +393,15 @@ function gbif_literature_topic_term_mapping() {
       'target_tid' => 970, // Climate change
     ],
     [
-      'source_tags' => ['conservation', 'endangered_species', 'IUCN_red_list'],
+      'source_tags' => ['conservation'],
+      'target_tid' => 826, // Conservation
+    ],
+    [
+      'source_tags' => ['endangered_species'],
+      'target_tid' => 826, // Conservation
+    ],
+    [
+      'source_tags' => ['IUCN_red_list'],
       'target_tid' => 826, // Conservation
     ],
     [
@@ -356,11 +413,19 @@ function gbif_literature_topic_term_mapping() {
       'target_tid' => 1330, // data paper
     ],
     [
-      'source_tags' => ['ecosystem_services', 'ecosystem_function'],
+      'source_tags' => ['ecosystem_services'],
       'target_tid' => 902, // Ecosystem services
     ],
     [
-      'source_tags' => ['human_health', 'medical_plants'],
+      'source_tags' => ['ecosystem_function'],
+      'target_tid' => 902, // Ecosystem services
+    ],
+    [
+      'source_tags' => ['human_health'],
+      'target_tid' => 878, // Human health
+    ],
+    [
+      'source_tags' => ['medical_plants'],
       'target_tid' => 878, // Human health
     ],
     [
@@ -404,13 +469,10 @@ function gbif_literature_topic_term_mapping() {
       'target_tid' => 861, // Marine
     ],
   ];
-  $term_id_mapping = [];
-  foreach ($mappings as $mapping) {
-    foreach($mapping['source_tags'] as $tag) {
-      $term_id_mapping[$tag] = $mapping['target_tid'];
-    }
+  foreach ($mappings as &$mapping) {
+    $mapping['source_tags'][] = 'GBIF_used';
   }
-  return $term_id_mapping;
+  return $mappings;
 }
 
 function gbif_literature_types() {
@@ -431,4 +493,15 @@ function _gbif_literature_bio_tag($tag, $gbif_countries, &$bio_iso2) {
     }
   }
   return $exists;
+}
+
+function _append_author_ref(&$wrapper, $target_field, $new_id) {
+  $author_refs = $wrapper->$target_field->raw();
+  $target_ids = [];
+  $append_nids = function($ref) use (&$target_ids) {
+    $target_ids[] = intval($ref);
+  };
+  array_walk($author_refs, $append_nids);
+  $target_ids[] = $new_id;
+  return $target_ids;
 }

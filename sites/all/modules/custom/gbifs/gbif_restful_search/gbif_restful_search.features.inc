@@ -75,6 +75,7 @@ function gbif_restful_search_default_search_api_index() {
         "field_mdl_editors" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "node" },
         "field_mdl_gbif_ref_annt" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
         "field_mdl_identifiers" : { "type" : "text" },
+        "field_mdl_keywords" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
         "field_mdl_last_modified" : { "type" : "date" },
         "field_mdl_publisher" : { "type" : "text" },
         "field_mdl_type" : { "type" : "string" },

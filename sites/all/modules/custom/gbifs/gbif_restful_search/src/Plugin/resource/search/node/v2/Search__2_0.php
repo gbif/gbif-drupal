@@ -179,13 +179,12 @@ class Search__2_0 extends GbifResourceSearchBase implements GbifResourceSearchBa
     // literature fields
     $public_fields['abstract'] = ['property' => 'field_mdl_abstract', 'sub_property' => LANGUAGE_NONE . '::0::value'];
     $public_fields['literatureType'] = ['property' => 'field_mdl_type', 'sub_property' => LANGUAGE_NONE . '::0::value',];
-    $public_fields['authors'] = ['property' => 'field_mdl_authors', 'sub_property' => LANGUAGE_NONE . '::0::value'];
-    $public_fields['editors'] = ['property' => 'field_mdl_editors', 'sub_property' => LANGUAGE_NONE . '::0::value'];
+    $public_fields['authors'] = ['property' => 'field_mdl_authors_json', 'sub_property' => LANGUAGE_NONE . '::0::value'];
+    $public_fields['editors'] = ['property' => 'field_mdl_editors_json', 'sub_property' => LANGUAGE_NONE . '::0::value'];
 
     $public_fields['keywords'] = ['property' => 'field_mdl_keywords', 'sub_property' => LANGUAGE_NONE];
     $public_fields['literatureGbifType'] = ['property' => 'field_literature_type', 'sub_property' => LANGUAGE_NONE];
     $public_fields['authorCountry'] = ['property' => 'field_mdl_author_from_country', 'sub_property' => LANGUAGE_NONE];
-    $public_fields['biodiversityCountry'] = ['property' => 'field_mdl_bio_country', 'sub_property' => LANGUAGE_NONE];
 
     $public_fields['literatureSource'] = ['property' => 'field_mdl_source', 'sub_property' => LANGUAGE_NONE . '::0::value'];
     $public_fields['literatureYear'] = ['property' => 'field_mdl_year', 'sub_property' => LANGUAGE_NONE . '::0::value'];

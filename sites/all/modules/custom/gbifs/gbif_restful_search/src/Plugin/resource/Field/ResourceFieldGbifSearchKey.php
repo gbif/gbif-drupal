@@ -50,7 +50,6 @@ class ResourceFieldGbifSearchKey extends ResourceFieldKeyValue implements Resour
         'field_mdl_keywords',
         'field_literature_type',
         'field_mdl_author_from_country',
-        'field_mdl_bio_country',
       ];
       foreach ($value as &$v) {
         if (isset($v['tid']) && in_array($definition['property'], $termRefFields)) {
@@ -64,7 +63,7 @@ class ResourceFieldGbifSearchKey extends ResourceFieldKeyValue implements Resour
     }
 
     // 2) Convert back serialised object.
-    if (in_array($this->property, ['field_mdl_authors', 'field_mdl_editors', 'field_mdl_websites', 'field_mdl_identifiers'])) {
+    if (in_array($this->property, ['field_mdl_authors_json', 'field_mdl_editors_json', 'field_mdl_websites', 'field_mdl_identifiers'])) {
       $value = unserialize($value) ? unserialize($value) : null;
     }
 

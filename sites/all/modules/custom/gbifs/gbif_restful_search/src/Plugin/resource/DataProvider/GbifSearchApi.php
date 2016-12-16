@@ -74,7 +74,8 @@ use \EntityFieldQuery;
     'field_mdl_type' => 'category_literature_type',
     'field_mdl_author_from_country' => 'category_author_from_country',
     'field_mdl_bio_country' => 'category_biodiversity_about_country',
-    'field_mdl_year' => 'category_literature_year'
+    'field_mdl_year' => 'category_literature_year',
+    'field_mdl_authors:title' => 'category_author_surname',
   );
 
    /**
@@ -97,7 +98,6 @@ use \EntityFieldQuery;
      'field_un_region' => 'un_region',
      'field_mdl_gbif_ref_annt' => 'gbif_literature_annotation',
      'field_mdl_author_from_country' => 'countries',
-     'field_mdl_bio_country' => 'countries',
    );
   /**
    * {@inheritdoc}
@@ -604,7 +604,6 @@ use \EntityFieldQuery;
     $country_fields = [
       'field_country' => 'category_country',
       'field_mdl_author_from_country' => 'category_author_from_country',
-      'field_mdl_bio_country' => 'category_biodiversity_about_country',
     ];
 
     // Extra double quotes are introduced during the query.
@@ -616,11 +615,22 @@ use \EntityFieldQuery;
         if (is_numeric($facet['filter'])) {
           // Modify the facet output so it makes better sense to consumers.
           $facet['id'] = (int)$facet['filter'];
-          $term = taxonomy_term_load($facet['id']);
-          $facet['label'] = $term->name;
+
+          // Don't use field_mdl_year to load term name.
+          if ($field_name !== 'field_mdl_year') {
+            $term = taxonomy_term_load($facet['id']);
+            $facet['label'] = $term->name;
+          }
+          else {
+            $facet['label'] = $facet['filter'];
+          }
+
           // country fields uses ISO2 as enum
           if (isset($country_fields[$field_name])) {
             $facet['enum'] = $term->field_iso2['und'][0]['value'];
+          }
+          elseif ($field_name == 'field_mdl_year') {
+            $facet['enum'] = strtolower(str_replace(' ', '_', $facet['label']));
           }
           else {
             $facet['enum'] = strtolower(str_replace(' ', '_', $term->name));
@@ -631,6 +641,23 @@ use \EntityFieldQuery;
         }
         unset($facet['filter']);
       }
+
+      // Strip nonsense in author titles
+      if ($field_name == 'field_mdl_authors:title') {
+        foreach ($facets[$field_name] as $k => $c) {
+          if (in_array($c['enum'], ['o', 'de', 'van', 'm', 'a', 'le', 's', 'la'])) unset($facets[$field_name][$k]);
+        }
+        $facets[$field_name] = array_values($facets[$field_name]);
+      }
+
+      // Strip gbif_acknowledged filter
+      if ($field_name == 'field_mdl_gbif_ref_annt') {
+        foreach ($facets[$field_name] as $k => $c) {
+          if (in_array($c['enum'], ['gbif_acknowledged'])) unset($facets[$field_name][$k]);
+        }
+        $facets[$field_name] = array_values($facets[$field_name]);
+      }
+
     }
     // Map field names to conform the defined convention.
     foreach($facets as $field_name => &$field) {

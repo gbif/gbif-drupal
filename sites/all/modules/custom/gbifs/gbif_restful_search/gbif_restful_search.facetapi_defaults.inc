@@ -1097,7 +1097,7 @@ function gbif_restful_search_facetapi_default_facet_settings() {
   $facet->searcher = 'search_api@node_index';
   $facet->realm = 'block';
   $facet->facet = 'field_mdl_keywords';
-  $facet->enabled = TRUE;
+  $facet->enabled = FALSE;
   $facet->settings = array(
     'weight' => 0,
     'widget' => 'facetapi_links',

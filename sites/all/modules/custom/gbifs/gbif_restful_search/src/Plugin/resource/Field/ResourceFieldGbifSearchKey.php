@@ -18,23 +18,7 @@ class ResourceFieldGbifSearchKey extends ResourceFieldKeyValue implements Resour
    */
   const NESTING_SEPARATOR = '::';
 
-  /**
-   * Overrides ResourceField::value().
-   */
-  public function value(DataInterpreterInterface $interpreter) {
-    $value = parent::value($interpreter);
-    $definition = $this->getDefinition();
-    if (!empty($definition['sub_property'])) {
-      $parts = explode(static::NESTING_SEPARATOR, $definition['sub_property']);
-      foreach ($parts as $part) {
-        if (isset($value[$part])) $value = $value[$part];
-      }
-    }
-
-    // Value processing
-    // Add term name if it's included to extract the term name.
-    if (isset($value) && is_array($value)) {
-      $termRefFields = [
+  public $termRefFields = [
         'field_featured_search_terms',
         'tx_informatics',
         'tx_data_use',
@@ -51,20 +35,46 @@ class ResourceFieldGbifSearchKey extends ResourceFieldKeyValue implements Resour
         'field_literature_type',
         'field_mdl_author_from_country',
       ];
-      foreach ($value as &$v) {
-        if (isset($v['tid']) && in_array($definition['property'], $termRefFields)) {
-          $term = taxonomy_term_load(intval($v['tid']));
-          $v['id'] = $term->tid;
-          $v['name'] = $term->name;
-          $v['enum'] = str_replace(' ', '_', strtolower($term->name));
-          unset($v['tid']);
+
+  public $serialisedFields = [
+      'field_mdl_authors_json',
+      'field_mdl_editors_json',
+      'field_mdl_websites',
+      'field_mdl_identifiers'
+    ];
+
+  /**
+   * Overrides ResourceField::value().
+   */
+  public function value(DataInterpreterInterface $interpreter) {
+    $value = parent::value($interpreter);
+    $definition = $this->getDefinition();
+    if (!empty($definition['sub_property'])) {
+      $parts = explode(static::NESTING_SEPARATOR, $definition['sub_property']);
+      foreach ($parts as $part) {
+        if (isset($value[$part])) $value = $value[$part];
+      }
+    }
+
+    // Value processing
+    // Add term name if it's included to extract the term name.
+    if (isset($definition['property']) && in_array($definition['property'], $this->termRefFields)) {
+      if (isset($value) && is_array($value)) {
+        foreach ($value as &$v) {
+          if (isset($v['tid'])) {
+            $term = taxonomy_term_load(intval($v['tid']));
+            $v['id'] = $term->tid;
+            $v['name'] = $term->name;
+            $v['enum'] = str_replace(' ', '_', strtolower($term->name));
+            unset($v['tid']);
+          }
         }
       }
     }
 
     // 2) Convert back serialised object.
-    if (in_array($this->property, ['field_mdl_authors_json', 'field_mdl_editors_json', 'field_mdl_websites', 'field_mdl_identifiers'])) {
-      $value = unserialize($value) ? unserialize($value) : null;
+    if (isset($definition['property']) && in_array($definition['property'], $this->serialisedFields)) {
+      if (!empty($value)) $value = unserialize($value) ? unserialize($value) : null;
     }
 
     return $value;

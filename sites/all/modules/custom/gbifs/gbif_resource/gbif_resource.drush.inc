@@ -60,8 +60,14 @@ function drush_gbif_resource_language_map() {
       $wrapper = entity_metadata_wrapper('node', $nid);
       $lang_tid = $wrapper->gr_language->value()->tid;
       if (isset($existing_lang_tid[$lang_tid])) {
-        $wrapper->language->set($existing_lang_tid[$lang_tid]);
-        $wrapper->save();
+        try {
+          $lang_code = $existing_lang_tid[$lang_tid];
+          $wrapper->language->set($lang_code);
+          $wrapper->save();
+        }
+        catch (Exception $e) {
+          drupal_set_message($e->getMessage(), 'error');
+        }
         $processed_resources++;
       }
     };

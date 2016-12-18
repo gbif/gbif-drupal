@@ -10,6 +10,32 @@
 function gbif_i18n_locale_default_languages() {
   $languages = array();
 
+  // Exported language: ar.
+  $languages['ar'] = array(
+    'language' => 'ar',
+    'name' => 'Arabic',
+    'native' => 'العربية',
+    'direction' => 1,
+    'enabled' => 1,
+    'plurals' => 0,
+    'formula' => '',
+    'domain' => '',
+    'prefix' => 'ar',
+    'weight' => 0,
+  );
+  // Exported language: ca.
+  $languages['ca'] = array(
+    'language' => 'ca',
+    'name' => 'Catalan',
+    'native' => 'Català',
+    'direction' => 0,
+    'enabled' => 1,
+    'plurals' => 0,
+    'formula' => '',
+    'domain' => '',
+    'prefix' => 'ca',
+    'weight' => 0,
+  );
   // Exported language: da.
   $languages['da'] = array(
     'language' => 'da',
@@ -86,6 +112,32 @@ function gbif_i18n_locale_default_languages() {
     'formula' => '',
     'domain' => '',
     'prefix' => 'ja',
+    'weight' => 0,
+  );
+  // Exported language: ko.
+  $languages['ko'] = array(
+    'language' => 'ko',
+    'name' => 'Korean',
+    'native' => '한국어',
+    'direction' => 0,
+    'enabled' => 1,
+    'plurals' => 0,
+    'formula' => '',
+    'domain' => '',
+    'prefix' => 'ko',
+    'weight' => 0,
+  );
+  // Exported language: nl.
+  $languages['nl'] = array(
+    'language' => 'nl',
+    'name' => 'Dutch',
+    'native' => 'Nederlands',
+    'direction' => 0,
+    'enabled' => 1,
+    'plurals' => 0,
+    'formula' => '',
+    'domain' => '',
+    'prefix' => 'nl',
     'weight' => 0,
   );
   // Exported language: pt.

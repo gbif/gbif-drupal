@@ -59,12 +59,17 @@ function drush_gbif_resource_language_map() {
     $nids = array_keys($result['node']);
     $set_node_language = function($nid) use ($existing_lang_tid, &$processed_resources) {
       $wrapper = entity_metadata_wrapper('node', $nid);
+      $node = node_load($nid);
       $lang_tid = $wrapper->gr_language->value()->tid;
       if (isset($existing_lang_tid[$lang_tid])) {
         try {
           $lang_code = $existing_lang_tid[$lang_tid];
-          $wrapper->language->set($lang_code);
-          $wrapper->save();
+          $node->language = $lang_code;
+          $node->revision = 1;
+          $node->workbench_moderation_state_new = 'published';
+          $node->workbench_moderation_state_current = 'draft';
+          $node->log = 'CMS API deployment: Resource language mapping to content property.';
+          node_save($node);
         }
         catch (Exception $e) {
           drupal_set_message($e->getMessage(), 'error');
@@ -77,6 +82,6 @@ function drush_gbif_resource_language_map() {
 
   $time_end = time();
   $time_elapsed = date('i:s', $time_end - $time_begin);
-  drupal_set_message($processed_resources . ' resource language mapped. Time elapsed: ' . $time_elapsed . '.', 'status');
-
+  $num_not_processed = count($result['node']) - $processed_resources;
+  drupal_set_message($processed_resources . ' resource language mapped. ' . $num_not_processed . ' not processed. Time elapsed: ' . $time_elapsed . '.', 'status');
 }

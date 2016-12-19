@@ -65,11 +65,14 @@ function drush_gbif_resource_language_map() {
         try {
           $lang_code = $existing_lang_tid[$lang_tid];
           $node->language = $lang_code;
-          $node->revision = 1;
-          $node->workbench_moderation_state_new = 'published';
-          $node->workbench_moderation_state_current = 'draft';
+          if (isset($node->workbench_moderation_state_current)) {
+            $node->revision = 1;
+            $node->workbench_moderation_state_new = 'published';
+            $node->workbench_moderation_state_current = 'draft';
+          }
           $node->log = 'CMS API deployment: Resource language mapping to content property.';
           node_save($node);
+          drush_print('Resource nid: ' . $node->nid . ' saved with language ' . $lang_code);
         }
         catch (Exception $e) {
           drupal_set_message($e->getMessage(), 'error');

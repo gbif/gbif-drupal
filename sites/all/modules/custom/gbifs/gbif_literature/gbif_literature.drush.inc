@@ -494,9 +494,13 @@ function gbif_literature_topic_term_mapping() {
       'target_tid' => 861, // Marine
     ],
   ];
+
+  // Don't include GBIF_used in the topic mapping.
+  /*
   foreach ($mappings as &$mapping) {
     $mapping['source_tags'][] = 'GBIF_used';
   }
+  */
   return $mappings;
 }
 

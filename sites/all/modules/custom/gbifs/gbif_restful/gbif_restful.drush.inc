@@ -124,11 +124,17 @@ function drush_gbif_restful_url_alias_rewrite() {
     $update_url_alias = function($node) use ($patterns) {
       $matched = 0;
       $node = node_load($node->nid);
-      $alias = $node->path['alias'];
-      $node->path['alias'] = preg_replace($patterns, '', $alias, -1, $matched);
+      $alias = drupal_get_path_alias('node/' . $node->nid);
+      $node->path = [
+        'path_auto' => 0,
+        'alias' => preg_replace($patterns, '', $alias, -1, $matched),
+      ];
       if ($matched > 0) {
-        $node->workbench_moderation_state_new = 'published';
-        $node->workbench_moderation_state_current = 'draft';
+        if (isset($node->workbench_moderation_state_current)) {
+          $node->revision = 1;
+          $node->workbench_moderation_state_new = 'published';
+          $node->workbench_moderation_state_current = 'draft';
+        }
         $node->log = 'CMS API deployment: URL prefix change for portal16';
         node_save($node);
       }

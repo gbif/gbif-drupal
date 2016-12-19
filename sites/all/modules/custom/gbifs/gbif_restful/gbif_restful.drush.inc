@@ -19,6 +19,11 @@ function gbif_restful_drush_command() {
     'description' => 'Refresh the prev_next index.',
     'aliases' => array('ppni'),
   );
+  $items['url-alias-rewrite'] = array(
+    'callback' => 'drush_gbif_restful_url_alias_rewrite',
+    'description' => 'Rewrite URL alias.',
+    'aliases' => array('uar'),
+  );
   return $items;
 }
 
@@ -91,4 +96,44 @@ function drush_gbif_restful_prev_next_index() {
       '%remaining' => $remaining,
     )));
   }
+}
+
+function drush_gbif_restful_url_alias_rewrite() {
+  $bundles = [
+    'news',
+    'data_use',
+    'programme',
+    'project',
+    'event',
+    'resource'
+  ];
+  $patterns = [
+    '|newsroom/news/|',
+    '|newsroom/uses/|',
+    '|event/|',
+    '|programme/|',
+    '|project/|',
+    '|resource/|',
+  ];
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', $bundles, 'IN');
+  $result = $query->execute();
+
+  if (isset($result['node']) && count($result['node']) > 0) {
+    $update_url_alias = function($node) use ($patterns) {
+      $matched = 0;
+      $node = node_load($node->nid);
+      $alias = $node->path['alias'];
+      $node->path['alias'] = preg_replace($patterns, '', $alias, -1, $matched);
+      if ($matched > 0) {
+        $node->workbench_moderation_state_new = 'published';
+        $node->workbench_moderation_state_current = 'draft';
+        $node->log = 'CMS API deployment: URL prefix change for portal16';
+        node_save($node);
+      }
+    };
+    array_walk($result['node'], $update_url_alias);
+  }
+
 }

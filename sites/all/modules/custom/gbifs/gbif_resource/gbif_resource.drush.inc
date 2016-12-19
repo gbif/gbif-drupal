@@ -50,7 +50,8 @@ function drush_gbif_resource_language_map() {
   $tid_values = array_keys($existing_lang_tid);
 
   $query = new EntityFieldQuery();
-  $query->entityCondition('bundle', 'resource')
+  $query->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', 'resource')
     ->fieldCondition('gr_language', 'tid', $tid_values, 'IN');
   $result = $query->execute();
 

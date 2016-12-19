@@ -72,7 +72,7 @@ function drush_gbif_resource_language_map() {
           }
           $node->log = 'CMS API deployment: Resource language mapping to content property.';
           node_save($node);
-          drush_print('Resource nid: ' . $node->nid . ' saved with language ' . $lang_code);
+          drupal_set_message('Resource nid: ' . $node->nid . ' saved with language ' . $lang_code, 'status');
         }
         catch (Exception $e) {
           drupal_set_message($e->getMessage(), 'error');

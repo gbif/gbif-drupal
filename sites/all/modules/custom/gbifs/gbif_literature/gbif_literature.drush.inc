@@ -8,15 +8,21 @@ function gbif_literature_drush_command() {
   $items['mendeley-import'] = array(
     'callback' => 'drush_gbif_literature_import',
     'description' => 'Import/update all literature items to Drupal DB.',
+    'arguments' => array(
+      'batch' => 'The batch in a thousand unit.'
+    ),
   );
   $items['mendeley-delete'] = array(
     'callback' => 'drush_gbif_literature_delete',
     'description' => 'Delete all literature items in Drupal DB.',
+    'arguments' => array(
+      'batch' => 'The batch in a thousand unit.'
+    ),
   );
   return $items;
 }
 
-function drush_gbif_literature_import() {
+function drush_gbif_literature_import($batch = 0) {
   $time_begin = time();
   $processed_docs = 0;
 
@@ -334,7 +340,10 @@ function drush_gbif_literature_import() {
     };
 
     // available sets: $documents, $docs_journal_only, $docs_journal_only_gbif_used
-    array_map($import_document, $docs_journal_only);
+    $batch_size = 600;
+    $sliced_docs = array_slice($docs_journal_only, $batch * $batch_size, $batch_size);
+    drupal_set_message('Importing starts with ' . $sliced_docs[0]->id, 'status');
+    array_map($import_document, $sliced_docs);
 
     $time_end = time();
     $time_elapsed = date('i:s', $time_end - $time_begin);
@@ -343,7 +352,7 @@ function drush_gbif_literature_import() {
 
 }
 
-function drush_gbif_literature_delete() {
+function drush_gbif_literature_delete($batch) {
   $time_begin = time();
 
   // query if already an item with the same ID
@@ -378,7 +387,10 @@ function drush_gbif_literature_delete() {
     foreach ($exist['node'] as $nid => $node) {
       $ids[] = $nid;
     }
-    node_delete_multiple($ids);
+    $batch_size = 600;
+    $sliced_ids = array_slice($ids, $batch * $batch_size, $batch_size);
+    drupal_set_message('Deleting starts with ' . $sliced_ids[0], 'status');
+    node_delete_multiple($sliced_ids);
   }
   else {
     drupal_set_message('No author to be deleted.', 'status');

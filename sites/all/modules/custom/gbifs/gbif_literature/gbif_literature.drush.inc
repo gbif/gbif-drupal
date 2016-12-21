@@ -348,6 +348,7 @@ function drush_gbif_literature_import($batch = 0) {
     $time_end = time();
     $time_elapsed = date('i:s', $time_end - $time_begin);
     drupal_set_message($processed_docs . ' literature import finished. Time elapsed: ' . $time_elapsed . '.', 'status');
+    drupal_set_message('At ' . format_date(time()), 'status');
   }
 
 }

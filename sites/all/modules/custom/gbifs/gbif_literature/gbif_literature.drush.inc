@@ -301,12 +301,12 @@ function drush_gbif_literature_import($batch = 0) {
             unset($bio_iso2);
           }
           // @todo if the tag is year
+          // set language if the tag indicates
           elseif (isset($available_languages[strtolower($tag)])) {
             $wrapper->language->set($available_languages[strtolower($tag)]);
           }
           // the rest will go to tx_tags and language gets set as English.
           else {
-            $wrapper->language->set('en');
             $existing_tags = $wrapper->tx_tags->value();
             $matched = false;
             $find_tag_match = function($tx_tag) use (&$matched) {
@@ -330,6 +330,8 @@ function drush_gbif_literature_import($batch = 0) {
         };
         if (isset($doc->tags) && is_array($doc->tags)) array_map($set_tags_value, $doc->tags);
 
+        // if after tag mapping the language is still not set, set it to 'en'
+        if ($wrapper->language->value() == 'und') $wrapper->language->set('en');
         $wrapper->status->set(1);
         $wrapper->save();
         $processed_docs ++;

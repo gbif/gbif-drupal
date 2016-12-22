@@ -78,7 +78,7 @@ function gbif_event_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Event',
-    'weight' => '3',
+    'weight' => '4',
     'children' => array(
       0 => 'group_date_time',
       1 => 'group_description',
@@ -145,6 +145,7 @@ function gbif_event_field_group_info() {
       0 => 'ge_location',
       1 => 'ge_venue',
       2 => 'ge_venue_country',
+      3 => 'field_country',
     ),
     'format_type' => 'tab',
     'format_settings' => array(

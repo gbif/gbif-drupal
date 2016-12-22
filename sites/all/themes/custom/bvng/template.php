@@ -140,7 +140,9 @@ function bvng_preprocess_page(&$variables) {
   if (drupal_is_front_page()) {
     drupal_add_js(libraries_get_path('leaflet') . '/leaflet.js', array('type' => 'file', 'scope' => 'footer', 'weight' => 10));
     drupal_add_js(libraries_get_path('moment') . '/moment.js', array('type' => 'file', 'scope' => 'footer', 'weight' => 20));
-    drupal_add_js(drupal_get_path('theme', 'bvng') . '/js/frontPageWidgets.js', array('type' => 'file', 'scope' => 'footer', 'weight' => 50));
+    // only load if it's prod instance
+    $env = variable_get('environment_settings');
+    if ($env['gbif_api_base_url'] == 'http://api.gbif.org') drupal_add_js(drupal_get_path('theme', 'bvng') . '/js/frontPageWidgets.js', array('type' => 'file', 'scope' => 'footer', 'weight' => 50));
 
     $variables['search_form'] = module_invoke('search', 'block_view', 'search_form');
     $variables['logo'] = drupal_get_path('theme', 'bvng') . '/images/logo_white.png';

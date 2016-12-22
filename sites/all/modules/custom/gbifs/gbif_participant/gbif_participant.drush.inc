@@ -9,6 +9,10 @@ function gbif_participant_drush_command() {
     'callback' => 'drush_gbif_participant_sync',
     'description' => 'Synchronise participant from IMS base table to "participant" vocabulary',
   );
+  $items['participant-map'] = array(
+    'callback' => 'drush_gbif_participant_map',
+    'description' => 'Re-map language to indexable fields.',
+  );
   return $items;
 }
 
@@ -136,4 +140,35 @@ function gbif_participant_term_update($term, $result) {
 
   // Save the change
   $term_wrapper->save();
+}
+
+function drush_gbif_participant_map() {
+  $time_begin = time();
+  $processed_resources = 0;
+
+  // map all events to English
+  // map ge_venue_country to field_country
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', 'gbif_participant');
+  $result = $query->execute();
+
+  if (isset($result['node']) && count($result['node']) > 0) {
+    $nids = array_keys($result['node']);
+    $set_node_mapping = function($nid) use (&$processed_resources) {
+      $wrapper = entity_metadata_wrapper('node', $nid);
+      $wrapper->language->set('en');
+      $wrapper->log->set('CMS API deployment: Event content property mappings for language and country.');
+      $wrapper->save();
+      drupal_set_message('Participant nid: ' . $wrapper->getIdentifier() . ' saved with language ' . 'en', 'status');
+      $processed_resources++;
+    };
+    array_walk($nids, $set_node_mapping);
+  }
+
+  $time_end = time();
+  $time_elapsed = date('i:s', $time_end - $time_begin);
+  $num_not_processed = count($result['node']) - $processed_resources;
+  drupal_set_message($processed_resources . ' participant info language mapped. ' . $num_not_processed . ' not processed. Time elapsed: ' . $time_elapsed . '.', 'status');
+
 }

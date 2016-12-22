@@ -68,6 +68,7 @@ function gbif_event_form_event_node_form_alter(&$form, &$form_state) {
 	// ge_ims_kp_id shouldn't be touched as it's the linkage to the IMS.
 	$form['ge_ims_kp_id']['#disabled'] = TRUE;
 	$form['ge_desc_long']['#disabled'] = TRUE;
+  $form['field_country']['#disabled'] = TRUE;
 	// ge_date_ical should follow whatever is set in the event date. We then insert
 	// the same value from the event date.
 	$form['ge_date_ical']['#printed'] = TRUE;

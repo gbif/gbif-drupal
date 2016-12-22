@@ -82,6 +82,64 @@ function gbif_event_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-event-field_country'.
+  $field_instances['node-event-field_country'] = array(
+    'bundle' => 'event',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Do not attempt to edit this field before a notification from the informatics team. Thanks.',
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 23,
+      ),
+      'ical' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'search_index' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_country',
+    'label' => 'Venue country (for API)',
+    'required' => 0,
+    'settings' => array(
+      'mediafront' => array(
+        'custom' => '',
+        'field_type' => 0,
+        'media_type' => 'media',
+        'preview' => 0,
+        'thumbnail' => 0,
+      ),
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'apply_chosen' => '',
+      ),
+      'type' => 'options_select',
+      'weight' => 18,
+    ),
+  );
+
   // Exported field_instance: 'node-event-field_featured_search_terms'.
   $field_instances['node-event-field_featured_search_terms'] = array(
     'bundle' => 'event',
@@ -137,7 +195,7 @@ function gbif_event_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'taxonomy_autocomplete',
-      'weight' => 41,
+      'weight' => 5,
     ),
   );
 
@@ -1591,6 +1649,7 @@ function gbif_event_field_default_field_instances() {
   t('Date');
   t('Description');
   t('Description (deprecated)');
+  t('Do not attempt to edit this field before a notification from the informatics team. Thanks.');
   t('Event Date');
   t('Event ID');
   t('Event image');
@@ -1612,6 +1671,7 @@ function gbif_event_field_default_field_instances() {
   t('The terms provided in this field will be used to highlight this content node when a search is performed using these terms as keywords.');
   t('Venue');
   t('Venue country');
+  t('Venue country (for API)');
 
   return $field_instances;
 }

@@ -71,7 +71,7 @@
               $.each(data, function(index, o) {
                 occurrences.push(o);
               });
-            }, async:false});
+            }, async:true});
           occurrences.reverse; // so we can just pop off the end
           return occurrences;
         }

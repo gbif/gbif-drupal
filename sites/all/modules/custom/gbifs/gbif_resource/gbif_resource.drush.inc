@@ -52,29 +52,30 @@ function drush_gbif_resource_language_map() {
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'node')
     ->entityCondition('bundle', 'resource')
-    ->fieldCondition('gr_language', 'tid', $tid_values, 'IN');
+    ->propertyCondition('status', 1);
   $result = $query->execute();
 
   if (isset($result['node']) && count($result['node']) > 0) {
     $nids = array_keys($result['node']);
-    $set_node_language = function($nid) use ($existing_lang_tid, &$processed_resources) {
+    $set_node_language = function($nid) use ($existing_lang_tid, &$processed_resources, $tid_values) {
       $wrapper = entity_metadata_wrapper('node', $nid);
       $node = node_load($nid);
+
+      // if the node has language term reference set, set accordingly. Or use 'en'
       $lang_tid = $wrapper->gr_language->value()->tid;
-      if (isset($existing_lang_tid[$lang_tid])) {
-        $lang_code = $existing_lang_tid[$lang_tid];
-      }
-      else {
-        $lang_code = 'en';
-      }
+
+      $lang_code = (isset($lang_tid) && isset($existing_lang_tid[$lang_tid])) ? $existing_lang_tid[$lang_tid] : 'en';
       $node->language = $lang_code;
+
       $node->path = ['pathauto' => 0, 'alias' => 0];
+
       if (isset($node->workbench_moderation_state_current)) {
         $node->revision = 1;
         $node->workbench_moderation_state_new = 'published';
         $node->workbench_moderation_state_current = 'draft';
       }
       $node->log = 'CMS API deployment: Resource language mapping to content property.';
+
       node_save($node);
       $processed_resources++;
       drupal_set_message('Resource nid: ' . $node->nid . ' saved with language ' . $lang_code, 'status');

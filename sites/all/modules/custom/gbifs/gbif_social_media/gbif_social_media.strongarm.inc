@@ -81,20 +81,20 @@ function gbif_social_media_strongarm() {
     38 => 0,
     39 => 0,
     40 => 0,
+    47 => 0,
     44 => 0,
+    48 => 0,
     45 => 0,
+    52 => 0,
     36 => 0,
+    51 => 0,
     43 => 0,
+    49 => 0,
     41 => 0,
     46 => 0,
-    22 => 0,
     42 => 0,
-    15 => 0,
     17 => 0,
-    16 => 0,
     18 => 0,
-    21 => 0,
-    30 => 0,
   );
   $export['service_links_category_vocs'] = $strongarm;
 
@@ -325,11 +325,15 @@ function gbif_social_media_strongarm() {
     'resource' => 'resource',
     'page' => 0,
     'call' => 0,
+    'dataset' => 0,
     'gbif_participant' => 0,
+    'generic' => 0,
     'generictemplate' => 0,
+    'literature_author' => 0,
     'dir_organization' => 0,
     'programme' => 0,
     'project' => 0,
+    'literature' => 0,
   );
   $export['service_links_node_types'] = $strongarm;
 
@@ -339,7 +343,7 @@ function gbif_social_media_strongarm() {
   $strongarm->name = 'service_links_node_view_modes';
   $strongarm->value = array(
     'full' => 'full',
-    'teaser' => 'teaser',
+    'teaser' => 0,
     'rss' => 0,
     'search_index' => 0,
     'search_result' => 0,
@@ -367,7 +371,10 @@ function gbif_social_media_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'service_links_page_match_for_node';
-  $strongarm->value = '';
+  $strongarm->value = 'newsroom/news/*
+newsroom/uses/*
+event/*
+resource/*';
   $export['service_links_page_match_for_node'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -495,7 +502,7 @@ function gbif_social_media_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'service_links_visibility_for_node';
-  $strongarm->value = '0';
+  $strongarm->value = '1';
   $export['service_links_visibility_for_node'] = $strongarm;
 
   $strongarm = new stdClass();

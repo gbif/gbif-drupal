@@ -332,7 +332,7 @@ function drush_gbif_literature_import($batch = 0) {
 
         // if after tag mapping the language is still not set, set it to 'en'
         if ($wrapper->language->value() == 'und') $wrapper->language->set('en');
-        $wrapper->path->set(['pathauto' => 0, 'alias' => '']);
+        //$wrapper->path->set(['pathauto' => 0, 'alias' => '']);
         $wrapper->status->set(1);
         $wrapper->save();
         $processed_docs ++;
@@ -372,27 +372,43 @@ function drush_gbif_literature_delete($batch) {
     foreach ($exist['node'] as $nid => $node) {
       $ids[] = $nid;
     }
-    node_delete_multiple($ids);
+    $batch_size = count($ids) / 7;
+    $batch_reminder = count($ids) % 7;
+    if ($batch_reminder > 0 && $batch == 7) {
+      $sliced_ids = array_slice($ids, $batch * $batch_size + $batch_reminder, $batch_size);
+    }
+    else {
+      $sliced_ids = array_slice($ids, $batch * $batch_size, $batch_size);
+    }
+
+    node_delete_multiple($sliced_ids);
   }
   else {
     drupal_set_message('No document to be deleted.', 'status');
   }
 
-  // query if already an author with the same ID
+  // delete all authors
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'node')
     ->entityCondition('bundle', 'literature_author');
-  $exist = $query->execute();
+  $results = $query->execute();
 
-  if (isset($exist['node'])) {
+  if (isset($results['node'])) {
     drupal_set_message(count($exist['node']) . ' authors are deleted.', 'status');
 
     $ids = [];
-    foreach ($exist['node'] as $nid => $node) {
+    foreach ($results['node'] as $nid => $node) {
       $ids[] = $nid;
     }
-    $batch_size = 600;
-    $sliced_ids = array_slice($ids, $batch * $batch_size, $batch_size);
+    $batch_size = count($results['node']) / 7;
+    $batch_reminder = count($results['node']) % 7;
+    if ($batch_reminder > 0 && $batch == 7) {
+      $sliced_ids = array_slice($ids, $batch * $batch_size + $batch_reminder, $batch_size);
+    }
+    else {
+      $sliced_ids = array_slice($ids, $batch * $batch_size, $batch_size);
+    }
+
     drupal_set_message('Deleting starts with ' . $sliced_ids[0], 'status');
     node_delete_multiple($sliced_ids);
   }
@@ -401,13 +417,23 @@ function drush_gbif_literature_delete($batch) {
   }
 
   // delete all terms in Keywords vocabulary
+  $processed_terms = 0;
   $voc = taxonomy_vocabulary_machine_name_load('keywords');
   $terms = taxonomy_get_tree((int) $voc->vid);
-  $delete_term = function($term) {
+  $delete_term = function($term) use (&$processed_terms) {
     taxonomy_term_delete($term->tid);
+    $processed_terms++;
   };
-  array_map($delete_term, $terms);
-  drupal_set_message(count($terms) . ' keywords are deleted.', 'status');
+  $batch_size = count($terms) / 7;
+  $batch_reminder = count($terms) % 7;
+  if ($batch_reminder > 0 && $batch == 7) {
+    $sliced_terms = array_slice($ids, $batch * $batch_size + $batch_reminder, $batch_size);
+  }
+  else {
+    $sliced_terms = array_slice($ids, $batch * $batch_size, $batch_size);
+  }
+  array_map($delete_term, $sliced_terms);
+  drupal_set_message($processed_terms . ' keywords are deleted.', 'status');
 
   $time_end = time();
   $time_elapsed = date('i:s', $time_end - $time_begin);

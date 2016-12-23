@@ -332,6 +332,7 @@ function drush_gbif_literature_import($batch = 0) {
 
         // if after tag mapping the language is still not set, set it to 'en'
         if ($wrapper->language->value() == 'und') $wrapper->language->set('en');
+        $wrapper->path->set(['pathauto' => 0, 'alias' => '']);
         $wrapper->status->set(1);
         $wrapper->save();
         $processed_docs ++;

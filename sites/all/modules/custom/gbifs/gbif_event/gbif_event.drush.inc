@@ -24,6 +24,7 @@ function drush_gbif_event_map() {
     $set_node_mapping = function($nid) use (&$processed_resources) {
       $wrapper = entity_metadata_wrapper('node', $nid);
       $wrapper->language->set('en');
+      $wrapper->path->set(['pathauto' => 0, 'alias' => '']);
       $country = $wrapper->ge_venue_country->value();
       $wrapper->field_country->set([$country->tid]);
       $wrapper->log->set('CMS API deployment: Event content property mappings for language and country.');

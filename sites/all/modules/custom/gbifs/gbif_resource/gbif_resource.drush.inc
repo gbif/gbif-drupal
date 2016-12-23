@@ -65,6 +65,7 @@ function drush_gbif_resource_language_map() {
         try {
           $lang_code = $existing_lang_tid[$lang_tid];
           $node->language = $lang_code;
+          $node->path = ['pathauto' => 0, 'alias' => 0];
           if (isset($node->workbench_moderation_state_current)) {
             $node->revision = 1;
             $node->workbench_moderation_state_new = 'published';

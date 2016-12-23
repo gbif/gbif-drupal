@@ -9,7 +9,8 @@ function gbif_literature_drush_command() {
     'callback' => 'drush_gbif_literature_import',
     'description' => 'Import/update all literature items to Drupal DB.',
     'arguments' => array(
-      'batch' => 'The batch in a thousand unit.'
+      'bnum' => 'The number of batches by which this task will be divided.',
+      'batch' => 'The n-th of the batches this task will run.'
     ),
   );
   $items['mendeley-delete'] = array(
@@ -22,49 +23,144 @@ function gbif_literature_drush_command() {
   return $items;
 }
 
-function drush_gbif_literature_import($batch = 0) {
+function drush_gbif_literature_import($bnum = 6, $batch = 0) {
   $time_begin = time();
   $processed_docs = 0;
 
   // country objects
-  $gbif_enum_countries = json_decode(file_get_contents(GBIF_ENUMERATION_COUNTRY));
-  $gbif_countries = [];
-  $prepare_countries = function($c) use (&$gbif_countries) {
-    $gbif_countries[$c->iso2] = (array)$c;
-  };
-  array_map($prepare_countries, $gbif_enum_countries);
-  ksort($gbif_countries);
+  static $gbif_countries;
+  if (!isset($gbif_countries)) {
+    $gbif_enum_countries = json_decode(file_get_contents(GBIF_ENUMERATION_COUNTRY));
+    $gbif_countries = [];
+    $prepare_countries = function($c) use (&$gbif_countries) {
+      $gbif_countries[$c->iso2] = (array)$c;
+    };
+    array_map($prepare_countries, $gbif_enum_countries);
+    ksort($gbif_countries);
+  }
 
-  $mappings = gbif_literature_topic_term_mapping();
-  $literature_annotations = gbif_literature_annotations();
+  static $mappings;
+  if (!isset($mappings)) {
+    $mappings = gbif_literature_topic_term_mapping();
+  }
 
-  // Prepare the uri for storing retrieved documents
-  $documents_file_loc = file_build_uri('gbif_mendeley/documents.json');
-  $documents_exist = file_exists($documents_file_loc);
+  static $literature_annotations;
+  if (!isset($literature_annotations)) {
+    $literature_annotations = gbif_literature_annotations();
+  }
+
+  static $documents_exist;
+  if (!isset($documents_exist)) {
+    $documents_file_loc = file_build_uri('gbif_mendeley/documents.json');
+    $documents_exist = file_exists($documents_file_loc);
+  }
+
+  // language
+  $available_languages = [
+    'chinese_simplified' => 'zh-hans',
+    'chinese_traditional' => 'zh-hant',
+    'danish' => 'da',
+    'german' => 'de',
+    'english' => 'en',
+    'french' => 'fr',
+    'japanese' => 'ja',
+    'portuguese' => 'pt',
+    'russian' => 'ru',
+    'spanish' => 'es',
+  ];
+
+  $field_mapping = [
+    // set text/integer fields
+    'text_fields' => [
+      'title' => 'title',   'abstract' => 'field_mdl_abstract',
+      'citation_key' => 'field_mdl_citation_key',
+      'code' => 'field_mdl_code',
+      'firstAuthor' => 'field_mdl_first_author',
+      'group_id' =>'field_mdl_group_id',
+      'id' => 'field_mdl_id',
+      'accessed' => 'field_mdl_accessed',
+      'issue' => 'field_mdl_issue',
+      'pages' => 'field_mdl_pages',
+      'profile_id' => 'field_mdl_profile_id',
+      'publisher' => 'field_mdl_publisher',
+      'source' => 'field_mdl_source',
+      'volume' => 'field_mdl_volume',
+      'year' => 'field_mdl_year',
+      'month' => 'field_mdl_month',
+      'day' => 'field_mdl_day',
+    ],
+    // boolean fields
+    'boolean_fields' => [
+      'authored' => 'field_mdl_authored',
+      'read' => 'field_mdl_read',
+      'starred' => 'field_mdl_starred',
+      'confirmed' => 'field_mdl_confirmed',
+      'hidden' => 'field_mdl_hidden',
+      'file_attached' => 'field_mdl_file_attached',
+    ],
+    // serialized fields
+    'serialized_fields' => [
+      'authors' => 'field_mdl_authors_json',
+      'editors' => 'field_mdl_editors_json',
+      'identifiers' => 'field_mdl_identifiers',
+      'websites' => 'field_mdl_websites',
+    ],
+    // entity reference fields
+    'ent_ref_fields' => [
+      'authors' => 'field_mdl_authors',
+      'editors' => 'field_mdl_editors',
+    ],
+    // list fields
+    'list_fields' => [
+      'type' => 'field_mdl_type',
+    ],
+    // date fields
+    'date_fields'=> [
+      'created' => 'field_mdl_created',
+      'last_modified' => 'field_mdl_last_modified',
+    ],
+  ];
 
   if ($documents_exist !== TRUE) {
     drupal_set_message('Documents file not available. Check if Mendeley sync is required.', 'error');
   }
   else {
-    $documents = json_decode(file_get_contents(drupal_realpath($documents_file_loc)));
+    static $documents;
+    if (!isset($documents)) {
+      $documents = json_decode(file_get_contents(drupal_realpath($documents_file_loc)));
+    }
 
     // journal only documents
-    $docs_journal_only = [];
-    foreach ($documents as $d) {
-      if (isset($d->type) && $d->type == 'journal') {
-        $docs_journal_only[] = $d;
+    static $docs_journal_only;
+    if (!isset($docs_journal_only)) {
+      $docs_journal_only = [];
+      foreach ($documents as $d) {
+        if (isset($d->type) && $d->type == 'journal') {
+          $docs_journal_only[] = $d;
+        }
       }
+    }
+    static $journal_only_count;
+    if (!isset($journal_only_count)) {
+      $journal_only_count = count($docs_journal_only);
     }
 
     // journal only with GBIF_used
-    $docs_journal_only_gbif_used = [];
-    foreach ($documents as $d) {
-      if (isset($d->type) && $d->type == 'journal' && is_array($d->tags) && in_array('GBIF_used', $d->tags)) {
-        $docs_journal_only_gbif_used[] = $d;
+    static $docs_journal_only_gbif_used;
+    if (!isset($docs_journal_only_gbif_used)) {
+      $docs_journal_only_gbif_used = [];
+      foreach ($documents as $d) {
+        if (isset($d->type) && $d->type == 'journal' && is_array($d->tags) && in_array('GBIF_used', $d->tags)) {
+          $docs_journal_only_gbif_used[] = $d;
+        }
       }
     }
 
-    $import_document = function($doc) use (&$processed_docs, $mappings, $literature_annotations, $gbif_countries) {
+    // available sets: $documents, $docs_journal_only, $docs_journal_only_gbif_used
+    $sliced_docs = gbif_literature_batch_create($docs_journal_only, $bnum, $batch);
+    drupal_set_message('Importing ' . count($sliced_docs) . ' of ' . $journal_only_count . ' documents, starts with ' . $sliced_docs[0]->id, 'status');
+
+    $import_document = function($doc) use (&$processed_docs, $mappings, $literature_annotations, $gbif_countries, $available_languages, $field_mapping) {
       // query if already an item with the same ID
       $query = new EntityFieldQuery();
       $query->entityCondition('entity_type', 'node')
@@ -82,61 +178,17 @@ function drush_gbif_literature_import($batch = 0) {
         $wrapper = entity_metadata_wrapper($entity_type, $entity);
         $bio_iso2 = '';
 
-        // language
-        $available_languages = [
-          'chinese_simplified' => 'zh-hans',
-          'chinese_traditional' => 'zh-hant',
-          'danish' => 'da',
-          'german' => 'de',
-          'english' => 'en',
-          'french' => 'fr',
-          'japanese' => 'ja',
-          'portuguese' => 'pt',
-          'russian' => 'ru',
-          'spanish' => 'es',
-        ];
-
-        // set text/integer fields
-        $text_fields = [
-          'title' => 'title',   'abstract' => 'field_mdl_abstract',
-          'citation_key' => 'field_mdl_citation_key',
-          'code' => 'field_mdl_code',
-          'firstAuthor' => 'field_mdl_first_author',
-          'group_id' =>'field_mdl_group_id',
-          'id' => 'field_mdl_id',
-          'accessed' => 'field_mdl_accessed',
-          'issue' => 'field_mdl_issue',
-          'pages' => 'field_mdl_pages',
-          'profile_id' => 'field_mdl_profile_id',
-          'publisher' => 'field_mdl_publisher',
-          'source' => 'field_mdl_source',
-          'volume' => 'field_mdl_volume',
-          'year' => 'field_mdl_year',
-          'month' => 'field_mdl_month',
-          'day' => 'field_mdl_day',
-        ];
         $set_text_value = function($target_field, $source_field) use ($wrapper, $doc) {
           if (isset($doc->$source_field)) $wrapper->$target_field->set($doc->$source_field);
         };
-        array_walk($text_fields, $set_text_value);
+        array_walk($field_mapping['text_fields'], $set_text_value);
 
-        // set serialized fields
-        $serialized_fields = [
-          'authors' => 'field_mdl_authors_json',
-          'editors' => 'field_mdl_editors_json',
-          'identifiers' => 'field_mdl_identifiers',
-          'websites' => 'field_mdl_websites',
-        ];
         $set_serialized_value = function($target_field, $source_field) use ($wrapper, $doc) {
           if (isset($doc->$source_field)) $wrapper->$target_field = serialize($doc->$source_field);
         };
-        array_walk($serialized_fields, $set_serialized_value);
+        array_walk($field_mapping['serialized_fields'], $set_serialized_value);
 
         // entity referenced fields
-        $ent_ref_fields = [
-          'authors' => 'field_mdl_authors',
-          'editors' => 'field_mdl_editors',
-        ];
         $set_author_value = function($target_field, $source_field) use (&$wrapper, $doc) {
           if (isset($doc->$source_field)) {
             foreach ($doc->authors as $author) {
@@ -176,40 +228,22 @@ function drush_gbif_literature_import($batch = 0) {
             }
           }
         };
-        array_walk($ent_ref_fields, $set_author_value);
+        array_walk($field_mapping['ent_ref_fields'], $set_author_value);
 
-        // boolean fields
-        $boolean_fields = [
-          'authored' => 'field_mdl_authored',
-          'read' => 'field_mdl_read',
-          'starred' => 'field_mdl_starred',
-          'confirmed' => 'field_mdl_confirmed',
-          'hidden' => 'field_mdl_hidden',
-          'file_attached' => 'field_mdl_file_attached',
-        ];
         $set_boolean_value = function($target_field, $source_field) use ($wrapper, $doc) {
           if (isset($doc->$source_field)) $wrapper->$target_field->set($doc->$source_field);
         };
-        array_walk($boolean_fields, $set_boolean_value);
+        array_walk($field_mapping['boolean_fields'], $set_boolean_value);
 
-        // list fields
-        $list_fields = [
-          'type' => 'field_mdl_type',
-        ];
         $set_list_value = function($target_field, $source_field) use ($wrapper, $doc) {
           if (isset($doc->$source_field)) $wrapper->$target_field->set($doc->$source_field);
         };
-        array_walk($list_fields, $set_list_value);
+        array_walk($field_mapping['list_fields'], $set_list_value);
 
-        // date fields
-        $date_fields = [
-          'created' => 'field_mdl_created',
-          'last_modified' => 'field_mdl_last_modified',
-        ];
         $set_date_value = function($target_field, $source_field) use ($wrapper, $doc) {
           if (isset($doc->$source_field)) $wrapper->$target_field->set(date('U', strtotime($doc->$source_field)));
         };
-        array_walk($date_fields, $set_date_value);
+        array_walk($field_mapping['date_fields'], $set_date_value);
 
         // keywords
         // 1) see if a new term is already in the voc, if not, create one.
@@ -339,17 +373,6 @@ function drush_gbif_literature_import($batch = 0) {
         drupal_set_message('Exception.', 'error');
       }
     };
-
-    // available sets: $documents, $docs_journal_only, $docs_journal_only_gbif_used
-    $batch_size = count($docs_journal_only) / 7;
-    $batch_remainder = count($docs_journal_only) % 7;
-    if ($batch_remainder > 0 && $batch == 7) {
-      $sliced_docs = array_slice($docs_journal_only, $batch * $batch_size + $batch_remainder, $batch_size);
-    }
-    else {
-      $sliced_docs = array_slice($docs_journal_only, $batch * $batch_size, $batch_size);
-    }
-    drupal_set_message('Importing starts with ' . $sliced_docs[0]->id, 'status');
     array_map($import_document, $sliced_docs);
 
     $time_end = time();
@@ -360,7 +383,7 @@ function drush_gbif_literature_import($batch = 0) {
 
 }
 
-function drush_gbif_literature_delete($batch) {
+function drush_gbif_literature_delete($bnum = 6, $batch = 0) {
   $time_begin = time();
 
   // query if already an item with the same ID
@@ -404,14 +427,8 @@ function drush_gbif_literature_delete($batch) {
     foreach ($results['node'] as $nid => $node) {
       $ids[] = $nid;
     }
-    $batch_size = count($results['node']) / 7;
-    $batch_remainder = count($results['node']) % 7;
-    if ($batch_remainder > 0 && $batch == 7) {
-      $sliced_ids = array_slice($ids, $batch * $batch_size + $batch_remainder, $batch_size);
-    }
-    else {
-      $sliced_ids = array_slice($ids, $batch * $batch_size, $batch_size);
-    }
+
+    $sliced_ids = gbif_literature_batch_create($ids, $bnum, $batch);
 
     drupal_set_message('Deleting starts with ' . $sliced_ids[0], 'status');
     node_delete_multiple($sliced_ids);
@@ -428,14 +445,8 @@ function drush_gbif_literature_delete($batch) {
     taxonomy_term_delete($term->tid);
     $processed_terms++;
   };
-  $batch_size = count($terms) / 7;
-  $batch_remainder = count($terms) % 7;
-  if ($batch_remainder > 0 && $batch == 7) {
-    $sliced_terms = array_slice($ids, $batch * $batch_size + $batch_remainder, $batch_size);
-  }
-  else {
-    $sliced_terms = array_slice($ids, $batch * $batch_size, $batch_size);
-  }
+
+  $sliced_terms = gbif_literature_batch_create($terms, $bnum, $batch);
   array_map($delete_term, $sliced_terms);
   drupal_set_message($processed_terms . ' keywords are deleted.', 'status');
 
@@ -443,6 +454,23 @@ function drush_gbif_literature_delete($batch) {
   $time_elapsed = date('i:s', $time_end - $time_begin);
   drupal_set_message('Time elapsed: ' . $time_elapsed . '.', 'status');
 };
+
+function gbif_literature_batch_create($items, $bnum, $batch) {
+  // available sets: $documents, $docs_journal_only, $docs_journal_only_gbif_used
+  $items_count = count($items);
+  static $batch_size;
+  if (!isset($batch_size)) $batch_size = $items_count / $bnum;
+  static $batch_remainder;
+  if (!isset($batch_remainder)) $batch_remainder = $items_count % $bnum;
+
+  if ($batch_remainder > 0 && $batch == $bnum - 1) {
+    $sliced_items = array_slice($items, $batch * $batch_size);
+  }
+  else {
+    $sliced_items = array_slice($items, $batch * $batch_size, $batch_size);
+  }
+  return $sliced_items;
+}
 
 function gbif_literature_create_taxonomy_term($name, $vid) {
   $term = new stdClass();

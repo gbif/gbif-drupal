@@ -723,24 +723,6 @@ function gbif_roles_user_default_permissions() {
     'module' => 'taxonomy',
   );
 
-  // Exported permission: 'administer theme assignments'.
-  $permissions['administer theme assignments'] = array(
-    'name' => 'administer theme assignments',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-    ),
-    'module' => 'themekey',
-  );
-
-  // Exported permission: 'administer themekey settings'.
-  $permissions['administer themekey settings'] = array(
-    'name' => 'administer themekey settings',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-    ),
-    'module' => 'themekey',
-  );
-
   // Exported permission: 'administer themes'.
   $permissions['administer themes'] = array(
     'name' => 'administer themes',
@@ -794,15 +776,6 @@ function gbif_roles_user_default_permissions() {
       'Publisher' => 'Publisher',
     ),
     'module' => 'user',
-  );
-
-  // Exported permission: 'administer uuid'.
-  $permissions['administer uuid'] = array(
-    'name' => 'administer uuid',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-    ),
-    'module' => 'uuid',
   );
 
   // Exported permission: 'administer views'.

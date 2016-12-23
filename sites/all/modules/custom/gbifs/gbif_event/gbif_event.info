@@ -27,7 +27,6 @@ dependencies[] = smart_trim
 dependencies[] = strongarm
 dependencies[] = taxonomy
 dependencies[] = text
-dependencies[] = uuid_features
 dependencies[] = views
 configure = admin/config/gbif/event
 features[context][] = event_node_menu

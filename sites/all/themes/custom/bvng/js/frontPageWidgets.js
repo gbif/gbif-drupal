@@ -67,6 +67,7 @@
           var occurrences = [];
           $.ajax({
             url: api_base_url + '/occurrence/featured?seed=' + seed++,
+            datatype: 'jsonp',
             success: function(data) {
               $.each(data, function(index, o) {
                 occurrences.push(o);

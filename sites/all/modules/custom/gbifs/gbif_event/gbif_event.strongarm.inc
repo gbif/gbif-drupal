@@ -103,7 +103,7 @@ function gbif_event_strongarm() {
     'extra_fields' => array(
       'form' => array(
         'metatags' => array(
-          'weight' => '3',
+          'weight' => '2',
         ),
         'title' => array(
           'weight' => '2',

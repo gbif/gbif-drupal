@@ -89,6 +89,14 @@ function gbif_vocabularies_taxonomy_default_vocabularies() {
       'module' => 'taxonomy',
       'weight' => 0,
     ),
+    'gbif_literature_annotation' => array(
+      'name' => 'GBIF Literature Annotation',
+      'machine_name' => 'gbif_literature_annotation',
+      'description' => '',
+      'hierarchy' => 0,
+      'module' => 'taxonomy',
+      'weight' => 0,
+    ),
     'informatics' => array(
       'name' => 'Informatics',
       'machine_name' => 'informatics',
@@ -112,14 +120,6 @@ function gbif_vocabularies_taxonomy_default_vocabularies() {
       'hierarchy' => 0,
       'module' => 'taxonomy',
       'weight' => -4,
-    ),
-    'gbif_literature_annotation' => array(
-      'name' => 'GBIF Literature Annotation',
-      'machine_name' => 'gbif_literature_annotation',
-      'description' => '',
-      'hierarchy' => 0,
-      'module' => 'taxonomy',
-      'weight' => 0,
     ),
     'organizations' => array(
       'name' => 'Organizations/economies',

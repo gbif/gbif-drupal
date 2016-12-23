@@ -341,8 +341,14 @@ function drush_gbif_literature_import($batch = 0) {
     };
 
     // available sets: $documents, $docs_journal_only, $docs_journal_only_gbif_used
-    $batch_size = 600;
-    $sliced_docs = array_slice($docs_journal_only, $batch * $batch_size, $batch_size);
+    $batch_size = count($docs_journal_only) / 7;
+    $batch_remainder = count($docs_journal_only) % 7;
+    if ($batch_remainder > 0 && $batch == 7) {
+      $sliced_docs = array_slice($docs_journal_only, $batch * $batch_size + $batch_remainder, $batch_size);
+    }
+    else {
+      $sliced_docs = array_slice($docs_journal_only, $batch * $batch_size, $batch_size);
+    }
     drupal_set_message('Importing starts with ' . $sliced_docs[0]->id, 'status');
     array_map($import_document, $sliced_docs);
 
@@ -371,9 +377,9 @@ function drush_gbif_literature_delete($batch) {
       $ids[] = $nid;
     }
     $batch_size = count($ids) / 7;
-    $batch_reminder = count($ids) % 7;
-    if ($batch_reminder > 0 && $batch == 7) {
-      $sliced_ids = array_slice($ids, $batch * $batch_size + $batch_reminder, $batch_size);
+    $batch_remainder = count($ids) % 7;
+    if ($batch_remainder > 0 && $batch == 7) {
+      $sliced_ids = array_slice($ids, $batch * $batch_size + $batch_remainder, $batch_size);
     }
     else {
       $sliced_ids = array_slice($ids, $batch * $batch_size, $batch_size);
@@ -399,9 +405,9 @@ function drush_gbif_literature_delete($batch) {
       $ids[] = $nid;
     }
     $batch_size = count($results['node']) / 7;
-    $batch_reminder = count($results['node']) % 7;
-    if ($batch_reminder > 0 && $batch == 7) {
-      $sliced_ids = array_slice($ids, $batch * $batch_size + $batch_reminder, $batch_size);
+    $batch_remainder = count($results['node']) % 7;
+    if ($batch_remainder > 0 && $batch == 7) {
+      $sliced_ids = array_slice($ids, $batch * $batch_size + $batch_remainder, $batch_size);
     }
     else {
       $sliced_ids = array_slice($ids, $batch * $batch_size, $batch_size);
@@ -423,9 +429,9 @@ function drush_gbif_literature_delete($batch) {
     $processed_terms++;
   };
   $batch_size = count($terms) / 7;
-  $batch_reminder = count($terms) % 7;
-  if ($batch_reminder > 0 && $batch == 7) {
-    $sliced_terms = array_slice($ids, $batch * $batch_size + $batch_reminder, $batch_size);
+  $batch_remainder = count($terms) % 7;
+  if ($batch_remainder > 0 && $batch == 7) {
+    $sliced_terms = array_slice($ids, $batch * $batch_size + $batch_remainder, $batch_size);
   }
   else {
     $sliced_terms = array_slice($ids, $batch * $batch_size, $batch_size);

@@ -158,7 +158,6 @@ function drush_gbif_participant_map() {
     $set_node_mapping = function($nid) use (&$processed_resources) {
       $wrapper = entity_metadata_wrapper('node', $nid);
       $wrapper->language->set('en');
-      $wrapper->path->set(['pathauto' => 0, 'alias' => '']);
       $wrapper->log->set('CMS API deployment: Event content property mappings for language and country.');
       $wrapper->save();
       drupal_set_message('Participant nid: ' . $wrapper->getIdentifier() . ' saved with language ' . 'en', 'status');

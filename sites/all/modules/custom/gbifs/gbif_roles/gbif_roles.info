@@ -63,7 +63,6 @@ dependencies[] = token_insert
 dependencies[] = twitter
 dependencies[] = twitter_post
 dependencies[] = user
-dependencies[] = uuid
 dependencies[] = views
 dependencies[] = workbench
 dependencies[] = workbench_media

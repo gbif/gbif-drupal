@@ -62,24 +62,22 @@ function drush_gbif_resource_language_map() {
       $node = node_load($nid);
       $lang_tid = $wrapper->gr_language->value()->tid;
       if (isset($existing_lang_tid[$lang_tid])) {
-        try {
-          $lang_code = $existing_lang_tid[$lang_tid];
-          $node->language = $lang_code;
-          $node->path = ['pathauto' => 0, 'alias' => 0];
-          if (isset($node->workbench_moderation_state_current)) {
-            $node->revision = 1;
-            $node->workbench_moderation_state_new = 'published';
-            $node->workbench_moderation_state_current = 'draft';
-          }
-          $node->log = 'CMS API deployment: Resource language mapping to content property.';
-          node_save($node);
-          drupal_set_message('Resource nid: ' . $node->nid . ' saved with language ' . $lang_code, 'status');
-        }
-        catch (Exception $e) {
-          drupal_set_message($e->getMessage(), 'error');
-        }
-        $processed_resources++;
+        $lang_code = $existing_lang_tid[$lang_tid];
       }
+      else {
+        $lang_code = 'en';
+      }
+      $node->language = $lang_code;
+      $node->path = ['pathauto' => 0, 'alias' => 0];
+      if (isset($node->workbench_moderation_state_current)) {
+        $node->revision = 1;
+        $node->workbench_moderation_state_new = 'published';
+        $node->workbench_moderation_state_current = 'draft';
+      }
+      $node->log = 'CMS API deployment: Resource language mapping to content property.';
+      node_save($node);
+      $processed_resources++;
+      drupal_set_message('Resource nid: ' . $node->nid . ' saved with language ' . $lang_code, 'status');
     };
     array_walk($nids, $set_node_language);
   }

@@ -125,7 +125,7 @@ function service_links_node_view($node, $view_mode) {
     $view_modes_allowed = array_filter(variable_get('service_links_node_view_modes', array()));
   }
 
-  if ((arg(2) != 'edit') && service_links_show($node) && user_access('access service links')) {
+  if ((arg(2) != 'edit') && service_links_show($node) && user_access('access service links') && in_array($view_mode, $view_modes_allowed)) {
 
     $node->service_links = service_links_render($node, TRUE);
 

@@ -12,7 +12,7 @@ Key documents {"url":"<nolink>"}
 -Data users agreement {"url":"terms\/data-user"}
 -Privacy policy {"url":"terms\/privacy-policy"}
 -Memorandum of Understanding {"url":"resource\/80661"}
--GBIF Travel guidelines {"url":"http://links.gbif.org\/travel_guidelines.pdf"}
+-GBIF Travel guidelines {"url":"http://www.gbif.org\/travel-guidelines"}
 For developers {"url":"<nolink>"}
 -Portal API {"url":"developer", "non_drupal_url":true}
 -Developer blog {"url":"http:\/\/gbif.blogspot.com\/"}

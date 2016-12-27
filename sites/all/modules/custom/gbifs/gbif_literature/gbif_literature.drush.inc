@@ -26,6 +26,8 @@ function gbif_literature_drush_command() {
 function drush_gbif_literature_import($bnum = 6, $batch = 0) {
   $time_begin = time();
   $processed_docs = 0;
+  $topic_mapped = 0;
+  $topic_bio_science_mapped = 0;
 
   // country objects
   static $gbif_countries;
@@ -39,9 +41,14 @@ function drush_gbif_literature_import($bnum = 6, $batch = 0) {
     ksort($gbif_countries);
   }
 
-  static $mappings;
-  if (!isset($mappings)) {
-    $mappings = gbif_literature_topic_term_mapping();
+  static $topic_mapping;
+  if (!isset($topic_mapping)) {
+    $topic_mapping = gbif_literature_topic_term_mapping();
+  }
+
+  static $topic_mapping_keys;
+  if (!isset($topic_mapping_keys)) {
+    $topic_mapping_keys = array_keys($topic_mapping);
   }
 
   static $literature_annotations;
@@ -160,7 +167,7 @@ function drush_gbif_literature_import($bnum = 6, $batch = 0) {
     $sliced_docs = gbif_literature_batch_create($docs_journal_only, $bnum, $batch);
     drupal_set_message('Importing ' . count($sliced_docs) . ' of ' . $journal_only_count . ' documents, starts with ' . $sliced_docs[0]->id, 'status');
 
-    $import_document = function($doc) use (&$processed_docs, $mappings, $literature_annotations, $gbif_countries, $available_languages, $field_mapping) {
+    $import_document = function($doc) use (&$processed_docs, &$topic_mapped, &$topic_bio_science_mapped, $topic_mapping, $topic_mapping_keys, $literature_annotations, $gbif_countries, $available_languages, $field_mapping) {
       // query if already an item with the same ID
       $query = new EntityFieldQuery();
       $query->entityCondition('entity_type', 'node')
@@ -272,17 +279,20 @@ function drush_gbif_literature_import($bnum = 6, $batch = 0) {
         // 1) if the tag is already defined in the mapping, following the
         //    mapping to insert into tx_topic field;
         // 2) if no matches found, assign to topic “Biodiversity Science(1327)”.
-        $set_topic_value = function($mapping) use (&$wrapper, $doc) {
-          if (isset($doc->tags) && is_array($doc->tags)) {
-            if (count(array_intersect($mapping['source_tags'], $doc->tags)) == count($mapping['source_tags']) ) {
-              $wrapper->tx_topic[] = taxonomy_term_load($mapping['target_tid']);
+        if (isset($doc->tags) && is_array($doc->tags)) {
+          $mapped_tags = array_intersect($topic_mapping_keys, $doc->tags);
+          $mapped_tags_count = count($mapped_tags);
+          if ($mapped_tags_count > 0) {
+            foreach($mapped_tags as $mapped_tag) {
+              $wrapper->tx_topic[] = taxonomy_term_load($topic_mapping[$mapped_tag]);
             }
-            else {
-              $wrapper->tx_topic[] = taxonomy_term_load(1327);
-            }
+            $topic_mapped++;
           }
-        };
-        array_walk($mappings, $set_topic_value);
+          else {
+            $wrapper->tx_topic[] = taxonomy_term_load(1327);
+            $topic_bio_science_mapped++;
+          }
+        }
 
         // Other tags
         $set_tags_value = function($tag) use ($wrapper, $doc, $literature_annotations, $gbif_countries, $bio_iso2, $available_languages) {
@@ -339,7 +349,7 @@ function drush_gbif_literature_import($bnum = 6, $batch = 0) {
           elseif (isset($available_languages[strtolower($tag)])) {
             $wrapper->language->set($available_languages[strtolower($tag)]);
           }
-          // the rest will go to tx_tags and language gets set as English.
+          // the rest will go to tx_tags.
           else {
             $existing_tags = $wrapper->tx_tags->value();
             $matched = false;
@@ -363,6 +373,7 @@ function drush_gbif_literature_import($bnum = 6, $batch = 0) {
           }
         };
         if (isset($doc->tags) && is_array($doc->tags)) array_map($set_tags_value, $doc->tags);
+
         // if after tag mapping the language is still not set, set it to 'en'
         if ($wrapper->language->value() == 'und') $wrapper->language->set('en');
         $wrapper->status->set(1);
@@ -377,6 +388,7 @@ function drush_gbif_literature_import($bnum = 6, $batch = 0) {
 
     $time_end = time();
     $time_elapsed = date('i:s', $time_end - $time_begin);
+    drupal_set_message($topic_mapped . ' items mapped in topic, ' . $topic_bio_science_mapped . ' items mapped to biodiversity science.', 'status');
     drupal_set_message($processed_docs . ' literature import finished. Time elapsed: ' . $time_elapsed . '.', 'status');
     drupal_set_message('At ' . format_date(time()), 'status');
   }
@@ -486,87 +498,27 @@ function gbif_literature_create_taxonomy_term($name, $vid) {
  * @return array
  */
 function gbif_literature_topic_term_mapping() {
-  $mappings = [
-    [
-      'source_tags' => ['climate_change'],
-      'target_tid' => 970, // Climate change
-    ],
-    [
-      'source_tags' => ['conservation'],
-      'target_tid' => 826, // Conservation
-    ],
-    [
-      'source_tags' => ['endangered_species'],
-      'target_tid' => 826, // Conservation
-    ],
-    [
-      'source_tags' => ['IUCN_red_list'],
-      'target_tid' => 826, // Conservation
-    ],
-    [
-      'source_tags' => ['data_management'],
-      'target_tid' => 1328, // data management
-    ],
-    [
-      'source_tags' => ['data_paper'],
-      'target_tid' => 1330, // data paper
-    ],
-    [
-      'source_tags' => ['ecosystem_services'],
-      'target_tid' => 902, // Ecosystem services
-    ],
-    [
-      'source_tags' => ['ecosystem_function'],
-      'target_tid' => 902, // Ecosystem services
-    ],
-    [
-      'source_tags' => ['human_health'],
-      'target_tid' => 878, // Human health
-    ],
-    [
-      'source_tags' => ['medical_plants'],
-      'target_tid' => 878, // Human health
-    ],
-    [
-      'source_tags' => ['invasives'],
-      'target_tid' => 968, // Invasives
-    ],
-    [
-      'source_tags' => ['phylogenetics'],
-      'target_tid' => 1329, // phylogenetics
-    ],
-    [
-      'source_tags' => ['evolution'],
-      'target_tid' => 951, // Evolution
-    ],
-    [
-      'source_tags' => ['species_distributions'],
-      'target_tid' => 1038, // Species distributions
-    ],
-    [
-      'source_tags' => ['biogeography'],
-      'target_tid' => 1048, // Biogeography
-    ],
-    [
-      'source_tags' => ['taxonomy'],
-      'target_tid' => 928, // taxonomy
-    ],
-    [
-      'source_tags' => ['ecology'],
-      'target_tid' => 836, // Ecology
-    ],
-    [
-      'source_tags' => ['freshwater'],
-      'target_tid' => 887, // Ecology
-    ],
-    [
-      'source_tags' => ['citizen_science'],
-      'target_tid' => 975, // Citizen science
-    ],
-    [
-      'source_tags' => ['marine'],
-      'target_tid' => 861, // Marine
-    ],
+  $mapping = [
+    'climate_change' => 970, // Climate change
+    'conservation' => 826, // Conservation
+    'endangered_species' => 826, // Conservation
+    'IUCN_red_list' => 826, // Conservation
+    'data_management' => 1328, // data management
+    'data_paper' => 1330, // data paper
+    'ecosystem_services' => 902, // Ecosystem services
+    'ecosystem_function' => 902, // Ecosystem services
+    'human_health' => 878, // Human health
+    'medical_plants' => 878, // Human health
+    'invasives' => 968, // Invasives
+    'phylogenetics' => 1329, // phylogenetics
+    'evolution' => 951, // Evolution
+    'species_distributions' => 1038, // Species distributions
+    'biogeography' => 1048, // Biogeography
+    'taxonomy' => 928, // taxonomy
+    'ecology' => 836, // Ecology
+    'freshwater' => 887, // Ecology
+    'citizen_science' => 975, // Citizen science
+    'marine' => 861, // Marine
   ];
 
   // Don't include GBIF_used in the topic mapping.
@@ -575,7 +527,7 @@ function gbif_literature_topic_term_mapping() {
     $mapping['source_tags'][] = 'GBIF_used';
   }
   */
-  return $mappings;
+  return $mapping;
 }
 
 function gbif_literature_annotations() {

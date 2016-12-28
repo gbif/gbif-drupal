@@ -132,7 +132,7 @@ class Programme__1_0 extends ResourceNodeGbif implements ResourceNodeGbifInterfa
       $nodes = node_load_multiple($ids);
       foreach ($nodes as $project) {
         $project_wrapper = entity_metadata_wrapper('node', $project->nid);
-        $node = array();
+        $node = array(); // This is NOT a node object.
         $node['id'] = (int)$project->nid;
         $node['type'] = $project_wrapper->type();
         $node['targetUrl'] = drupal_get_path_alias('node/' . $project->nid);
@@ -151,6 +151,7 @@ class Programme__1_0 extends ResourceNodeGbif implements ResourceNodeGbifInterfa
           ),
         );
         $node['status'] = $project_wrapper->field_status->value();
+        $node['projectId'] = $project_wrapper->field_project_id->value();
         $node['fundingAllocated'] = (int)$project_wrapper->field_pj_funding_allocated->value();
         $node['estimatedCoFunding'] = (int)$project_wrapper->field_pj_matching_fund->value();
         $node['grantType'] = $project_wrapper->field_pj_grant_type->value();

@@ -462,7 +462,19 @@ use \EntityFieldQuery;
     $filters = $query->getFilter()->getFilters();
     if (isset($filters)) {
       $response = $this->appendQueryFilters($filters);
+
+      // If there is no result by given filters, add 0 count to them.
+      if (empty($results)) {
+        foreach ($response['filters'] as &$filter) {
+          foreach ($filter['counts'] as &$countObj) {
+            $countObj['count'] = 0;
+          }
+        }
+
+      }
+
       $this->hateoas['filters'] = array_merge($this->hateoas['filters'], $response['filters']);
+
       $this->hateoas['issues'] = $response['issues'];
     }
 

@@ -166,14 +166,14 @@ class Search__2_0 extends GbifResourceSearchBase implements GbifResourceSearchBa
     // date field
     $public_fields['dateStart'] = array(
       'property' => 'ge_date_ical',
-      'sub_property' => LANGUAGE_NONE . '::0',
+      'sub_property' => LANGUAGE_NONE . '::0::value',
       'process_callbacks' => array(
         [$this, 'Drupal\gbif_restful_search\Plugin\resource\search\node\v2\Search__2_0::getDateStartTimestamp']
       ),
     );
     $public_fields['dateEnd'] = array(
       'property' => 'ge_date_ical',
-      'sub_property' => LANGUAGE_NONE . '::0',
+      'sub_property' => LANGUAGE_NONE . '::0::value2',
       'process_callbacks' => array(
         [$this, 'Drupal\gbif_restful_search\Plugin\resource\search\node\v2\Search__2_0::getDateEndTimestamp']
       ),
@@ -319,22 +319,17 @@ class Search__2_0 extends GbifResourceSearchBase implements GbifResourceSearchBa
 
   /**
    * Return UNIX timestamp of the starting time
+   * @todo include timezone calculation.
    */
   public static function getDateStartTimestamp($value) {
-    if (!is_array($value)) {
-      return $value;
-    }
-    return strtotime($value['value']);
+    return strtotime($value);
   }
 
   /**
    * Return UNIX timestamp of the ending time
    */
   public static function getDateEndTimestamp($value) {
-    if (!is_array($value)) {
-      return $value;
-    }
-    return strtotime($value['value2']);
+    return strtotime($value);
   }
 
 }

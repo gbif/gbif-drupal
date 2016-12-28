@@ -9,6 +9,8 @@ namespace Drupal\gbif_restful\Plugin\resource\node\event\v1;
 
 use Drupal\gbif_restful\Plugin\resource\ResourceNodeGbifInterface;
 use Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif;
+use DateTime;
+use DateTimeZone;
 
 /**
  * Class Event__1_0
@@ -49,6 +51,20 @@ class Event__1_0 extends ResourceNodeGbif implements ResourceNodeGbifInterface {
       'property' => 'ge_date_ical',
       'process_callbacks' => array(
         array($this, 'Drupal\gbif_restful\Plugin\resource\ResourceNodeGbif::getDateValue')
+      ),
+    );
+
+    $public_fields['dateStart'] = array(
+      'property' => 'ge_date_ical',
+      'process_callbacks' => array(
+        array($this, 'Drupal\gbif_restful\Plugin\resource\node\event\v1\Event__1_0::getDateStartTimestamp')
+      ),
+    );
+
+    $public_fields['dateEnd'] = array(
+      'property' => 'ge_date_ical',
+      'process_callbacks' => array(
+        array($this, 'Drupal\gbif_restful\Plugin\resource\node\event\v1\Event__1_0::getDateEndTimestamp')
       ),
     );
 
@@ -126,6 +142,18 @@ class Event__1_0 extends ResourceNodeGbif implements ResourceNodeGbifInterface {
     );
 
     return $public_fields;
+  }
+
+  public function getDateStartTimestamp($value) {
+    return strtotime($value['value']);
+    // $dt = new DateTime('@' . $start);
+    // $dt->setTimeZone(new DateTimeZone($value['timezone']));
+    // $// start_new = $dt->format('c');
+    // $start_timestamp = strtotime($start_new);
+  }
+
+  public function getDateEndTimestamp($value) {
+    return strtotime($value['value2']);
   }
 
 }

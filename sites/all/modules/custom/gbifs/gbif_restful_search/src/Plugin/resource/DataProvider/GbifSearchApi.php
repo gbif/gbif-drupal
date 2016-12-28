@@ -501,6 +501,16 @@ use \EntityFieldQuery;
     foreach ($sorts as $sort => $direction) {
       $resource_field = $this->fieldDefinitions->get($sort);
       $property = ($resource_field && $resource_field->getProperty()) ? $resource_field->getProperty() : $sort;
+
+      switch ($sort) {
+        case 'dateStart':
+          $property = $property . ":value";
+          break;
+        case 'dateEnd':
+          $property = $property . ":value2";
+          break;
+      }
+
       try {
         $query->sort($property, $direction);
 

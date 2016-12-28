@@ -406,6 +406,9 @@ class ResourceFieldGbifCollection extends ResourceFieldCollection implements Res
     'type',
     'title',
     'targetUrl',
+    'featuredSearchTerms',
+    'summary',
+    'body',
     'promote',
     'sticky',
     'language',
@@ -432,9 +435,6 @@ class ResourceFieldGbifCollection extends ResourceFieldCollection implements Res
 
   public $mask = [
     'news' => [
-      'featuredSearchTerms',
-      'summary',
-      'body',
       'field_uni_images',
       'datasetUuid',
     ],
@@ -443,13 +443,18 @@ class ResourceFieldGbifCollection extends ResourceFieldCollection implements Res
     ],
     'project' => [
       'field_pj_image',
+      'projectId',
     ],
     'generic' => [
       'field_uni_images',
       'headingPrimary',
       'headingSecondary',
     ],
-    'event' => [],
+    'event' => [
+      'dateStart',
+      'dateEnd',
+      'dateText',
+    ],
     'resource' => [],
     'gbif_participant' => [],
     'literature' => [
@@ -486,10 +491,12 @@ class ResourceFieldGbifCollection extends ResourceFieldCollection implements Res
         break;
       case 'programme':
       case 'project':
-      case 'event':
       case 'resource':
       case 'gbif_participant':
         $maskingFields = array_merge($this->commonFields, $this->mask['news'], $this->mask['programme'], $this->mask['project'], $this->tagFields, $this->sharedTagFields);
+        break;
+      case 'event':
+        $maskingFields = array_merge($this->commonFields, $this->mask['event'], $this->tagFields, $this->sharedTagFields);
         break;
       case 'generic':
         $maskingFields = array_merge($this->commonFields, $this->mask['news'], $this->mask['generic'], $this->tagFields, $this->sharedTagFields);

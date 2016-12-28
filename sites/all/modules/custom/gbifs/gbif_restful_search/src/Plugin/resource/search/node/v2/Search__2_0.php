@@ -68,6 +68,7 @@ class Search__2_0 extends GbifResourceSearchBase implements GbifResourceSearchBa
 
   /**
    * Overrides Resource::publicFields().
+   * After adding fields, remember to add them to the mapping mask in ResourceFieldGbifCollection.
    */
   protected function publicFields() {
     $public_fields['entity_id'] = array(
@@ -141,6 +142,11 @@ class Search__2_0 extends GbifResourceSearchBase implements GbifResourceSearchBa
       'sub_property' => LANGUAGE_NONE . '::0::value'
     ];
 
+    $public_fields['projectId'] = [
+      'property' => 'field_project_id',
+      'sub_property' => LANGUAGE_NONE . '::0::value'
+    ];
+
     $public_fields['headingPrimary'] = array(
       'property' => 'field_category_upper',
       'sub_property' => LANGUAGE_NONE . '::0::value',
@@ -154,6 +160,28 @@ class Search__2_0 extends GbifResourceSearchBase implements GbifResourceSearchBa
       'process_callbacks' => [
         [$this, 'Drupal\gbif_restful_search\Plugin\resource\search\node\v2\Search__2_0::camelCase']
       ]
+    );
+
+    // Events
+    // date field
+    $public_fields['dateStart'] = array(
+      'property' => 'ge_date_ical',
+      'sub_property' => LANGUAGE_NONE . '::0',
+      'process_callbacks' => array(
+        [$this, 'Drupal\gbif_restful_search\Plugin\resource\search\node\v2\Search__2_0::getDateStartTimestamp']
+      ),
+    );
+    $public_fields['dateEnd'] = array(
+      'property' => 'ge_date_ical',
+      'sub_property' => LANGUAGE_NONE . '::0',
+      'process_callbacks' => array(
+        [$this, 'Drupal\gbif_restful_search\Plugin\resource\search\node\v2\Search__2_0::getDateEndTimestamp']
+      ),
+    );
+
+    $public_fields['dateText'] = array(
+      'property' => 'ge_date_text',
+      'sub_property' => LANGUAGE_NONE . '::0::value',
     );
 
     // Tag fields should be here for filtering to work.
@@ -287,6 +315,26 @@ class Search__2_0 extends GbifResourceSearchBase implements GbifResourceSearchBa
 
   public function setFieldGbifDefinitions(ResourceFieldGbifCollectionInterface $field_definitions) {
     $this->fieldDefinitions = $field_definitions;
+  }
+
+  /**
+   * Return UNIX timestamp of the starting time
+   */
+  public static function getDateStartTimestamp($value) {
+    if (!is_array($value)) {
+      return $value;
+    }
+    return strtotime($value['value']);
+  }
+
+  /**
+   * Return UNIX timestamp of the ending time
+   */
+  public static function getDateEndTimestamp($value) {
+    if (!is_array($value)) {
+      return $value;
+    }
+    return strtotime($value['value2']);
   }
 
 }

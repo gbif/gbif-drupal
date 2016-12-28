@@ -98,6 +98,8 @@ function gbif_restful_search_default_search_api_index() {
         "field_tx_data_type" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
         "field_tx_purpose" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
         "field_un_region" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
+        "ge_date_ical:value" : { "type" : "date" },
+        "ge_date_ical:value2" : { "type" : "date" },
         "ge_date_text" : { "type" : "text" },
         "ge_language" : { "type" : "text", "boost" : "0.8" },
         "ge_location" : { "type" : "text" },

@@ -765,6 +765,31 @@ use \EntityFieldQuery;
           }
           break;
 
+        case 'field_country';
+        case 'field_mdl_author_from_country';
+          $is_term = (is_numeric($filter[1])) ?  TRUE : FALSE;
+          if ($is_term) {
+            $term = taxonomy_term_load($filter[1]);
+            $term_wrapper = entity_metadata_wrapper('taxonomy_term', $filter[1]);
+            if ($this->validTaxonomy($filter[0], $filter[1])) {
+              $item = array(
+                'field' => $mapping[$filter[0]],
+                'counts' => array(
+                  array(
+                    'id' => (int)$term->tid,
+                    'label' => $term->name,
+                    'enum' => $term_wrapper->field_iso2->value(),
+                  )
+                ),
+              );
+              $requested_filters[] = $item;
+            }
+            else {
+              $issues[] = $filter[1] . '(' . $term->name . ', ' . $term->vocabulary_machine_name . ') is not a valid term ID for ' . $mapping[$filter[0]];
+            }
+          }
+          break;
+
         default:
           $is_term = (is_numeric($filter[1])) ?  TRUE : FALSE;
           if ($is_term) {

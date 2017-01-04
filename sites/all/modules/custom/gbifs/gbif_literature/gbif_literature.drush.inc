@@ -318,7 +318,7 @@ function drush_gbif_literature_import($bnum = 6, $batch = 0) {
             }
             unset($matched);
           }
-          // if the tag is iso2 country code or [country_title]_biodiversity
+          // if the tag is iso2 country code, associate with the author from country.
           elseif (isset($gbif_countries[$tag])) {
             $query = new EntityFieldQuery();
             $query->entityCondition('entity_type', 'taxonomy_term')
@@ -331,6 +331,8 @@ function drush_gbif_literature_import($bnum = 6, $batch = 0) {
               $wrapper->field_mdl_author_from_country[] = taxonomy_term_load($term_keys[0]);
             }
           }
+          // if [country_title]_biodiversity, associate with generic country
+          // @todo include [iso2]_biodiversity.
           elseif (_gbif_literature_bio_tag($tag, $gbif_countries, $bio_iso2)) {
             $query = new EntityFieldQuery();
             $query->entityCondition('entity_type', 'taxonomy_term')

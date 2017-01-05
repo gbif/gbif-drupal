@@ -474,8 +474,8 @@ function gbif_mendeley_cron() {
       if ($file_exists == TRUE) {
         $documents = json_decode(file_get_contents(file_create_url($documents_file_loc)));
         if (count($documents) > 0) {
-          $cron_result = gbif_mendeley_retrieve_by_oauth2();
-          watchdog('mendeley', t('Cron attempted: ') . $cron_result, WATCHDOG_INFO);
+          // $cron_result = gbif_mendeley_retrieve_by_oauth2();
+          // watchdog('mendeley', t('Cron attempted: ') . $cron_result, WATCHDOG_INFO);
           $analyse_result = gbif_mendeley_analyse();
           watchdog('mendeley', t('Publication analysis attempted: ') . $analyse_result, WATCHDOG_INFO);
         }

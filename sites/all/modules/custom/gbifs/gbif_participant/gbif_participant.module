@@ -426,7 +426,7 @@ function gbif_participant_block_view($delta = '') {
       $html .= '<div class="box">';
       $html .= '<div class="content">';
       $html .= '<ul>';
-      $html .= '<li class="single last"><h4>Country Report</h4>' . '1/1/15 - 31/12/15' . '</li>';
+      $html .= '<li class="single last"><h4>Country Report</h4>' . '1/1/16 - 31/12/16' . '</li>';
       $html .= '</ul>';
       $html .= '<a href="' . '/country/' . arg(1) . '/report' . '" target="_blank" class="candy_blue_button download_button"><span>Download</span></a>';
       $html .= '</div>';

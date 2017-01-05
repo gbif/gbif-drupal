@@ -22,6 +22,7 @@ function gbif_mendeley_settings_form() {
 		'#type' => 'textfield',
 		'#default_value' => variable_get('mendeley_app_secret'),
 	);
+	/*
   $form['gbif_mendeley_update'] = array(
     '#type' => 'fieldset',
     '#title' => t('Update documents from Mendeley'),
@@ -32,6 +33,7 @@ function gbif_mendeley_settings_form() {
     '#value' => t('Update now'),
 		'#submit' => array('gbif_mendeley_retrieve_by_oauth2'),
   );
+	*/
   $form['gbif_mendeley_analyse'] = array(
     '#type' => 'fieldset',
     '#title' => t('Analyse retrieved documents from Mendeley'),

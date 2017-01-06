@@ -6,9 +6,9 @@
 function gbif_generic_drush_command() {
   $items = array();
   $items['generic-publish'] = array(
-    'callback' => 'drush_gbif_generic_publish',
     'description' => 'Publish all generic contents.',
   );
+
   return $items;
 }
 
@@ -18,7 +18,7 @@ function gbif_generic_drush_command() {
  * @see http://drupal.stackexchange.com/questions/89019/publish-nodes-with-drush
  * @see http://drupal.stackexchange.com/questions/129491/change-workbench-state-from-draft-to-published-programatically
  */
-function drush_gbif_generic_publish() {
+function drush_generic_publish() {
   $types = array('generic');
   foreach ($types as $type) {
     $count = 0;

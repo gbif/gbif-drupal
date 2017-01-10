@@ -223,6 +223,12 @@ use \EntityFieldQuery;
           if (is_numeric($value)) {
             $search_result->$property = (int)$value;
           }
+          if ($search_result->type == 'literature' && in_array($property, ['field_mdl_year', 'field_mdl_month', 'field_mdl_day'])) {
+            if (isset($search_result->$property)) {
+              $field = &$search_result->$property;
+              if (isset($field['und'])) $field['und'][0]['value'] = (is_numeric($field['und'][0]['value'])) ? (int)$value['und'][0]['value'] : $value['und'][0]['value'];
+            }
+          }
         }
         $ids[] = $this->mapSearchResultToPublicFields($search_result);
       }
@@ -575,7 +581,7 @@ use \EntityFieldQuery;
    * @param object $result
    *   Search result from Search API.
    *
-   * @return array
+   * @return object
    *   The prepared output.
    */
   protected function mapSearchResultToPublicFields($result) {

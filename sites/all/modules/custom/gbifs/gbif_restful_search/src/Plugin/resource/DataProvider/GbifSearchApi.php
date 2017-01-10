@@ -216,7 +216,14 @@ use \EntityFieldQuery;
     try {
       // Query SearchAPI for the results.
       $search_results = $this->executeQuery('', $options);
-      foreach ($search_results as $search_result) {
+      foreach ($search_results as &$search_result) {
+        // cast value to numeric when possible.
+        $search_result_array = (array) $search_result;
+        foreach ($search_result_array as $property => $value) {
+          if (is_numeric($value)) {
+            $search_result->$property = (int)$value;
+          }
+        }
         $ids[] = $this->mapSearchResultToPublicFields($search_result);
       }
     }

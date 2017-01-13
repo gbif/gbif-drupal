@@ -1,0 +1,6 @@
+<?php
+
+function gbif_restful_schema() {
+  $schema['cache_gbif_restful'] = drupal_get_schema_unprocessed('system', 'cache');
+  return $schema;
+}

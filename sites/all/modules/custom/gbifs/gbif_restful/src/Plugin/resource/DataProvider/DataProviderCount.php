@@ -93,12 +93,13 @@ class DataProviderCount extends DataProvider implements DataProviderCountInterfa
   public function countLiterature($identifier) {
     $args = explode('/', $identifier);
     // $type = $args[0];
-    $region = $args[1];
+    $region = isset($args[1]) ? $args[1] : 'GLOBAL';
+    $variable = 'literature_count_' . $region;
 
-    $literatureCounts = &drupal_static(__FUNCTION__);
-    if (!isset($literatureCounts)) {
-      if ($cache = cache_get('gbif_literature_counts', 'cache_gbif_restful')) {
-        $literatureCounts = $cache->data;
+    $$variable = &drupal_static(__FUNCTION__);
+    if (!isset($$variable)) {
+      if ($cache = cache_get('gbif_literature_counts_' . $region, 'cache_gbif_restful')) {
+        $$variable = $cache->data;
       }
       else {
         $participants = json_decode(file_get_contents('http://api.gbif.org/v1/directory/participant?limit=300'));
@@ -112,6 +113,7 @@ class DataProviderCount extends DataProvider implements DataProviderCountInterfa
         }
 
         $participantGroups = [];
+        $participantGroups['GLOBAL'] = $participantsGlobal;
         foreach ($participantsGlobal as $p) {
           if (isset($p->gbifRegion)) {
             $participantGroups[$p->gbifRegion][] = $p;
@@ -163,18 +165,19 @@ class DataProviderCount extends DataProvider implements DataProviderCountInterfa
         }
         $authors = array_map('unserialize', array_unique(array_map('serialize', $authors)));
 
-        $literatureCounts = [
+        $$variable = [
           'region' => $region,
           'literature' => $literatureCount,
           'literatureAuthorFromCountries' => $countriesCount,
           'literatureAuthors' => count($authors),
         ];
-        cache_set('gbif_literature_counts', $literatureCounts, 'cache_gbif_restful', time() + 86400);
+        // cache expires in 3 hours.
+        cache_set('gbif_literature_counts_' . $region, $$variable, 'cache_gbif_restful', time() + 10800);
       }
 
     }
 
-    $this->output = $literatureCounts;
+    $this->output = $$variable;
 
   }
 

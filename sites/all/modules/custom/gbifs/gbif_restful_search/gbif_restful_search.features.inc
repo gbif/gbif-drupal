@@ -58,6 +58,7 @@ function gbif_restful_search_default_search_api_index() {
         "field_featured_search_terms" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
         "field_featured_search_terms:name" : { "type" : "list\\u003Ctext\\u003E", "boost" : "21.0" },
         "field_gbif_area" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
+        "field_gbif_region" : { "type" : "string" },
         "field_ge_gbif_attendee" : { "type" : "text" },
         "field_links_block" : {
           "type" : "list\\u003Cinteger\\u003E",

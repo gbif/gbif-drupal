@@ -10,6 +10,35 @@
 function gbif_literature_field_default_field_bases() {
   $field_bases = array();
 
+  // Exported field_base: 'field_gbif_region'.
+  $field_bases['field_gbif_region'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_gbif_region',
+    'indexes' => array(
+      'value' => array(
+        0 => 'value',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'list',
+    'settings' => array(
+      'allowed_values' => array(
+        'AFRICA' => 'Africa',
+        'ASIA' => 'Asia',
+        'EUROPE' => 'Europe',
+        'LATIN_AMERICA' => 'Latin America',
+        'NORTH_AMERICA' => 'North America',
+        'OCEANIA' => 'Oceania',
+      ),
+      'allowed_values_function' => '',
+    ),
+    'translatable' => 0,
+    'type' => 'list_text',
+  );
+
   // Exported field_base: 'field_mdl_abstract'.
   $field_bases['field_mdl_abstract'] = array(
     'active' => 1,

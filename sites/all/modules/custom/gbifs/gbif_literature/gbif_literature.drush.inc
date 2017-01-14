@@ -62,6 +62,11 @@ function drush_gbif_literature_import($bnum = 6, $batch = 0) {
     $documents_exist = file_exists($documents_file_loc);
   }
 
+  static $country_region;
+  if (!isset($country_region)) {
+    $country_region = _gbif_participant_region_lookup();
+  }
+
   // language
   $available_languages = [
     'chinese_simplified' => 'zh-hans',
@@ -167,7 +172,7 @@ function drush_gbif_literature_import($bnum = 6, $batch = 0) {
     $sliced_docs = gbif_literature_batch_create($docs_journal_only, $bnum, $batch);
     drupal_set_message('Importing ' . count($sliced_docs) . ' of ' . $journal_only_count . ' documents, starts with ' . $sliced_docs[0]->id, 'status');
 
-    $import_document = function($doc) use (&$processed_docs, &$topic_mapped, &$topic_bio_science_mapped, $topic_mapping, $topic_mapping_keys, $literature_annotations, $gbif_countries, $available_languages, $field_mapping) {
+    $import_document = function($doc) use (&$processed_docs, &$topic_mapped, &$topic_bio_science_mapped, $topic_mapping, $topic_mapping_keys, $literature_annotations, $gbif_countries, $available_languages, $field_mapping, $country_region) {
       // query if already an item with the same ID
       $query = new EntityFieldQuery();
       $query->entityCondition('entity_type', 'node')
@@ -295,7 +300,7 @@ function drush_gbif_literature_import($bnum = 6, $batch = 0) {
         }
 
         // Other tags
-        $set_tags_value = function($tag) use ($wrapper, $doc, $literature_annotations, $gbif_countries, $bio_iso2, $available_languages) {
+        $set_tags_value = function($tag) use ($wrapper, $doc, $literature_annotations, $gbif_countries, $bio_iso2, $available_languages, $country_region) {
 
           // if the tag is gbif_xyz, put them in gbif literature annotation
           if (in_array($tag, $literature_annotations)) {
@@ -329,6 +334,12 @@ function drush_gbif_literature_import($bnum = 6, $batch = 0) {
             if (isset($result['taxonomy_term']) && count($result['taxonomy_term']) === 1) {
               $term_keys = array_keys($result['taxonomy_term']);
               $wrapper->field_mdl_author_from_country[] = taxonomy_term_load($term_keys[0]);
+
+              // based on this country value, assign gbif_region
+              // 'gbif_region' => 'field_gbif_region', is a multi-value list field.
+              if (isset($country_region[$tag])) {
+                $wrapper->field_gbif_region[] = $country_region[$tag];
+              }
             }
           }
           // if [country_title]_biodiversity, associate with generic country
@@ -375,6 +386,11 @@ function drush_gbif_literature_import($bnum = 6, $batch = 0) {
           }
         };
         if (isset($doc->tags) && is_array($doc->tags)) array_map($set_tags_value, $doc->tags);
+        // array_unique the field_gbif_region
+        $regions = $wrapper->field_gbif_region->raw();
+        $regions = array_map('unserialize', array_unique(array_map('serialize', $regions)));
+        sort($regions);
+        $wrapper->field_gbif_region->set($regions);
 
         // if after tag mapping the language is still not set, set it to 'en'
         if ($wrapper->language->value() == 'und') $wrapper->language->set('en');

@@ -516,4 +516,19 @@ class ResourceFieldGbifCollection extends ResourceFieldCollection implements Res
     }
 
   }
+
+  /**
+   * This is only used for cache id for search result.
+   * @return string
+   */
+  public function __toString() {
+    $nid = $this->interpreter->getWrapper()->get('nid');
+    if (is_integer($nid)) $nid = strval($nid);
+    if (is_string($nid)) {
+      return $nid;
+    }
+    else {
+      return 'null';
+    }
+  }
 }

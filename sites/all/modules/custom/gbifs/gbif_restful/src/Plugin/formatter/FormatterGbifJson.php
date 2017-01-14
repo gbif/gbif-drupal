@@ -56,7 +56,7 @@ class FormatterGbifJson extends Formatter implements FormatterInterface {
       if ($request->isListRequest($resource->getPath())) {
         // Get the total number of items for the current request without
         // pagination.
-        $output['count'] = $data_provider->count();
+        $output['count'] = (int)$data_provider->count();
         // If there are items that were taken out during access checks,
         // report them as denied in the metadata.
         if (variable_get('restful_show_access_denied', FALSE) && ($inaccessible_records = $data_provider->getMetadata()->get('inaccessible_records'))) {

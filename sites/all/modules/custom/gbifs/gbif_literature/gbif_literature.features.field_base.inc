@@ -13,7 +13,7 @@ function gbif_literature_field_default_field_bases() {
   // Exported field_base: 'field_gbif_region'.
   $field_bases['field_gbif_region'] = array(
     'active' => 1,
-    'cardinality' => 1,
+    'cardinality' => -1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_gbif_region',

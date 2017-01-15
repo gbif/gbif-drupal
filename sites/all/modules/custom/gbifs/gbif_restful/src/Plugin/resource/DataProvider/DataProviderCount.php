@@ -101,8 +101,50 @@ class DataProviderCount extends DataProvider implements DataProviderCountInterfa
   }
 
   public function countLiteratureYearly($region) {
+    $variable = 'literature_count_yearly_' . $region;
+    $$variable = &drupal_static(__FUNCTION__);
+    if (!isset($$variable)) {
+      if ($cache = cache_get('gbif_literature_counts_yearly_' . $region, 'cache_gbif_restful')) {
+        $$variable = $cache->data;
+      }
+      else {
+        $regionalLiteratureByYear = [];
 
+        $participantGroups = $this->getActiveParticipantsGrouped();
 
+        // collect iso2 codes
+        $countries = $this->getCountries($participantGroups[$region]);
+
+        // Get tids from iso2 codes
+        $country_tids = $this->getCountryTids($countries);
+
+        // Get the literature with authors from these countries
+        $literatureNids = $this->getLiteratureOfCountries($country_tids);
+        $nids = array_keys($literatureNids);
+        $literature = node_load_multiple($nids);
+        foreach ($literature as $doc) {
+          $year = $doc->field_mdl_year['und'][0]['value'];
+          if (isset($year)) {
+            $regionalLiteratureByYear[$year][] = $doc;
+          }
+          else {
+            $regionalLiteratureByYear['year_unknown'][] = $doc;
+          }
+        }
+
+        ksort($regionalLiteratureByYear); // Don't return this. It's too big.
+        $yearly = [];
+        foreach ($regionalLiteratureByYear as $year => $lits) {
+          $yearly[] = ['year' => $year, 'literature_number' => count($lits)];
+        }
+        $$variable = $yearly;
+        // cache expires in 3 hours.
+        cache_set('gbif_literature_counts_yearly_' . $region, $$variable, 'cache_gbif_restful', time() + 10800);
+
+      }
+    }
+
+    $this->output = $$variable;
   }
 
   public function countLiterature($region) {

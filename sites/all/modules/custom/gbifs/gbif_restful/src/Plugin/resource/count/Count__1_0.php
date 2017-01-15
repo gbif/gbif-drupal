@@ -24,7 +24,8 @@ use Drupal\restful\Plugin\resource\ResourceInterface;
  *   },
  *   majorVersion = 1,
  *   minorVersion = 0,
- *   class = "Count__1_0"
+ *   class = "Count__1_0",
+ *   formatter = "single_json"
  * )
  */
 

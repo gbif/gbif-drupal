@@ -86,14 +86,26 @@ class DataProviderCount extends DataProvider implements DataProviderCountInterfa
    * @return array
    */
   public function view($identifier) {
-    $this->countLiterature($identifier);
+    $args = explode('/', $identifier);
+    $type = $args[0];
+    $region = isset($args[1]) ? $args[1] : 'GLOBAL';
+    switch ($type) {
+      case 'literature':
+        $this->countLiterature($region);
+        break;
+      case 'literature-yearly':
+        $this->countLiteratureYearly($region);
+        break;
+    }
     return $this->output;
   }
 
-  public function countLiterature($identifier) {
-    $args = explode('/', $identifier);
-    // $type = $args[0];
-    $region = isset($args[1]) ? $args[1] : 'GLOBAL';
+  public function countLiteratureYearly($region) {
+
+
+  }
+
+  public function countLiterature($region) {
     $variable = 'literature_count_' . $region;
 
     $$variable = &drupal_static(__FUNCTION__);
@@ -102,63 +114,22 @@ class DataProviderCount extends DataProvider implements DataProviderCountInterfa
         $$variable = $cache->data;
       }
       else {
-        $participants = json_decode(file_get_contents('http://api.gbif.org/v1/directory/participant?limit=300'));
-
-        $participantsGlobal = $participants->results;
-        // keeps only active participants
-        foreach ($participantsGlobal as $k => $p) {
-          if ($p->participationStatus === 'FORMER' || $p->participationStatus === 'OBSERVER') {
-            unset($participantsGlobal[$k]);
-          }
-        }
-
-        $participantGroups = [];
-        $participantGroups['GLOBAL'] = $participantsGlobal;
-        foreach ($participantsGlobal as $p) {
-          if (isset($p->gbifRegion)) {
-            $participantGroups[$p->gbifRegion][] = $p;
-          }
-        }
+        $participantGroups = $this->getActiveParticipantsGrouped();
 
         // collect iso2 codes
-        $iso2 = [];
-        if (isset($region)) {
-          $participantsToCollect = $participantGroups[$region];
-          foreach ($participantsToCollect as $p) {
-            if (!in_array($p->countryCode, $iso2)) {
-              $iso2[] = $p->countryCode;
-            }
-          }
-        }
-        $countriesCount = count($iso2);
+        $countries = $this->getCountries($participantGroups[$region]);
+        $countriesCount = count($countries);
 
         // Get tids from iso2 codes
-        $country_tids = [];
-        $query = new EntityFieldQuery();
-        $query->entityCondition('entity_type', 'taxonomy_term');
-        $query->entityCondition('bundle', array('countries'));
-        $query->fieldCondition('field_iso2', 'value', $iso2, 'IN');
-        $results = $query->execute();
-        if (count($results) == 1 && isset($results['taxonomy_term'])) {
-          foreach ($results['taxonomy_term'] as $tid => $t_obj) {
-            $country_tids[] = $tid;
-          }
-        }
-        else throw new \Exception;
-        unset($results);
+        $country_tids = $this->getCountryTids($countries);
 
         // Get the literature with authors from these countries
-        $query = new EntityFieldQuery();
-        $query->entityCondition('entity_type', 'node')
-          ->entityCondition('bundle', 'literature')
-          ->propertyCondition('status', 1)
-          ->fieldCondition('field_mdl_author_from_country', 'tid', $country_tids, 'IN');
-        $results = $query->execute();
-        $literatureCount = count($results['node']);
+        $literatureNids = $this->getLiteratureOfCountries($country_tids);
+        $literatureCount = count($literatureNids);
 
         // Get the authors count from these literature
         $authors = [];
-        $nids = array_keys($results['node']);
+        $nids = array_keys($literatureNids);
         $nodes = node_load_multiple($nids);
         foreach ($nodes as $node) {
           $authors = array_merge($authors, $node->field_mdl_authors['und']);
@@ -179,6 +150,64 @@ class DataProviderCount extends DataProvider implements DataProviderCountInterfa
 
     $this->output = $$variable;
 
+  }
+
+  public function getActiveParticipantsGrouped() {
+    $participants = json_decode(file_get_contents('http://api.gbif.org/v1/directory/participant?limit=300'));
+
+    $participantsGlobal = $participants->results;
+    // keeps only active participants
+    foreach ($participantsGlobal as $k => $p) {
+      if ($p->participationStatus === 'FORMER' || $p->participationStatus === 'OBSERVER') {
+        unset($participantsGlobal[$k]);
+      }
+    }
+
+    $participantGroups = [];
+    $participantGroups['GLOBAL'] = $participantsGlobal;
+    foreach ($participantsGlobal as $p) {
+      if (isset($p->gbifRegion)) {
+        $participantGroups[$p->gbifRegion][] = $p;
+      }
+    }
+    return $participantGroups;
+  }
+
+  public function getCountries($regionalParticipants) {
+    $iso2 = [];
+    foreach ($regionalParticipants as $p) {
+      if (!in_array($p->countryCode, $iso2)) {
+        $iso2[] = $p->countryCode;
+      }
+    }
+    return $iso2;
+  }
+
+  public function getCountryTids($iso2) {
+    $country_tids = [];
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'taxonomy_term');
+    $query->entityCondition('bundle', array('countries'));
+    $query->fieldCondition('field_iso2', 'value', $iso2, 'IN');
+    $results = $query->execute();
+    if (count($results) == 1 && isset($results['taxonomy_term'])) {
+      foreach ($results['taxonomy_term'] as $tid => $t_obj) {
+        $country_tids[] = $tid;
+      }
+    }
+    else throw new \Exception;
+    unset($results);
+    return $country_tids;
+  }
+
+  public function getLiteratureOfCountries($country_tids) {
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'node')
+      ->entityCondition('bundle', 'literature')
+      ->propertyCondition('status', 1)
+      ->fieldCondition('field_mdl_author_from_country', 'tid', $country_tids, 'IN');
+    $results = $query->execute();
+    return $results['node'];
   }
 
   /**

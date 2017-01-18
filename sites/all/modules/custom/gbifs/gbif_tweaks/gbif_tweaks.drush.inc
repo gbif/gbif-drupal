@@ -140,15 +140,55 @@ function drush_gbif_tweaks_url_alias_rewrite() {
   $result = $query->execute();
 
   if (isset($result['node']) && count($result['node']) > 0) {
-    $update_url_alias = function($node) use ($patterns) {
+    foreach ($result['node'] as $node) {
       $matched = 0;
       $node = node_load($node->nid);
       $alias = drupal_get_path_alias('node/' . $node->nid);
-      $node->path = [
-        'path_auto' => 0,
-        'alias' => preg_replace($patterns, '', $alias, -1, $matched),
-      ];
+      $new_alias = preg_replace($patterns, '', $alias, -1, $matched);
       if ($matched > 0) {
+        // check if the $new_alias is redirecting to something else.
+        // if so, reverse the redirection.
+        $redirect_results = db_select('redirect', 'r')
+          ->fields('r')
+          ->condition('source', $new_alias, '=')
+          ->execute()
+          ->fetchAll();
+
+        if (count($redirect_results)) {
+          foreach ($redirect_results as $redirect) {
+            $new_source = $redirect->redirect;
+            $new_redirect = $redirect->source;
+            $redirect->source = $new_source;
+            $redirect->redirect = $new_redirect;
+            redirect_save($redirect);
+            drupal_set_message(t('Redirect @source to @target.', array(
+              '@source' => $new_source,
+              '@target' => $new_redirect,
+            )));
+          }
+        }
+
+        // check if there are multiple entries of the same alias, delete them.
+        $alias_results = db_select('url_alias', 'u')
+          ->fields('u')
+          ->condition('alias', $new_alias, '=')
+          ->execute()
+          ->fetchAll();
+
+        if (count($alias_results)) {
+          foreach ($alias_results as $a) {
+            path_delete($a->pid);
+            drupal_set_message(t('Alias @alias to @source deleted.', array(
+              '@alias' => $a->alias,
+              '@source' => $a->source,
+            )));
+          }
+        }
+
+        $node->path = [
+          'path_auto' => 0,
+          'alias' => $new_alias,
+        ];
         if (isset($node->workbench_moderation_state_current)) {
           $node->revision = 1;
           $node->workbench_moderation_state_new = 'published';
@@ -157,8 +197,6 @@ function drush_gbif_tweaks_url_alias_rewrite() {
         $node->log = 'CMS API deployment: URL prefix change for portal16';
         node_save($node);
       }
-    };
-    array_walk($result['node'], $update_url_alias);
+    }
   }
-
 }

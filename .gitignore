@@ -22,6 +22,8 @@ sites/cms.gbif-uat.org/
 sites/cms-swap.gbif-uat.org/
 sites/cms.gbif.org/
 sites/cms-swap.gbif.org/
+sites/drupal.local
+sites/drupal-swap.local
 
 # Ignore default text files
 robots.txt

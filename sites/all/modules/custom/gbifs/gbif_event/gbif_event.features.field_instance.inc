@@ -1344,7 +1344,7 @@ function gbif_event_field_default_field_instances() {
     'settings' => array(
       'description_field' => 1,
       'file_directory' => '',
-      'file_extensions' => 'txt pdf doc docx xls xlsx ppt pptx',
+      'file_extensions' => 'txt pdf doc docx dot xls xlsx xlt ppt pptx',
       'filefield_paths' => array(
         'active_updating' => 0,
         'file_name' => array(

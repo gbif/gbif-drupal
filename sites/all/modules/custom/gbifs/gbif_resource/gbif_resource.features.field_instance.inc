@@ -835,7 +835,7 @@ function gbif_resource_field_default_field_instances() {
     'settings' => array(
       'description_field' => 0,
       'file_directory' => '',
-      'file_extensions' => 'csv txt doc docx dot dotx pdf ppt pptx xls xlsx eps ai psd jpg jpeg gif svg png',
+      'file_extensions' => 'csv txt doc docx dot dotx pdf ppt pptx xls xlsx xlt eps ai psd jpg jpeg gif svg png',
       'filefield_paths' => array(
         'active_updating' => 0,
         'file_name' => array(

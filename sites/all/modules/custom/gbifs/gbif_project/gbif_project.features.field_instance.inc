@@ -1125,7 +1125,7 @@ function gbif_project_field_default_field_instances() {
     'settings' => array(
       'description_field' => 1,
       'file_directory' => '',
-      'file_extensions' => 'txt doc docx pdf ppt pptx xls xlsx rtf',
+      'file_extensions' => 'txt doc dot docx pdf ppt pptx xls xlsx xlt rtf',
       'filefield_paths' => array(
         'active_updating' => 0,
         'file_name' => array(
@@ -2452,7 +2452,7 @@ function gbif_project_field_default_field_instances() {
     'settings' => array(
       'description_field' => 1,
       'file_directory' => '',
-      'file_extensions' => 'txt doc docx pdf ppt pptx xls xlsx rtf',
+      'file_extensions' => 'txt doc docx dot pdf ppt pptx xls xlsx xlt rtf',
       'filefield_paths' => array(
         'active_updating' => 0,
         'file_name' => array(

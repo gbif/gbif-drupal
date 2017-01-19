@@ -1485,7 +1485,7 @@ function _gp_authenticated_call($request_uri_wo_version) {
   // essential variables
   $env = variable_get('environment_settings');
 
-  $base_url = $env['gbif_api_base_url'];
+  $base_url = 'https://api.gbif.org';
   //$base_url = $env['temp_d_api']; // For local development
   $request_uri = '/v' . $env['gbif_api_version'] . '/directory' . $request_uri_wo_version;
   //$request_uri = $request_uri_wo_version; // For local development

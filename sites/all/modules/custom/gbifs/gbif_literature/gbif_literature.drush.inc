@@ -390,7 +390,9 @@ function drush_gbif_literature_import($bnum = 6, $batch = 0) {
         $regions = $wrapper->field_gbif_region->raw();
         $regions = array_map('unserialize', array_unique(array_map('serialize', $regions)));
         sort($regions);
-        $wrapper->field_gbif_region->set($regions);
+        if (count($regions) > 0) {
+          $wrapper->field_gbif_region->set($regions);
+        }
 
         // if after tag mapping the language is still not set, set it to 'en'
         if ($wrapper->language->value() == 'und') $wrapper->language->set('en');

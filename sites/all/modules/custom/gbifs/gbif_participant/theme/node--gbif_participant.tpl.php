@@ -80,6 +80,14 @@
  */
 
 	drupal_set_title($title . ' - ' . t('Participation in GBIF'));
+	$fields = ['gb_history', 'gp_vision_mission', 'gp_structure', 'gp_national_funding'];
+	$learn_more = false;
+	foreach ($fields as $field) {
+	    if (isset($content[$field])) {
+	        $learn_more = true;
+	    }
+	}
+
 
 ?>
 <article id="node-<?php print $node->nid; ?>" class="container <?php print $classes; ?>">
@@ -105,15 +113,17 @@
           <aside class="content content-sidebar col-xs-4">
             <h3>Node name</h3>
             <p><?php print $participant_ims['node_name']; ?></p>
+            <?php if (isset($participant_ims['node_address'])): ?>
             <h3>Address</h3>
             <address>
               <?php print _gbif_participant_print_address_fields($participant_ims['node_address']); ?>
             </address>
+            <?php endif; ?>
             <?php if (isset($participant_node['node_established'])): ?>
               <h3>Node Established</h3>
               <p><?php print $participant_node['node_established']; ?></p>
             <?php endif; ?>
-						<?php if (isset($participant_ims['node_url'])): ?>
+            <?php if (isset($participant_ims['node_url'])): ?>
             <h3>Website</h3>
             	<p><?php print l($participant_ims['node_url'], $participant_ims['node_url'], array('attributes' => array('target' => '_blank'))); ?></p>
 						<?php endif; ?>
@@ -121,7 +131,7 @@
         </div>
       </section>
 
-			<?php if (count($participant_node) != 0): ?>
+			<?php if (count($participant_node) != 0 && $learn_more == true): ?>
 			<section id="description" class="col-xs-12 well well-lg">
 				<div class="row">
 					<header class="content-header col-xs-12">

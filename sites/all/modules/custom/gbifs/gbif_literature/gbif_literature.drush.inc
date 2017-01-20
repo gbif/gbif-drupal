@@ -242,16 +242,19 @@ function drush_gbif_literature_import($bnum = 6, $batch = 0) {
         };
         array_walk($field_mapping['ent_ref_fields'], $set_author_value);
 
+        // match and store boolean values
         $set_boolean_value = function($target_field, $source_field) use ($wrapper, $doc) {
           if (isset($doc->$source_field)) $wrapper->$target_field->set($doc->$source_field);
         };
         array_walk($field_mapping['boolean_fields'], $set_boolean_value);
 
+        // match and store list values
         $set_list_value = function($target_field, $source_field) use ($wrapper, $doc) {
           if (isset($doc->$source_field)) $wrapper->$target_field->set($doc->$source_field);
         };
         array_walk($field_mapping['list_fields'], $set_list_value);
 
+        // match and store date values
         $set_date_value = function($target_field, $source_field) use ($wrapper, $doc) {
           if (isset($doc->$source_field)) $wrapper->$target_field->set(date('U', strtotime($doc->$source_field)));
         };

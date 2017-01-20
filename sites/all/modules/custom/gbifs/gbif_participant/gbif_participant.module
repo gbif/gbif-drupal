@@ -91,16 +91,6 @@ function gbif_participant_form($node, $form_state) {
 }
 
 /**
- * Implements hook_form_FORM_ID_alter().
- */
-function gbif_participant_form_gbif_participant_node_form_alter(&$form, &$form_state) {
-	// $participantID and $iso2 are keys to link IMS tables so we prevent users
-	// from editing.
-	$form['gp_id']['#disabled'] = TRUE;
-	$form['gp_iso2']['#disabled'] = TRUE;
-}
-
-/**
  * Implements hook_library().
  */
 function gbif_participant_library() {

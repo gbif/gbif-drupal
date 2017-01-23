@@ -69,8 +69,8 @@ function drush_gbif_literature_import($bnum = 6, $batch = 0) {
 
   // language
   $available_languages = [
-    'chinese_simplified' => 'zh-hans',
-    'chinese_traditional' => 'zh-hant',
+    //'chinese_simplified' => 'zh-hans',
+    //'chinese_traditional' => 'zh-hant',
     'danish' => 'da',
     'german' => 'de',
     'english' => 'en',
@@ -84,7 +84,8 @@ function drush_gbif_literature_import($bnum = 6, $batch = 0) {
   $field_mapping = [
     // set text/integer fields
     'text_fields' => [
-      'title' => 'title',   'abstract' => 'field_mdl_abstract',
+      'title' => 'title',
+      'abstract' => 'field_mdl_abstract',
       'citation_key' => 'field_mdl_citation_key',
       'code' => 'field_mdl_code',
       'firstAuthor' => 'field_mdl_first_author',
@@ -141,6 +142,11 @@ function drush_gbif_literature_import($bnum = 6, $batch = 0) {
     if (!isset($documents)) {
       $documents = json_decode(file_get_contents(drupal_realpath($documents_file_loc)));
     }
+    static $document_count;
+    if (!isset($document_count)) {
+      $document_count = count($documents);
+    }
+
 
     // journal only documents
     static $docs_journal_only;
@@ -169,10 +175,15 @@ function drush_gbif_literature_import($bnum = 6, $batch = 0) {
     }
 
     // available sets: $documents, $docs_journal_only, $docs_journal_only_gbif_used
-    $sliced_docs = gbif_literature_batch_create($docs_journal_only, $bnum, $batch);
+    $sliced_docs = gbif_literature_batch_create($documents, $bnum, $batch);
     drupal_set_message('Importing ' . count($sliced_docs) . ' of ' . $journal_only_count . ' documents, starts with ' . $sliced_docs[0]->id, 'status');
 
     $import_document = function($doc) use (&$processed_docs, &$topic_mapped, &$topic_bio_science_mapped, $topic_mapping, $topic_mapping_keys, $literature_annotations, $gbif_countries, $available_languages, $field_mapping, $country_region) {
+
+      if (strstr($doc->title, "A Tool for Harvesting and Indexing Biodiversity Data") !== false) {
+        $found = true;
+      }
+
       // query if already an item with the same ID
       $query = new EntityFieldQuery();
       $query->entityCondition('entity_type', 'node')
@@ -363,7 +374,8 @@ function drush_gbif_literature_import($bnum = 6, $batch = 0) {
           // @todo if the tag is year
           // set language if the tag indicates
           elseif (isset($available_languages[strtolower($tag)])) {
-            $wrapper->language->set($available_languages[strtolower($tag)]);
+            $language = $available_languages[strtolower($tag)];
+            $wrapper->language->set($language);
           }
           // the rest will go to tx_tags.
           else {

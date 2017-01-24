@@ -214,7 +214,7 @@ function drush_gbif_literature_import($bnum = 6, $batch = 0) {
         // entity referenced fields
         $set_author_value = function($target_field, $source_field) use (&$wrapper, $doc) {
           if (isset($doc->$source_field)) {
-            foreach ($doc->authors as $author) {
+            foreach ($doc->$source_field as $author) {
               $query = new EntityFieldQuery();
               $query->entityCondition('entity_type', 'node')
                 ->entityCondition('bundle', 'literature_author')

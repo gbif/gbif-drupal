@@ -69,6 +69,7 @@ use \EntityFieldQuery;
     'language' => 'language',
     'field_gbif_area' => 'category_area',
     'field_content_stream' => 'category_content_stream',
+    'field_gbif_region' => 'category_gbif_region',
     'field_un_region' => 'category_un_region',
     'field_mdl_gbif_ref_annt' => 'category_gbif_literature_annotation',
     'field_mdl_type' => 'category_literature_type',

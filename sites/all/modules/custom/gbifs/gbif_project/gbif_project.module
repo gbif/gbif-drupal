@@ -370,11 +370,8 @@ function gbif_project_preprocess_node(&$variables) {
   switch ($node_type) {
     case 'project':
       // Partners block, a merge of field_pj_participants and field_pj_partners values
-      if ((isset($variables['field_pj_participants']['und']) && count($variables['field_pj_participants']['und']) > 0) ||
-        (isset($variables['field_pj_partners']['und']) && count($variables['field_pj_partners']['und']) > 0)) {
-        $participants = (isset($variables['field_pj_participants']['und'])) ? $variables['field_pj_participants']['und'] : [];
-        $partners_pre = (isset($variables['field_pj_partners']['und'])) ? $variables['field_pj_partners']['und'] : [];
-        $mixed_partners = array_merge($participants, $partners_pre);
+      if (count($variables['field_pj_participants']) > 0 || count($variables['field_pj_partners']) > 0) {
+        $mixed_partners = array_merge($variables['field_pj_participants'], $variables['field_pj_partners']);
         $lead_partners = array();
         $partners = array();
         // First pick participants with 'lead'

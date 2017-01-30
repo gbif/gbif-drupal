@@ -186,6 +186,10 @@ $programme_title = $field_programme_value->title;
               <?php print render($content['pj_call']); ?>
             <?php endif; ?>
 
+            <?php if (isset($content['field_project_id'])): ?>
+              <?php print render($content['field_project_id']); ?>
+            <?php endif; ?>
+
             <?php if (isset($content['field_status'])): ?>
               <?php print render($content['field_status']); ?>
             <?php endif; ?>

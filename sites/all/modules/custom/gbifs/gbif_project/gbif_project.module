@@ -731,11 +731,20 @@ function gbif_project_node_access($node, $op, $account) {
     if (!empty($node) && in_array($node->type, ['call', 'dir_organization'])) {
       // @see http://stackoverflow.com/questions/17139264/cant-use-function-return-value-in-write-context
       $validated_roles = array_intersect($account->roles, ['Administrator', 'Editor', 'GBIFS Staff', 'Publisher']);
-      if (empty($validated_roles)) {
-        return NODE_ACCESS_DENY;
+
+      // if this is programme or project page don't validate roles
+      $req = explode('/', $_GET['q']);
+      $node_being_viewed = node_load($req[1]);
+      if (in_array($node_being_viewed->type, ['project', 'programme'])) {
+        return NODE_ACCESS_IGNORE;
       }
       else {
-        return NODE_ACCESS_IGNORE;
+        if (empty($validated_roles)) {
+          return NODE_ACCESS_DENY;
+        }
+        else {
+          return NODE_ACCESS_IGNORE;
+        }
       }
     }
   }

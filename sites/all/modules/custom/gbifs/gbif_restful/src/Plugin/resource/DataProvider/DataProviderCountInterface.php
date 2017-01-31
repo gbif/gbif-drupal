@@ -14,8 +14,15 @@ interface DataProviderCountInterface extends DataProviderInterface {
   /**
    * Return literature count.
    *
-   * @param $identifier
+   * @param $region
    */
-  public function countLiterature($identifier);
+  public function countLiterature($region);
+
+  /**
+   * Return literature count by year
+   *
+   * @param $region
+   */
+   public function countLiteratureYearly($region);
 
 }

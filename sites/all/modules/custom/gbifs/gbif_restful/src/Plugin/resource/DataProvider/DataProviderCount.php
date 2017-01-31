@@ -102,44 +102,32 @@ class DataProviderCount extends DataProvider implements DataProviderCountInterfa
 
   public function countLiteratureYearly($region) {
     $variable = 'literature_count_yearly_' . $region;
+
     $$variable = &drupal_static(__FUNCTION__);
     if (!isset($$variable)) {
       if ($cache = cache_get('gbif_literature_counts_yearly_' . $region, 'cache_gbif_restful')) {
         $$variable = $cache->data;
       }
       else {
-        $regionalLiteratureByYear = [];
-
-        $participantGroups = $this->getActiveParticipantsGrouped();
-
-        // collect iso2 codes
-        $countries = $this->getCountries($participantGroups[$region]);
-
-        // Get tids from iso2 codes
-        $country_tids = $this->getCountryTids($countries);
-
-        // Get the literature with authors from these countries
-        $literatureNids = $this->getLiteratureOfCountries($country_tids);
-        $nids = array_keys($literatureNids);
-        $literature = node_load_multiple($nids);
-        foreach ($literature as $doc) {
-          $year = $doc->field_mdl_year['und'][0]['value'];
-          if (isset($year)) {
-            $regionalLiteratureByYear[$year][] = $doc;
-          }
-          else {
-            $regionalLiteratureByYear['year_unknown'][] = $doc;
-          }
-        }
-
-        ksort($regionalLiteratureByYear); // Don't return this. It's too big.
         $yearly = [];
-        foreach ($regionalLiteratureByYear as $year => $lits) {
-          $yearly[] = ['year' => $year, 'literature_number' => count($lits)];
+        $query = search_api_query('node_index');
+
+        // Get total literature for this region.
+        $years = ['2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017'];
+        foreach($years as $year) {
+          $query_filter = new \SearchApiQueryFilter();
+          $query_filter->condition('type', 'literature');
+          if (isset($region) && $region !== 'GLOBAL') {
+            $query_filter->condition('field_gbif_region', $region);
+          }
+          $query_filter->condition('field_mdl_year', $year);
+          $query->filter($query_filter);
+          $result = $query->execute();
+          $yearly[] = ['year' => $year, 'literature_number' => (int)$result['result count']];
         }
         $$variable = $yearly;
-        // cache expires in 3 hours.
-        cache_set('gbif_literature_counts_yearly_' . $region, $$variable, 'cache_gbif_restful', time() + 10800);
+        // cache expires in 1 hours.
+        cache_set('gbif_literature_counts_yearly_' . $region, $$variable, 'cache_gbif_restful', time() + 3600);
 
       }
     }
@@ -148,6 +136,64 @@ class DataProviderCount extends DataProvider implements DataProviderCountInterfa
   }
 
   public function countLiterature($region) {
+    $variable = 'literature_count_' . $region;
+
+    // Get countries where authors are from.
+    // Before new region definition goes live the count is restricted to participant countries.
+    // @todo Update to use new region definition.
+    $participantGroups = $this->getActiveParticipantsGrouped();
+    $countries = $this->getCountries($participantGroups[$region]);
+    $countriesCount = count($countries);
+
+    $$variable = &drupal_static(__FUNCTION__);
+    if (!isset($$variable)) {
+      if ($cache = cache_get('gbif_literature_counts_' . $region, 'cache_gbif_restful')) {
+        $$variable = $cache->data;
+      }
+      else {
+
+        $query = search_api_query('node_index');
+
+        // Get total literature for this region.
+        $query_filter = new \SearchApiQueryFilter();
+        $query_filter->condition('type', 'literature');
+        if (isset($region) && $region !== 'GLOBAL') {
+          $query_filter->condition('field_gbif_region', $region);
+        }
+        $query->filter($query_filter);
+        $result = $query->execute();
+        $literatureCount = (int)$result['result count'];
+        $literatureNids = array_keys($result['results']);
+
+        // Get authors from these literature
+        $authorsCount = db_select('search_api_db_node_index_field_mdl_authors', 's')
+          ->fields('s', ['value'])
+          ->condition('item_id', $literatureNids, 'IN')
+          ->distinct()
+          ->execute()
+          ->rowCount();
+
+        $$variable = [
+          'region' => $region,
+          'literature' => $literatureCount,
+          'countriesLiteratureAuthorsFrom' => $countriesCount,
+          'literatureAuthors' => $authorsCount,
+        ];
+        // cache expires in 1 hours.
+        cache_set('gbif_literature_counts_' . $region, $$variable, 'cache_gbif_restful', time() + 3600);
+      }
+
+    }
+
+    $this->output = $$variable;  }
+
+
+  /**
+   * Get literature count by direct DB query. This takes more time and likely to
+   * be inconsistent with Search Index.
+   * @param $region
+   */
+  public function countLiteratureRaw($region) {
     $variable = 'literature_count_' . $region;
 
     $$variable = &drupal_static(__FUNCTION__);
@@ -181,11 +227,11 @@ class DataProviderCount extends DataProvider implements DataProviderCountInterfa
         $$variable = [
           'region' => $region,
           'literature' => $literatureCount,
-          'literatureAuthorFromCountries' => $countriesCount,
+          'countriesLiteratureAuthorsFrom' => $countriesCount,
           'literatureAuthors' => count($authors),
         ];
-        // cache expires in 3 hours.
-        cache_set('gbif_literature_counts_' . $region, $$variable, 'cache_gbif_restful', time() + 10800);
+        // cache expires in 1 hours.
+        cache_set('gbif_literature_counts_' . $region, $$variable, 'cache_gbif_restful', time() + 3600);
       }
 
     }
@@ -195,6 +241,7 @@ class DataProviderCount extends DataProvider implements DataProviderCountInterfa
   }
 
   public function getActiveParticipantsGrouped() {
+    // @todo update when latest directory params are live.
     $participants = json_decode(file_get_contents('http://api.gbif.org/v1/directory/participant?limit=300'));
 
     $participantsGlobal = $participants->results;

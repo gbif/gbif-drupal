@@ -35,7 +35,6 @@ function gbif_restful_search_default_search_api_index() {
           "gbif_participant",
           "generic",
           "literature",
-          "literature_author",
           "news",
           "programme",
           "project",

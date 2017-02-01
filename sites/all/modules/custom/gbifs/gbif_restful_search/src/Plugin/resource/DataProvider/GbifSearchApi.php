@@ -704,6 +704,29 @@ use \EntityFieldQuery;
         }
       }
     }
+
+    // Force single select
+    if (isset($_REQUEST['filter'])) {
+      foreach($_REQUEST['filter'] as $filter => $value) {
+        if (isset($facets[$filter]) && count($facets[$filter]) > 0) {
+          $forced_single = array_filter($facets[$filter], function ($f) use ($value, $filter, $country_fields) {
+            if (in_array($filter, $country_fields)) {
+              return $f['enum'] == $value;
+            }
+            elseif (isset($f['id'])) {
+              return $f['id'] == $value;
+            }
+            elseif (isset($f['enum'])) {
+              return $f['enum'] == $value;
+            }
+          });
+          sort($forced_single);
+          $facets[$filter] = $forced_single;
+        }
+      }
+
+    }
+
     // Arrange it as non-associative array.
     $facet_non_associative = array();
     foreach ($facets as $field_name => &$field) {
@@ -811,6 +834,24 @@ use \EntityFieldQuery;
             else {
               $issues[] = $filter[1] . '(' . $term->name . ', ' . $term->vocabulary_machine_name . ') is not a valid term ID for ' . $mapping[$filter[0]];
             }
+          }
+          break;
+
+        case 'field_mdl_year':
+          if ($filter[1] >= 1500 && $filter[1] <= 2050) {
+            $item = array(
+              'field' => $mapping[$filter[0]],
+              'counts' => array(
+                array(
+                  'label' => $filter[1],
+                  'enum' => $filter[1],
+                )
+              ),
+            );
+            $requested_filters[] = $item;
+          }
+          else{
+              $issues[] = $filter[1] . ' is not likely a valid year for ' . $mapping[$filter[0]];
           }
           break;
 

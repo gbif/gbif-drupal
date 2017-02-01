@@ -9,12 +9,13 @@ namespace Drupal\gbif_restful_search\Http;
 use Drupal\restful\Exception\BadRequestException;
 use Drupal\restful\Util\StringHelper;
 use Drupal\restful\Http\Request;
-use Drupal\restful\Http\RequestInterface;
+use Drupal\restful\Http\HttpHeaderBag;
+use Drupal\restful\Http\HttpHeader;
 
 /**
  * Deals with everything coming from the consumer.
  */
-class GbifRequest extends Request implements RequestInterface {
+class GbifRequest extends Request implements GbifRequestInterface {
 
   /**
    * Names for headers that can be trusted when
@@ -139,6 +140,7 @@ class GbifRequest extends Request implements RequestInterface {
    * Parses the URL and the query params. It also uses input:// to get the body.
    */
   public function __construct($path, array $query, $method = 'GET', HttpHeaderBag $headers, $via_router = FALSE, $csrf_token = NULL, array $cookies = array(), array $files = array(), array $server = array(), $parsed_body = NULL) {
+    parent::__construct($path, $query, $method, $headers, $via_router, $csrf_token, $cookies = array(),$files = array(), $server = array(), $parsed_body = NULL);
     $this->path = $path;
     $this->query = !isset($query) ? static::parseInput() : $query;
     $this->query = $this->fixQueryFields($this->query);

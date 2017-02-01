@@ -12,10 +12,10 @@ use Drupal\restful\Exception\ForbiddenException;
 use Drupal\restful\Exception\ServerConfigurationException;
 use Drupal\restful\Exception\ServiceUnavailableException;
 use Drupal\restful\Exception\UnprocessableEntityException;
-use Drupal\restful\Http\RequestInterface;
 use Drupal\restful\Plugin\resource\DataInterpreter\ArrayWrapper;
 use Drupal\restful\Plugin\resource\DataInterpreter\DataInterpreterArray;
 use Drupal\restful\Plugin\resource\DataProvider\DataProvider;
+use Drupal\gbif_restful_search\Http\GbifRequestInterface;
 use Drupal\gbif_restful_search\Plugin\resource\Field\ResourceFieldGbifCollectionInterface;
 use \EntityFieldQuery;
 
@@ -103,7 +103,7 @@ use \EntityFieldQuery;
   /**
    * {@inheritdoc}
    */
-  public function __construct(RequestInterface $request, ResourceFieldGbifCollectionInterface $field_definitions, $account, $plugin_id, $resource_path = NULL, array $options = array(), $langcode = NULL) {
+  public function __construct(GbifRequestInterface $request, ResourceFieldGbifCollectionInterface $field_definitions, $account, $plugin_id, $resource_path = NULL, array $options = array(), $langcode = NULL) {
     parent::__construct($request, $field_definitions, $account, $plugin_id, $resource_path, $options, $langcode);
     if (empty($this->options['urlParams'])) {
       $this->options['urlParams'] = array(

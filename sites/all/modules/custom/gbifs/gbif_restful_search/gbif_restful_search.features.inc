@@ -69,7 +69,6 @@ function gbif_restful_search_default_search_api_index() {
         "field_mdl_authors" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "node" },
         "field_mdl_authors:field_mdl_first_name" : { "type" : "list\\u003Ctext\\u003E", "boost" : "5.0" },
         "field_mdl_authors:title" : { "type" : "list\\u003Ctext\\u003E", "boost" : "8.0" },
-        "field_mdl_citation_key" : { "type" : "text" },
         "field_mdl_code" : { "type" : "text" },
         "field_mdl_confirmed" : { "type" : "boolean" },
         "field_mdl_created" : { "type" : "date" },

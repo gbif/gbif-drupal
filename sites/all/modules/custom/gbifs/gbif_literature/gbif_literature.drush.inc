@@ -28,6 +28,10 @@ function drush_gbif_literature_import($bnum = 6, $batch = 0) {
   $processed_docs = 0;
   $topic_mapped = 0;
   $topic_bio_science_mapped = 0;
+  $documents_w_issue = [
+    'suspect_duplicate' => [],
+    'problem_during_saving' => [],
+  ];
 
   // country objects
   static $gbif_countries;
@@ -176,13 +180,9 @@ function drush_gbif_literature_import($bnum = 6, $batch = 0) {
 
     // available sets: $documents, $docs_journal_only, $docs_journal_only_gbif_used
     $sliced_docs = gbif_literature_batch_create($documents, $bnum, $batch);
-    drupal_set_message('Importing ' . count($sliced_docs) . ' of ' . $journal_only_count . ' documents, starts with ' . $sliced_docs[0]->id, 'status');
+    drupal_set_message('Importing ' . count($sliced_docs) . ' of ' . $document_count . ' documents, starts with ' . $sliced_docs[0]->id . '\n', 'status');
 
-    $import_document = function($doc) use (&$processed_docs, &$topic_mapped, &$topic_bio_science_mapped, $topic_mapping, $topic_mapping_keys, $literature_annotations, $gbif_countries, $available_languages, $field_mapping, $country_region) {
-
-      if (strstr($doc->title, "A Tool for Harvesting and Indexing Biodiversity Data") !== false) {
-        $found = true;
-      }
+    $import_document = function($doc) use (&$processed_docs, &$topic_mapped, &$topic_bio_science_mapped, $topic_mapping, $topic_mapping_keys, $literature_annotations, $gbif_countries, $available_languages, $field_mapping, $country_region, &$documents_w_issue) {
 
       // query if already an item with the same ID
       $query = new EntityFieldQuery();
@@ -192,7 +192,8 @@ function drush_gbif_literature_import($bnum = 6, $batch = 0) {
       $exist = $query->execute();
 
       if (isset($exist['node']) && count($exist['node']) == 1) {
-        // @todo update procedure
+        $documents_w_issue['suspect_duplicate'][] = $doc;
+        drupal_set_message('Suspicious duplicated document: ' . $doc->title . ', with id: ' . $doc->id, 'status');
       }
       elseif (empty($exist)) {
         // import
@@ -412,14 +413,32 @@ function drush_gbif_literature_import($bnum = 6, $batch = 0) {
         // if after tag mapping the language is still not set, set it to 'en'
         if ($wrapper->language->value() == 'und') $wrapper->language->set('en');
         $wrapper->status->set(1);
-        $wrapper->save();
+        try {
+          $wrapper->save();
+        }
+        catch (Exception $e) {
+          $documents_w_issue['problem_during_saving'][] = $doc;
+          drupal_set_message('Problems in saving ' . $doc->title . ' with Mendeley ID: ' . $doc->id . '.', 'status');
+        }
         $processed_docs ++;
       }
       else {
-        drupal_set_message('Exception.', 'error');
+        drupal_set_message('Uncaught Exception.', 'error');
       }
     };
     array_map($import_document, $sliced_docs);
+
+    // save documents with issue
+    $documents_file_loc = file_build_uri('gbif_mendeley/documents_w_issue_' . $batch . '.json');
+    $file_save_success = file_save_data(json_encode($documents_w_issue), $documents_file_loc, FILE_EXISTS_REPLACE);
+    if (is_object($file_save_success)) {
+      $message = t('The documents with issue are updated.');
+      drupal_set_message($message, 'status');
+    }
+    else {
+      $message = t('The documents with issue are not updated. Investigation needed.');
+      drupal_set_message($message, 'warning');
+    }
 
     $time_end = time();
     $time_elapsed = date('i:s', $time_end - $time_begin);
@@ -505,17 +524,9 @@ function drush_gbif_literature_delete($bnum = 6, $batch = 0) {
 function gbif_literature_batch_create($items, $bnum, $batch) {
   // available sets: $documents, $docs_journal_only, $docs_journal_only_gbif_used
   $items_count = count($items);
-  static $batch_size;
-  if (!isset($batch_size)) $batch_size = $items_count / $bnum;
-  static $batch_remainder;
-  if (!isset($batch_remainder)) $batch_remainder = $items_count % $bnum;
-
-  if ($batch_remainder > 0 && $batch == $bnum - 1) {
-    $sliced_items = array_slice($items, $batch * $batch_size);
-  }
-  else {
-    $sliced_items = array_slice($items, $batch * $batch_size, $batch_size);
-  }
+  $batch_size = ($items_count / $bnum) + 1;
+  $sliced_items = array_slice($items, $batch * $batch_size, $batch_size);
+  drupal_set_message('Processing: ' . count($sliced_items) . ' items.', 'status');
   return $sliced_items;
 }
 

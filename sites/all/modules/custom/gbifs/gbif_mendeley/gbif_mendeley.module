@@ -967,17 +967,19 @@ function gbif_mendeley_group_counts() {
 		$documents = json_decode(file_get_contents(drupal_realpath($documents_file_loc)));
 
 		$total = 0;
+		$total_gbif_used = 0;
 		$year_field = 0;
 		$month_field = 0;
 		$day_field = 0;
 		$group_by_year = array();
 
 		foreach ($documents as $i => $doc) {
+		  $total++;
 
 			if (isset($doc->tags)) {
 				if (in_array('GBIF_used', $doc->tags)) {
 
-					$total++;
+					$total_gbif_used++;
 					if (isset($doc->year)) $year_field++;
 					if (isset($doc->month)) $month_field++;
 					if (isset($doc->day)) $day_field++;
@@ -1007,7 +1009,8 @@ function gbif_mendeley_group_counts() {
 		ksort($group_by_year);
 
 		$output = array(
-			'total_gbif_used' => $total,
+		  'total' => $total,
+			'total_gbif_used' => $total_gbif_used,
 			'year_available' => $year_field,
 			'month_available' => $month_field,
 			'day_available' => $day_field,

@@ -14,6 +14,7 @@
   var data_portal_base_url = env.data_portal_base_url;
   var api_base_url = env.gbif_api_base_url + "/v" + env.gbif_api_version;
 
+
     Drupal.behaviors.loadMapTiles = {
       attach: function (context, settings) {
         var maxVisible = 300; // at any time
@@ -42,80 +43,80 @@
           minZoom: 0
         }).addTo(map);
 
-        var points = [];
-        var visible = []; // at any time
-
-        function initData() {
-          for (var i = 0; i < maxVisible; i++) {
-            points.push(
-              new L.CircleMarker([0, 0], {
-                fillColor: '#223E1D',
-                weight: 2,
-                color: '#FFF',
-                fillOpacity: 1,
-                opacity: 0.8,
-                radius: 4
-              })
-            );
-          }
-        }
+        // var points = [];
+        // var visible = []; // at any time
+//
+        // function initData() {
+        //   for (var i = 0; i < maxVisible; i++) {
+        //     points.push(
+        //       new L.CircleMarker([0, 0], {
+        //         fillColor: '#223E1D',
+        //         weight: 2,
+        //         color: '#FFF',
+        //         fillOpacity: 1,
+        //         opacity: 0.8,
+        //         radius: 4
+        //       })
+        //     );
+        //   }
+        // }
 
         /**
          * Gets a page of occurrences from the server
          */
-        function getOccurrences() {
-          var occurrences = [];
-          $.ajax({
-            url: api_base_url + '/occurrence/featured?seed=' + seed++,
-            datatype: 'jsonp',
-            success: function(data) {
-              $.each(data, function(index, o) {
-                occurrences.push(o);
-              });
-            }, async:true});
-          occurrences.reverse; // so we can just pop off the end
-          return occurrences;
-        }
-
-        var currentPointIdx=0;
-        var occurrences = getOccurrences();
+        // function getOccurrences() {
+        //   var occurrences = [];
+        //   $.ajax({
+        //     url: api_base_url + '/occurrence/featured?seed=' + seed++,
+        //     datatype: 'jsonp',
+        //     success: function(data) {
+        //       $.each(data, function(index, o) {
+        //         occurrences.push(o);
+        //       });
+        //     }, async:true});
+        //   occurrences.reverse; // so we can just pop off the end
+        //   return occurrences;
+        // }
+//
+        // var currentPointIdx=0;
+        // var occurrences = getOccurrences();
 
         /**
          * Gets a batch from the server and pages through it plotting the points
          */
         function runMap() {
           // get a batch from the server
-          if (occurrences.length==0) {
-            occurrences = getOccurrences();
-          }
+          // if (occurrences.length==0) {
+          //   occurrences = getOccurrences();
+          // }
 
-          var point = points[currentPointIdx];
-          if (point._map && point._map.hasLayer(point._popup)) {
-            // popup is open, can't remove this point
-          }
-          else {
-            var occurrence = occurrences.pop();
-            if (occurrence!==undefined) {
-              point.setLatLng([occurrence.latitude,occurrence.longitude]);
-              point.unbindPopup(); // avoid memory leak
-              point.bindPopup(
-                "<p>Occurrence of <a href='occurrence/" + occurrence.key + "'>" + occurrence.scientificName +"</a></p>" +
-                  "Published by <a href='publisher/" + occurrence.publisherKey + "'>" + occurrence.publisher +"</a>" +
-                  "<p>Last indexed " + moment(occurrence.lastInterpreted).fromNow() +"</p>");
-              point.addTo(map); // it should already be
-            }
-          }
+          // var point = points[currentPointIdx];
+          // if (point._map && point._map.hasLayer(point._popup)) {
+          //   // popup is open, can't remove this point
+          // }
+          // else {
+          //   var occurrence = occurrences.pop();
+          //   if (occurrence!==undefined) {
+          //     point.setLatLng([occurrence.latitude,occurrence.longitude]);
+          //     point.unbindPopup(); // avoid memory leak
+          //     point.bindPopup(
+          //       "<p>Occurrence of <a href='occurrence/" + occurrence.key + "'>" + occurrence.scientificName +"</a></p>" +
+          //         "Published by <a href='publisher/" + occurrence.publisherKey + "'>" + occurrence.publisher +"</a>" +
+          //         "<p>Last indexed " + moment(occurrence.lastInterpreted).fromNow() +"</p>");
+          //     point.addTo(map); // it should already be
+          //   }
+          // }
 
           // move to next one
-          currentPointIdx = currentPointIdx + 1;
+          // currentPointIdx = currentPointIdx + 1;
           // reuse the points
-          if (currentPointIdx >= points.length) {
-            currentPointIdx = 0;
-          }
-          setTimeout(runMap, delayMsecs);
+          //if (currentPointIdx >= points.length) {
+          //  currentPointIdx = 0;
+          //// }
+          // setTimeout(runMap, delayMsecs);
         }
-        initData();
-        runMap();
+        //initData();
+        //runMap();
       }
     }
 

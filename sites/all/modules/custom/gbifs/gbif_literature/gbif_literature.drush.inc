@@ -449,7 +449,7 @@ function drush_gbif_literature_import($bnum = 6, $batch = 0) {
 
 }
 
-function drush_gbif_literature_delete($bnum = 6, $batch = 0) {
+function drush_gbif_literature_delete($bnum, $batch = 0) {
   $time_begin = time();
 
   // query if already an item with the same ID
@@ -465,15 +465,8 @@ function drush_gbif_literature_delete($bnum = 6, $batch = 0) {
     foreach ($exist['node'] as $nid => $node) {
       $ids[] = $nid;
     }
-    $batch_size = count($ids) / 7;
-    $batch_remainder = count($ids) % 7;
-    if ($batch_remainder > 0 && $batch == 7) {
-      $sliced_ids = array_slice($ids, $batch * $batch_size + $batch_remainder, $batch_size);
-    }
-    else {
-      $sliced_ids = array_slice($ids, $batch * $batch_size, $batch_size);
-    }
-
+    $batch_size = (count($ids) / $bnum) + 1;
+    $sliced_ids = array_slice($ids, $batch * $batch_size, $batch_size);
     node_delete_multiple($sliced_ids);
   }
   else {
@@ -524,9 +517,9 @@ function drush_gbif_literature_delete($bnum = 6, $batch = 0) {
 function gbif_literature_batch_create($items, $bnum, $batch) {
   // available sets: $documents, $docs_journal_only, $docs_journal_only_gbif_used
   $items_count = count($items);
-  $batch_size = ($items_count / $bnum) + 1;
+  $batch_size = round($items_count / $bnum) + 1;
   $sliced_items = array_slice($items, $batch * $batch_size, $batch_size);
-  drupal_set_message('Processing: ' . count($sliced_items) . ' items.', 'status');
+  drupal_set_message('Processing: ' . count($sliced_items) . ' items from ' . $batch * $batch_size . ' to ' . ($batch * $batch_size + $batch_size), 'status');
   return $sliced_items;
 }
 

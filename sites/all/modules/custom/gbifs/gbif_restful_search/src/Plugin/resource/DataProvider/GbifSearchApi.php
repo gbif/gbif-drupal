@@ -719,6 +719,9 @@ use \EntityFieldQuery;
             elseif (isset($f['enum'])) {
               return $f['enum'] == $value;
             }
+            else {
+              return false;
+            }
           });
           sort($forced_single);
           $facets[$filter] = $forced_single;

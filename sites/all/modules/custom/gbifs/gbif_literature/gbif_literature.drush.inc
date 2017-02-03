@@ -538,6 +538,8 @@ function gbif_literature_create_taxonomy_term($name, $vid) {
  */
 function gbif_literature_topic_term_mapping() {
   $mapping = [
+    'agriculture' => 891, // Agriculture
+    'aquaculture' => 891, // Aquaculture
     'climate_change' => 970, // Climate change
     'conservation' => 826, // Conservation
     'endangered_species' => 826, // Conservation

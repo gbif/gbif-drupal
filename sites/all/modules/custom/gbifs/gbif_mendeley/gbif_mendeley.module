@@ -972,6 +972,7 @@ function gbif_mendeley_group_counts() {
 		$month_field = 0;
 		$day_field = 0;
 		$group_by_year = array();
+		$year_missing = [];
 
 		foreach ($documents as $i => $doc) {
 		  $total++;
@@ -997,11 +998,16 @@ function gbif_mendeley_group_counts() {
 						} else {
 							$group_by_year['year_missing']++;
 						}
-
 					}
-
 				}
+			}
 
+			if ($doc->year == null) {
+        $d_obj = [
+          'title' => $doc->title,
+          'id' => $doc->id,
+        ];
+        $year_missing[] = $d_obj;
 			}
 
 		}
@@ -1015,6 +1021,7 @@ function gbif_mendeley_group_counts() {
 			'month_available' => $month_field,
 			'day_available' => $day_field,
 			'group_by_year' => $group_by_year,
+      'year_missing' => $year_missing,
 		);
 
 		return $output;

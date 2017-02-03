@@ -2055,14 +2055,12 @@ function _gbif_participant_country_list() {
 	foreach ($chunks as $chunk) {
 		$country_list = '<ul>';
 		foreach ($chunk as $country) {
-			if ($country['official'] == "true") {
-				$link = l($country['title'], 'country/' . $country['iso2']);
-				$country_list .= '<li class="country ';
-				$country_list .= (!empty($country['participationStatus'])) ? 'participant' : '';
-				$country_list .= '">';
-				$country_list .= $link;
-				$country_list .= '</li>';
-			}
+			$link = l($country['title'], 'country/' . $country['iso2']);
+			$country_list .= '<li class="country ';
+			$country_list .= (!empty($country['participationStatus'])) ? 'participant' : '';
+			$country_list .= '">';
+			$country_list .= $link;
+			$country_list .= '</li>';
 		}
 		$country_list .= '</ul>';
 		$columns[] = $country_list;

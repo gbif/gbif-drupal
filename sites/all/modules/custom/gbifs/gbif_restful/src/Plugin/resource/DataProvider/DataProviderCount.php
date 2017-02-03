@@ -121,7 +121,7 @@ class DataProviderCount extends DataProvider implements DataProviderCountInterfa
             $query_filter->condition('field_gbif_region', $region);
           }
           $query_filter->condition('field_mdl_year', $year);
-          $query_filter->condition('field_mdl_gbif_ref_annt', 1341);
+          $query_filter->condition('field_mdl_gbif_ref_annt', 1341); // only gbif_used
           $query->filter($query_filter);
           $result = $query->execute();
           $yearly[] = ['year' => $year, 'literature_number' => (int)$result['result count']];
@@ -161,6 +161,7 @@ class DataProviderCount extends DataProvider implements DataProviderCountInterfa
         if (isset($region) && $region !== 'GLOBAL') {
           $query_filter->condition('field_gbif_region', $region);
         }
+        $query_filter->condition('field_mdl_gbif_ref_annt', 1341); // only gbif_used
         $query->filter($query_filter);
         $result = $query->execute();
         $literatureCount = (int)$result['result count'];

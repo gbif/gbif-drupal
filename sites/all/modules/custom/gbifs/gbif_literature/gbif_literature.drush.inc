@@ -180,7 +180,7 @@ function drush_gbif_literature_import($bnum = 6, $batch = 0) {
 
     // available sets: $documents, $docs_journal_only, $docs_journal_only_gbif_used
     $sliced_docs = gbif_literature_batch_create($documents, $bnum, $batch);
-    drupal_set_message('Importing ' . count($sliced_docs) . ' of ' . $document_count . ' documents, starts with ' . $sliced_docs[0]->id . '\n', 'status');
+    drupal_set_message('Importing ' . count($sliced_docs) . ' of ' . $document_count . ' documents, starts with ' . $sliced_docs[0]->id, 'status');
 
     $import_document = function($doc) use (&$processed_docs, &$topic_mapped, &$topic_bio_science_mapped, $topic_mapping, $topic_mapping_keys, $literature_annotations, $gbif_countries, $available_languages, $field_mapping, $country_region, &$documents_w_issue) {
 
@@ -519,7 +519,7 @@ function gbif_literature_batch_create($items, $bnum, $batch) {
   $items_count = count($items);
   $batch_size = round($items_count / $bnum) + 1;
   $sliced_items = array_slice($items, $batch * $batch_size, $batch_size);
-  drupal_set_message('Processing: ' . count($sliced_items) . ' items from ' . $batch * $batch_size . ' to ' . ($batch * $batch_size + $batch_size), 'status');
+  drupal_set_message('Processing: ' . count($sliced_items) . ' items from ' . $batch * $batch_size . ' to ' . ($batch * $batch_size + $batch_size - 1), 'status');
   return $sliced_items;
 }
 

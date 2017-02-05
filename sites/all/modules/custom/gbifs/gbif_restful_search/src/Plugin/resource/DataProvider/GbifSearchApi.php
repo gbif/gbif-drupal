@@ -344,7 +344,7 @@ use \EntityFieldQuery;
               else throw new \Exception;
             }
             else {
-              $value = str_replace('_', ' ', $value);
+              $value = ($value === 'LATIN_AMERICA' || $value === 'NORTH_AMERICA') ? $value : str_replace('_', ' ', $value);
               $term = taxonomy_get_term_by_name($value, $voc);
               if (count($term) == 1) {
                 foreach ($term as $tid => $t) {

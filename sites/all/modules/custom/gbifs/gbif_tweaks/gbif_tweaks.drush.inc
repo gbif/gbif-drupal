@@ -57,7 +57,7 @@ function drush_gbif_tweaks_prepare_headless_contents(){
 
   // /ipt should no longer redirect to 82906
   $node_82906 = workbench_moderation_node_current_load(node_load(82906));
-  $node_82906->path['alias'] = '';
+  $node_82906->path['alias'] = 'ipt';
   $node_82894->path['pathauto'] = 0;
   $node_82906->revision =1;
   $node_82906->workbench_moderation_state_new = 'published';

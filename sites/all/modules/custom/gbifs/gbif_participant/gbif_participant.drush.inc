@@ -155,15 +155,14 @@ function drush_gbif_participant_map() {
 
   if (isset($result['node']) && count($result['node']) > 0) {
     $nids = array_keys($result['node']);
-    $set_node_mapping = function($nid) use (&$processed_resources) {
-      $wrapper = entity_metadata_wrapper('node', $nid);
-      $wrapper->language->set('en');
-      $wrapper->log->set('CMS API deployment: Event content property mappings for language and country.');
-      $wrapper->save();
-      drupal_set_message('Participant nid: ' . $wrapper->getIdentifier() . ' saved with language ' . 'en', 'status');
+    $nodes = node_load_multiple($nids);
+    foreach ($nodes as $node) {
+      $node->language = 'en';
+      $node->log = 'CMS API deployment: Event content property mappings for language and country.';
+      node_save($node);
+      drupal_set_message('Participant nid: ' . $node->nid . ' saved with language ' . 'en', 'status');
       $processed_resources++;
-    };
-    array_walk($nids, $set_node_mapping);
+    }
   }
 
   $time_end = time();

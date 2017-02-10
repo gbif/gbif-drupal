@@ -27,9 +27,8 @@ function gbif_event_views_default_views() {
   $handler->display->display_options['access']['type'] = 'role';
   $handler->display->display_options['access']['role'] = array(
     3 => '3',
-    7 => '7',
     12 => '12',
-    8 => '8',
+    11 => '11',
   );
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';

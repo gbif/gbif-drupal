@@ -184,6 +184,14 @@ class Search__2_0 extends GbifResourceSearchBase implements GbifResourceSearchBa
       'sub_property' => LANGUAGE_NONE . '::0::value',
     );
 
+    // GBIF Participant
+    $public_fields['participantId'] = ['property' => 'gp_id', 'sub_property' => LANGUAGE_NONE . '::0::value'];
+    $public_fields['participantIso2'] = ['property' => 'gp_iso2', 'sub_property' => LANGUAGE_NONE . '::0::value'];
+    $public_fields['history'] = ['property' => 'gp_history', 'sub_property' => 'value'];
+    $public_fields['visionMission'] = ['property' => 'gp_vision_mission', 'sub_property' => 'value'];
+    $public_fields['structure'] = ['property' => 'gp_structure', 'sub_property' => 'value'];
+    $public_fields['nationalFunding'] = ['property' => 'gp_national_funding', 'sub_property' => 'value'];
+
     // Tag fields should be here for filtering to work.
     $public_fields['tagsInformatics'] = ['property' => 'tx_informatics', 'sub_property' => 'und'];
     $public_fields['tagsDataUse'] = ['property' => 'tx_data_use', 'sub_property' => 'und'];

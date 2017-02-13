@@ -49,7 +49,7 @@ class GbifParticipant__1_0 extends ResourceNodeGbif implements ResourceNodeGbifI
 
     unset($public_fields['summary'], $public_fields['body']);
 
-    $public_fields['participantID'] = array(
+    $public_fields['participantId'] = array(
       'property' => 'gp_id',
     );
 

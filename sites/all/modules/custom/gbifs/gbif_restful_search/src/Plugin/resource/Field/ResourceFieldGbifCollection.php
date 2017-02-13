@@ -456,7 +456,14 @@ class ResourceFieldGbifCollection extends ResourceFieldCollection implements Res
       'dateText',
     ],
     'resource' => [],
-    'gbif_participant' => [],
+    'gbif_participant' => [
+      'participantId',
+      'participantIso2',
+      'history',
+      'visionMission',
+      'structure',
+      'nationalFunding',
+    ],
     'literature' => [
       'abstract',
       'literatureType',
@@ -492,8 +499,10 @@ class ResourceFieldGbifCollection extends ResourceFieldCollection implements Res
       case 'programme':
       case 'project':
       case 'resource':
-      case 'gbif_participant':
         $maskingFields = array_merge($this->commonFields, $this->mask['news'], $this->mask['programme'], $this->mask['project'], $this->tagFields, $this->sharedTagFields);
+        break;
+      case 'gbif_participant':
+        $maskingFields = array_merge($this->commonFields, $this->mask['gbif_participant']);
         break;
       case 'event':
         $maskingFields = array_merge($this->commonFields, $this->mask['event'], $this->tagFields, $this->sharedTagFields);

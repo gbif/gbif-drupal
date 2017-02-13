@@ -23,7 +23,7 @@ use Drupal\restful\Util\EntityFieldQuery;
 /**
  * Class DataProviderCount.
  *
- * @package Drupal\restful_search_api\Plugin\resource\DataProvider
+ * @package Drupal\gbif_restful\Plugin\resource\DataProvider
  */
 class DataProviderCount extends DataProvider implements DataProviderCountInterface {
 

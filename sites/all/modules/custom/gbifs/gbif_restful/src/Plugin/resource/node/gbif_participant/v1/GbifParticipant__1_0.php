@@ -36,6 +36,14 @@ class GbifParticipant__1_0 extends ResourceNodeGbif implements ResourceNodeGbifI
   /**
    * {@inheritdoc}
    */
+
+  protected function dataProviderClassName() {
+    return '\\Drupal\\gbif_restful\\Plugin\\resource\\DataProvider\\DataProviderGbifParticipant';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function publicFields() {
     $public_fields = parent::publicFields();
 

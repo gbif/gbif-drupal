@@ -22,7 +22,7 @@ use Drupal\restful\Plugin\resource\Field\ResourceFieldCollectionInterface;
 /**
  * Class DataProviderUrlLookup.
  *
- * @package Drupal\restful_search_api\Plugin\resource\DataProvider
+ * @package Drupal\gbif_restful\Plugin\resource\DataProvider
  */
 class DataProviderUrlLookup extends DataProvider implements DataProviderLookupInterface {
 

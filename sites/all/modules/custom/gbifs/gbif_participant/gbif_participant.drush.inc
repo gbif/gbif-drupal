@@ -146,8 +146,6 @@ function drush_gbif_participant_map() {
   $time_begin = time();
   $processed_resources = 0;
 
-  // map all events to English
-  // map ge_venue_country to field_country
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'node')
     ->entityCondition('bundle', 'gbif_participant');
@@ -160,6 +158,19 @@ function drush_gbif_participant_map() {
       $node->language = 'en';
       $node->log = 'CMS API deployment: Event content property mappings for language and country.';
       node_save($node);
+
+      // update translatable fields attached. The proper way should be using Field API.
+      $translatables = ['gp_history', 'gp_vision_mission', 'gp_structure', 'gp_national_funding'];
+      foreach ($translatables as $translatable) {
+        foreach (['field_data_', 'field_revision_'] as $table) {
+          db_update($table . $translatable)
+            ->fields(['language' => 'en'])
+            ->condition('bundle', $node->type)
+            ->condition('entity_id', $node->nid)
+            ->execute();
+        }
+      }
+
       drupal_set_message('Participant nid: ' . $node->nid . ' saved with language ' . 'en', 'status');
       $processed_resources++;
     }

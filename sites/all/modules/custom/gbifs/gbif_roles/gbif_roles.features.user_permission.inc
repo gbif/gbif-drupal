@@ -114,6 +114,7 @@ function gbif_roles_user_default_permissions() {
     'name' => 'access gbifs office reports',
     'roles' => array(
       'Administrator' => 'Administrator',
+      'GBIFS Staff' => 'GBIFS Staff',
     ),
     'module' => 'gbif_roles',
   );
@@ -942,6 +943,16 @@ function gbif_roles_user_default_permissions() {
     'module' => 'node',
   );
 
+  // Exported permission: 'create generic content'.
+  $permissions['create generic content'] = array(
+    'name' => 'create generic content',
+    'roles' => array(
+      'Editor' => 'Editor',
+      'Publisher' => 'Publisher',
+    ),
+    'module' => 'node',
+  );
+
   // Exported permission: 'create generictemplate content'.
   $permissions['create generictemplate content'] = array(
     'name' => 'create generictemplate content',
@@ -1093,6 +1104,15 @@ function gbif_roles_user_default_permissions() {
     'module' => 'node',
   );
 
+  // Exported permission: 'delete any generic content'.
+  $permissions['delete any generic content'] = array(
+    'name' => 'delete any generic content',
+    'roles' => array(
+      'Publisher' => 'Publisher',
+    ),
+    'module' => 'node',
+  );
+
   // Exported permission: 'delete any generictemplate content'.
   $permissions['delete any generictemplate content'] = array(
     'name' => 'delete any generictemplate content',
@@ -1201,6 +1221,16 @@ function gbif_roles_user_default_permissions() {
   // Exported permission: 'delete own gbif_participant content'.
   $permissions['delete own gbif_participant content'] = array(
     'name' => 'delete own gbif_participant content',
+    'roles' => array(
+      'Editor' => 'Editor',
+      'Publisher' => 'Publisher',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'delete own generic content'.
+  $permissions['delete own generic content'] = array(
+    'name' => 'delete own generic content',
     'roles' => array(
       'Editor' => 'Editor',
       'Publisher' => 'Publisher',
@@ -1356,9 +1386,23 @@ function gbif_roles_user_default_permissions() {
     'module' => 'taxonomy',
   );
 
+  // Exported permission: 'delete terms in featured_search_terms'.
+  $permissions['delete terms in featured_search_terms'] = array(
+    'name' => 'delete terms in featured_search_terms',
+    'roles' => array(),
+    'module' => 'taxonomy',
+  );
+
   // Exported permission: 'delete terms in gbif_area'.
   $permissions['delete terms in gbif_area'] = array(
     'name' => 'delete terms in gbif_area',
+    'roles' => array(),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'delete terms in gbif_literature_annotation'.
+  $permissions['delete terms in gbif_literature_annotation'] = array(
+    'name' => 'delete terms in gbif_literature_annotation',
     'roles' => array(),
     'module' => 'taxonomy',
   );
@@ -1550,6 +1594,16 @@ function gbif_roles_user_default_permissions() {
   // Exported permission: 'edit any gbif_participant content'.
   $permissions['edit any gbif_participant content'] = array(
     'name' => 'edit any gbif_participant content',
+    'roles' => array(
+      'Editor' => 'Editor',
+      'Publisher' => 'Publisher',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'edit any generic content'.
+  $permissions['edit any generic content'] = array(
+    'name' => 'edit any generic content',
     'roles' => array(
       'Editor' => 'Editor',
       'Publisher' => 'Publisher',
@@ -1783,6 +1837,16 @@ function gbif_roles_user_default_permissions() {
     'module' => 'node',
   );
 
+  // Exported permission: 'edit own generic content'.
+  $permissions['edit own generic content'] = array(
+    'name' => 'edit own generic content',
+    'roles' => array(
+      'Editor' => 'Editor',
+      'Publisher' => 'Publisher',
+    ),
+    'module' => 'node',
+  );
+
   // Exported permission: 'edit own generictemplate content'.
   $permissions['edit own generictemplate content'] = array(
     'name' => 'edit own generictemplate content',
@@ -1965,9 +2029,23 @@ function gbif_roles_user_default_permissions() {
     'module' => 'taxonomy',
   );
 
+  // Exported permission: 'edit terms in featured_search_terms'.
+  $permissions['edit terms in featured_search_terms'] = array(
+    'name' => 'edit terms in featured_search_terms',
+    'roles' => array(),
+    'module' => 'taxonomy',
+  );
+
   // Exported permission: 'edit terms in gbif_area'.
   $permissions['edit terms in gbif_area'] = array(
     'name' => 'edit terms in gbif_area',
+    'roles' => array(),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'edit terms in gbif_literature_annotation'.
+  $permissions['edit terms in gbif_literature_annotation'] = array(
+    'name' => 'edit terms in gbif_literature_annotation',
     'roles' => array(),
     'module' => 'taxonomy',
   );
@@ -2658,7 +2736,9 @@ function gbif_roles_user_default_permissions() {
     'name' => 'view own unpublished content',
     'roles' => array(
       'Administrator' => 'Administrator',
+      'Code editor' => 'Code editor',
       'Editor' => 'Editor',
+      'GBIFS Staff' => 'GBIFS Staff',
       'Office admin' => 'Office admin',
       'Publisher' => 'Publisher',
       'TDWG DQIG' => 'TDWG DQIG',
@@ -2671,7 +2751,9 @@ function gbif_roles_user_default_permissions() {
     'name' => 'view revisions',
     'roles' => array(
       'Administrator' => 'Administrator',
+      'Code editor' => 'Code editor',
       'Editor' => 'Editor',
+      'GBIFS Staff' => 'GBIFS Staff',
       'Office admin' => 'Office admin',
       'Publisher' => 'Publisher',
       'TDWG DQIG' => 'TDWG DQIG',

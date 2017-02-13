@@ -1,9 +1,9 @@
 <?php
 /**
  * @file
- * gbif_participant.module
+ * Code for the GBIF Participant feature.
  */
-
+include_once 'gbif_participant.features.inc';
 module_load_include('inc', 'gbif_participant', 'gbif_participant.api');
 module_load_include('inc', 'gbif_participant', 'gbif_participant.helper');
 

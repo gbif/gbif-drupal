@@ -370,6 +370,9 @@ class ResourceNodeGbif extends ResourceNode implements ResourceNodeGbifInterface
           case 'call':
             $item['acronym'] = $entity->field_acronym->value();
             break;
+          case 'gbif_participant':
+            $item['participantId'] = (int)$entity->gp_id->value();
+            break;
 
         }
 

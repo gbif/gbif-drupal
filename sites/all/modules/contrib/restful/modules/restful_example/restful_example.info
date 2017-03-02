@@ -6,9 +6,9 @@ dependencies[] = restful
 registry_autoload[] = PSR-0
 registry_autoload[] = PSR-4
 
-; Information added by Drupal.org packaging script on 2016-06-16
-version = "7.x-2.11"
+; Information added by Drupal.org packaging script on 2017-02-15
+version = "7.x-2.16"
 core = "7.x"
 project = "restful"
-datestamp = "1466059445"
+datestamp = "1487139488"
 

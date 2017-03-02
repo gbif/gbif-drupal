@@ -29,6 +29,10 @@ function gbif_tweaks_drush_command() {
     'description' => 'Rewrite URL alias.',
     'aliases' => array('uar'),
   );
+  $items['tag-counts'] = array(
+    'description' => 'Counting tag usages.',
+    'aliases' => array('tcount'),
+  );
   return $items;
 }
 
@@ -198,5 +202,62 @@ function drush_gbif_tweaks_url_alias_rewrite() {
         node_save($node);
       }
     }
+  }
+}
+
+function drush_gbif_tweaks_tag_counts() {
+  module_load_include('inc', 'phpexcel');
+
+  $query = db_select('field_config', 'f')
+    ->fields('f', array('field_name', 'active', 'type', 'data'))
+    ->condition('type', 'taxonomy_term_reference')
+    ->condition('active', '1');
+
+  $results = $query->execute()->fetchAll();
+
+  $term_ref_fields = [];
+  foreach ($results as $result) {
+    $result->data = unserialize($result->data);
+    $term_ref_fields[] = $result;
+  }
+
+  // $results[0]->data['storage']['details']['sql']['FIELD_LOAD_CURRENT']['field_data_field_country']['tid']
+  $data = [];
+  $headers = [];
+
+  $tag_query = db_select('field_data_tx_topic', 'f');
+  $tag_query->leftjoin('taxonomy_term_data', 't', 't.tid = f.tx_topic_tid');
+  $tag_query->addField('t', 'name', 'tag');
+  $tag_query->addField('f', 'bundle', 'content_type');
+  $tag_query->addExpression('COUNT(f.bundle)', 'frequency');
+  $tag_query->groupBy('t.name');
+  $tag_query->groupBy('f.bundle');
+  $tag_query->orderBy('t.name');
+
+  $tag_results = $tag_query->execute();
+
+  while($row = $tag_results->fetchAssoc()) {
+    if (!count($headers)) {
+      // Add the headers for the first worksheet
+      $headers['Tags'] = array_keys($row);
+    }
+
+    // Add the data
+    $data['Tags'][] = array_values($row);
+  }
+  // Store the file in sites/default/files
+  $dir = file_stream_wrapper_get_instance_by_uri('public://')->realpath();
+  $filename = 'tag_frequency.xls';
+  $path = "$dir/$filename";
+
+  // Use the .xls format
+  $options = array('format' => 'xls');
+
+  $result = phpexcel_export($headers, $data, $path, $options);
+  if ($result == PHPEXCEL_SUCCESS) {
+    drupal_set_message(t('Tag frequency exported.'));
+  }
+  else {
+    drupal_set_message(t('Tag frequency exportation failed'), 'error');
   }
 }

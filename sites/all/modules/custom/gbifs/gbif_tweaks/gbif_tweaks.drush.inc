@@ -207,6 +207,33 @@ function drush_gbif_tweaks_url_alias_rewrite() {
 
 function drush_gbif_tweaks_tag_counts() {
   module_load_include('inc', 'phpexcel');
+  $content_types = ['news', 'data_use', 'programme', 'project', 'event', 'gbif_participant', 'generic', 'resource'];
+  $data = [];
+  $headers = [];
+
+  foreach ($content_types as $type) {
+    $voc_query = db_select('field_config_instance', 'fci');
+    $voc_query->leftjoin('field_config', 'fc', 'fc.id = fci.field_id');
+    $voc_query->addField('fc', 'field_name', 'Field name');
+    $voc_query->addField('fc', 'data', 'data');
+    $voc_query->condition('fc.type', 'taxonomy_term_reference');
+    $voc_query->condition('fci.bundle', $type);
+    $voc_query->condition('fc.active', '1');
+
+    $voc_results = $voc_query->execute()->fetchAll();
+    foreach ($voc_results as &$result) {
+      $result = (array)$result;
+      $field_data = unserialize($result['data']);
+      $result['vocabulary'] = $field_data['settings']['allowed_values'][0]['vocabulary'];
+      unset($result['data']);
+
+      if (!count($headers)) {
+        $headers[$type] = array_keys($result);
+      }
+      $data[$type][] = array_values($result);
+    }
+  }
+  export_excel('term_fields.xls', $data, $headers);
 
   $query = db_select('field_config', 'f')
     ->fields('f', array('field_name', 'active', 'type', 'data'))
@@ -214,50 +241,52 @@ function drush_gbif_tweaks_tag_counts() {
     ->condition('active', '1');
 
   $results = $query->execute()->fetchAll();
-
-  $term_ref_fields = [];
-  foreach ($results as $result) {
-    $result->data = unserialize($result->data);
-    $term_ref_fields[] = $result;
-  }
-
-  // $results[0]->data['storage']['details']['sql']['FIELD_LOAD_CURRENT']['field_data_field_country']['tid']
   $data = [];
   $headers = [];
 
-  $tag_query = db_select('field_data_tx_topic', 'f');
-  $tag_query->leftjoin('taxonomy_term_data', 't', 't.tid = f.tx_topic_tid');
-  $tag_query->addField('t', 'name', 'tag');
-  $tag_query->addField('f', 'bundle', 'content_type');
-  $tag_query->addExpression('COUNT(f.bundle)', 'frequency');
-  $tag_query->groupBy('t.name');
-  $tag_query->groupBy('f.bundle');
-  $tag_query->orderBy('t.name');
+  foreach ($results as $result) {
+    $field_key = 'field_data_' . $result->field_name;
+    $tid_field = $result->field_name . '_tid';
 
-  $tag_results = $tag_query->execute();
+    $tag_query = db_select($field_key, 'f');
+    $tag_query->leftjoin('taxonomy_term_data', 't', 't.tid = f.' . $tid_field);
+    $tag_query->leftjoin('taxonomy_vocabulary', 'v', 'v.vid = t.vid');
+    $tag_query->addField('t', 'name', 'tag');
+    $tag_query->addField('v', 'name', 'vocabulary');
+    $tag_query->addField('f', 'bundle', 'content_type');
+    $tag_query->addExpression('COUNT(f.bundle)', 'frequency');
+    $tag_query->groupBy('t.name');
+    $tag_query->groupBy('f.bundle');
+    $tag_query->orderBy('t.name');
 
-  while($row = $tag_results->fetchAssoc()) {
-    if (!count($headers)) {
-      // Add the headers for the first worksheet
-      $headers['Tags'] = array_keys($row);
+    $tag_results = $tag_query->execute();
+
+    while($row = $tag_results->fetchAssoc()) {
+      if (!count($headers)) {
+        // Add the headers for the first worksheet
+        $headers['Tags'] = array_keys($row);
+      }
+      // Add the data
+      $data['Tags'][] = array_values($row);
     }
-
-    // Add the data
-    $data['Tags'][] = array_values($row);
   }
+
+  export_excel('tag_frequency.xls', $data, $headers);
+}
+
+function export_excel($filename, $data, $headers) {
   // Store the file in sites/default/files
   $dir = file_stream_wrapper_get_instance_by_uri('public://')->realpath();
-  $filename = 'tag_frequency.xls';
   $path = "$dir/$filename";
 
   // Use the .xls format
-  $options = array('format' => 'xls');
+  $options = ['format' => 'xls', 'ignore_headers' => TRUE];
 
   $result = phpexcel_export($headers, $data, $path, $options);
   if ($result == PHPEXCEL_SUCCESS) {
-    drupal_set_message(t('Tag frequency exported.'));
+    drupal_set_message(t('Tag frequency for @filename exported.', ['@filename' => $filename]));
   }
   else {
-    drupal_set_message(t('Tag frequency exportation failed'), 'error');
+    drupal_set_message(t('Tag frequency for @filename exportation failed', ['@filename' => $filename]), 'error');
   }
 }

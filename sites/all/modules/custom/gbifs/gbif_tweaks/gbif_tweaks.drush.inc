@@ -33,6 +33,10 @@ function gbif_tweaks_drush_command() {
     'description' => 'Counting tag usages.',
     'aliases' => array('tcount'),
   );
+  $items['tag-counts-all'] = array(
+    'description' => 'Counting tag usages.',
+    'aliases' => array('tca'),
+  );
   return $items;
 }
 
@@ -208,6 +212,60 @@ function drush_gbif_tweaks_url_alias_rewrite() {
 function drush_gbif_tweaks_tag_counts() {
   module_load_include('inc', 'phpexcel');
   $content_types = ['news', 'data_use', 'programme', 'project', 'event', 'gbif_participant', 'generic', 'resource'];
+
+  foreach ($content_types as $type) {
+    $data = [];
+    $headers = [];
+    $voc_query = db_select('field_config_instance', 'fci');
+    $voc_query->leftjoin('field_config', 'fc', 'fc.id = fci.field_id');
+    $voc_query->addField('fc', 'field_name', 'Field name');
+    $voc_query->addField('fc', 'data', 'data');
+    $voc_query->condition('fc.type', 'taxonomy_term_reference');
+    $voc_query->condition('fci.bundle', $type);
+    $voc_query->condition('fc.active', '1');
+
+    $voc_results = $voc_query->execute()->fetchAll();
+    foreach ($voc_results as &$voc_result) {
+      $voc_result = (array)$voc_result;
+      $field_data = unserialize($voc_result['data']);
+      $voc_result['Vocabulary'] = $field_data['settings']['allowed_values'][0]['vocabulary'] . ' (' . $voc_result['Fieldname'] . ')';
+      $field_name = $voc_result['Fieldname'];
+      unset($voc_result['Fieldname']);
+      unset($voc_result['data']);
+      $headers[$type] = array_keys($voc_result);
+      $data[$type][] = array_values($voc_result);
+
+      // all term ref fields and term freq
+      $field_key = 'field_data_' . $field_name;
+      $tid_field = $field_name . '_tid';
+
+      $tag_query = db_select($field_key, 'f');
+      $tag_query->leftjoin('taxonomy_term_data', 't', 't.tid = f.' . $tid_field);
+      $tag_query->leftjoin('taxonomy_vocabulary', 'v', 'v.vid = t.vid');
+      $tag_query->addField('t', 'name', 'tag');
+      $tag_query->addField('v', 'machine_name', 'vocabulary');
+      $tag_query->addExpression('COUNT(f.bundle)', 'frequency');
+      $tag_query->condition('f.bundle', $type);
+      $tag_query->groupBy('t.name');
+      $tag_query->orderBy('frequency', 'DESC');
+
+      $tag_results = $tag_query->execute();
+
+      while($row = $tag_results->fetchAssoc()) {
+        // Add the headers
+        $headers['term_frequency'] = array_keys($row);
+        // Add the data
+        $data['term_frequency'][] = array_values($row);
+      }
+    }
+    export_excel('term_fields_' . $type . '.xls', $data, $headers);
+  }
+
+}
+
+function drush_gbif_tweaks_tag_counts_all() {
+  module_load_include('inc', 'phpexcel');
+  $content_types = ['news', 'data_use', 'programme', 'project', 'event', 'gbif_participant', 'generic', 'resource'];
   $data = [];
   $headers = [];
 
@@ -219,59 +277,86 @@ function drush_gbif_tweaks_tag_counts() {
     $voc_query->condition('fc.type', 'taxonomy_term_reference');
     $voc_query->condition('fci.bundle', $type);
     $voc_query->condition('fc.active', '1');
-
     $voc_results = $voc_query->execute()->fetchAll();
-    foreach ($voc_results as &$result) {
-      $result = (array)$result;
-      $field_data = unserialize($result['data']);
-      $result['vocabulary'] = $field_data['settings']['allowed_values'][0]['vocabulary'];
-      unset($result['data']);
 
-      if (!count($headers)) {
-        $headers[$type] = array_keys($result);
+    if ($type === 'resource') {
+      foreach ($voc_results as &$voc_result) {
+          $voc_result = (array)$voc_result;
+        if ($voc_result['Fieldname'] !== 'gr_resource_type') {
+          $field_data = unserialize($voc_result['data']);
+          $voc_result['Vocabulary'] = $field_data['settings']['allowed_values'][0]['vocabulary'] . ' (' . $voc_result['Fieldname'] . ')';
+          $field_name = $voc_result['Fieldname'];
+
+          // all term ref fields and term freq
+          $field_key = 'field_data_' . $field_name;
+          $tid_field = $field_name . '_tid';
+
+          // resource types Document(895), Presentation(987), Tool(1010), Video(963), Link(1076), Data resource(1039)
+          $tag_query = db_select($field_key, 'f');
+          $tag_query->leftjoin('taxonomy_term_data', 't', 't.tid = f.' . $tid_field);
+          $tag_query->leftjoin('taxonomy_vocabulary', 'v', 'v.vid = t.vid');
+          $tag_query->leftjoin('field_data_gr_resource_type', 'fg', 'fg.entity_id = f.entity_id');
+          $tag_query->leftjoin('taxonomy_term_data', 'tt', 'tt.tid = fg.gr_resource_type_tid');
+          $tag_query->addField('t', 'name', 'tag');
+          $tag_query->addField('v', 'machine_name', 'vocabulary');
+          $tag_query->addField('tt', 'name', 'content_type');
+          $tag_query->addExpression('COUNT(f.bundle)', 'frequency');
+          $tag_query->condition('f.bundle', $type);
+          $tag_query->groupBy('t.name')->groupBy('fg.gr_resource_type_tid');
+          $tag_query->orderBY('content_type')->orderBy('tag', 'ASC')->orderBy('frequency', 'DESC');
+
+          $tag_results = $tag_query->execute();
+
+          while($row = $tag_results->fetchAssoc()) {
+            $row['vocabulary'] = $row['vocabulary'] . ' (' . $field_name . ')';
+            // Add the headers
+            $headers['term_frequency'] = array_keys($row);
+            // Add the data
+            $data['term_frequency'][] = array_values($row);
+          }
+        }
       }
-      $data[$type][] = array_values($result);
     }
-  }
-  export_excel('term_fields.xls', $data, $headers);
+    else {
+      foreach ($voc_results as &$voc_result) {
+        $voc_result = (array)$voc_result;
+        $field_data = unserialize($voc_result['data']);
+        $voc_result['Vocabulary'] = $field_data['settings']['allowed_values'][0]['vocabulary'] . ' (' . $voc_result['Fieldname'] . ')';
+        $field_name = $voc_result['Fieldname'];
+        unset($voc_result['Fieldname']);
+        unset($voc_result['data']);
+        //$headers[$type] = array_keys($voc_result);
+        //$data[$type][] = array_values($voc_result);
 
-  $query = db_select('field_config', 'f')
-    ->fields('f', array('field_name', 'active', 'type', 'data'))
-    ->condition('type', 'taxonomy_term_reference')
-    ->condition('active', '1');
+        // all term ref fields and term freq
+        $field_key = 'field_data_' . $field_name;
+        $tid_field = $field_name . '_tid';
 
-  $results = $query->execute()->fetchAll();
-  $data = [];
-  $headers = [];
+        $tag_query = db_select($field_key, 'f');
+        $tag_query->leftjoin('taxonomy_term_data', 't', 't.tid = f.' . $tid_field);
+        $tag_query->leftjoin('taxonomy_vocabulary', 'v', 'v.vid = t.vid');
+        $tag_query->addField('t', 'name', 'tag');
+        $tag_query->addField('v', 'machine_name', 'vocabulary');
+        $tag_query->addField('f', 'bundle', 'content_type');
+        $tag_query->addExpression('COUNT(f.bundle)', 'frequency');
+        $tag_query->condition('f.bundle', $type);
+        $tag_query->groupBy('t.name');
+        $tag_query->orderBy('frequency', 'DESC');
 
-  foreach ($results as $result) {
-    $field_key = 'field_data_' . $result->field_name;
-    $tid_field = $result->field_name . '_tid';
+        $tag_results = $tag_query->execute();
 
-    $tag_query = db_select($field_key, 'f');
-    $tag_query->leftjoin('taxonomy_term_data', 't', 't.tid = f.' . $tid_field);
-    $tag_query->leftjoin('taxonomy_vocabulary', 'v', 'v.vid = t.vid');
-    $tag_query->addField('t', 'name', 'tag');
-    $tag_query->addField('v', 'name', 'vocabulary');
-    $tag_query->addField('f', 'bundle', 'content_type');
-    $tag_query->addExpression('COUNT(f.bundle)', 'frequency');
-    $tag_query->groupBy('t.name');
-    $tag_query->groupBy('f.bundle');
-    $tag_query->orderBy('t.name');
-
-    $tag_results = $tag_query->execute();
-
-    while($row = $tag_results->fetchAssoc()) {
-      if (!count($headers)) {
-        // Add the headers for the first worksheet
-        $headers['Tags'] = array_keys($row);
+        while($row = $tag_results->fetchAssoc()) {
+          $row['vocabulary'] = $row['vocabulary'] . ' (' . $field_name . ')';
+          // Add the headers
+          $headers['term_frequency'] = array_keys($row);
+          // Add the data
+          $data['term_frequency'][] = array_values($row);
+        }
       }
-      // Add the data
-      $data['Tags'][] = array_values($row);
     }
-  }
 
-  export_excel('tag_frequency.xls', $data, $headers);
+  }
+  export_excel('term_fields_all.xls', $data, $headers);
 }
 
 function export_excel($filename, $data, $headers) {
@@ -280,7 +365,7 @@ function export_excel($filename, $data, $headers) {
   $path = "$dir/$filename";
 
   // Use the .xls format
-  $options = ['format' => 'xls', 'ignore_headers' => TRUE];
+  $options = ['format' => 'xls'];
 
   $result = phpexcel_export($headers, $data, $path, $options);
   if ($result == PHPEXCEL_SUCCESS) {

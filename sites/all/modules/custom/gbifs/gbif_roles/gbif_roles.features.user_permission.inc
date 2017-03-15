@@ -210,6 +210,7 @@ function gbif_roles_user_default_permissions() {
       'Administrator' => 'Administrator',
       'Editor' => 'Editor',
       'Publisher' => 'Publisher',
+      'anonymous user' => 'anonymous user',
     ),
     'module' => 'user',
   );
